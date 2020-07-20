@@ -1,0 +1,100 @@
+{% extends 'Squelette.html.twig' %}
+
+{% block Titre %}
+    Portail web de TimSoft - Suppression de {{utilisateur.username}} {{utilisateur.prenomUtilisateur}}
+{%endblock %}
+
+{%block Section %} 
+     Gestion des utilisateurs
+        <small>Suppression d'un utilisateur</small>
+{% endblock %}
+
+{% block Navigation %}
+    <li class="breadcrumb-item"><a href="{{path('ConsulterUtilisateur')}}">Consulter la liste des utilisateurs</a></li>
+    <li class="breadcrumb-item active">Suppression d'un utilisateur</li>
+    {%endblock %}
+
+{%block Contenu %}
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header with-border">
+                <h2 class="card-title" style="color:#1E5584">Informations de {{utilisateur.nomUtilisateur}} {{utilisateur.prenomUtilisateur}}</h2>
+                <div class="card-tools pull-center">
+                </div>
+            </div>
+            <div class="card-body" id="DivCente">
+                <div class="row">
+                    <div class="col-md-6">
+                        <table width="400">
+                            <tr>
+                                <th scope="row" style="padding: 15px 0px 0px 0px"><div align="left">Nom:</div></th>
+                                <td style="padding: 15px 0px 0px 0px">{{utilisateur.nomUtilisateur}}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row" style="padding: 15px 0px 0px 0px"><div align="left">Email:</div></th>
+                                <td style="padding: 15px 0px 0px 0px">{{utilisateur.email}}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row" style="padding: 15px 0px 0px 0px"><div align="left">Société:</div></th>
+                                <td style="padding: 15px 0px 0px 0px">{{utilisateur.client.raisonSociale}}</td>
+                            </tr>
+                        </table>
+
+                    </div>
+                    <div class="col-md-6">
+                        <table width="400">
+                            <tr>
+                                <th scope="row" style="padding: 15px 0px 0px 0px"><div align="left">Prénom:</div></th>
+                                <td style="padding: 15px 0px 0px 0px">{{utilisateur.prenomUtilisateur}}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row" style="padding: 15px 0px 0px 0px"><div align="left">Téléphone:</div></th>
+                                <td style="padding: 15px 0px 0px 0px">{{utilisateur.telephoneUtilisateur}}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row" style="padding: 15px 0px 0px 0px"><div align="left">Catégorie:</div></th>
+                                <td style="padding: 15px 0px 0px 0px">
+                                     {%set role = utilisateur.roleUtilisateur %}
+                                        {% if ( role == 'ROLE_ADMIN')%}Administrateur
+                                        {% elseif ( role == 'ROLE_CONSULTANT') %}Consultant
+                                        {% elseif ( role == 'ROLE_CLIENT') %}Client
+                                            {% elseif ( role == 'ROLE_GESTIONNAIRE') %}Gestionnaire
+                                        {%endif%}
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <br>
+                <div class="form-group">
+                    <br>
+                    <a href="#" data-href="{{ path('SupprimerUtilisateur', { 'id': utilisateur.id }) }}" class="btn btn-danger"  data-toggle="modal" data-target="#confirm-delete">Supprimer</a>
+                </div>
+            </div>
+        </div>
+    </div>
+                     <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                Confirmation de suppression
+            </div>
+            <div class="modal-body">
+                Voulez-vous vraiment supprimer {{utilisateur.nomUtilisateur}} {{utilisateur.prenomUtilisateur}} ?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                <a class="btn btn-primary btn-ok">Supprimer</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+  {{ parent() }}
+  <script>
+$('#confirm-delete').on('show.bs.modal', function(e) {
+    $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
+});
+</script>
+  {% endblock %}

@@ -1,0 +1,206 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8"/>
+    <title>Feuille de présence du {{ Feuille.dateIntervention|date('d-m-Y') }} par {{ Feuille.intervenant }}
+        pour {{ Feuille.client }}</title>
+    <link rel="stylesheet" href="style.css" type="text/css"/>
+    <style>
+        header {
+            padding: 10px 10px; /*Marge verticale*/
+            background-color: #1E5584; /*Couleur de fond*/
+        }
+
+        html, body, p {
+            margin: 0;
+            padding: 0;
+        }
+
+        .contentStyle {
+            margin: 10px 25px 80px 25px; /*centrer la colonne*/
+            padding: 25px; /*margin interne*/
+        }
+
+        footer {
+            background-color: #1E5584; /*Couleur de fond*/
+            padding: 10px 10px 21px 0px; /*Marge verticale*/
+            position: absolute;
+            bottom: 0px;
+            width: 100%;
+            text-align: center; /*texte centré*/
+            color: #FFFFFF;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div>
+        <img src="{{ app.request.getSchemeAndHttpHost()~ asset('Template/Webp.net-resizeimage.png') }}"
+             style="height:70px;">
+    </div>
+</header>
+<div style=" text-align: center;"><h1>FEUILLE DE PRÉSENCE </h1></div>
+<div class="contentStyle">
+
+    <div style="border: 2px solid #1E5584; padding: 3px; background-color: #FFFFFF; -moz-border-radius-topleft: 5px; -moz-border-radius-topright: 5px; -moz-border-radius-bottomright: 5px; -moz-border-radius-bottomleft: 5px;">
+        <center><h3>Informations relatives à l'intervention du {{ Feuille.dateIntervention|date('d-m-Y') }} effectuée
+                par {{ Feuille.intervenant }} pour {{ Feuille.client }}</h3></center>
+    </div>
+    <br>
+    <div style="border: 1px solid #1E5584; padding: 5px 10px; background-color: #FFFFFF; -moz-border-radius-topleft: 5px; -moz-border-radius-topright: 5px; -moz-border-radius-bottomright: 5px; -moz-border-radius-bottomleft: 5px;">
+        <strong>Coordonnées client</strong>
+        <HR width=100%>
+        <div class="form-group">
+            <table width="800">
+                <tr>
+                    <th width="200" scope="row">
+                        <div align="left">Client:</div>
+                    </th>
+                    <td>{{ Feuille.client.raisonSociale }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">
+                        <div align="left">Code Client:</div>
+                    </th>
+                    <td>{{ Feuille.client.codeClient }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">
+                        <div align="left">Adresse:</div>
+                    </th>
+                    <td>{{ Feuille.client.adresseClient }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">
+                        <div align="left">Téléphone:</div>
+                    </th>
+                    <td>{{ Feuille.client.telephone }}</td>
+                </tr>
+                {#                <tr>#}
+                {#                    <th scope="row">#}
+                {#                        <div align="left">Fax:</div>#}
+                {#                    </th>#}
+                {#                    <td>{{ Feuille.client.faxClient }}</td>#}
+                {#                </tr>#}
+                <tr>
+                    <th scope="row">
+                        <div align="left">Email:</div>
+                    </th>
+                    <td>{{ Feuille.client.adresseMailClient }}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <br>
+    <div style="border: 1px solid #1E5584; padding: 5px; background-color: #FFFFFF; -moz-border-radius-topleft: 5px; -moz-border-radius-topright: 5px; -moz-border-radius-bottomright: 5px; -moz-border-radius-bottomleft: 5px;">
+        <strong>Visa intervenant</strong>
+        <HR width=100%>
+        <table width="800">
+            <tr>
+                <th scope="row" width="200">
+                    <div align="left">Intervenant:</div>
+                </th>
+                <td>{{ Feuille.intervenant.nomUtilisateur }} {{ Feuille.intervenant.prenomUtilisateur }}</td>
+            </tr>
+            {#            <tr>#}
+            {#                <th scope="row">#}
+            {#                    <div align="left">Société:</div>#}
+            {#                </th>#}
+            {#                <td>{{ Feuille.intervenant.client }}</td>#}
+            {#            </tr>#}
+            <tr>
+                <th scope="row">
+                    <div align="left">Numéro de commande:</div>
+                </th>
+                <td>{{ Feuille.numeroCommande }}</td>
+            </tr>
+            <tr>
+                <th scope="row">
+                    <div align="left">Libellé commande:</div>
+                </th>
+                <td><p>{{ Feuille.libelleCommande }}</p></td>
+            </tr>
+            <tr>
+                <th scope="row">
+                    <div align="left">Fait à:</div>
+                </th>
+                <td>{{ Feuille.lieuIntervention }}</td>
+            </tr>
+            <tr>
+                <th scope="row">
+                    <div align="left">Le:</div>
+                </th>
+                <td>{{ Feuille.dateIntervention|date('d-m-Y') }}</td>
+            </tr>
+            {% if not(Feuille.heureDebutInterventionMatin == null) or not (Feuille.heureDebutInterventionAM == null) %}
+
+        </table>
+        {% else %}
+            </table>
+            <br>
+            <p>L'horaire de l'intervention n'est pas indiqué !</p>
+
+        {% endif %}
+
+
+        <div style="padding-left: 15px">
+            <table width="400">
+                {% if not(Feuille.heureDebutInterventionMatin == null) %}
+                    <tr>
+                        <th width="185" scope="col">Matin:</th>
+                        <td>De {{ Feuille.heureDebutInterventionMatin|date('H:i') }}
+                            à {{ Feuille.heureFinInterventionMatin|date('H:i') }}</td>
+                    </tr>
+                {% endif %}
+                {% if not(Feuille.heureDebutInterventionAM == null) %}
+                    <tr>
+                        <th width="185" scope="col">Après-Midi:</th>
+                        <td>De {{ Feuille.heureDebutInterventionAM|date('H:i') }}
+                            à {{ Feuille.heureFinInterventionAM|date('H:i') }}</td>
+                    </tr>
+                {% endif %}
+            </table>
+        </div>
+    </div>
+
+    <br>
+    <div style="border: 1px solid #1E5584; padding: 5px; background-color: #FFFFFF; -moz-border-radius-topleft: 5px; -moz-border-radius-topright: 5px; -moz-border-radius-bottomright: 5px; -moz-border-radius-bottomleft: 5px;">
+        <strong>Participants</strong>
+        <HR width=100%>
+        <div style="padding: 0px 0px 0px 50px;">
+            {% if not (Feuille.participants|length == 0) %}
+                {% for Participant in Feuille.participants %}
+                    <li> {{ Participant.nomParticipant }} {{ Participant.prenomParticipant }}
+                        ( {{ Participant.adresseMailParticipant }} )
+                    </li>
+                {% endfor %}
+            {% else %}
+                <p> Aucun participant </p>
+            {% endif %}
+            <br>
+        </div>
+    </div>
+    <br>
+    <div style="border: 1px solid #1E5584; padding: 5px; background-color: #FFFFFF; -moz-border-radius-topleft: 5px; -moz-border-radius-topright: 5px; -moz-border-radius-bottomright: 5px; -moz-border-radius-bottomleft: 5px;">
+        <strong>Commentaire</strong>
+        <HR width=100%>
+        <div style="padding: 0px 0px 0px 50px;">
+            {% if Feuille.intervention.commentaire %}
+                {{ Feuille.intervention.commentaire }}
+            {% else %}
+                Aucun commentaire
+            {% endif %}
+        </div>
+    </div>
+    <br>
+</div>
+
+
+<footer>
+    <strong>7, AV Taher ben Ammar, El Manar II-2092 Tunis. TUNISIE <br></strong>
+    <strong>Tél:</strong>+216 70 860 870 / 70 860 122 <strong>Fax:</strong> +216 71 884 132 <strong>E-mail:</strong>
+    contacts@timsoft.com.tn
+</footer>
+
+</body>
+</html>

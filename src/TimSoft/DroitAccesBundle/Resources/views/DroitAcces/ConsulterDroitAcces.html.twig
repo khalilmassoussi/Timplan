@@ -1,0 +1,213 @@
+{% extends 'Squelette.html.twig' %}
+
+{% block Titre %}
+    Portail web de TimSoft - Les Droits d'accès
+{% endblock %}
+
+{% block Section %}
+    Gestion des droits d'accès
+    <small>Consulter les droits d'accès</small>
+{% endblock %}
+
+
+{% block Navigation %}
+    <li class="breadcrumb-item active">Consulter les droits d'accès</li>
+{% endblock %}
+
+{% block css %}
+    {{ parent() }}
+    <link rel="stylesheet" href="https://cdn.datatables.net/rowgroup/1.1.1/css/rowGroup.dataTables.min.css">
+    <style type="text/css">
+        .Style1 {
+            color: #1E5584
+        }
+
+        .Style4 {
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: bold;
+        }
+
+        .td0 {
+            padding: 3px 0px 3px 8px;
+        }
+
+        .td1 {
+            padding: 3px 0px 3px 15px;
+        }
+
+        .td2 {
+            padding: 3px 0px 3px 25px;
+        }
+    </style>
+{% endblock %}
+{% block SideBar %}{% endblock %}
+{% block Contenu %}
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <table id="TableDroit" class="table table-bordered table-hover dataTable" style="width:100%">
+                    <thead>
+                    <tr class="row1 header blue">
+                        <th>
+                            Droit
+                        </th>
+                        <th>
+                            Categorie
+                        </th>
+                        <th>
+                            Administrateur
+                        </th>
+                        <th>
+                            Gestionnaire
+                        </th>
+                        <th>
+                            Consultant
+                        </th>
+                        <th>
+                            Client
+                        </th>
+                        <th>
+                            BU Manager
+                        </th>
+                        <th>
+                            Modifier
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for Droit in Droits %}
+                        <tr>
+                            <td class="cell1">
+                                {{ Droit.nomDroit }}
+                            </td>
+                            <td>
+                                {{ Droit.CategorieDroit }}
+                            </td>
+                            <td class="cell1">
+                                {% if contient(Droit.id,'ROLE_ADMIN') > 0 %}
+                                    <center><i class="fas fa-exclamation-circle fa-lg" style="color:#ffc107;"
+                                               title="Accès Exceptionnel"></i>
+                                    </center>
+                                {% elseif autoriserGroupe(Droit.id,'ROLE_ADMIN') %}
+                                    <center><i class="fas fa-check-circle fa-lg" style="color:#28a745;"
+                                               title="Accès Autorisé"></i></center>
+                                {% else %}
+                                    <center><i class="fas fa-times-circle fa-lg" style="color:#dc3545;"
+                                               title="Accès Inerdit"></i>
+                                    </center>
+                                {% endif %}
+                            </td>
+                            <td class="cell1">
+                                {% if contient(Droit.id,'ROLE_GESTIONNAIRE') > 0 %}
+                                    <center><i class="fas fa-exclamation-circle fa-lg" style="color:#ffc107;"
+                                               title="Accès Exceptionnel"></i></center>
+                                {% elseif autoriserGroupe(Droit.id,'ROLE_GESTIONNAIRE') %}
+                                    <center><i class="fas fa-check-circle fa-lg" style="color:#28a745;"
+                                               title="Accès Autorisé"></i></center>
+                                {% else %}
+                                    <center><i class="fas fa-times-circle fa-lg" style="color:#dc3545;"
+                                               title="Accès Inerdit"></i></center>
+                                {% endif %}
+                            </td>
+                            <td class="cell1">
+                                {% if contient(Droit.id,'ROLE_CONSULTANT') > 0 %}
+                                    <center><i class="fas fa-exclamation-circle fa-lg" style="color:#ffc107;"
+                                               title="Accès Exceptionnel"></i></center>
+                                {% elseif autoriserGroupe(Droit.id,'ROLE_CONSULTANT') %}
+                                    <center><i class="fas fa-check-circle fa-lg" style="color:#28a745;"
+                                               title="Accès Autorisé"></i></center>
+                                {% else %}
+                                    <center><i class="fas fa-times-circle fa-lg" style="color:#dc3545;"
+                                               title="Accès Inerdit"></i></center>
+                                {% endif %}
+                            </td>
+                            <td class="cell1">
+                                {% if contient(Droit.id,'ROLE_CLIENT') > 0 %}
+                                    <center><i class="fas fa-exclamation-circle fa-lg" style="color:#ffc107;"
+                                               title="Accès Exceptionnel"></i></center>
+                                {% elseif autoriserGroupe(Droit.id,'ROLE_CLIENT') %}
+                                    <center><i class="fas fa-check-circle fa-lg" style="color:#28a745;"
+                                               title="Accès Autorisé"></i></center>
+                                {% else %}
+                                    <center><i class="fas fa-times-circle fa-lg" style="color:#dc3545;"
+                                               title="Accès Inerdit"></i></center>
+                                {% endif %}
+                            </td>
+                            <td class="cell1" width="100px">
+                                {% if contient(Droit.id,'ROLE_CHEF') > 0 %}
+                                    <center><i class="fas fa-exclamation-circle fa-lg" style="color:#ffc107;"
+                                               title="Accès Exceptionnel"></i></center>
+                                {% elseif autoriserGroupe(Droit.id,'ROLE_CHEF') %}
+                                    <center><i class="fas fa-check-circle fa-lg" style="color:#28a745;"
+                                               title="Accès Autorisé"></i></center>
+                                {% else %}
+                                    <center><i class="fas fa-times-circle fa-lg" style="color:#dc3545;"
+                                               title="Accès Inerdit"></i></center>
+                                {% endif %}
+                            </td>
+                            {% if AutorisationAcces('ModifierDroitAcces' , Utilisateur) %}
+                                <td class="cell1">
+                                    <center><a href="{{ path('ModifierDroitAcces', { 'id': Droit.id }) }}"><img
+                                                    src="{{ asset('Template/Editer.png') }}"
+                                                    title="Modifier le droit d'accès"></a></center>
+                                </td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <br>
+    </div>
+{% endblock %}
+
+{% block script %}
+    {{ parent() }}
+    <script src="https://cdn.datatables.net/rowgroup/1.1.1/js/dataTables.rowGroup.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var table = $('#TableDroit').DataTable({
+                language: {
+                    processing: "Traitement en cours...",
+                    search: "Rechercher&nbsp;:",
+                    lengthMenu: "Afficher _MENU_ &eacute;l&eacute;ments",
+                    info: "Affichage de l'&eacute;lement _START_ &agrave; _END_ sur _TOTAL_ &eacute;l&eacute;ments",
+                    infoEmpty: "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
+                    infoFiltered: "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
+                    infoPostFix: "",
+                    loadingRecords: "Chargement en cours...",
+                    zeroRecords: "Aucun &eacute;l&eacute;ment &agrave; afficher",
+                    emptyTable: "Aucune donnée disponible dans le tableau",
+
+                    aria: {
+                        sortAscending: ": activer pour trier la colonne par ordre croissant",
+                        sortDescending: ": activer pour trier la colonne par ordre décroissant"
+                    },
+                },
+                "ordering": true,
+                "info": true,
+                "bPaginate": false,
+                "aoColumns": [
+                    {"bSortable": false},
+                    {"bSortable": false},
+                    {"bSortable": false},
+                    {"bSortable": false},
+                    {"bSortable": false},
+                    {"bSortable": false},
+                    {"bSortable": false},
+                    {"bSortable": false}
+                ],
+                order: [[1, 'asc']],
+                "columnDefs": [
+                    {"width": "3%", "targets": 6},
+                    {targets: 1, visible: false},
+                ],
+                rowGroup: {
+                    dataSrc: [1]
+                },
+            });
+
+        });
+    </script>
+{% endblock %}

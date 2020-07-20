@@ -1,0 +1,130 @@
+{% extends 'Squelette.html.twig' %}
+
+{% block css %}
+    {{ parent() }}
+    <script src="{{ asset('Template/dist/js/pages/dashboard2.js') }}"></script>
+{% endblock %}
+
+{% block Titre %}
+    Portail web de TimSoft - Journal d’événement
+{% endblock %}
+
+{% block Section %} Journal d’événement
+
+{% endblock %}
+
+
+{% block Navigation %}
+    <li class="breadcrumb-item active">Log</li>
+{% endblock %}
+{% block SideBar %}
+{% endblock %}
+{% block Contenu %}
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <table style="width: 100%" class="table table-bordered table-striped dataTable" id="myTable">
+                    <thead>
+                    <tr class="row1 header blue">
+                        <th class="cell1">
+                            Action
+                        </th>
+                        <th class="cell1">
+                            ID de l'objet
+                        </th>
+                        <th class="cell1">
+                            Classe
+                        </th>
+                        <th class="cell1">
+                            Donnée
+                        </th>
+                        <th class="cell1">
+                            Date
+                        </th>
+                        <th class="cell1">
+                            Par
+                        </th>
+                        <th class="cell1">
+                            Version
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% if logs %}
+                        {% for log in logs %}
+                            <tr class="row1">
+                                <td class="cell1">{{ log.action }}</td>
+                                <td class="cell1">{{ log.objectId }}</td>
+                                <td class="cell1">
+                                    {% if log.objectClass == 'TeteCommande' %}
+                                        Commande
+                                    {% elseif log.objectClass == 'Planning' %}
+                                        Intervention
+                                    {% elseif log.objectClass == 'FeuilleDePresence' %}
+                                        Feuille de presence
+                                    {% elseif log.objectClass == 'RapportIntervention' %}
+                                        Rapport d'intervention
+                                    {% endif %}
+                                </td>
+                                <td class="cell1">
+                                    {% for slug, item in log.data %}
+                                        {% if slug == 'allDay' and item %}
+                                            Toute la journée: Oui <br>
+                                        {% elseif slug == 'allDay' and  not item %}
+                                            Toute la journée: Non <br>
+                                        {% else %}
+                                            {{ slug }}: {{ item }}<br>
+                                        {% endif %}
+                                    {% endfor %}
+                                </td>
+                                <td class="cell1">{{ log.loggedAt|localizeddate('long', 'medium') }}</td>
+                                <td class="cell1">{{ log.username }}</td>
+                                <td class="cell1">{{ log.version }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+    {{ parent() }}
+    <script>
+        var table = $('#myTable').DataTable({
+            // "order": [[4, "desc"]],
+            language: {
+                processing: "Traitement en cours...",
+                search: "Rechercher&nbsp;:",
+                lengthMenu: "Afficher _MENU_ &eacute;l&eacute;ments",
+                info: "Affichage de l'&eacute;lement _START_ &agrave; _END_ sur _TOTAL_ &eacute;l&eacute;ments",
+                infoEmpty: "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
+                infoFiltered: "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
+                infoPostFix: "",
+                loadingRecords: "Chargement en cours...",
+                zeroRecords: "Aucun &eacute;l&eacute;ment &agrave; afficher",
+                emptyTable: "Aucune donnée disponible dans le tableau",
+                paginate: {
+                    first: "Premier",
+                    previous: "Précédent",
+                    next: "Suivant",
+                    last: "Dernier"
+                },
+                aria: {
+                    sortAscending: ": activer pour trier la colonne par ordre croissant",
+                    sortDescending: ": activer pour trier la colonne par ordre décroissant"
+                },
+                "processing": true,
+                "serverSide": true,
+
+                /*"ajax": "''"*/
+            },
+            // "columnDefs": [{
+            //     "targets": -1,
+            //     "data": null,
+            //     "defaultContent": "<center><a href='#'><img src='/Template/Editer.png' title=\"Remplir la feuille de présence\"></center>"
+            // }]
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,16 @@
+services:
+    tim_soft_general.registration.form.type:
+        class: TimSoft\GeneralBundle\Form\UtilisateurType
+        arguments: [%fos_user.model.user.class%]
+        tags:
+            - { name: form.type, alias: timsoft_ajouter_un_utilisateur }
+
+    redirectionListener:
+        class: TimSoft\GeneralBundle\Listener\RedirectionListener
+        arguments: [ '@service_container', '@session']
+        tags:
+            - { name: kernel.event_listener , event: kernel.request, method: onKernelRequest}
+
+    site.service_test:
+        class: TimSoft\GeneralBundle\Commande\TestCommand
+        arguments: ['@doctrine.orm.entity_manager']

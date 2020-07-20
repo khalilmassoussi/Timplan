@@ -1,0 +1,4 @@
+services:
+#    tim_soft_client.example:
+#        class: TimSoft\ClientBundle\Example
+#        arguments: ["@service_id", "plain_value", "%parameter%"]

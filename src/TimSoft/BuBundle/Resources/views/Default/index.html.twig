@@ -1,0 +1,224 @@
+{% extends 'Squelette.html.twig' %}
+
+{% block css %}
+    {{ parent() }}
+{% endblock %}
+
+{% block Titre %}
+    Portail web de TimSoft - Gestion des Business units
+{% endblock %}
+{% block Navigation %}
+    <li class="breadcrumb-item active">Gestion des Business units</li>
+{% endblock %}
+{% block SideBar %}
+{% endblock %}
+{% block Contenu %}
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                {% if AutorisationAcces('bu_new' , Utilisateur) %}
+                    <div align="right"><a href="{{ path('bu_new') }}" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Ajouter un BU</a>
+                    </div>
+                {% endif %}
+                <br>
+                <div id="accordion">
+                    <!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
+                    {% for bu in bus %}
+                        {% if loop.index is even %}
+                            <div class="card">
+                                <div class="card-header with-border"
+                                     style="border-top: solid; border-top-color: #28a745">
+                                    <h4 class="card-title">
+                                        <a data-toggle="collapse" data-parent="#accordion" href="#bu{{ loop.index }}"
+                                           class="collapsed" aria-expanded="false">
+                                            {{ bu.libelle }}
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="bu{{ loop.index }}" class="panel-collapse collapse" aria-expanded="false"
+                                     style="height: 0px;">
+                                    <div class="card-body">
+                                        {% if AutorisationAcces('addUser' , Utilisateur) %}
+                                            <button type="button" class="btn btn-outline-primary"
+                                                    data-target="#u{{ loop.index }}"
+                                                    data-toggle="modal">
+                                                <i class="fas fa-plus-circle fa-lg"></i> Ajouter un
+                                                utilisateur
+                                            </button>
+                                        {% endif %}
+                                        {% if AutorisationAcces('bu_delete' , Utilisateur) %}
+                                            <a type="button" class="btn btn-outline-danger"
+                                               data-target="#{{ loop.index }}"
+                                               href="{{ path('bu_delete', {'id': bu.id}) }}">
+                                                <i class="fas fa-trash fa-lg"></i> Supprimer ce BU
+                                            </a>
+                                        {% endif %}
+                                        <br><br>
+                                        {% if bu.utilisateurs %}
+                                            <table class="table table-bordered table-striped dataTable" id="users1">
+                                                <thead>
+                                                <tr>
+                                                    <th>Nom</th>
+                                                    <th>Role</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                {% for utilisateur in bu.utilisateurs %}
+                                                    <tr>
+                                                        <td>
+                                                            {% if ( utilisateur.roleUtilisateur == 'ROLE_ADMIN') %} {% set RoleUser = 'Administrateur' %}
+                                                            {% elseif ( utilisateur.roleUtilisateur == 'ROLE_CONSULTANT') %}{% set RoleUser = 'Consultant' %}
+                                                            {% elseif ( utilisateur.roleUtilisateur == 'ROLE_CLIENT') %}{% set RoleUser = 'Client' %}
+                                                            {% elseif ( utilisateur.roleUtilisateur == 'ROLE_GESTIONNAIRE') %}{% set RoleUser = 'Gestionnaire' %}
+                                                            {% elseif ( utilisateur.roleUtilisateur == 'ROLE_CHEF') %}{% set RoleUser = 'BU Manager' %}
+                                                            {% endif %}
+                                                            {{ utilisateur.nomUtilisateur }} {{ utilisateur.prenomUtilisateur }}</td>
+                                                        <td>{{ RoleUser }}</td>
+                                                        <td> {% if AutorisationAcces('deleteUser' , Utilisateur) %}
+                                                                <a href="{{ path('deleteUser', {'bu': bu.id , 'user': utilisateur.id }) }}">
+                                                                    <i class="fas fa-minus-circle fa-lg"
+                                                                       title="Retirer de la liste"
+                                                                       style="color: #dc3545"></i>
+                                                                </a>
+                                                            {% endif %}</td>
+                                                    </tr>
+                                                {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="card">
+                                <div class="card-header with-border"
+                                     style="border-top: solid; border-top-color: #dc3545">
+                                    <h4 class="card-title">
+                                        <a data-toggle="collapse" data-parent="#accordion" href="#bu{{ loop.index }}"
+                                           class="collapsed" aria-expanded="false">
+                                            {{ bu.libelle }}
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="bu{{ loop.index }}" class="panel-collapse collapse" aria-expanded="false"
+                                     style="height: 0px;">
+                                    <div class="card-body">
+                                        {% if AutorisationAcces('addUser' , Utilisateur) %}
+                                            <button type="button" class="btn btn-outline-primary"
+                                                    data-target="#u{{ loop.index }}"
+                                                    data-toggle="modal">
+                                                <i class="fas fa-plus-circle fa-lg"></i> Ajouter un utilisateur
+                                            </button>
+                                        {% endif %}
+                                        {% if AutorisationAcces('bu_delete' , Utilisateur) %}
+                                            <a type="button" class="btn btn-outline-danger"
+                                               data-target="#{{ loop.index }}"
+                                               href="{{ path('bu_delete', {'id': bu.id}) }}">
+                                                <i class="fas fa-trash fa-lg"></i> Supprimer ce BU
+                                            </a>
+                                        {% endif %}
+                                        <br><br>
+                                        {% if bu.utilisateurs %}
+                                            <table class="table table-bordered table-striped dataTable" id="users2">
+                                                <thead>
+                                                <tr>
+                                                    <th>Nom</th>
+                                                    <th>Role</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                {% for utilisateur in bu.utilisateurs %}
+                                                    <tr>
+                                                        <td>
+                                                            {% if ( utilisateur.roleUtilisateur == 'ROLE_ADMIN') %} {% set RoleUser = 'Administrateur' %}
+                                                            {% elseif ( utilisateur.roleUtilisateur == 'ROLE_CONSULTANT') %}{% set RoleUser = 'Consultant' %}
+                                                            {% elseif ( utilisateur.roleUtilisateur == 'ROLE_CLIENT') %}{% set RoleUser = 'Client' %}
+                                                            {% elseif ( utilisateur.roleUtilisateur == 'ROLE_GESTIONNAIRE') %}{% set RoleUser = 'Gestionnaire' %}
+                                                            {% elseif ( utilisateur.roleUtilisateur == 'ROLE_CHEF') %}{% set RoleUser = 'BU Manager' %}
+                                                            {% endif %}
+                                                            {{ utilisateur.nomUtilisateur }} {{ utilisateur.prenomUtilisateur }}</td>
+                                                        <td>{{ RoleUser }}</td>
+                                                        <td> {% if AutorisationAcces('deleteUser' , Utilisateur) %}
+                                                                <a href="{{ path('deleteUser', {'bu': bu.id , 'user': utilisateur.id }) }}">
+                                                                    <i class="fas fa-minus-circle fa-lg"
+                                                                       title="Retirer de la liste"
+                                                                       style="color: #dc3545"></i>
+                                                                </a>
+                                                            {% endif %}</td>
+                                                    </tr>
+
+                                                {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                        <div class="modal fade" id="u{{ loop.index }}" style="display: none" aria-hidden="true">
+                            <div class="modal-dialog modal-lg" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Ajouter un utilsateur</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">×</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        {{ render(controller('TimSoftBuBundle:Default:users')) }}
+                                        <table class="table table-bordered table-striped dataTable no-footer"
+                                               style="width:100%">
+                                            <thead>
+                                            <tr class="row1 header blue">
+                                                <th class="cell1">Choisir</th>
+                                                <th class="cell1">
+                                                    Nom et prénom
+                                                </th>
+                                                <th class="cell1">
+                                                    Rôle
+                                                </th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for user in getUsers(bu.id) %}
+                                                {% if ( user.roleUtilisateur == 'ROLE_ADMIN') %} {% set RoleUser = 'Administrateur' %}
+                                                {% elseif ( user.roleUtilisateur == 'ROLE_CONSULTANT') %}{% set RoleUser = 'Consultant' %}
+                                                {% elseif ( user.roleUtilisateur == 'ROLE_CLIENT') %}{% set RoleUser = 'Client' %}
+                                                {% elseif ( user.roleUtilisateur == 'ROLE_GESTIONNAIRE') %}{% set RoleUser = 'Gestionnaire' %}
+                                                {% elseif ( user.roleUtilisateur == 'ROLE_CHEF') %}{% set RoleUser = 'BU Manager' %}
+                                                {% endif %}
+                                                <tr class="row1">
+                                                    <td class="cell1">
+                                                        <a type="button" class="btn btn-default btn-sm"
+                                                           href="{{ path('addUser', {'bu': bu.id, 'user': user.id}) }}">
+                                                            <i class="fas fa-plus"></i>
+                                                        </a></td>
+                                                    <td class="cell1">{{ user.prenomUtilisateur }} {{ user.nomUtilisateur }}</td>
+                                                    <td class="cell1">{{ RoleUser }} </td>
+                                                </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block script %}
+    {{ parent() }}
+    <script>
+        $("table").each(function (index) {
+            $(this).dataTable();
+        });
+    </script>
+{% endblock %}

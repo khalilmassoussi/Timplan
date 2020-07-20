@@ -1,0 +1,19 @@
+GestionDesClients_show:
+    path:     /{codeClient}/show
+    defaults: { _controller: "TimSoftGeneralBundle:Client:show" }
+    methods:  GET
+
+GestionDesClients_new:
+    path:     /new
+    defaults: { _controller: "TimSoftGeneralBundle:Client:new" }
+    methods:  [GET, POST]
+
+GestionDesClients_edit:
+    path:     /{codeClient}/edit
+    defaults: { _controller: "TimSoftGeneralBundle:Client:edit" }
+    methods:  [GET, POST]
+
+GestionDesClients_delete:
+    path:     /{codeClient}/delete
+    defaults: { _controller: "TimSoftGeneralBundle:Client:delete" }
+    methods:  DELETE

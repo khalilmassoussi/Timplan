@@ -1,0 +1,132 @@
+GestionDesClients_index:
+  path:     /Clients
+  defaults: { _controller: "TimSoftGeneralBundle:Client:index" }
+  methods:  GET
+
+GestionDesClients_show:
+  path:     /{codeClient}/show
+  defaults: { _controller: "TimSoftGeneralBundle:Client:show" }
+  methods:  GET
+
+GestionDesClients_new:
+  path:     /new
+  defaults: { _controller: "TimSoftGeneralBundle:Client:new" }
+  methods:  [GET, POST]
+
+GestionDesClients_edit:
+  path:     /{codeClient}/edit
+  defaults: { _controller: "TimSoftGeneralBundle:Client:edit" }
+  methods:  [GET, POST]
+
+GestionDesClients_delete:
+  path:     /{codeClient}/delete
+  defaults: { _controller: "TimSoftGeneralBundle:Client:delete" }
+  methods:  DELETE
+
+#Pour la redirection apres le LOGIN
+tim_soft_client_homepage:
+  path:     /
+  defaults: { _controller: "TimSoftGeneralBundle:Default:redirectionUtilisateur" }
+appBundle_resize:
+  path:     /accueil/calendar/resize
+  defaults: { _controller: TimSoftGeneralBundle:Planning:resizeEvent }
+  methods:  [GET, POST]
+appBundle_drop:
+  path:     /calendar/drop
+  defaults: { _controller: TimSoftGeneralBundle:Planning:dropEvent }
+  methods:  [GET, POST]
+list:
+  path:     /list/{user}
+  defaults: { _controller: TimSoftGeneralBundle:Planning:list }
+  methods:  [GET, POST]
+  options:
+    expose: true
+appBundle_add:
+  path:     /calendar/add
+  defaults: { _controller: TimSoftGeneralBundle:Planning:addEvent }
+  methods:  [GET, POST]
+mesPlans:
+  path:    /mesplans
+  defaults:  { _controller: TimSoftGeneralBundle:Planning:mesPlans }
+  methods:  [GET, POST]
+plans:
+  path:    /plans
+  defaults:  { _controller: TimSoftGeneralBundle:Planning:plans }
+  methods:  [GET, POST]
+calcul:
+  path:    /calcul
+  defaults:  { _controller: TimSoftGeneralBundle:Planning:calculate }
+  methods:  [GET]
+buPlans:
+  path:    /bu/plans
+  defaults:  { _controller: TimSoftGeneralBundle:Planning:BuPlan }
+  methods:  [GET, POST]
+getbuPlans:
+  path:    get/bu/plans
+  defaults:  { _controller: TimSoftGeneralBundle:Planning:ByBu }
+  methods:  [GET, POST]
+ModificationPlanning:
+  path:    planning/modification
+  defaults:  { _controller: TimSoftGeneralBundle:Planning:modification }
+  methods:  [POST]
+AccompagnementPlanning:
+  path:    planning/accompagnement
+  defaults:  { _controller: TimSoftGeneralBundle:Planning:accompagnement }
+  methods:  [GET, POST]
+GetMyPlans:
+  path:    myPlannings
+  defaults:  { _controller: TimSoftGeneralBundle:Planning:getByUser }
+  methods:  [GET, POST]
+getByBu:
+  path:    /Planning/Bu
+  defaults:  { _controller: TimSoftGeneralBundle:Planning:getByBu }
+  methods:  [GET, POST]
+allPlans:
+  path:    /allPlannings
+  defaults:  { _controller: TimSoftGeneralBundle:Planning:allPlans }
+  methods:  [GET, POST]
+deletePlanning:
+  path:    /planning/delete
+  defaults:  { _controller: TimSoftGeneralBundle:Planning:delete }
+  methods:  [GET, POST]
+telechargementPlanning:
+  path:    /planning/telecharger
+  defaults:  { _controller: TimSoftGeneralBundle:Planning:telechargerPlanning }
+dashboard:
+  path:    /dashboard
+  defaults:  { _controller: TimSoftGeneralBundle:Default:dashboard }
+
+planningByUser:
+  path:    /planning/client
+  defaults:  { _controller: TimSoftGeneralBundle:Planning:PlanningByClient }
+planningsByUser:
+  path:    /planning/user
+  defaults:  { _controller: TimSoftGeneralBundle:Planning:listPlans }
+  methods:  [GET]
+  options:
+    expose: true
+
+jsonPlanningByClient:
+  path:    /jsonPlanningByClient/{id}
+  defaults:  { _controller: TimSoftGeneralBundle:Planning:jsonPlanningByClient }
+  options:
+    expose: true
+jsonPlanningByLc:
+  path:    /jsonPlanningByLc/{id}
+  defaults:  { _controller: TimSoftGeneralBundle:Planning:getByLc }
+  options:
+    expose: true
+
+logs:
+  path:    /logs
+  defaults:  { _controller: TimSoftGeneralBundle:Default:log }
+auth:
+  path:    /Ologin
+  defaults:  { _controller: TimSoftGeneralBundle:Default:auth }
+outlook:
+  path:    /authorize
+  defaults:  { _controller: TimSoftGeneralBundle:Default:outlook }
+oCalendar:
+  path:    /oCalendar
+  defaults:  { _controller: TimSoftGeneralBundle:Default:oCalendar }
+

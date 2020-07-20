@@ -1,0 +1,201 @@
+{% extends 'Squelette.html.twig' %}
+
+{% block Titre %}
+    Portail web de TimSoft - Les clients
+{% endblock %}
+
+{% block Section %} Gestion des clients
+    <small>Consulter la liste des clients</small>
+{% endblock %}
+
+{% block Navigation %}
+    <li class="breadcrumb-item active">Consulter la liste des clients</li>
+{% endblock %}
+{% block SideBar %}
+{% endblock %}
+{% block Contenu %}
+
+    <div class="col-md-12">
+        {% for message in app.flashes('OK-Suppression-Client') %}
+            <div class="flash-notice">
+                <body onLoad="$('#my-modal').modal('show');">
+                <div id="my-modal" class="modal fade">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+
+                                <h4 class="modal-title">Validation de suppression</h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                {{ message }}
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </body>
+            </div>
+        {% endfor %}
+
+        {% for message in app.flashes('OK-Import-Client') %}
+            <div class="flash-notice">
+                <body onLoad="$('#my-modal').modal('show');">
+                <div id="my-modal" class="modal fade">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Validation de l'import des clients</h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                {{ message }}
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </body>
+            </div>
+        {% endfor %}
+        <!--   <div style="border: 2px solid #1E5584; padding: 3px; background-color: #FFFFFF; -moz-border-radius-topleft: 5px; -moz-border-radius-topright: 5px; -moz-border-radius-bottomright: 5px; -moz-border-radius-bottomleft: 5px;">-->
+        <div class="card">
+            <div class="card-header with-border">
+                <h2 class="card-title" style="color:#1E5584">Liste de tous les clients</h2>
+            </div>
+
+            <div class="card-body">
+                <br>
+                {% if ('Gestion des clients' in Rubriques) %}
+                    <div align="right" style="padding-right: 0px; padding-bottom: 5px">
+                        {% if AutorisationAcces('AjouterClient' , Utilisateur) %}
+                            <a href="{{ path('AjouterClient') }}" class="btn btn-default"><i class="fas fa-plus"></i>
+                                Ajouter
+                                un client </a>
+                        {% endif %}
+                        {% if AutorisationAcces('ImporterClients' , Utilisateur) %}
+                            <a href="{{ path('ImporterClients') }}" class="btn btn-default"><i
+                                        class="fas fa-file-import"></i> Importer
+                                des clients</a>
+                        {% endif %}
+                    </div>
+                {% endif %}
+                <br>
+                <table id="TableClient" class="table table-bordered table-striped dataTable" style="width:100%">
+                    <thead>
+                    <tr class="row1 header blue">
+                        <th class="cell1">
+                            Code
+                        </th>
+                        <th class="cell1">
+                            Société
+                        </th>
+                        <th class="cell1">
+                            E-Mail
+                        </th>
+                        <th class="cell1">
+                            Téléphone
+                        </th>
+                        <th class="cell1">
+                            Action
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for client in clients %}
+                        <tr class="row1">
+                            <td class="cell1">
+                                {{ client.codeClient }}
+                            </td>
+                            <td class="cell1">
+                                {{ client.raisonSociale }}
+                            </td>
+                            <td class="cell1">
+                                {{ client.adresseMailClient }}
+                            </td>
+                            <td class="cell1">
+                                {{ client.telephone }}
+                            </td>
+                            <td class="cell1" style="text-align: center">
+                                {% if AutorisationAcces('ConsulterUnClient' , Utilisateur) %}
+                                    <a href="{{ path('ConsulterUnClient', { 'id': client.id }) }}"><i
+                                                class="fas fa-search fa-lg" title="Consulter {{ client.raisonSociale }}"></i></a>
+                                {% endif %}
+                                {% if AutorisationAcces('ModifierClient' , Utilisateur) %}
+                                    <a href="{{ path('ModifierClient', { 'id': client.id }) }}"><i
+                                                class="fas fa-edit fa-lg" title="Modifier {{ client.raisonSociale }}"></i></a>
+                                {% endif %}
+                                {% if AutorisationAcces('SupprimerUnClient' , Utilisateur) %}
+                                    <a href="{{ path('SupprimerUnClient', { 'id': client.id }) }}"><i
+                                                class="fas fa-trash-alt fa-lg"
+                                                title="Supprimer {{ client.raisonSociale }}"
+                                        style="color: #dc3545"></i></a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <br>
+            </div>
+        </div>
+        <br><br>
+    </div>
+{% endblock %}
+
+{% block script %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var table = $('#TableClient').DataTable({
+                language: {
+                    processing: "Traitement en cours...",
+                    search: "Rechercher&nbsp;:",
+                    lengthMenu: "Afficher _MENU_ &eacute;l&eacute;ments",
+                    info: "Affichage de l'&eacute;lement _START_ &agrave; _END_ sur _TOTAL_ &eacute;l&eacute;ments",
+                    infoEmpty: "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
+                    infoFiltered: "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
+                    infoPostFix: "",
+                    loadingRecords: "Chargement en cours...",
+                    zeroRecords: "Aucun &eacute;l&eacute;ment &agrave; afficher",
+                    emptyTable: "Aucune donnée disponible dans le tableau",
+                    paginate: {
+                        first: "Premier",
+                        previous: "Précédent",
+                        next: "Suivant",
+                        last: "Dernier"
+                    },
+                    aria: {
+                        sortAscending: ": activer pour trier la colonne par ordre croissant",
+                        sortDescending: ": activer pour trier la colonne par ordre décroissant"
+                    },
+                    "processing": true,
+                    "serverSide": true,
+                    /*"ajax": "''"*/
+                },
+                "paging": true,
+                "ordering": true,
+                "info": true,
+                "aoColumns": [
+                    null,
+                    null,
+                    null,
+                    null,
+                    {"bSortable": false}
+                ],
+                "columnDefs": [
+                    {"width": "12%", "targets": 4},
+                    {"width": "35%", "targets": 1},
+                    {"width": "20%", "targets": 2}
+                ]
+            });
+
+        });
+    </script>
+{% endblock %}

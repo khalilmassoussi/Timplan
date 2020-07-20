@@ -1,0 +1,199 @@
+{% extends 'Squelette.html.twig' %}
+
+{% block Titre %}
+    Portail web de TimSoft - Suppression de {{ client.raisonSociale }}
+{% endblock %}
+
+{% block Section %}
+    Gestion des clients
+    <small>Suppression d'un client</small>
+{% endblock %}
+
+
+{% block Navigation %}
+    {% if AutorisationAcces('ConsulterClient' , Utilisateur) %}
+        <li class="breadcrumb-item"><a href="{{ path('ConsulterClient') }}">Consulter la liste de tous les clients</a>
+        </li>
+    {% endif %}
+    <li class="breadcrumb-item active">Suppression d'un client</li>
+{% endblock %}
+
+
+{% block Contenu %}
+    <div class="col-md-12">
+    <div class="card">
+    <div class="card-header with-border">
+        <h2 class="card-title" style="color:#1E5584">Informations de <b>{{ client.raisonSociale }}</b></h2>
+        <div class="card-tools pull-center">
+        </div>
+    </div>
+    {% if client is defined %}
+        <br>
+        <div class="card-body" id="DivCente">
+            <div class="row">
+                <div class="col-md-6">
+                    <table width="400">
+                        <tr>
+                            <th scope="row" style="padding: 15px 0px 0px 0px">
+                                <div align="left">Code Client :</div>
+                            </th>
+                            <td style="padding: 15px 0px 0px 0px">{{ client.codeClient }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row" style="padding: 15px 0px 0px 0px">
+                                <div align="left">Adresse:</div>
+                            </th>
+                            <td style="padding: 15px 0px 0px 0px">{{ client.adresseClient }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row" style="padding: 15px 0px 0px 0px">
+                                <div align="left">Ville:</div>
+                            </th>
+                            <td style="padding: 15px 0px 0px 0px">{{ client.villeClient }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row" style="padding: 15px 0px 0px 0px">
+                                <div align="left">Téléphone:</div>
+                            </th>
+                            <td style="padding: 15px 0px 0px 0px">{{ client.telephone }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row" style="padding: 15px 0px 0px 0px">
+                                <div align="left">Email:</div>
+                            </th>
+                            <td style="padding: 15px 0px 0px 0px">{{ client.adresseMailClient }}</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-md-6">
+                    <table width="400">
+                        <tr>
+                            <th scope="row" style="padding: 15px 0px 0px 0px">
+                                <div align="left">Société:</div>
+                            </th>
+                            <td style="padding: 15px 0px 0px 0px">{{ client.raisonSociale }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row" style="padding: 15px 0px 0px 0px">
+                                <div align="left">Pays:</div>
+                            </th>
+                            <td style="padding: 15px 0px 0px 0px">{{ client.paysClient }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row" style="padding: 15px 0px 0px 0px">
+                                <div align="left">Ville:</div>
+                            </th>
+                            <td style="padding: 15px 0px 0px 0px">{{ client.villeClient }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row" style="padding: 15px 0px 0px 0px">
+                                <div align="left">Code postal:</div>
+                            </th>
+                            <td style="padding: 15px 0px 0px 0px">{{ client.codePostalClient }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row" style="padding: 15px 0px 0px 0px">
+                                <div align="left">Fax:</div>
+                            </th>
+                            <td style="padding: 15px 0px 0px 0px">{{ client.faxClient }}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <br><br>
+            <div style="padding:5px">
+                <h4> Suite à la suppression de <b>{{ client.raisonSociale }},</b> toutes ces informations seront
+                    supprimées</h4>
+                <ul>
+                    {% if (ClientsASupprimer|length)== 0 and (UserASupprimer|length)== 0 and (FacturesASupprimer|length)==0 and (FeuillesASupprimer|length)==0 %}
+                        Aucune information
+                    {% endif %}
+                    {% if (ClientsASupprimer|length)>0 %}
+                        <li>Client(s):</li>
+                        <ol>
+                            {% for ClientToDelete in ClientsASupprimer %}
+                                <li> {{ ClientToDelete.raisonSociale }}</li>
+                            {% endfor %}
+                        </ol>
+                    {% endif %}
+
+                    {% if (UserASupprimer|length)>0 %}
+                        <br>
+                        <li>Utilisateur(s):</li>
+                        <ol>
+                            {% for UserToDelete in UserASupprimer %}
+                                <li> {{ UserToDelete.nomUtilisateur }} {{ UserToDelete.prenomUtilisateur }}
+                                    (Société: {{ UserToDelete.client }})
+                                </li>
+                            {% endfor %}
+                        </ol>
+                    {% endif %}
+
+                    {% if (FacturesASupprimer|length)>0 %}
+                        <br>
+                        <li>Factures(s):</li>
+                        <ol>
+                            {% for FactureToDelete in FacturesASupprimer %}
+                                <li> {{ FactureToDelete }} </li>
+                            {% endfor %}
+                        </ol>
+                    {% endif %}
+
+                    {% if (FeuillesASupprimer|length)>0 %}
+                        <br>
+                        <li>Feuille(s) de Présence:</li>
+                        <ol>
+                            {% for FeuilleToDelete in FeuillesASupprimer %}
+                                <li> {{ FeuilleToDelete }} </li>
+                            {% endfor %}
+                        </ol>
+                    {% endif %}
+
+                    {% if (RapportsASupprimer|length)>0 %}
+                        <br>
+                        <li>Rapport(s) d'intervention:</li>
+                        <ol>
+                            {% for RapportToDelete in RapportsASupprimer %}
+                                <li> {{ RapportToDelete }} </li>
+                            {% endfor %}
+                        </ol>
+                    {% endif %}
+                </ul>
+            </div>
+            {% if AutorisationAcces('SupprimerClient' , Utilisateur) %}
+                <div class="form-group">
+                    <a href="#" data-href="{{ path('SupprimerClient', { 'id': client.id }) }}"
+                       class="btn btn-primary btn-block btn-flat" data-toggle="modal" data-target="#confirm-delete">Supprimer</a>
+                </div>
+            {% endif %}
+
+        </div>
+        </div>
+        </div>
+        <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        Confirmation de suppression
+                    </div>
+                    <div class="modal-body">
+                        Voulez-vous vraiment supprimer {{ client.raisonSociale }} ?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                        <a class="btn btn-primary btn-ok">Supprimer</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
+{% block script %}
+    {{ parent() }}
+    <script>
+        $('#confirm-delete').on('show.bs.modal', function (e) {
+            $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
+        });
+    </script>
+{% endblock %}

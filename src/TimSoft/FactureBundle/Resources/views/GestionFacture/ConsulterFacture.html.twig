@@ -1,0 +1,224 @@
+{% extends 'Squelette.html.twig' %}
+
+{% block Titre %}
+    {% if typeFacture is defined %}
+        Portail web de TimSoft - Liste des Factures dont le statut est {{typeFacture}}
+    {%else%}
+         Portail web de TimSoft - Liste des Factures
+    {% endif%}
+{%endblock %}
+
+{%block Section %} 
+    <h1>
+        Gestion des factures
+        <small>Consultation factures</small>
+    
+    </h1>
+{% endblock %}
+
+
+{% block Navigation %}
+    {% if typeFacture  is defined %}
+        <li class="active">Consulter la liste des factures dont le statut est {{typeFacture}}</li>
+    {%else%}
+        <li class="active">Consulter la liste des factures</li>
+    {% endif%}
+    {%endblock %}
+
+
+
+{%block Contenu %}
+    {% for message in app.flashes('OK-Suppression') %}
+    <div class="flash-notice">
+        <body onLoad="$('#my-modal').modal('show');">
+            <div id="my-modal" class="modal fade">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title">Validation de suppression</h4>
+                        </div>
+                        <div class="modal-body">
+                            {{message}}
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+                        </div>
+                    </div>
+                </div> 
+            </div>
+        </body>
+    </div>
+{% endfor %}
+    <div class="col-md-9">
+        <div class="box box-primary">
+            <div class="box-header with-border">
+    {% if typeFacture  is defined%}
+         <h2 class="box-title" style="color:#1E5584">Liste de toutes les factures dont le statut est {{typeFacture}}</h2> 
+    {%else%}
+         <h2 class="box-title" style="color:#1E5584">Liste de toutes les factures</h2>
+    {% endif%}
+           
+        </div>
+            <div class="box-body">
+                <br>
+                <div align="right" style="padding-right: 0px; padding-bottom: 5px">
+                            {% if AutorisationAcces('AjouterFacture' , Utilisateur) %} 
+                                <a href="{{path('AjouterFacture')}}"><img src="{{ asset('Template/add.png') }}">Ajouter une facture </a>
+                              {%endif%} 
+                            
+                           
+                </div>
+                <br>
+                <table id="TableFacture" class="display" style="width:100%">
+                    <thead>
+                    <tr class="row1 header blue">
+                        <th class="cell1">
+                            N° Facture
+                        </th>
+                        <th class="cell1">
+                            Client 
+                        </th>
+                        <th class="cell1">
+                            Date
+                        </th>
+                        <th class="cell1">
+                            Nature
+                        </th>
+                        <th class="cell1">
+                            Statut
+                        </th>
+                    <th class="cell1">
+                            Montant TTC
+                        </th>
+                        <th class="cell1">
+                    <center> Action </center>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for Facture in Factures%}
+                        <tr class="row1">
+                            <td class="cell1">
+                               <center> {{Facture.numeroFacture}} </center>
+                            </td>
+                            <td class="cell1">
+                                {{Facture.client}}
+                            </td>
+                            <td class="cell1">
+                                <center> {{Facture.dateFacture|date('d-m-Y')}} </center>
+                            </td>
+                            <td class="cell1">
+                               <center>  {{Facture.natureFacture}} </center>
+                            </td>
+                            <td class="cell1">
+                              {{Facture.statutFacture}}
+                              {#<button class="pull-right" id="Bouton1" onclick="EnableSelect()"><img src="{{ asset('Template/Editer.png') }}"></button>#}
+                            </td>
+                            <td class="cell1">
+                    <center> {{Facture.montantTTCFacture}} </center>
+                            </td>
+                            <td class="cell1">
+                               <center>  
+                                <a href="{{ path('ConsulterUneFacture', { 'id': Facture.id }) }}"><img src="{{ asset('Template/Consulter.png') }}"  title="Consulter la facture"></a>
+                                {% if is_granted('ROLE_ADMIN')%}
+                                <a href="{{ path('ModifierFacture', { 'id': Facture.id }) }}"><img src="{{ asset('Template/Editer.png') }}"  title="Modifier la facture"></a>
+                                <a href="{{ path('SupprimerUneFacture', { 'id': Facture.id }) }}"><img src="{{ asset('Template/SupprimerUser.png') }}"  title="Supprimer la facture"></a>
+                                {% endif %}
+                                {% if is_granted('ROLE_CLIENT')%}
+                                <a href="{{ path('ModifFactModal', { 'id': Facture.id }) }}"><img src="{{ asset('Template/Editer.png') }}"  title="Modifier le statut de la facture"></a>
+                                {% endif %}
+                                   
+
+                                <a href="{{ asset('uploads/Factures/')}}{{Facture.facturePDF}}"><img src="{{ asset('Template/Telecharger.png') }}"  title="Télécharger la facture"></a>
+                             </center></td>
+                        </tr>
+                       
+                    {% endfor%}
+                    </tbody>
+                </table>
+                    <br>
+            </div>
+        </div>
+    </div>
+     {#{{ render(controller('TimSoft\\FactureBundle\\Controller\\GestionFactureController::modifierFactureModalAction', {'id': 10})) }}
+      {{ render(controller('TimSoft\\FactureBundle\\Controller\\GestionFactureController::modifierFactureModalAction,
+        { 'max': 3 }')) }}
+      
+      #}
+
+  
+                    
+            {#         <div class="modal fade" id="Modif" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                Confirmation de suppression
+            </div>
+            <div class="modal-body">
+                Voulez Vous vraiment supprimer  ?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                <a class="btn btn-info btn-ok">Supprimer</a>
+            </div>
+        </div>
+    </div>
+</div>    #} 
+{% endblock %}
+
+{% block script %}
+  {{ parent() }}
+  <script type="text/javascript">
+        $(document).ready(function () {
+            var table = $('#TableFacture').DataTable({
+                language: {
+                    processing: "Traitement en cours...",
+                    search: "Rechercher&nbsp;:",
+                    lengthMenu: "Afficher _MENU_ &eacute;l&eacute;ments",
+                    info: "Affichage de l'&eacute;lement _START_ &agrave; _END_ sur _TOTAL_ &eacute;l&eacute;ments",
+                    infoEmpty: "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
+                    infoFiltered: "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
+                    infoPostFix: "",
+                    loadingRecords: "Chargement en cours...",
+                    zeroRecords: "Aucun &eacute;l&eacute;ment &agrave; afficher",
+                    emptyTable: "Aucune donnée disponible dans le tableau",
+                    paginate: {
+                        first: "Premier",
+                        previous: "Précédent",
+                        next: "Suivant",
+                        last: "Dernier"
+                    },
+                    aria: {
+                        sortAscending: ": activer pour trier la colonne par ordre croissant",
+                        sortDescending: ": activer pour trier la colonne par ordre décroissant"
+                    },
+                    "processing": true,
+                    "serverSide": true,
+                    /*"ajax": "''"*/
+                },
+                "paging": true,
+                "ordering": true,
+                "info": true,
+                "aoColumns": [
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    {"bSortable": false}
+                ],
+                "columnDefs": [
+                    {"width": "5%", "targets": 0},
+                    {"width": "15%", "targets": 2},
+                    {"width": "23%", "targets": 4},
+                    {"width": "14%", "targets": 6}                    
+                ]
+            });
+
+        });
+    </script>   
+    
+   
+{% endblock %}

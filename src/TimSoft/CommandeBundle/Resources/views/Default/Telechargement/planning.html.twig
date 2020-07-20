@@ -1,0 +1,92 @@
+{#<!DOCTYPE HTML>#}
+{#<html>#}
+{#<head>#}
+{#    <meta http-equiv="content-type" content="text/html;charset=utf-8"/>#}
+{#    <title>Planning du {{ "now"|date("m/d/Y") }} </title>#}
+{#    #}{#<link rel="stylesheet" href="style.css" type="text/css"/>#}
+{#    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">#}
+
+{#    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>#}
+{#    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>#}
+{#    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>#}
+{#    <style>#}
+{#        header {#}
+{#            padding: 10px 10px; /*Marge verticale*/#}
+{#            background-color: #1E5584; /*Couleur de fond*/#}
+{#        }#}
+
+{#        html, body, p {#}
+{#            margin: 0;#}
+{#            padding: 0;#}
+{#        }#}
+
+{#        .contentStyle {#}
+{#            margin: 10px 25px 80px 25px; /*centrer la colonne*/#}
+{#            padding: 25px; /*margin interne*/#}
+{#        }#}
+
+{#        footer {#}
+{#            background-color: #1E5584; /*Couleur de fond*/#}
+{#            padding: 10px 10px 21px 0px; /*Marge verticale*/#}
+{#            position: absolute;#}
+{#            bottom: 0px;#}
+{#            width: 100%;#}
+{#            text-align: center; /*texte centré*/#}
+{#            color: #FFFFFF;#}
+{#        }#}
+{#    </style>#}
+{#</head>#}
+{#<body>#}
+{#<header>#}
+{#    <center><img src="{{ app.request.getSchemeAndHttpHost()~ asset('Template/LogoTimsoft2017.jpg') }}">#}
+{#    </center>#}
+{#</header>#}
+{#<div style=" text-align: center;"><h1>Mes plannings#}
+{#        du {{ "now"|localizeddate('none', 'none', null, null, 'MMMM Y') }} </h1></div>#}
+{#<div class="contentStyle">#}
+{#    <table style="width: 100%" class="table table-striped">#}
+{#        <thead style="text-decoration-color: white">#}
+{#        <tr >#}
+{#            <th >Date</th>#}
+{#            <th >Client</th>#}
+{#            <th >Libelle Intervention</th>#}
+{#            <th >Commande</th>#}
+{#        </tr>#}
+{#        </thead>#}
+{#        <tbody>#}
+{#        {% for pl in plannings %}#}
+{#            <tr>#}
+{#                <td >#}
+{#                    {{ pl.start|date("d/m/Y") }}#}
+{#                </td>#}
+{#                <td >#}
+{#                    {{ pl.lc.commande.client.raisonSociale }}#}
+{#                </td>#}
+{#                <td >{{ pl.lc.libelle }}</td>#}
+{#                <td >#}
+{#                    {{ pl.lc.commande.nCommande }}#}
+{#                </td>#}
+{#            </tr>#}
+{#        {% endfor %}#}
+{#        </tbody>#}
+{#    </table>#}
+{#</div>#}
+{#<footer>#}
+{#    <strong>7, AV Taher ben Ammar, El Manar II-2092 Tunis. TUNISIE <br></strong>#}
+{#    <strong>Tél:</strong>+216 70 860 870 / 70 860 122 <strong>Fax:</strong> +216 71 884 132 <strong>E-mail:</strong>#}
+{#    contacts@timsoft.com.tn#}
+{#</footer>#}
+{#</body>#}
+{#</html>#}
+{% xlsdocument %}
+    {% xlssheet 'Worksheet' %}
+        {% xlsrow %}
+            {% xlscell { style: { font: { size: '18' } } } %}Values{% endxlscell %}
+        {% endxlsrow %}
+        {% for value in data %}
+            {% xlsrow %}
+                {% xlscell %}{{ value }}{% endxlscell %}
+            {% endxlsrow %}
+        {% endfor %}
+    {% endxlssheet %}
+{% endxlsdocument %}

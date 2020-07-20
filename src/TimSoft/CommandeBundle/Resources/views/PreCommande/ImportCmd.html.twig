@@ -1,0 +1,92 @@
+{% extends 'Squelette.html.twig' %}
+
+{% block Titre %}
+    Portail web de TimSoft - Importation des précommandes
+{% endblock %}
+
+{% block Section %} Gestion des précommandes
+    <small>Importation des précommandes</small>
+{% endblock %}
+
+
+{% block Navigation %}
+    <li class="breadcrumb-item active">Importation des précommandes</li>
+{% endblock %}
+{% block SideBar %}
+{% endblock %}
+{% block Contenu %}
+    {% for message in app.flashes('Erreur') %}
+        <div class="flash-notice">
+            <body onLoad="$('#my-modal').modal('show');">
+            <div id="my-modal" class="modal fade">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title">Erreur d'importation !</h4>
+                        </div>
+                        <div class="modal-body">
+                            {{ message }}
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </body>
+        </div>
+    {% endfor %}
+    <div class="col-md-12">
+        <div class="card">
+            {#            <div class=" card-header with-border">#}
+            {#                <h2 class="card-title" style="color:#1E5584">Importation des commandes</h2>#}
+            {#            </div>#}
+            <div class="card-body">
+                {{ form_start(form) }}
+                {{ form_errors(form.listeCmd) }}
+                <br>
+                <label>Pour importer des RAL, assurez-vous que votre fichier Excel est de la forme
+                    suivante:</label>
+                <br>
+                <img src="{{ asset('Template/format excel.PNG') }}" width="100%" height="60px">
+                <div class="row">
+                    <div class="col-md-6">
+
+                        <br>
+
+                        <div class="form-group">
+                            <label>Sélectionner le fichier à importer</label>
+                            {{ form_widget(form.listeCmd , {'attr' : {'class' : 'form-control-file'}} ) }}
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+            <table align="center" width="50%">
+                <tr>
+                    <td width="50%">
+                        <div class="form-group" align="center">
+                            <button type="reset" class="btn btn-default btn-block">
+                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                Annuler
+                            </button>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group" align="center">
+                            <button type="submit" class="btn btn-primary btn-block"><span
+                                        class="glyphicon glyphicon-import" aria-hidden="true"></span>Importer
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+            {{ form_widget(form._token) }}
+            {{ form_end(form) }}
+
+        </div>
+    </div>
+{% endblock %}
+

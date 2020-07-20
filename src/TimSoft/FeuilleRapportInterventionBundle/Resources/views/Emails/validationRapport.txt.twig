@@ -1,0 +1,29 @@
+{% set Feuille = Rapport.FeuilleDePresence %}
+<h3>Informations sur l'intervention du {{Feuille.dateIntervention|date('d-m-Y')}} effectuée par {{Feuille.intervenant}} !</h3>
+<b>Intervenant:</b>  {{Feuille.intervenant}} <br>
+<b>Client:</b>  {{Feuille.client}} <br>
+<b>N° Commande: </b>{{ Feuille.intervention.lc.commande.nCommande }}<br>
+<b>Libellé: </b>{{ Feuille.intervention.lc.libelle }}<br>
+{% if not(Feuille.heureDebutInterventionMatin == null) %}
+    <b>Horaire d'intervention (Matin) :</b> de {{Feuille.heureDebutInterventionMatin|date('H:i')}} à {{Feuille.heureFinInterventionMatin|date('H:i')}}<br>
+{% endif %}
+ {% if not(Feuille.heureDebutInterventionAM == null) %}
+    <b>Horaire d'intervention (Après-Midi) :</b> de {{Feuille.heureDebutInterventionAM|date('H:i')}} à {{Feuille.heureFinInterventionAM|date('H:i')}} <br>
+{% endif %}
+<b> Statut: </b>{{ Feuille.intervention.statut}}<br>
+<b> Lieu: </b>{{ Feuille.lieuIntervention}}<br>
+
+<b>Participants:</b><br>
+{% for Participant in Feuille.participants %}
+    -  {{Participant.nomParticipant}} {{Participant.prenomParticipant}}<br>
+{% endfor%}
+<b>Accompagnants:</b><br>
+{% for accomp in Feuille.intervention.accompagnements %}
+    -  {{ accomp.nomUtilisateur }} {{ accomp.prenomUtilisateur }}<br>
+{% endfor %}
+<b>Chef de projet client: </b>{{ Feuille.intervention.confirmePar }} <br><br>
+<b>Rapport de l'intervention: <b>{{ Rapport.compteRenduIntervention }}<br><br>
+<b>Remarque Client: <b>{{ Rapport.remarqueClient }}<br><br>
+
+Cordialement,<br>
+Direction des Opérations Timsoft !

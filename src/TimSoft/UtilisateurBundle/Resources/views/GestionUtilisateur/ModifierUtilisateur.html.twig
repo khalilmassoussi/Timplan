@@ -1,0 +1,118 @@
+{% extends 'Squelette.html.twig' %}
+
+{% block Titre %}
+    Portail web de TimSoft - MAJ du profil de
+{% endblock %}
+
+{% block Section %}
+    Gestion des utilisateurs
+    <small>Modification d'un utilisateur</small>
+{% endblock %}
+
+{% block Navigation %}
+    <li><a href="{{ path('ConsulterUtilisateur') }}">Consulter la liste des utilisateurs</a></li>
+    <li class="active">Modification d'un utilisateur</li>
+{% endblock %}
+{% block SideBar %}
+{% endblock %}
+{% block Contenu %}
+    {% trans_default_domain 'FOSUserBundle' %}
+    <div class="col-md-12">
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h2 class="box-title" style="color:#1E5584">Informations de </h2>
+                <div class="box-tools pull-center">
+                </div>
+            </div>
+            <div class="box-body">
+                <div class="row">
+                    {{ form_start(form, { 'action': path('fos_user_profile_edit'), 'attr': { 'class': 'fos_user_profile_edit' } }) }}
+                    {{ form_widget(form) }}
+                    <div class="col-md-6">
+
+                        <div class="form-group">
+                            <label>Nom</label>
+                            <input type="text" class="form-control" id="Nom" placeholder="Nom...">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="text" class="form-control" id="Mail" placeholder="Adresse Mail...">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Téléphone</label>
+                            <input type="tel" class="form-control" id="Tel" placeholder="Numéro de téléphone...">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Société</label>
+                            <input type="text" class="form-control" id="SocieteMere" placeholder="Société...">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Prénom</label>
+                            <input type="text" class="form-control" id="Prenom" placeholder="Prénom...">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Mot de passe</label>
+                            <input type="password" class="form-control" id="MDP" placeholder="Mot de passe...">
+                        </div>
+                        <div class="form-group">
+                            <label>Catégorie</label>
+                            <select class="form-control select2" style="width: 100%;">
+                                <option selected="selected"></option>
+                                <option>Administrateur</option>
+                                <option>Client</option>
+                                <option>Consultant</option>
+                            </select>
+                        </div>
+                        {{ form_widget(form.bus) }}
+                    </div>
+                    {{ form_end(form) }}
+                </div>
+
+                <br>
+                <div class="form-group">
+                    <button type="reset" class="btn btn-primary btn-block btn-flat">Annuler</button>
+                </div>
+                <div class="form-group">
+                    <a href="#" class="btn btn-primary btn-block btn-flat" data-toggle="modal"
+                       data-target="#confirm-modif">Enregister modification(s)</a>
+                    {#<button type="submit" class="btn btn-primary btn-block btn-flat">Enregister modification(s)</button>#}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="confirm-modif" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    Confirmation de Modification
+                </div>
+                <div class="modal-body">
+                    Voulez Vous continuer ?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                    <a class="btn btn-primary btn-ok" onclick="$('form[name=form_modif]').submit();">Continuer</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+
+
+
+{#
+{% extends "@FOSUser/layout.html.twig" %}
+
+{% block fos_user_content %}
+{% include "@FOSUser/Profile/edit_content.html.twig" %}
+{% endblock fos_user_content %}#}

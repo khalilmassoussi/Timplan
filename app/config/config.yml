@@ -1,0 +1,203 @@
+imports:
+    - { resource: parameters.yml }
+    - { resource: security.yml }
+    - { resource: services.yml }
+    - { resource: "@TimSoftBuBundle/Resources/config/services.yml" }
+    - { resource: "@TimSoftCommandeBundle/Resources/config/services.yml" }
+    - { resource: doctrine_extensions.yml }
+    - { resource: "@TimSoftTasksBundle/Resources/config/services.yml" }
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
+parameters:
+    locale: fr
+    DossierFactures: '%kernel.project_dir%/web/uploads/Factures'
+    DossierFichiersJoin: '%kernel.project_dir%/web/uploads/FichiersJoin'
+
+framework:
+    templating:
+        engines: ['twig']
+    serializer:
+        enabled: true
+    #esi: ~
+    translator: { fallbacks: ['%locale%'] }
+    secret: '%secret%'
+    router:
+        resource: '%kernel.project_dir%/app/config/routing.yml'
+        strict_requirements: ~
+    form: ~
+    csrf_protection: ~
+    validation: { enable_annotations: true }
+    #serializer: { enable_annotations: true }
+    default_locale: '%locale%'
+    trusted_hosts: ~
+    session:
+        # https://symfony.com/doc/current/reference/configuration/framework.html#handler-id
+        handler_id: session.handler.native_file
+        save_path: '%kernel.project_dir%/var/sessions/%kernel.environment%'
+    fragments: ~
+    http_method_override: true
+    assets: ~
+    php_errors:
+        log: true
+
+# Twig Configuration
+twig:
+    debug: '%kernel.debug%'
+    strict_variables: '%kernel.debug%'
+    form_themes:
+        - DependentSelectBundle::fields.html.twig
+
+
+# Doctrine Configuration
+doctrine:
+    dbal:
+        driver: pdo_mysql
+        host: '%database_host%'
+        port: '%database_port%'
+        dbname: '%database_name%'
+        user: '%database_user%'
+        password: '%database_password%'
+        charset: UTF8
+        mapping_types:
+            enum: string
+        # if using pdo_sqlite as your database driver:
+        #   1. add the path in parameters.yml
+        #     e.g. database_path: '%kernel.project_dir%/var/data/data.sqlite'
+        #   2. Uncomment database_path in parameters.yml.dist
+        #   3. Uncomment next line:
+        #path: '%database_path%'
+
+    orm:
+        auto_generate_proxy_classes: '%kernel.debug%'
+        naming_strategy: doctrine.orm.naming_strategy.underscore
+        auto_mapping: true
+        mappings:
+            loggable:
+              type: annotation
+              alias: Gedmo
+              prefix: Gedmo\Loggable\Entity
+              dir: "%kernel.root_dir%/../vendor/gedmo/doctrine-extensions/lib/Gedmo/Loggable/Entity"
+        dql:
+            datetime_functions:
+                DAY: DoctrineExtensions\Query\Mysql\Day
+                MONTH: DoctrineExtensions\Query\Mysql\Month
+                YEAR: DoctrineExtensions\Query\Mysql\Year
+                DATE: DoctrineExtensions\Query\Mysql\Date
+                TIME: DoctrineExtensions\Query\Mysql\Time
+
+# Swiftmailer Configuration
+swiftmailer:
+#    transport: 'mail'
+#    host: 'ssl0.ovh.net'
+#    username: 'timplan@timsoft.net'
+#    password: 'timplanTIMPLAN2020'
+#    encryption: 'ssl'
+#    port: 587
+    transport: 'smtp'
+    host: '127.0.0.1'
+    username: ''
+    password: ''
+#    encryption: 'tls'
+    port: 1025
+#    auth_mode: 'login'
+#    pool: true,
+#    spool:
+#        type: file
+#        path: '%kernel.root_dir%/spool'
+    antiflood:
+        threshold:            1
+        sleep:                1
+#    maxMessages: 3
+     # spool: { type: memory }
+
+# NelmioApiDocBundle Configuration
+nelmio_api_doc:
+    areas:
+        path_patterns: # an array of regexps
+            - ^/api(?!/doc$)
+        
+services:
+    tim_soft_general.registration.form.type:
+        class: TimSoft\GeneralBundle\Form\UtilisateurType
+        arguments: [%fos_user.model.user.class%]
+        tags:
+            - { name: form.type, alias: timsoft_ajouter_un_utilisateur }     
+
+# Configuration FOSUserBundle
+fos_user:
+    db_driver: orm
+    firewall_name: main
+    user_class: TimSoft\GeneralBundle\Entity\Utilisateur
+    service:
+        mailer: fos_user.mailer.twig_swift
+    from_email:
+        address: "timplan@timsoft.net"
+        sender_name: "Administrateur TimSoft"
+    registration:
+        confirmation: 
+            enabled: true
+       
+# Configuration vich_uploader pour la gestion des fichiers
+vich_uploader:
+    db_driver: orm
+    mappings:
+        UploadFacture:
+            uri_prefix: /uploads/Factures
+            upload_destination: '%kernel.project_dir%/web/uploads/Factures'
+            namer:
+                service: vich_uploader.namer_origname
+            inject_on_load: false
+            delete_on_update: true
+            delete_on_remove: true
+        UploadFichierJoin:
+            uri_prefix: /uploads/FichiersJoin
+            upload_destination: '%kernel.project_dir%/web/uploads/FichiersJoin'
+            namer:
+                service: vich_uploader.namer_origname
+            inject_on_load: false
+            delete_on_update: true
+            delete_on_remove: true
+        UploadPhotoDeProfil:
+            uri_prefix: /uploads/PhotoDeProfil
+            upload_destination: '%kernel.project_dir%/web/uploads/PhotoDeProfil'
+            namer:
+                service: vich_uploader.namer_origname
+            inject_on_load: false
+            delete_on_update: true
+            delete_on_remove: true
+
+# Configuration de knp_paginator pour la gestion de pagination
+knp_paginator:
+    page_range: 5                       # number of links showed in the pagination menu (e.g: you have 10 pages, a page_range of 3, on the 5th page you'll see links to page 4, 5, 6)
+    default_options:                                 
+        page_name: page                 # page query parameter name
+        sort_field_name: sort           # sort field query parameter name
+        sort_direction_name: direction  # sort direction query parameter name
+        distinct: true                  # ensure distinct results, useful when ORM queries are using GROUP BY statements
+        filter_field_name: filterField  # filter field query parameter name
+        filter_value_name: filterValue  # filter value query paameter name
+    template:                                        
+        pagination: '@KnpPaginator/Pagination/twitter_bootstrap_v3_pagination.html.twig'     # sliding pagination controls template                                    
+        sortable: '@KnpPaginator/Pagination/sortable_link.html.twig' # sort link template                                
+        filtration: '@KnpPaginator/Pagination/filtration.html.twig'  # filters template
+        
+# NotificationsBundle configuration
+notifications:
+    app_id:     "517609"
+    app_key:    "59ef4233a2d396ab0a83"
+    app_secret: "629556fa84b9fa048a6a"
+    cluster:    "eu"
+    # Optional
+    # Default false: work without ssl encryption
+    # Set it to true to work with ssl encryption
+    encrypted:  false
+
+dependent_select:
+    task_by_activite:
+        class: TimSoft\TasksBundle\Entity\Task
+        parent_property: activite
+        property: libelle
+        no_result_msg: 'Aucune task trouvée pour cette activité'
+        order_property: libelle
+        order_direction: ASC

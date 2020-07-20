@@ -1,0 +1,339 @@
+<div id="editTask" class="modal fade">
+    <div class="modal-dialog  modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 id="eventInfo" class="modal-title">Modifier un Task</h5>
+                <button type="button" class="close" data-dismiss="modal" id="close"><span
+                            aria-hidden="true">×</span> <span
+                            class="sr-only">close</span></button>
+            </div>{{ form_start(edit_form, { 'name':'edit','method' : 'post', 'action': path('taskevent_edit', {id: taskEvent.id}) }) }}
+            <div id="modalBody" class="modal-body">
+                <div class="row">
+                    <table class="table table-sm">
+                        <tr>
+                            <td colspan="2" style="text-align: center"> {{ form_row(edit_form.allDay) }}</td>
+                            {#                            <td></td>#}
+                        </tr>
+                        <tr>
+                            <td>{{ form_row(edit_form.start, {'attr': {'class': 'date form-control' , 'autocomplete': 'off'}}) }}</td>
+                            <td>{{ form_row(edit_form.end, {'attr': {'class': 'date form-control', 'autocomplete': 'off'}}) }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ form_row(edit_form.utilisateur, {'attr': {'class': 'form-control'}}) }}</td>
+                            <td>{{ form_row(edit_form.client, {'attr': {'class': 'form-control'}}) }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ form_row(edit_form.activite, {'attr': {'class': 'form-control'}}) }}</td>
+                            <td>{{ form_row(edit_form.task, {'attr': {'class': 'form-control'}}) }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ form_row(edit_form.statut, {'attr': {'class': 'form-control'}}) }}</td>
+                            <td>{{ form_row(edit_form.motif, {'attr': {'class': 'form-control'}}) }}</td>
+                        </tr>
+                        <tr>
+                            <td> {{ form_row(edit_form.etiquette, {'attr': {'class': 'form-control'}}) }}</td>
+                            <td>{{ form_row(edit_form.rapport, {'attr': {'class': 'form-control'}}) }}</td>
+                        </tr>
+                        <tr>
+                            <td> {{ form_row(edit_form.progression, {'attr': {'class': 'custom-range'}}) }}</td>
+                            <td>{{ form_row(edit_form.site, {'attr': {'class': 'form-control'}}) }}</td>
+                        </tr>
+
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <input type="submit" value="Enregistrer les modifications" class="btn btn-primary"/>
+            </div>
+            {{ form_end(edit_form) }}
+        </div>
+    </div>
+</div>
+
+<script>
+    var $activive = $('#timsoft_tasksbundle_taskevent_activite');
+    // When sport gets selected ...
+    $activive.change(function () {
+        // ... retrieve the corresponding form.
+        var $form = $(this).closest('form');
+        // Simulate form data, but only include the selected sport value.
+        var data = {};
+        data[$activive.attr('name')] = $activive.val();
+        // Submit data via AJAX to the form's action path.
+        $.ajax({
+            url: $form.attr('action'),
+            type: $form.attr('method'),
+            data: data,
+            success: function (html) {
+                // Replace current position field ...
+                $('#timsoft_tasksbundle_taskevent_task').replaceWith(
+                    // ... with the returned one from the AJAX response.
+                    $(html).find('#timsoft_tasksbundle_taskevent_task')
+                );
+                // Position field now displays the appropriate positions.
+            }
+        });
+    });
+    {#$('#timsoft_tasksbundle_taskevent_activite option[value={{ taskEvent.task.activite.id }}]').prop('selected', true);#}
+    {#$('#timsoft_tasksbundle_taskevent_activite').val({{ taskEvent.task.activite.id }});#}
+</script>
+<script>
+    $('form[name="edit"]').submit(function (event) {
+        event.preventDefault();
+        if (new Date($('form[name="new"] #timsoft_tasksbundle_taskevent_start').datetimepicker('getValue')) > new Date($('form[name="new"] #timsoft_tasksbundle_taskevent_end').datetimepicker('getValue'))) {
+            alert('Date non valable, veuillez la vérifier et réessayer');
+        } else {
+
+            var cc = new FormData(this);
+
+            var url = "{{ path('taskevent_edit', {id: taskEvent.id}) }}";
+            var formSerialize = $(this).serialize();
+
+            $.ajax({
+                url: url,
+                data: formSerialize,
+                type: 'POST',
+                dataType: "json",
+            }).done(function (response) {
+                $('#addTask').modal('hide');
+                if (response.PlanningExist) {
+                    alert('Message');
+                }
+            });
+        }
+    });
+    $(document).ready(function () {
+        var editTask = $('form[name="edit"]');
+        $.datetimepicker.setLocale('fr');
+        $('form[name="edit"] #timsoft_tasksbundle_taskevent_start').attr('autocomplete', 'off');
+        $('form[name="edit"] #timsoft_tasksbundle_taskevent_utilisateur').select2({
+            placeholder: 'Assigner à'
+        });
+        $('form[name="edit"] #timsoft_tasksbundle_taskevent_client').select2({
+            placeholder: 'Choisir le client'
+        });
+        $('form[name="edit"] #timsoft_tasksbundle_taskevent_start').datetimepicker({
+            format: 'd F Y',
+            timepicker: false,
+            onShow: function (ct) {
+                this.setOptions({
+                    maxDate: $('#timsoft_tasksbundle_taskevent_end').val() ? $('#timsoft_tasksbundle_taskevent_end').val() : false,
+                    formatDate: 'd F Y H:i'
+                })
+            },
+            onChangeDateTime: function (dp, $input) {
+                console.log($input.val());
+                if (new Date($('form[name="edit"] #timsoft_tasksbundle_taskevent_start').datetimepicker('getValue')) > new Date($('form[name="edit"] #timsoft_tasksbundle_taskevent_end').datetimepicker('getValue'))) {
+                    $('form[name="edit"] #timsoft_tasksbundle_taskevent_start').addClass('is-invalid');
+                    $('form[name="edit"] #timsoft_tasksbundle_taskevent_end').addClass('is-invalid');
+                    console.log($input.val());
+                } else {
+                    $('form[name="edit"] #timsoft_tasksbundle_taskevent_start').removeClass('is-invalid');
+                    $('form[name="edit"] #timsoft_tasksbundle_taskevent_end').removeClass('is-invalid');
+                }
+            }
+        });
+        var allDay = $('form[name="edit"] input[name="timsoft_tasksbundle_taskevent[allDay]"]:checked');
+        if ($('form[name="edit"] input[name="timsoft_tasksbundle_taskevent[allDay]"]:checked').val() == 1) {
+            $('#timsoft_tasksbundle_taskevent_start').datetimepicker({
+                format: 'd F Y',
+                timepicker: false,
+                onShow: function (ct) {
+                    this.setOptions({
+                        maxDate: $('#timsoft_tasksbundle_taskevent_end').val() ? $('#timsoft_tasksbundle_taskevent_end').val() : false,
+                        formatDate: 'd F Y'
+                    })
+                },
+                onChangeDateTime: function (dp, $input) {
+                    if (new Date($('form[name="new"] #timsoft_tasksbundle_taskevent_start').datetimepicker('getValue')) > new Date($('form[name="new"] #timsoft_tasksbundle_taskevent_end').datetimepicker('getValue'))) {
+                        // alert('Date non valable, veuillez la vérifier et réessayer');
+                        $('form[name="new"] #timsoft_tasksbundle_taskevent_start').addClass('is-invalid');
+                        $('form[name="new"] #timsoft_tasksbundle_taskevent_end').addClass('is-invalid');
+                        console.log($input.val());
+                    } else {
+                        $('form[name="new"] #timsoft_tasksbundle_taskevent_start').removeClass('is-invalid');
+                        $('form[name="new"] #timsoft_tasksbundle_taskevent_end').removeClass('is-invalid');
+                    }
+                }
+            });
+            $('#timsoft_tasksbundle_taskevent_end').datetimepicker({
+                format: 'd F Y',
+                timepicker: false,
+                onShow: function (ct) {
+                    this.setOptions({
+                        minDate: $('#timsoft_tasksbundle_taskevent_start').val() ? $('#timsoft_tasksbundle_taskevent_start').val() : false,
+                        formatDate: 'd F Y'
+                    })
+                },
+                onChangeDateTime: function (dp, $input) {
+                    if (new Date($('form[name="edit"] #timsoft_tasksbundle_taskevent_start').datetimepicker('getValue')) > new Date($('form[name="edit"] #timsoft_tasksbundle_taskevent_end').datetimepicker('getValue'))) {
+                        // alert('Date non valable, veuillez la vérifier et réessayer');
+                        $('form[name="edit"] #timsoft_tasksbundle_taskevent_start').addClass('is-invalid');
+                        $('form[name="edit"] #timsoft_tasksbundle_taskevent_end').addClass('is-invalid');
+                        console.log($input.val());
+                    } else {
+                        $('form[name="edit"] #timsoft_tasksbundle_taskevent_start').removeClass('is-invalid');
+                        $('form[name="edit"] #timsoft_tasksbundle_taskevent_end').removeClass('is-invalid');
+                    }
+                }
+            });
+        } else {
+            $('#timsoft_tasksbundle_taskevent_start').datetimepicker({
+                format: 'd F Y H:i',
+                timepicker: true,
+                onShow: function (ct) {
+                    this.setOptions({
+                        maxDate: $('#timsoft_tasksbundle_taskevent_end').val() ? $('#timsoft_tasksbundle_taskevent_end').val() : false
+                        , formatDate: 'd F Y H:i'
+                    })
+                },
+                onChangeDateTime: function (dp, $input) {
+                    if (new Date($('form[name="edit"] #timsoft_tasksbundle_taskevent_start').datetimepicker('getValue')) > new Date($('form[name="edit"] #timsoft_tasksbundle_taskevent_end').datetimepicker('getValue'))) {
+                        // alert('Date non valable, veuillez la vérifier et réessayer');
+                        $('form[name="edit"] #timsoft_tasksbundle_taskevent_start').addClass('is-invalid');
+                        $('form[name="edit"] #timsoft_tasksbundle_taskevent_end').addClass('is-invalid');
+                        console.log($input.val());
+                    } else {
+                        $('form[name="edit"] #timsoft_tasksbundle_taskevent_start').removeClass('is-invalid');
+                        $('form[name="edit"] #timsoft_tasksbundle_taskevent_end').removeClass('is-invalid');
+                    }
+                }
+            });
+
+            $('#timsoft_tasksbundle_taskevent_end').datetimepicker({
+                format: 'd F Y H:i',
+                timepicker: true,
+                onShow: function (ct) {
+                    this.setOptions({
+                        minDate: $('#timsoft_tasksbundle_taskevent_start').val() ? $('#timsoft_tasksbundle_taskevent_start').val() : false
+                        , formatDate: 'd F Y H:i'
+                    })
+                },
+                onChangeDateTime: function (dp, $input) {
+                    if (new Date($('form[name="edit"] #timsoft_tasksbundle_taskevent_start').datetimepicker('getValue')) > new Date($('form[name="new"] #timsoft_tasksbundle_taskevent_end').datetimepicker('getValue'))) {
+                        // alert('Date non valable, veuillez la vérifier et réessayer');
+                        $('form[name="edit"] #timsoft_tasksbundle_taskevent_start').addClass('is-invalid');
+                        $('form[name="edit"] #timsoft_tasksbundle_taskevent_end').addClass('is-invalid');
+                        console.log($input.val());
+                    } else {
+                        $('form[name="edit"] #timsoft_tasksbundle_taskevent_start').removeClass('is-invalid');
+                        $('form[name="edit"] #timsoft_tasksbundle_taskevent_end').removeClass('is-invalid');
+                    }
+                }
+            });
+        }
+        $('form[name="edit"] input[name="timsoft_tasksbundle_taskevent[allDay]"]').change(function () {
+            if (this.value == 1) {
+                $('#timsoft_tasksbundle_taskevent_start').datetimepicker({
+                    format: 'd F Y',
+                    timepicker: false,
+                    onShow: function (ct) {
+                        this.setOptions({
+                            maxDate: $('#timsoft_tasksbundle_taskevent_end').val() ? $('#timsoft_tasksbundle_taskevent_end').val() : false,
+                            formatDate: 'd F Y H:i'
+                        })
+                    },
+                    onChangeDateTime: function (dp, $input) {
+                        if (new Date($('form[name="new"] #timsoft_tasksbundle_taskevent_start').datetimepicker('getValue')) > new Date($('form[name="new"] #timsoft_tasksbundle_taskevent_end').datetimepicker('getValue'))) {
+                            // alert('Date non valable, veuillez la vérifier et réessayer');
+                            $('form[name="new"] #timsoft_tasksbundle_taskevent_start').addClass('is-invalid');
+                            $('form[name="new"] #timsoft_tasksbundle_taskevent_end').addClass('is-invalid');
+                            console.log($input.val());
+                        } else {
+                            $('form[name="new"] #timsoft_tasksbundle_taskevent_start').removeClass('is-invalid');
+                            $('form[name="new"] #timsoft_tasksbundle_taskevent_end').removeClass('is-invalid');
+                        }
+                    }
+                });
+                $('#timsoft_tasksbundle_taskevent_end').datetimepicker({
+                    format: 'd F Y',
+                    timepicker: false,
+                    onShow: function (ct) {
+                        this.setOptions({
+                            minDate: $('#timsoft_tasksbundle_taskevent_start').val() ? $('#timsoft_tasksbundle_taskevent_start').val() : false,
+                            formatDate: 'd F Y H:i'
+                        })
+                    },
+                    onChangeDateTime: function (dp, $input) {
+                        if (new Date($('form[name="new"] #timsoft_tasksbundle_taskevent_start').datetimepicker('getValue')) > new Date($('form[name="new"] #timsoft_tasksbundle_taskevent_end').datetimepicker('getValue'))) {
+                            // alert('Date non valable, veuillez la vérifier et réessayer');
+                            $('form[name="new"] #timsoft_tasksbundle_taskevent_start').addClass('is-invalid');
+                            $('form[name="new"] #timsoft_tasksbundle_taskevent_end').addClass('is-invalid');
+                            console.log($input.val());
+                        } else {
+                            $('form[name="new"] #timsoft_tasksbundle_taskevent_start').removeClass('is-invalid');
+                            $('form[name="new"] #timsoft_tasksbundle_taskevent_end').removeClass('is-invalid');
+                        }
+                    }
+                });
+            } else {
+                $('form[name="edit"] #timsoft_tasksbundle_taskevent_start').datetimepicker({
+                    format: 'd F Y H:i',
+                    timepicker: true,
+                    onShow: function (ct) {
+                        this.setOptions({
+                            maxDate: $('#timsoft_tasksbundle_taskevent_end').val() ? $('#timsoft_tasksbundle_taskevent_end').val() : false
+                            , formatDate: 'd F Y H:i'
+                        })
+                    },
+                    onChangeDateTime: function (dp, $input) {
+                        if (new Date($('form[name="new"] #timsoft_tasksbundle_taskevent_start').datetimepicker('getValue')) > new Date($('form[name="new"] #timsoft_tasksbundle_taskevent_end').datetimepicker('getValue'))) {
+                            // alert('Date non valable, veuillez la vérifier et réessayer');
+                            $('form[name="new"] #timsoft_tasksbundle_taskevent_start').addClass('is-invalid');
+                            $('form[name="new"] #timsoft_tasksbundle_taskevent_end').addClass('is-invalid');
+                            console.log($input.val());
+                        } else {
+                            $('form[name="new"] #timsoft_tasksbundle_taskevent_start').removeClass('is-invalid');
+                            $('form[name="new"] #timsoft_tasksbundle_taskevent_end').removeClass('is-invalid');
+                        }
+                    }
+                });
+
+                $('form[name="edit"] #timsoft_tasksbundle_taskevent_end').datetimepicker({
+                    format: 'd F Y H:i',
+                    timepicker: true,
+                    onShow: function (ct) {
+                        this.setOptions({
+                            minDate: $('#timsoft_tasksbundle_taskevent_start').val() ? $('#timsoft_tasksbundle_taskevent_start').val() : false
+                            , formatDate: 'd F Y H:i'
+                        })
+                    },
+                    onChangeDateTime: function (dp, $input) {
+                        if (new Date($('form[name="edit"] #timsoft_tasksbundle_taskevent_start').datetimepicker('getValue')) > new Date($('form[name="edit"] #timsoft_tasksbundle_taskevent_end').datetimepicker('getValue'))) {
+                            // alert('Date non valable, veuillez la vérifier et réessayer');
+                            $('form[name="edit"] #timsoft_tasksbundle_taskevent_start').addClass('is-invalid');
+                            $('form[name="edit"] #timsoft_tasksbundle_taskevent_end').addClass('is-invalid');
+                            console.log($input.val());
+                        } else {
+                            $('form[name="edit"] #timsoft_tasksbundle_taskevent_start').removeClass('is-invalid');
+                            $('form[name="edit"] #timsoft_tasksbundle_taskevent_end').removeClass('is-invalid');
+                        }
+                    }
+                });
+            }
+        });
+        var $statut = $('form[name="edit"] #timsoft_tasksbundle_taskevent_statut');
+        if ($statut.val() !== 'Bloqué') {
+            $('form[name="edit"] #timsoft_tasksbundle_taskevent_motif').parent().hide();
+        }
+        $statut.on('change', function (e) {
+            console.log(this.value)
+            if (this.value !== 'Bloqué') {
+                $('form[name="edit"] #timsoft_tasksbundle_taskevent_motif').parent().hide();
+            } else {
+                $('form[name="edit"] #timsoft_tasksbundle_taskevent_motif').parent().show();
+            }
+        })
+        var label = $("label[for='" + 'timsoft_tasksbundle_taskevent_progression' + "']");
+        var slider = $('form[name="edit"] #timsoft_tasksbundle_taskevent_progression')
+        var val = slider.parent();
+        label.append('<div id="prog" style="display: inline-block"></div>')
+        var newV = $('#prog');
+        newV.html('&nbsp;' + {{ taskEvent.progression }} +'%');
+        slider.on('change', function () {
+            console.log(this.value);
+            newV.html('&nbsp;' + this.value + '%');
+        });
+    });
+
+</script>

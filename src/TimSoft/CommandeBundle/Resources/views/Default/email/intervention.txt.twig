@@ -1,0 +1,44 @@
+<h3>Planning {{ planning.statut }} : Intervention {{ planning.lc.commande.client.raisonSociale }} du {{planning.start|date('d-m-Y')}} effectuée par {{planning.utilisateur}} !</h3><br>
+<b>Intervenant:</b>  {{planning.utilisateur}} <br>
+<b>Client:</b>  {{planning.lc.commande.client.raisonSociale}} <br>
+<b>N° Commande: </b>{{ planning.lc.commande.nCommande }}<br>
+<b>Libellé: </b>{{ planning.lc.libelle }}<br>
+{% if planning.isAllDay %}
+<b>Date début: </b>{{ planning.start|date('d/m/Y') }}<br>
+<b>Date fin: </b>{{ planning.end|date('d/m/Y') }}<br>
+{% else %}
+<b>Date: </b>{{ planning.start|date('d/m/Y') }}<br>
+{% if planning.start|date('H') < 13 %}
+<b>Matin</b><br>
+{% else %}
+<b>Après-midi</b><br>
+{% endif %}
+<ul>
+<li><b>Heure début: </b>{{ planning.start|date('H:i') }}<br></li>
+<li><b>Heure fin: </b>{{ planning.end|date('H:i') }}<br></li>
+</ul>
+{% endif %}
+
+<b> Lieu: </b>{{ planning.lieu }}<br>
+<b>Facturable / Gratuit :</b> {% if planning.facturation == "Facturé" %}
+Facturable
+{% else %}
+Gratuit
+{% endif %}
+<br>
+<b> Statut: </b>{{ planning.statut}}<br>
+{% if planning.accompagnements|length > 0 %}
+<b>Accompagnants:</b><br>
+<ul>
+{% for accomp in planning.accompagnements %}
+    <li>  {{ accomp.nomUtilisateur }} {{ accomp.prenomUtilisateur }}</li>
+{% endfor %}
+</ul>
+{% endif %}
+{% if planning.confirmePar %}
+<b>Chef de projet client: </b>{{ planning.confirmePar }} <br><br>
+{% endif %}
+<br>
+<br>
+Cordialement,<br>
+Direction des Opérations Timsoft !

@@ -1,0 +1,10 @@
+tim_soft_bu_bu:
+    resource: "@TimSoftBuBundle/Resources/config/routing/bu.yml"
+    prefix:   /bu
+
+deleteUser:
+    path:    /delete/{bu}/{user}
+    defaults: { _controller: TimSoftBuBundle:Default:deleteUser }
+addUser:
+    path:    /addUser/{bu}/{user}
+    defaults: { _controller: TimSoftBuBundle:Default:addUser }

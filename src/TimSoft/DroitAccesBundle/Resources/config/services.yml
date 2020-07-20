@@ -1,0 +1,20 @@
+#services:
+#    tim_soft_droit_acces.example:
+#        class: TimSoft\DroitAccesBundle\Example
+#        arguments: ["@service_id", "plain_value", "%parameter%"]
+
+services:
+    twig.extension:
+        # Register the class (The namespace must match)
+        class: TimSoft\DroitAccesBundle\Extensions\TwigExtensions
+        # Inject doctrine as first parameter
+        arguments: ['@doctrine']
+        tags:
+          -  { name: twig.extension }
+
+    twig.extension.date:
+      # the namespace with the name of the Twig Extensions created class
+      class: TimSoft\DroitAccesBundle\Extensions\Twig_Extensions_Extension_Date
+#      arguments: ["@translator"]
+      tags:
+        - { name: twig.extension }

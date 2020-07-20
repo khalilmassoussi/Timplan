@@ -1,0 +1,25 @@
+<h3>Informations sur l'intervention du {{Feuille.dateIntervention|date('d-m-Y')}} effectuée par {{Feuille.intervenant}} !</h3>
+
+
+<b>Mode de l'intervention:</b>  {{Feuille.modeIntervention}} <br>
+<b>Date:</b>  {{Feuille.dateIntervention|date('d-m-Y')}}<br>
+<b>Lieu de l'intervention:</b>  {{Feuille.lieuIntervention}} <br>
+<b>Intervenant:</b>  {{Feuille.intervenant}} <br>
+<b>Participants:</b><br>
+{% for Participant in Feuille.participants %}
+    -  {{Participant.nomParticipant}} {{Participant.prenomParticipant}}<br>
+{% endfor%}
+
+{% if not(Feuille.heureDebutInterventionMatin == null) %}
+    <b>Horaire d'intervention (Matin) :</b> de {{Feuille.heureDebutInterventionMatin|date('H:i')}} à {{Feuille.heureFinInterventionMatin|date('H:i')}}<br>
+{% endif %}
+ {% if not(Feuille.heureDebutInterventionAM == null) %}
+    <b>Horaire d'intervention (Après-Midi) :</b> de {{Feuille.heureDebutInterventionAM|date('H:i')}} à {{Feuille.heureFinInterventionAM|date('H:i')}} <br>
+{% endif %}
+<b>Numéro de commande:</b> {{Feuille.numeroCommande}} <br>
+<b>Libellé de l'intervention:</b> {{Feuille.libelleCommande}} <br>
+<b>Statut de la feuille: </b> {% if Feuille.statutValidation%} Déjà Validée {% else %} Pas encore validée {% endif%}<br>
+
+
+Cordialement,<br>
+L'équipe de TimSoft !

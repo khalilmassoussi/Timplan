@@ -1,0 +1,107 @@
+<link rel="stylesheet" href="{{ asset('Template2/plugins/datatables-bs4/css/dataTables.bootstrap4.css') }}">
+<style type="text/css">
+    .tg {
+        border-collapse: collapse;
+        border-spacing: 0;
+    }
+
+    .tg td {
+        border-color: black;
+        border-style: solid;
+        border-width: 1px;
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+        overflow: hidden;
+        padding: 10px 5px;
+        word-break: normal;
+    }
+
+    .tg th {
+        border-color: black;
+        border-style: solid;
+        border-width: 1px;
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+        font-weight: bold;
+        overflow: hidden;
+        padding: 10px 5px;
+        word-break: normal;
+    }
+
+    .tg .tg-vask {
+        font-size: 13px;
+        text-align: left;
+        vertical-align: top
+    }
+
+    .tg .tg-0lax {
+        text-align: left;
+        vertical-align: top
+    }
+</style>
+<p>
+    Bonjour {{ chef }},
+</p>
+<p>
+    Ci-dessous un récapitulatif de la situation de votre BU sur Timplan
+</p>
+
+<table class="tg" id="table">
+    <thead>
+    <tr>
+        <th class="tg-auie"></th>
+        <th class="tg-auie" colspan="3">Total Planifié</th>
+        <th class="tg-auie">Total Rejeté</th>
+        <th class="tg-x4sf">Total Terminé</th>
+        <th class="tg-x4sf">Total/Mois</th>
+    </tr>
+    <tr>
+        <th class="tg-auie">Consultant</th>
+        <th class="tg-auie">Proposé</th>
+        <th class="tg-auie">Confirmé</th>
+        <th class="tg-auie">En Attente</th>
+        <th class="tg-djyw" colspan="3"></th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for item in array %}
+        <tr>
+            <td class="tg-djyw" style="font-weight: bold">{{ item.utilisateur }}</td>
+            <td class="tg-djyw">{{ item.propose }}</td>
+            <td class="tg-djyw">{{ item.confirme }}</td>
+            <td class="tg-djyw">{{ item.enattente }}</td>
+            <td class="tg-djyw">{{ item.rejete }}</td>
+            <td class="tg-1f5f">{{ item.termine }}</td>
+            <td class="tg-1f5f">{{ item.propose + item.confirme+item.enattente+item.rejete+ item.termine }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+<br>
+<table class="tg">
+    <thead>
+    <tr>
+        <th class="tg-ykrt" >Client</th>
+        <th class="tg-ykrt">RAL</th>
+        <th class="tg-ykrt">Valeur</th>
+        <th class="tg-ykrt">RAP</th>
+        <th class="tg-ykrt">Valeur</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for item in client %}
+        <tr>
+            <td class="tg-buh4" style="font-weight: bold">{{ item.Client.raisonSociale }} </td>
+            <td class="tg-buh4">{{ item.RAL }}</td>
+            <td class="tg-buh4">{{ item.ValRAL }}</td>
+            <td class="tg-buh4">{{ item.RAP }}</td>
+            <td class="tg-buh4">{{ item.ValRAP }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+<br>
+<br>
+<br>
+<p>Cordialement,</p>
+

@@ -1,0 +1,375 @@
+{% extends 'Squelette.html.twig' %}
+
+{% block Titre %}
+    Portail web de TimSoft - Modification d'un droit d'accès
+{% endblock %}
+
+{% block Section %}
+    Gestion des droits d'accès
+    <small>Modification d'un droit d'accès</small>
+{% endblock %}
+
+
+{% block Navigation %}
+    {% if AutorisationAcces('ConsulterDroitAcces' , Utilisateur) %}
+        <li class="breadcrumb-item"><a href="{{ path('ConsulterDroitAcces') }}">Consulter les droits d'accès</a></li>
+    {% endif %}
+    <li class="breadcrumb-item active">Modification d'un droit d'accès</li>
+{% endblock %}
+
+{% block css %}
+    {{ parent() }}
+    <style>
+        #DivPS, #DivUsers, #DivPUG, #DivCategorie {
+            display: none;
+        }
+
+        .select2-selection {
+            height: 31px !important;
+        }
+    </style>
+    <!-- Select2 -->
+    {#    <link rel="stylesheet" href="{{ asset('Template/bower_components/select2/dist/css/select2.min.css') }}">#}
+
+{% endblock %}
+
+{% block Contenu %}
+    {#    {% for message in app.flashes('OK-Modification') %}#}
+    {#        <div class="flash-notice">#}
+    {#            <body onLoad="$('#my-modal').modal('show');">#}
+    {#            <div id="my-modal" class="modal fade">#}
+    {#                <div class="modal-dialog">#}
+    {#                    <div class="modal-content">#}
+    {#                        <div class="modal-header">#}
+    {#                            <h4 class="modal-title"><strong>Validation de modification </strong></h4>#}
+    {#                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>#}
+    {#                        </div>#}
+    {#                        <div class="modal-body">#}
+    {#                            {{ message }}#}
+    {#                        </div>#}
+    {#                        <div class="modal-footer">#}
+    {#                            <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>#}
+    {#                        </div>#}
+    {#                    </div>#}
+    {#                </div>#}
+    {#            </div>#}
+    {#            </body>#}
+    {#        </div>#}
+    {#    {% endfor %}#}
+    <div class="col-md-6 offset-3">
+        <div class="card">
+            {#            <div class="card-header with-border">#}
+            {#                <h2 class="card-title">Informations concernant le droit d'accès</h2>#}
+            {#            </div>#}
+            <form name="form_modif" method='POST'>
+                <div>
+                    <div class="card-body">
+                        <table align="center" width="100%">
+                            <tr>
+                                <th width="50%" scope="col">
+                                    <div align="left">Nom du droit:</div>
+                                </th>
+                                <td width="50%" scope="col">
+                                    <div align="left">{{ Droit.nomDroit }}</div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    <div align="left">Groupe(s) autorisé(s)</div>
+                                </th>
+                                <td>
+                                    <ul>
+                                        {% for Groupe in GroupeAutorise %}
+                                            {% if ( Groupe.role == 'ROLE_ADMIN') %}
+                                                <li>Administrateur</li>
+                                            {% elseif ( Groupe.role == 'ROLE_CHEF') %}
+                                                <li>BU Manager</li>
+                                            {% elseif ( Groupe.role == 'ROLE_CONSULTANT') %}
+                                                <li>Consultant</li>
+                                            {% elseif ( Groupe.role == 'ROLE_CLIENT') %}
+                                                <li>Client</li>
+                                            {% elseif ( Groupe.role == 'ROLE_GESTIONNAIRE') %}
+                                                <li>Gestionnaire</li>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    <div align="left">Utilisateur(s) exeptionnel(s)</div>
+                                </th>
+                                <td>
+
+                                    {% if (UtilisateurExceptionnelsOK|length > 0) or (UtilisateurExceptionnelsKO|length > 0) %}
+                                        <ol>
+                                            {% if UtilisateurExceptionnelsOK|length > 0 %}
+                                                {% for  user in UtilisateurExceptionnelsOK %}
+                                                    <li> {{ user }} <img src="{{ asset('Template/OK.png') }}"
+                                                                         title="Autorisé"></li>
+                                                {% endfor %}
+                                            {% endif %}
+                                            {% if UtilisateurExceptionnelsKO|length > 0 %}
+                                                {% for  user in UtilisateurExceptionnelsKO %}
+                                                    <li> {{ user }} <img src="{{ asset('Template/KO.png') }}"
+                                                                         title="Interdit"></li>
+                                                {% endfor %}
+                                            {% endif %}
+                                        </ol>
+                                    {% else %}Aucun
+                                    {% endif %}
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <th scope="row">
+                                    <div align="left">Modifier droit</div>
+                                </th>
+                                <td style="padding: 50px 0px 0px 0px"><p align="left">
+                                        <input type="radio" name="BoutonModifierDroit" value="PS" id="BMDPS"
+                                               onclick="MontrerDiv()"/>Pour une personne spécifique
+                                        <br/>
+                                        {{ form_start(form) }}
+                                        {{ form_errors(form) }}
+                                    <div id="DivPS" style="padding: 0px 0px 0px 15px">
+                                        <table width="100%">
+                                            <tr>
+                                                <td scope="col">
+                                                    <div align="left">
+                                                        <div class="form-group">
+                                                            {{ form_widget(form.autorisation , {'attr' : {'class' : 'Autorisation form-control'}}) }}
+                                                            <br>
+                                                            <div id="DivUsers">
+                                                                <label>Utilisateur particulier:</label>
+                                                                <select name="Users" id="Users"
+                                                                        class="Users form-control"
+                                                                        style="width: 100%"
+                                                                        data-placeholder="Sélectionnez l'utilisateur">
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <input type="radio" name="BoutonModifierDroit" value="PUG" id="BMDPUG"
+                                           onclick="MontrerDiv()"/>Pour un groupe
+                                    <br/>
+
+                                    <div id="DivPUG" style="padding: 0px 0px 0px 15px">
+                                        <table width="100%">
+                                            <tr>
+                                                <td scope="col">
+                                                    <div align="left">
+                                                        <div class="form-group">
+                                                            <br>
+                                                            {{ form_widget(form1.autorisationCategorie , {'attr' : {'class' : 'AutorisationCategorie form-control'}}) }}
+                                                            <br>
+                                                            <div id="DivCategorie">
+                                                                <label>Selectionnez la categorie exceptionnelle:</label>
+                                                                <select name="Categories" id="Categories"
+                                                                        class="Categories form-control">
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+
+
+                                    {{ form_widget(form._token) }}
+                                    {{ form_end(form) }}
+
+                                    </p></td>
+                            </tr>
+                        </table>
+                        <br>
+                        <table align="center">
+                            <tr>
+                                <td width="50%">
+                                    <div class="form-group">
+                                        <a href="#" class="btn btn-primary" id="save">Enregister modification(s)</a>
+                                    </div>
+
+                                </td>
+                                <td width="50%">
+                                    <div class="form-group">
+                                        <button type="reset" class="btn btn-primary btn-block">Annuler</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="modal fade" id="confirm-modif" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    Confirmation de Modification
+                </div>
+                <div class="modal-body">
+                    Voulez-vous continuer ?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                    <a class="btn btn-primary btn-ok" onclick="$('form[name=form_modif]').submit();">Continuer</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/fosjsrouting/js/router.min.js') }}"></script>
+    <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
+    <script type="text/javascript">
+        function MontrerDiv() {
+            if (document.getElementById('BMDPS').checked == true) {
+                document.getElementById('DivPS').style.display = "block";
+            } else {
+                document.getElementById('DivPS').style.display = "none";
+            }
+            if (document.getElementById('BMDPUG').checked == true) {
+                document.getElementById('DivPUG').style.display = "block";
+            } else {
+                document.getElementById('DivPUG').style.display = "none";
+            }
+        }
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('.select2').select2({});
+            $('#Users').select2({
+                allowClear: true,
+            });
+
+            $('#save').on('click', function (e) {
+                e.preventDefault();
+                swalWithBootstrapButtons.fire({
+                    title: 'Confirmation de Modification !',
+                    text: "Voulez-vous continuer ?",
+                    icon: 'info',
+                    showCancelButton: true,
+                    confirmButtonText: 'Continuer!',
+                    cancelButtonText: 'Annuler!'
+                }).then((result) => {
+                    if (result.value) {
+                        $('form[name=form_modif]').submit();
+                        Swal.fire(
+                            'Succès!',
+                            "Le droit d\'accès " + '{{ Droit.nomDroit }}' +" est modifié avec succès !",
+                            'success'
+                        )
+                    }
+                })
+            })
+        });
+    </script>
+    {#    <script src="{{ asset('Template/bower_components/select2/dist/js/select2.full.min.js') }}"></script>#}
+    <script>
+        $(".Autorisation").change(function () {
+
+            if ($(this).val() == 1) {
+                ajouter();
+            } else if ($(this).val() == 0) {
+                retirer();
+            }
+        });
+
+        function ajouter() {
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('UsersSansDroit', {id: '{{ Droit.id }}'}),
+                success: function (response) {
+                    $('#Users').children().remove();
+                    $('#Users').append('<option value="" selected></option>');
+                    $("#DivUsers")
+                        .show();
+                    console.log(response, 'ccccccccc');
+                    $.each(response, function (index, value) {
+                        console.log('user', value);
+                        $(".Users").append('<option value="' + value.id + '">' + value.nomUtilisateur + " " + value.prenomUtilisateur + '</option>');
+
+                    })
+                }
+            })
+        }
+
+        function retirer() {
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('UsersAvecDroit', {id: '{{ Droit.id }}'}),
+                success: function (response) {
+                    $('#Users').children().remove();
+                    $('#Users').append('<option value="" disabled selected>Sélectionnez l\'utilisateur</option>');
+                    $("#DivUsers")
+                        .show();
+                    console.log(response);
+                    $.each(response, function (index, value) {
+                        console.log(index + " : " + value)
+                        $(".Users").append('<option value="' + value.id + '">' + value.nomUtilisateur + " " + value.prenomUtilisateur + '</option>');
+
+                    });
+                }
+            })
+        }
+    </script>
+
+    <script>
+        $(".AutorisationCategorie").change(function () {
+
+            if ($(this).val() == 1) {
+                ajouterCategorie();
+            } else if ($(this).val() == 0) {
+                retirerCategorie();
+            }
+        });
+
+        function ajouterCategorie() {
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('CategorieSansDroit', {id: '{{ Droit.id }}'}),
+                success: function (response) {
+                    $('#Categories').children().remove();
+                    $('#Categories').append('<option value="" disabled selected>Sélectionnez la catégorie</option>');
+                    $("#DivCategorie")
+                        .show();
+                    console.log('---------------');
+                    console.log(response);
+                    $.each(response, function (index, value) {
+                        console.log('categorie', value);
+                        $(".Categories").append('<option value="' + value[0] + '">' + value[1] + '</option>');
+
+                    })
+                }
+            })
+        }
+
+        function retirerCategorie() {
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('CategorieAvecDroit', {id: '{{ Droit.id }}'}),
+                success: function (response) {
+                    $('#Categories').children().remove();
+                    $('#Categories').append('<option value="" disabled selected>Sélectionnez la catégorie</option>');
+                    $("#DivCategorie")
+                        .show();
+                    console.log(response);
+                    $.each(response, function (index, value) {
+                        console.log('categorie', value);
+                        $(".Categories").append('<option value="' + value[0] + '">' + value[1] + '</option>');
+
+                    })
+                }
+            })
+        }
+    </script>
+{% endblock %}

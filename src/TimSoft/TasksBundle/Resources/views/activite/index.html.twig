@@ -1,0 +1,77 @@
+{% extends 'Squelette.html.twig' %}
+{% block Titre %}
+    Portail web de TimSoft - Gestion des activités
+{% endblock %}
+
+{% block Section %}
+    <h1>
+        Gestion des activités
+    </h1>
+{% endblock %}
+
+
+{% block Navigation %}
+    <li class="breadcrumb-item active">Activités</li>
+{% endblock %}
+{% block Contenu %}
+    <div class="col-md-12">
+        <div class="card">
+            {#            <div class="card-header with-border">#}
+            {#                <h2 class="card-title" style="color:#1E5584">Les plannings par utilisateur</h2>#}
+            {#            </div>#}
+            <div class="card-tools pull-center">
+            </div>
+            <div class="card-header with-border">
+                <h2 class="card-title" style="color:#1E5584">Liste des activités</h2>
+            </div>
+            <div class="card-body">
+                <ul>
+                    <li>
+                        <a href="{{ path('activite_new') }}">Créer une nouvelle activité</a>
+                        {#                        {{ render(controller('TimSoftTasksBundle:Activite:new' )) }}#}
+                    </li>
+                </ul>
+
+                <table id="activite" class="table table-striped dataTable">
+                    <thead>
+                    <tr>
+                        <th>Libelle</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for activite in activites %}
+                        <tr>
+                            <td>{{ activite.libelle }}</td>
+                            <td>
+                                <ul>
+                                    <li>
+                                        <a href="#show{{ activite.id }}" data-toggle="modal">Afficher</a>
+                                        {{ render(controller('TimSoftTasksBundle:Activite:show', { 'id': activite.id} )) }}
+
+                                    </li>
+                                    <li>
+                                        <a href="{{ path('activite_edit', {'id': activite.id}) }}">Modifier</a>
+                                    </li>
+                                </ul>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+    {{ parent() }}
+    <script>
+        $('#activite').dataTable(
+            {
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/French.json"
+                }
+            }
+        );
+    </script>
+{% endblock %}

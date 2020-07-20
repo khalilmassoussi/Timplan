@@ -1,0 +1,202 @@
+{% extends 'Squelette.html.twig' %}
+
+{% block Titre %}
+    Portail web de TimSoft - Modification de {{ client.raisonSociale }}
+{% endblock %}
+
+{% block Section %}
+    Gestion des clients
+    <small>Modification d'un client</small>
+{% endblock %}
+
+
+{% block Navigation %}
+    {% if AutorisationAcces('ConsulterClient' , Utilisateur) %}
+        <li class="breadcrumb-item"><a href="{{ path('ConsulterClient') }}">Consulter la liste de tous les clients</a>
+        </li>
+    {% endif %}
+    <li class="breadcrumb-item active">Modifier un client</li>
+{% endblock %}
+
+
+{% block Contenu %}
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header with-border">
+                <h2 class="card-title" style="color:#1E5584">Informations de <b>{{ client.raisonSociale }}</b></h2>
+            </div>
+
+            <br>
+            <div class="card-body">
+                {{ form_start(form) }}
+                {{ form_errors(form.codeClient) }}
+                {{ form_errors(form.raisonSociale) }}
+                {{ form_errors(form.adresseClient) }}
+                {{ form_errors(form.villeClient) }}
+                {{ form_errors(form.codePostalClient) }}
+                {{ form_errors(form.telephone) }}
+                {{ form_errors(form.faxClient) }}
+                {{ form_errors(form.adresseMailClient) }}
+                <br>
+                <div class="row">
+                    <div class="col-md-6">
+
+                        <div class="form-group">
+                            <label>Code Client</label>
+                            {{ form_widget(form.codeClient,{ 'attr': {'class': "form-control"} }) }}
+                        </div>
+
+                        <div class="form-group">
+                            <label>Adresse</label>
+                            {{ form_widget(form.adresseClient,{ 'attr': {'class': "form-control"} }) }}
+                        </div>
+
+                        <div class="form-group">
+                            <label>Ville</label>
+                            {{ form_widget(form.villeClient,{ 'attr': {'class': "form-control"} }) }}
+                        </div>
+
+                        <div class="form-group">
+                            <label>Téléphone</label>
+                            {{ form_widget(form.telephone,{ 'attr': {'class': "form-control"} }) }}
+                        </div>
+
+                        <div class="form-group">
+                            <label>Email</label>
+                            {{ form_widget(form.adresseMailClient,{ 'attr': {'class': "form-control"} }) }}
+                        </div>
+
+                        <div class="form-group">
+                            <label>Société Mère:</label>
+                            {{ form_widget(form.societeMere, {'attr' : {'class' : 'chosen-select-deselect form-control', 'tabindex' : '12' }} ) }}
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Société</label>
+                            {{ form_widget(form.raisonSociale,{ 'attr': {'class': "form-control"} }) }}
+                        </div>
+
+                        <div class="form-group">
+                            <label>Pays</label>
+                            {{ form_widget(form.paysClient,{ 'attr': {'class': "form-control"} }) }}
+                        </div>
+
+                        <div class="form-group">
+                            <label>Code postal</label>
+                            {{ form_widget(form.codePostalClient,{ 'attr': {'class': "form-control"} }) }}
+                        </div>
+
+                        <div class="form-group">
+                            <label>Fax</label>
+                            {{ form_widget(form.faxClient,{ 'attr': {'class': "form-control"} }) }}
+                        </div>
+
+                        <div class="form-group">
+                            <label>Date d'adhésion</label>
+                            {{ form_widget(form.dateAdhesionClient , { 'attr': {'class': "form-control"} }) }}
+                        </div>
+                        <div class="form-group">
+                            <label>Clients facturés:</label>
+                            {{ form_widget(form.clientFacture , {'attr' : {'class' : 'chosen-select form-control', 'tabindex' : '3' ,'multiple' : 'multiple' ,'data-placeholder' : 'Selectionnez les clients facturés'}} ) }}
+                        </div>
+                    </div>
+                </div>
+
+                {# <br>
+                 <h4> Clients facturés associés à <b>{{client.raisonSociale}}</b></h4>
+                 <div class="table1">
+                     <div class="row1 header blue">
+                         <div class="cell1">
+                             Code Client
+                         </div>
+                         <div class="cell1">
+                             Nom client facturé
+                         </div>
+                         <div class="cell1">
+                             Téléphone
+                         </div>
+                         <div class="cell1">
+                             E-Mail
+                         </div>
+                         <div class="cell1">
+                             Action
+                         </div>
+                     </div>
+                       {% if client.clientFacture %}
+                         {% for clientF in client.clientFacture %}
+                     <div class="row1">
+                         <div class="cell1">
+                            {{clientF.codeClient}}
+                         </div>
+                         <div class="cell1">
+                            {{clientF.raisonSociale}}
+                         </div>
+                         <div class="cell1">
+                             {{clientF.telephone}}
+                         </div>
+                         <div class="cell1">
+                             {{clientF.adresseMailClient}}
+                         </div>
+                         <div class="cell1" data-title="Active">
+                             <a href="{{ path('ConsulterUnClient', { 'id': clientF.id }) }}"><img src="{{ asset('Template/Consulter.png') }}"  title="Consulter les informations de {{clientF.raisonSociale}}"></a>
+                             <a href="{{ path('ModifierClient', { 'id': clientF.id }) }}"><img src="{{ asset('Template/Editer.png') }}"  title="Modifier {{clientF.raisonSociale}}"></a>
+                             <a href="{{ path('SupprimerUnClient', { 'id': clientF.id }) }}"><img src="{{ asset('Template/SupprimerUser.png') }}"  title="Supprimer {{clientF.raisonSociale}}"></a>
+                         </div>
+                     </div>
+                         {% endfor %}
+                     {% endif %}
+                     {{ form_widget(form.clientFacture  , { 'attr' : { 'style':'display:none'} }) }}
+                  </div>
+                 <div align="right">
+                     <table width="130">
+                         <tr>
+                             <td scope="col"><a href="{{path('AjouterClient')}}"><img src="{{ asset('Template/Add.png') }}">Ajouter un client</a></td>
+                         </tr>
+                     </table>
+                 </div>#}
+                <br><br>
+
+
+                <br>
+                <table align="center" width="35%">
+                    <tr>
+                        <td width="50%">
+                            <div class="form-group">
+                                <a href="#" class="btn btn-primary btn-block" data-toggle="modal"
+                                   data-target="#confirm-modif">Enregister modification(s)</a>
+                                {# <button type="submit" class="btn btn-primary btn-block btn-flat">Enregister modification(s)</button>#}
+                            </div>
+                        </td>
+
+                        </td>
+                        <td width="50%">
+                            <div class="form-group">
+                                <button type="reset" class="btn btn-secondary btn-block">Annuler</button>
+                            </div>
+                    </tr>
+                </table>
+            </div>
+            {{ form_widget(form._token) }}
+            {{ form_end(form) }}
+        </div>
+    </div>
+    <div class="modal fade" id="confirm-modif" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    Confirmation de Modification
+                </div>
+                <div class="modal-body">
+                    Voulez Vous continuer ?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                    <a class="btn btn-primary btn-ok" onclick="$('form[name=timsoft_generalbundle_client]').submit();">Continuer</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

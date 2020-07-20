@@ -1,0 +1,395 @@
+{% extends 'Squelette.html.twig' %}
+
+{% block Titre %}
+    Portail web de TimSoft - Gestion des Plannings
+{% endblock %}
+
+{% block Section %}
+    <h1>
+        Gestion des commandes
+        <small>Commandes a remplacer</small>
+    </h1>
+{% endblock %}
+
+
+{% block Navigation %}
+    <li class="breadcrumb-item"><a href="{{ path('ImportCmd') }}">Importation des commandes</a></li>
+    <li class="breadcrumb-item active">Commandes a remplacer</li>
+{% endblock %}
+{% block SideBar %}
+
+{% endblock %}
+{% block Contenu %}
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    {#<script src="https://unpkg.com/@fullcalendar/interaction@4.3.0/main.min.js"></script>#}
+    <script src="{{ asset('bundles/fosjsrouting/js/router.min.js') }}"></script>
+    <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
+    <style>
+        div.dataTables_scrollBody table tbody tr:first-child th, div.dataTables_scrollBody table tbody tr:first-child td {
+            border-top: 1px solid #dee2e6;
+        }
+    </style>
+
+    <div class="col-lg-12">
+
+        <div class="card card-primary">
+            <div class="card-header">
+                Commandes
+            </div>
+            <div class="card-body">
+                <table id="example" class="table table-hover" style="width:100%">
+                    <colgroup span="1"></colgroup>
+                    <colgroup span="2"></colgroup>
+                    <colgroup span="2"></colgroup>
+                    <thead>
+                    <tr class="row1">
+                        <td class="cell1 cell-border center" colspan="1" scope="colgroup">
+
+                        </td>
+                        <td class="cell1" colspan="2" scope="colgroup"
+                            style="border-right: 1px solid #111; border-left: 1px solid #111">
+                            <center> Existant</center>
+                        </td>
+                        <td class="cell1" colspan="2" scope="colgroup">
+                            <center> Nouvelle</center>
+                        </td>
+                    </tr>
+                    <tr class="row1 header blue">
+                        <td class="cell1">
+                            Choisir
+                        </td>
+                        <td class="cell1" style="display:none;">
+
+                        </td>
+                        <td class="cell1" style="display:none;">
+
+                        </td>
+                        <td class="cell1">
+                            N°Commande
+                        </td>
+                        <td class="cell1">
+                            Client
+                        </td>
+                        <td class="cell1">
+                            N°Commande
+                        </td>
+                        <td class="cell1">
+                            Client
+                        </td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for key,val in duplicateEC %}
+                        <tr class="row1">
+                            <td class="cell1"></td>
+                            {#                                        {% for value in val %}#}
+                            {#                                            <td class="cell1" style="display:none;">#}
+
+                            {#                                            </td>#}
+                            {#                                            <td class="cell1" style="display:none;">#}
+
+                            {#                                            </td>#}
+
+                            {#                                            <td class="cell1">#}
+                            {#                                                {{ value.NCommande }}#}
+                            {#                                            </td>#}
+                            {#                                            <td class="cell1">#}
+                            {#                                                {{ value.client.raisonSociale }}#}
+                            {#                                            </td>#}
+                            {#                                        {% endfor %}#}
+                            <td class="cell1" style="display:none;"> {{ val.0.id }}</td>
+                            <td class="cell1" style="display:none;"></td>
+                            <td class="cell1">{{ val.0.nCommande }}
+                            </td>
+
+                            <td class="cell1">
+                                {% if val.0.client %}
+                                    {{ val.0.client.raisonSociale }}
+                                {% endif %}
+                            </td>
+                            <td class="cell1">{{ val.1.nCommande }}
+                            </td>
+                            <td class="cell1">{{ val.1.client.raisonSociale }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card card-warning">
+            <div class="card-header">
+                Ligne de commandes
+            </div>
+            <div class="card-body">
+                {% if duplicate %}
+                    <table class="table table-hover" id="myTable" width="2000px">
+
+                        <colgroup span="1"></colgroup>
+                        <colgroup span="7"></colgroup>
+                        <colgroup span="7"></colgroup>
+
+                        <thead>
+                        <tr class="row1">
+                            <td class="cell1 cell-border center" colspan="1" scope="colgroup">
+
+                            </td>
+                            <td class="cell1" colspan="7" scope="colgroup"
+                                style="border-right: 1px solid #111; border-left: 1px solid #111">
+                                <center> Existant</center>
+                            </td>
+                            <td class="cell1" colspan="7" scope="colgroup">
+                                <center> Nouvelle</center>
+                            </td>
+                        </tr>
+                        <tr class="row1 header blue">
+                            <td class="cell1">
+                                Choisir
+                            </td>
+                            <td class="cell1" style="display:none;">
+
+                            </td>
+                            <td class="cell1" style="display:none;">
+
+                            </td>
+                            <td class="cell1">
+                                N°Commande
+                            </td>
+                            <td class="cell1">
+                                BU
+                            </td>
+                            <td class="cell1">
+                                Libellé
+                            </td>
+                            <td class="cell1">
+                                Quantité
+                            </td>
+                            <td class="cell1">
+                                Montant HT
+                            </td>
+                            <td class="cell1">
+                                Quantité Restante
+                            </td>
+                            <td class="cell1">
+                                Montant Restant
+                            </td>
+                            <td class="cell1">
+                                N°Commande
+                            </td>
+                            <td class="cell1">
+                                BU
+                            </td>
+                            <td class="cell1">
+                                Libellé
+                            </td>
+                            <td class="cell1">
+                                Quantité
+                            </td>
+                            <td class="cell1">
+                                Montant HT
+                            </td>
+                            <td class="cell1">
+                                Quantité Restante
+                            </td>
+                            <td class="cell1">
+                                Montant Restant
+                            </td>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for key,val in duplicate %}
+                            <tr style="height: 10%" class="row1">
+                                <td class="cell1"></td>
+                                {% for value in val %}
+                                    {% if value.id and value.commande.id %}
+                                        <td class="cell1" style="display:none;">
+                                            {{ value.id }}
+                                        </td>
+                                        <td class="cell1" style="display:none;">
+                                            {{ value.commande.id }}
+                                        </td>
+                                    {% endif %}
+                                    <td class="cell1">
+                                        {{ value.commande.NCommande }}
+                                    </td>
+                                    <td class="cell1">
+                                        {{ value.bu }}
+                                    </td>
+                                    <td class="cell1">
+                                        {{ value.libelle }}
+                                    </td>
+                                    <td class="cell1">
+                                        {{ value.quantite }}
+                                    </td>
+                                    <td class="cell1">
+                                        {{ value.montantHT }}
+                                    </td>
+                                    <td class="cell1">
+                                        {{ value.QteRestante }}
+                                    </td>
+                                    <td class="cell1" style="border-right: solid 1px">
+                                        {{ value.MRestant }}
+                                    </td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                {% endif %}
+            </div>
+        </div>
+        <div class="card card-danger">
+            <div class="card-body">
+                <table align="center">
+                    <tr>
+                        <td width="50%">
+                            <button type="submit" class="btn btn-primary btn-block" id="submit">Remplacer</button>
+                        </td>
+                        <td width="50%">
+                            <a href="{{ path('listerCmd') }}">
+                                <button type="submit" class="btn btn-secondary btn-block" id="submit">Ignorer Tout
+                                </button>
+                            </a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="confirm-modif" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    Confirmation de remplacement
+                </div>
+                <div class="modal-body">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Non</button>
+                    <a class="btn btn-primary btn-ok" data-dismiss="modal">Oui</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+    {% block script %}
+        {{ parent() }}
+        <script>
+            $(document).ready(function () {
+                // var table1 =  $('#diplicateEC').DataTable({
+
+                //       dom: 'Bfrtip',
+                //       scrollX: true,
+                //       // select: true,
+                //       columnDefs: [{
+                //
+                //           orderable: false,
+                //           className: 'select-check  text-center',
+                //           targets: 0
+                //
+                //       }],
+                //       select: {
+                //           style: 'multi',
+                //           selector: 'td:first-child'
+                //       },
+                //       buttons: []
+                //
+                //   });
+
+                var table1 = $('#example').DataTable({
+                    "language": {
+                        "url": "http://cdn.datatables.net/plug-ins/1.10.20/i18n/French.json"
+                    },
+                    dom: 'Bfrtip',
+                    columnDefs: [{
+                        orderable: false,
+                        className: 'select-checkbox text-center',
+                        targets: 0
+
+                    }],
+                    select: {
+                        style: 'multi',
+                        selector: 'td:first-child'
+                    },
+                    buttons: []
+
+                });
+                var table = $('#myTable').DataTable({
+                    "language": {
+                        "url": "http://cdn.datatables.net/plug-ins/1.10.20/i18n/French.json"
+                    },
+                    dom: 'Bfrtip',
+                    scrollX: true,
+                    // select: true,
+                    columnDefs: [{
+                        orderable: false,
+                        className: 'select-checkbox text-center',
+                        targets: 0
+
+                    }],
+                    select: {
+                        style: 'multi',
+                        selector: 'td:first-child'
+                    },
+                    buttons: []
+
+                });
+                $('#submit').click(function () {
+                    var oData = table.rows('.selected').data();
+                    var oData1 = table1.rows('.selected').data();
+                    var x = oData.length + oData1.length;
+                    if (x > 1) {
+                        $("#confirm-modif").modal();
+                        $(".modal-body").html('Souhaitez-vous remplacer les ' + x + ' lignes selectionnées?')
+                    } else if (x === 1) {
+                        $("#confirm-modif").modal();
+                        $(".modal-body").html('Souhaitez-vous remplacer la ligne selectionnée?')
+                    } else if (x === 0) {
+                        alert('Vous devez selectionnez au moin une ligne à remplacer');
+                    }
+
+                });
+                $(".btn-ok").one("click", function () {
+
+                    var oData = table.rows('.selected').data();
+                    var oData1 = table1.rows('.selected').data();
+                    // $.each( oData, function( key, value ) {
+                    // });
+                    // console.log(oData1);
+                    if (oData.length > 0) {
+                        for (var i = 0; i < oData.length; i++) {
+                            console.log(oData[i]);
+                            var libelle = oData[i][12].replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+                            $.ajax({
+                                url: '{{ path('remplacer') }}',
+                                type: "POST",
+                                data: 'action=update&id=' + oData[i][1] + '&libelle=' + libelle + '&quantite='
+                                    + oData[i][13] + '&montantHT=' + oData[i][14] + '&quantiteRestante=' + oData[i][15] + '&lc=true' + '&bu=' + oData[i][11],
+                                success: function (data) {
+                                    alert('Ligne ajouté avec success');
+                                    window.location.href = '{{ path('listerCmd') }}';
+                                },
+                            });
+                        }
+                    }
+                    if (oData1.length > 0) {
+                        for (var j = 0; j < oData1.length; j++) {
+                            console.log(oData1[j]);
+                            $.ajax({
+                                url: '{{ path('remplacer') }}',
+                                type: "POST",
+                                async: true,
+                                data: 'action=update&id=' + oData1[j][1] + '&client=' + oData1[j][6] + '&lc=false',
+                                success: function (data) {
+                                    alert('Ligne ajouté avec success');
+                                    window.location.href = '{{ path('listerCmd') }}';
+                                },
+                            });
+                        }
+                    }
+                });
+            });
+        </script>
+    {% endblock %}

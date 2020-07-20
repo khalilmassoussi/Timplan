@@ -1,0 +1,412 @@
+{% extends 'Squelette.html.twig' %}
+
+
+
+{% block Titre %}
+    {% if (utilisateur.id != app.user.id ) %}
+        Portail web de TimSoft - Profil de {{ utilisateur.nomUtilisateur }} {{ utilisateur.prenomUtilisateur }}
+    {% else %}
+        Portail web de TimSoft - Mon Profil
+    {% endif %}
+{% endblock %}
+
+{% block Section %}
+    Gestion des utilisateur
+    <small>Consultation du profil d'un utilisateur</small>
+{% endblock %}
+
+{% block Navigation %}
+    {% if (utilisateur.id != app.user.id ) %}
+        <li class="breadcrumb-item"><a href="{{ path('ConsulterUtilisateur') }}">Consulter la liste des utilisateurs</a>
+        </li>
+    {% endif %}
+    <li class="breadcrumb-item active">Consultation d'un utilisateur</li>
+{% endblock %}
+{% block SideBar %}
+{% endblock %}
+{% block Contenu %}
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fullcalendar/core@4.1.0/main.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@4.1.0/main.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@4.1.0/main.min.css">
+    <link href='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.css' rel='stylesheet'/>
+    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@4.1.0/main.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/interaction@4.1.0/main.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@4.1.0/main.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@4.1.0/main.min.js"></script>
+    <script src="https://unpkg.com/@fullcalendar/core@4.3.1/locales-all.js"></script>
+    {#<script src="https://unpkg.com/@fullcalendar/interaction@4.3.0/main.min.js"></script>#}
+    <script src="https://unpkg.com/@fullcalendar/list@4.3.0/main.min.js"></script>
+    <script src='http://fullcalendar.io/js/fullcalendar-2.1.1/lib/moment.min.js'></script>
+    {#<script src='http://fullcalendar.io/js/fullcalendar-2.1.1/lib/jquery.min.js'></script>#}
+    {#<script src="http://fullcalendar.io/js/fullcalendar-2.1.1/lib/jquery-ui.custom.min.js"></script>#}
+    {#<script src='http://fullcalendar.io/js/fullcalendar-2.1.1/fullcalendar.min.js'></script>#}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-modal/2.2.5/js/bootstrap-modal.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-modal/2.2.5/css/bootstrap-modal-bs3patch.css"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-modal/2.2.5/css/bootstrap-modal.css"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-modal/2.2.5/img/ajax-loader.gif"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-modal/2.2.5/js/bootstrap-modal.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-modal/2.2.5/js/bootstrap-modalmanager.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-modal/2.2.5/js/bootstrap-modalmanager.min.js"></script>
+    <style>
+        #external-events {
+            /*position: fixed;*/
+            z-index: 2;
+            top: 20px;
+            left: 20px;
+            width: 150px;
+            padding: 0 10px;
+            border: 1px solid #ccc;
+            background: #eee;
+        }
+
+        #external-events .fc-event {
+            margin: 1em 0;
+            cursor: move;
+        }
+
+        #calendar-container {
+            position: relative;
+            z-index: 1;
+            /*margin-left: 200px;*/
+        }
+
+        #calendar {
+            /*max-width: 900px;*/
+            /*margin: 20px auto;*/
+        }
+    </style>
+    {% for message in app.flashes('OK-Ajout') %}
+        <div class="flash-notice">
+            <body onLoad="$('#my-modal').modal('show');">
+            <div id="my-modal" class="modal fade">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Validation d'ajout !</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            {{ message }}
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </body>
+        </div>
+    {% endfor %}
+    {% for message in app.flashes('OK-Modification') %}
+        <div class="flash-notice">
+            <body onLoad="$('#my-modal').modal('show');">
+            <div id="my-modal" class="modal fade">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Validation de la modification</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            {{ message }}
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </body>
+        </div>
+        {#   <body onLoad="$('#modal-success').modal('show');">
+            <div class="modal modal-success fade" id="modal-success">
+
+<div class="modal-dialog">
+<div class="modal-content">
+<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+ <span aria-hidden="true">&times;</span></button>
+<h4 class="modal-title">Validation de la modification</h4>
+</div>
+<div class="modal-body">
+<p>{{message}}</p>
+</div>
+<div class="modal-footer">
+<button type="button" class="btn btn-outline" data-dismiss="modal">Fermer</button>
+</div>
+</div>
+<!-- /.modal-content -->
+</div>
+
+<!-- /.modal-dialog -->
+</div>
+</body>#}
+    {% endfor %}
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header with-border">
+                <h2 class="card-title">Informations
+                    de {{ utilisateur.nomUtilisateur }} {{ utilisateur.prenomUtilisateur }}</h2>
+                <div class="card-tools pull-center">
+                </div>
+            </div>
+            <br>
+            <div class="card-body" id="DivCente">
+                <div>
+                    <div class="card-body card-profile" style="text-align: center">
+                        {% if utilisateur.photoDeProfil == null %}
+                            <img class="profile-user-img img-responsive img-circle center"
+                                 src="{{ asset('Template/user.png') }}" alt="Photo De profil">
+                        {% else %}
+                            <img class="profile-user-img img-responsive img-circle"
+                                 src="{{ asset('uploads/PhotoDeProfil/') }}{{ utilisateur.photoDeProfil }}"
+                                 alt="Photo De profil">
+                        {% endif %}
+                        <h3 class="profile-username text-center">{{ utilisateur.nomUtilisateur }} {{ utilisateur.prenomUtilisateur }}</h3>
+
+                        <p class="text-muted text-center">
+                            {% set role = utilisateur.roleUtilisateur %}
+                            {% if ( role == 'ROLE_ADMIN') %}Administrateur
+                            {% elseif ( role == 'ROLE_CONSULTANT') %}Consultant
+                            {% elseif ( role == 'ROLE_CLIENT') %}Client
+                            {% elseif ( role == 'ROLE_GESTIONNAIRE') %}Gestionnaire
+                            {% endif %}
+                        </p>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6" style="padding-left: 50px">
+                            <table width="50%" align="center">
+                                <tr>
+                                    <th scope="row" style="padding: 15px 0px 0px 0px" width="70">
+                                        <div align="left">Nom:</div>
+                                    </th>
+                                    <td style="padding: 15px 0px 0px 0px">{{ utilisateur.nomUtilisateur }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row" style="padding: 15px 0px 0px 0px">
+                                        <div align="left">Email:</div>
+                                    </th>
+                                    <td style="padding: 15px 0px 0px 0px">{{ utilisateur.email }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row" style="padding: 15px 0px 0px 0px">
+                                        <div align="left">Société:</div>
+                                    </th>
+                                    <td style="padding: 15px 0px 0px 0px">{{ utilisateur.client.raisonSociale }} {% if (utilisateur.id != app.user.id ) %}
+                                        <a href="{{ path('ConsulterUnClient', { 'id': utilisateur.client.id }) }}">
+                                            <i class="fas fa-search fa-lg"
+                                               title="Consulter les informations de {{ utilisateur.client.raisonSociale }}"></i>
+                                            </a>{% endif %}
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-md-6" style="padding-right: 50px">
+                            <table width="50%" align="center">
+                                <tr>
+                                    <th scope="row" style="padding: 15px 0px 0px 0px" width="100">
+                                        <div align="left">Prénom:</div>
+                                    </th>
+                                    <td style="padding: 15px 0px 0px 0px">{{ utilisateur.prenomUtilisateur }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row" style="padding: 15px 0px 0px 0px">
+                                        <div align="left">Téléphone:</div>
+                                    </th>
+                                    <td style="padding: 15px 0px 0px 0px">{{ utilisateur.telephoneUtilisateur }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row" style="padding: 15px 0px 0px 0px">
+                                        <div align="left">Catégorie:</div>
+                                    </th>
+                                    <td style="padding: 15px 0px 0px 0px">
+                                        {% set role = utilisateur.roleUtilisateur %}
+                                        {% if ( role == 'ROLE_ADMIN') %}Administrateur
+                                        {% elseif ( role == 'ROLE_CONSULTANT') %}Consultant
+                                        {% elseif ( role == 'ROLE_CLIENT') %}Client
+                                        {% elseif ( role == 'ROLE_GESTIONNAIRE') %}Gestionnaire
+                                        {% elseif ( role == 'ROLE_CHEF') %}BU Manager
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <br>
+                </div>
+                <br>
+                {#                <div id='calendar'></div>#}
+                <br>
+                <table align="center">
+                    <tr>
+                        <td>
+                            {% if (utilisateur.id != app.user.id ) %}
+                                <a href="{{ path('ConsulterUtilisateur') }}">
+                                    <button type="submit" class="btn btn-default btn-block">
+                                        <i class="fas fa-backward fa-lg"
+                                           title="Retour à la liste de tous les utilisateurs"></i>
+                                    </button>
+                                </a>
+                            {% endif %}
+                        </td>
+                        {% if (utilisateur.id != app.user.id ) %}
+                            <td>
+                                <a href="{{ path('fos_user_profile_edit_utilisateur', { 'id': utilisateur.id }) }}"
+                                   class="btn btn-primary btn-block">
+                                    <i class="fas fa-edit fa-lg"
+                                       title="Modifier {{ utilisateur.nomUtilisateur }} {{ utilisateur.prenomUtilisateur }}"></i>
+                                </a>
+                            </td>
+                        {% else %}
+                            <td>
+                                <a href="{{ path('fos_user_profile_edit') }}"
+                                   class="btn btn-primary btn-block btn-flat">
+                                    <i class="fas fa-edit fa-lg"
+                                       title="Modifier Mon Profil"></i>
+                                </a>
+                            </td>
+                        {% endif %}
+
+                        {% if (utilisateur.id != app.user.id ) %}
+                            <td>
+                                <a href="{{ path('SupprimerUnUtilisateur', { 'id': utilisateur.id }) }}">
+                                    <button type="submit" class="btn btn-danger btn-block">
+                                        <i class="fas fa-trash-alt fa-lg"
+                                           title="Supprimer {{ utilisateur.nomUtilisateur }} {{ utilisateur.prenomUtilisateur }}"></i>
+                                    </button>
+                                </a>
+                            </td>
+                            <td>
+                                {% if not(utilisateur.statutProfil) %}
+                                    <a href="{{ path('ReactiverUtilisateur', { 'id': utilisateur.id }) }}">
+                                        <button type="submit" class="btn btn-success btn-block">
+                                            <i class="fas fa-arrow-circle-up fa-lg"
+                                               title="Réactiver {{ utilisateur.nomUtilisateur }} {{ utilisateur.prenomUtilisateur }}"></i>
+                                        </button>
+                                    </a>
+                                {% else %}
+                                    <a href="{{ path('DeactiverUnUtilisateur', { 'id': utilisateur.id }) }}">
+                                        <button type="submit" class="btn btn-secondary btn-block">
+                                            <i class="fas fa-ban fa-lg"
+                                               title="Désactiver le compte de {{ utilisateur.nomUtilisateur }} {{ utilisateur.prenomUtilisateur }}"></i>
+                                        </button>
+                                    </a>
+                                {% endif %}
+                            </td>
+                        {% endif %}
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div id="fullCalModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span> <span
+                                class="sr-only">close</span></button>
+                    <h4 id="eventInfo" class="modal-title"></h4>
+                </div>
+                <div id="modalBody" class="modal-body">
+                    <b>Debut:</b> <span id="startTime"></span><br><br>
+                    <b>Fin:</b> <span id="endTime"></span><br><br><br>
+                    <span><b>Client: </b>
+                    <span id="client"></span>
+
+                </span>
+                    <br><br>
+                    <span><b>Statut: </b>
+                    <span id="statut"></span>
+                </span>
+                    <br><br>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success" data-dismiss="modal">Valider</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Rejeter</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+    {% block script %}
+        {{ parent() }}
+        <script
+                src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"
+                integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30="
+                crossorigin="anonymous"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                $("#dialog1").dialog({
+                    autoOpen: false
+                });
+                var initialLocaleCode = 'fr';
+                var calendarEl = document.getElementById('calendar');
+
+                var calendar = new FullCalendar.Calendar(calendarEl, {
+                    locale: initialLocaleCode,
+                    eventRender: function (event, element) {
+                        // element.attr('href', 'javascript:void(0);');
+                        // element.click(function () {
+
+                        // });
+                    },
+                    eventClick: function (event) {
+
+                        //console.log(event);
+                        var xhr = $.ajax({
+                            url: '{{ path('plans') }}',
+                            data: 'action=update&id=' + event.event.id,
+                            type: "POST",
+                            success: function (data) {
+                                console.log(data, moment.locale('fr'));
+                                moment.locale('en');
+                                if (data.allDay) {
+                                    $("#startTime").html(moment(event.event.start).format('LL'));
+                                    $("#endTime").html(moment(data.end).format('LL'));
+                                } else {
+                                    $("#startTime").html(moment(event.event.start).format('LLL'));
+                                    $("#endTime").html(moment(data.end).format('LLL'));
+                                }
+                                $("#eventInfo").html(event.event.title);
+                                $("#statut").html(data.Statut);
+                                $("#fullCalModal").modal();
+                                $("#client").html(data.Client);
+                            },
+                            error: function () {
+                                alert("erreur lors de l'appel de l'url dans POST event/drop : contactez l'administrateur du site");
+                            },
+                        });
+                    },
+                    navLinks: true,
+                    firstDay: 1,
+                    eventLimit: true, // allow "more" link when too many events
+                    events: {
+                        url: '{{ path('list', {'user' : utilisateur.id }) }}',
+                    },
+                    plugins: ['interaction', 'dayGrid', 'timeGrid'],
+                    header: {
+                        left: 'prev,next today',
+                        center: 'title',
+                        right: 'dayGridMonth,timeGridMonth,timeGridDay,listMonth'
+                    },
+                    eventTimeFormat: { // like '14:30:00'
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit',
+                        hour12: false
+
+                    },
+                });
+
+                calendar.render();
+            });
+
+            $('#calendar').css('font-size', '12px');
+
+
+        </script>
+    {% endblock %}
+

@@ -1,0 +1,975 @@
+{% extends 'Squelette.html.twig' %}
+
+{% block css %}
+    {{ parent() }}
+
+{% endblock %}
+
+{% block Titre %}
+    Portail web de TimSoft - Accueil
+{% endblock %}
+
+{% block Section %} Accueil
+
+{% endblock %}
+
+
+{% block Navigation %}{% endblock %}
+{% block SideBar %}
+{% endblock %}
+{% block Contenu %}
+    <div class="col-md-12">
+        {% for message in app.flashes('notice') %}
+            <div class="flash-notice">
+                <body onLoad="$('#my-modal').modal('show');">
+                <div id="my-modal" class="modal fade">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;
+                                </button>
+                                <h4 class="modal-title">Notification</h4>
+                            </div>
+                            <div class="modal-body">
+                                {{ message }}
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </body>
+            </div>
+        {% endfor %}
+
+        {% for message in app.flashes('Confirmation') %}
+            <div class="flash-notice">
+                <body onLoad="$('#my-modal').modal('show');">
+                <div id="my-modal" class="modal fade">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;
+                                </button>
+                                <h4 class="modal-title">Confirmation de création de compte</h4>
+                            </div>
+                            <div class="modal-body">
+                                {{ message }}
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </body>
+            </div>
+        {% endfor %}
+
+        {% for message in app.flashes('KO-ConsulterUtilisateur') %}
+            <div class="flash-notice">
+                <body onLoad="$('#my-modal').modal('show');">
+                <div id="my-modal" class="modal fade">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;
+                                </button>
+                                <h4 class="modal-title">Erreur</h4>
+                            </div>
+                            <div class="modal-body">
+                                {{ message }}
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </body>
+            </div>
+        {% endfor %}
+
+        {% for message in app.flashes('OK-ReconfirmationMail') %}
+            <div class="flash-notice">
+                <body onLoad="$('#my-modal').modal('show');">
+                <div id="my-modal" class="modal fade">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;
+                                </button>
+                                <h4 class="modal-title">Confirmation de la nouvelle adresse e-mail</h4>
+                            </div>
+                            <div class="modal-body">
+                                {{ message }}
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </body>
+            </div>
+        {% endfor %}
+        <!-- Quelques statistiques -->
+        <div class="row">
+            <div class="col-md-12">
+
+                <div class="card ">
+                    {#                    <div class="card-header with-border">#}
+                    {#                        <h3 class="card-title" style="color:#1E5584">Quelques statistiques</h3>#}
+                    {#                        <div class="card-tools pull-right">#}
+                    {#                            <button type="button" class="btn btn-card-tool" data-widget="collapse"><i#}
+                    {#                                        class="fa fa-minus"></i></button>#}
+                    {#                        </div>#}
+                    {#                    </div>#}
+                    <div class="card-body">
+                        <div class="col-md-12">
+                            {% if app.user.email == "ttrabelsi@timsoft.com.tn" %}
+                                <iframe width="100%" height="700"
+                                        src="https://app.powerbi.com/view?r=eyJrIjoiZDBiNzg2ZWQtNjM5Zi00MmI2LWFiYzctYTVhMTRkMmZkZWU3IiwidCI6IjhhMGJiY2ZlLTQ3ZDQtNDhmMy05NzRlLWZhYTE4NmMwMmUzMiIsImMiOjl9"
+                                        frameborder="0" allowFullScreen="true"></iframe>
+                            {% else %}
+                                <iframe width="100%" height="700"
+                                        src="https://app.powerbi.com/view?r=eyJrIjoiM2FkNTE4YjYtMTllMS00NTQxLTljMTQtNzYxODVlZjE4NDVhIiwidCI6IjhhMGJiY2ZlLTQ3ZDQtNDhmMy05NzRlLWZhYTE4NmMwMmUzMiIsImMiOjl9"
+                                        frameborder="0" allowFullScreen="true"></iframe>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {#<div class="card-body">#}
+                    {#<div class="row">#}
+                </div>
+            </div>
+        </div>
+    </div>
+    {#{% if AutorisationAcces('ConsulterUtilisateur' , Utilisateur) %} <div>#}
+    {#<div class="col-md-3 col-sm-6 col-xs-12">#}
+    {#<a href="{{path('ConsulterUtilisateur')}}">#}
+    {#<div class="info-card">#}
+    {#<span class="info-card-icon bg-aqua"><i class="ion ion-ios-people-outline"></i></span>#}
+
+    {#<div class="info-card-content">#}
+    {#<h5>Utilisateurs</h5>#}
+    {#<span class="info-card-number"><center>{{NBUtilisateur()}}</center></span>#}
+    {#</div>#}
+    {#<!-- /.info-card-content -->#}
+    {#</div></a>#}
+    {#<!-- /.info-card -->#}
+    {#</div>#}
+    {#{%endif%}               #}
+
+    {#{% if AutorisationAcces('ConsulterFacturesEnCours' , Utilisateur) %} <div>#}
+    {#<div class="col-md-3 col-sm-6 col-xs-12">#}
+    {#<a href="{{path('ConsulterFacturesEnCours')}}">#}
+    {#<div class="info-card">#}
+    {#<span class="info-card-icon bg-red"><i class="fa fa-files-o"></i></span>#}
+    {#<center>#}
+    {#<div class="info-card-content">#}
+    {#<h5>Factures en cours</h5>#}
+    {#<span class="info-card-number">{{NBFactureEnCours()}}</span>#}
+    {#</div>#}
+    {#</center>#}
+    {#<!-- /.info-card-content -->#}
+    {#</div>#}
+    {#</a>#}
+    {#<!-- /.info-card -->#}
+    {#</div>#}
+    {#{%endif%}   #}
+
+    {#{% if AutorisationAcces('ConsulterFacturesEnCours' , Utilisateur) %} <div>#}
+    {#<div class="col-md-3 col-sm-6 col-xs-12">#}
+    {#<a href="{{path('ConsulterFacturesEnCours')}}">#}
+    {#<div class="info-card">#}
+    {#<span class="info-card-icon bg-green"><i class="fa fa-money"></i></span>#}
+    {#<center>#}
+    {#<div class="info-card-content">#}
+    {#<h5>Montant en cours</h5>  #}
+    {#<span class="info-card-number">{{MontantFactureEnCours}}</span>#}
+    {#</div>#}
+    {#</center>#}
+    {#<!-- /.info-card-content -->#}
+    {#</div>#}
+    {#</a>#}
+    {#<!-- /.info-card -->#}
+    {#</div>#}
+    {#{%endif%}   #}
+    {##}
+    {#{% if AutorisationAcces('ConsulterClient' , Utilisateur) %} <div>#}
+    {#<div class="col-md-3 col-sm-6 col-xs-12">#}
+    {#<a href="{{path('ConsulterClient')}}">#}
+    {#<div class="info-card">#}
+    {#<span class="info-card-icon bg-yellow"><i class="fa fa-users"></i></span>#}
+    {#<center>#}
+    {#<div class="info-card-content">#}
+    {#<h5>Clients</h5> #}
+    {#<span class="info-card-number">{{NBClient()}}</span>#}
+    {#</div>#}
+    {#</center>#}
+    {#</div>#}
+    {#</a>#}
+    {#</div>#}
+    {#{%endif%}   #}
+    {#<!-- fix for small devices only -->#}
+    {#<div class="clearfix visible-sm-block"></div>#}
+
+
+    {##}
+    {#</div>#}
+    {#</div>#}
+    {#<!-- /.card-body -->#}
+    {#</div>#}
+    {#</div>#}
+    {#</div>                               #}
+
+
+
+    {#<!-- Chiffre d'affaires -->    #}
+    {#<div class="row">#}
+    {#<div class="col-md-12">#}
+    {#<div class="card card-primary">#}
+    {#<div class="card-header with-border">#}
+    {#<h3 class="card-title" style="color:#1E5584">Évolution du chiffre d'affaires entre {{annee - 1 }} et {{annee}}</h3>#}
+    {#<div class="card-tools pull-right">#}
+    {#<button type="button" class="btn btn-card-tool" data-widget="collapse"><i class="fa fa-minus"></i>#}
+    {#</button>#}
+    {#</div>#}
+    {#</div>#}
+    {#<!-- /.card-header -->#}
+    {#<div class="card-body">#}
+    {#<div class="row">#}
+    {#<div class="col-md-12">#}
+    {#<p class="text-center">#}
+    {#<strong>Évolution du chiffre d'affaires entre {{annee - 1 }} et {{annee}}</strong>#}
+    {#</p>#}
+
+    {#<div class="chart">#}
+    {#<!-- Sales Chart Canvas -->#}
+    {#<canvas id="salesChart" style="height: 180px;"></canvas>#}
+    {#</div>#}
+    {#<!-- /.chart-responsive -->#}
+    {#</div>#}
+    {#<!-- /.col -->#}
+
+    {#</div>#}
+    {#<!-- /.row -->#}
+    {#</div>#}
+    {#<!-- ./card-body -->#}
+
+    {#</div>#}
+    {#<!-- /.card -->#}
+    {#</div>#}
+    {#<!-- /.col -->#}
+    {#</div>                          #}
+
+    {#<!-- Facture -->   #}
+    {#<div class="row">#}
+    {#<div class="col-md-12">#}
+
+    {#<div class="card card-primary">#}
+    {#<div class="card-header with-border">#}
+    {#<h3 class="card-title" style="color:#1E5584">Factures</h3>#}
+    {#<div class="card-tools pull-right">#}
+    {#<button type="button" class="btn btn-card-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>#}
+    {#</div>#}
+    {#</div>#}
+    {#<div class="card-body">#}
+    {#<div class="row">#}
+    {#<div class="col-md-8">#}
+    {#<div class="chart-responsive">#}
+    {#<canvas id="pieChart" height="150"></canvas>#}
+    {#</div>#}
+    {#</div>#}
+    {#<div class="col-md-4">#}
+    {#<ul class="chart-legend clearfix">#}
+    {#<li> Le nombre total de factures est <b>{{NBFacture()}}</b></li>#}
+    {#<li><i class="fa fa-circle-o text-gray"></i> Non traitée</li>#}
+    {#<li><i class="fa fa-circle-o text-aqua"></i> Validée</li>#}
+    {#<li><i class="fa fa-circle-o text-light-blue"></i> Règlement en cours</li>#}
+    {#<li><i class="fa fa-circle-o text-green"></i> Règlement prêt</li>#}
+    {#<li><i class="fa fa-circle-o text-red"></i> Refusée</li>#}
+    {#</ul>#}
+    {#</div>#}
+    {#<!-- /.col -->#}
+    {#</div>#}
+    {#<!-- /.row -->#}
+    {#</div>#}
+    {#<!-- /.card-body -->#}
+    {#<div class="card-footer no-padding">#}
+    {#<ul class="nav nav-pills nav-stacked">#}
+    {#<li>#}
+    {##}
+    {#<a href="{{ path('ConsulterFacturesParType', { 'typeFacture': 'Non traitée' }) }}">Factures Non traitées#}
+    {#{%if not (NBFacture() == 0)%}#}
+    {#<span class="pull-right text-gray">{{((NBFactureNonTraite() / NBFacture())*100)|number_format(2, '.')| replace({".00" : ""})}}%</span>#}
+    {#{%else%}#}
+    {#<span class="pull-right text-gray">0%</span>#}
+    {#{% endif%}#}
+    {#</a>#}
+    {#</li>#}
+    {#<li>#}
+    {#<a href="{{ path('ConsulterFacturesParType', { 'typeFacture': 'Validée' }) }}">Factures Validées #}
+    {#{%if not (NBFacture() == 0)%}#}
+    {#<span class="pull-right text-aqua">{{((NBFactureValide() / NBFacture())*100)|number_format(2, '.')| replace({".00" : ""})}}%</span>#}
+    {#{%else%}#}
+    {#<span class="pull-right text-aqua">0%</span>#}
+    {#{% endif%}#}
+    {#</a>#}
+    {#</li>#}
+    {#<li>#}
+    {#<a href="{{ path('ConsulterFacturesParType', { 'typeFacture': 'Règlement en cours' }) }}">Factures dont le règlement en cours#}
+    {#{%if not (NBFacture() == 0)%}#}
+    {#<span class="pull-right text-light-blue">{{((NBFactureReglementEnCours() / NBFacture())*100)|number_format(2, '.')| replace({".00" : ""})}}%</span>#}
+    {#{%else%}#}
+    {#<span class="pull-right text-light-blue">0%</span>#}
+    {#{% endif%}#}
+    {#</a>#}
+    {#</li>#}
+    {#<li>#}
+    {#<a href="{{ path('ConsulterFacturesParType', { 'typeFacture': 'Règlement prêt' }) }}">Factures dont le règlement est prêt#}
+    {#{%if not (NBFacture() == 0)%}#}
+    {#<span class="pull-right text-green">{{((NBFactureReglementPret() / NBFacture())*100)|number_format(2, '.')| replace({".00" : ""})}}%</span>#}
+    {#{%else%}#}
+    {#<span class="pull-right text-green">0%</span>#}
+    {#{% endif%}#}
+    {#</a>#}
+    {#</li>#}
+    {#<li>#}
+    {#{%if (NBFacture() == 0)%}#}
+    {#<a href="{{ path('ConsulterFacturesParType', { 'typeFacture': 'Refusée' }) }}">Factures refusées #}
+    {#<span class="pull-right text-red">0%</span>#}
+    {#</a>  #}
+    {#{%else%}#}
+    {#<a href="{{ path('ConsulterFacturesParType', { 'typeFacture': 'Refusée' }) }}">Factures refusées #}
+    {#<span class="pull-right text-red">{{((NBFactureRefusee() / NBFacture())*100)|number_format(2, '.')| replace({".00" : ""})}}%</span>#}
+    {#</a> #}
+    {#{% endif%}#}
+    {##}
+    {#</li>#}
+    {#</ul>#}
+    {#</div>#}
+    {#</div>#}
+    {#</div>#}
+    {#</div>#}
+
+
+    {#<div class="row">#}
+    {#<div class="col-md-6">#}
+
+    {#<div class="card card-primary">#}
+    {#<div class="card-header with-border">#}
+    {#<h3 class="card-title" style="color:#1E5584">Validation des feuilles de présence</h3>#}
+    {#<div class="card-tools pull-right">#}
+    {#<button type="button" class="btn btn-card-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>#}
+    {#</div>#}
+    {#</div>#}
+    {#<div class="card-body">#}
+    {#<div class="row">#}
+    {#<div class="col-md-6">#}
+    {#<div class="chart-responsive">#}
+    {#<canvas id="pieChartFeuilleIntervention" height="120"></canvas>#}
+    {#</div>#}
+    {#</div>#}
+    {#<div class="col-md-6">#}
+    {#<ul class="chart-legend clearfix">#}
+    {#<li> Le nombre total des feuilles de présence<b> {{NBFeuilleDePresence()}}</b></li>#}
+    {#<li><i class="fa fa-circle-o text-red"></i> Non Validée</li>#}
+    {#<li><i class="fa fa-circle-o text-green"></i> Validée</li>#}
+    {#</ul>#}
+    {#</div>#}
+    {#<!-- /.col -->#}
+    {#</div>#}
+    {#<!-- /.row -->#}
+    {#</div>#}
+    {#<!-- /.card-body -->#}
+    {#<div class="card-footer no-padding">#}
+    {#<ul class="nav nav-pills nav-stacked">#}
+    {#<li>#}
+    {#<a href="{{ path('ConsulterFeuilleParValidation', { 'validation': 0 }) }}">Feuilles Non Validées#}
+    {#{%if not (NBFeuilleDePresence() == 0)%}#}
+    {#<span class="pull-right text-red">{{((NBFeuilleNonValidee() / NBFeuilleDePresence())*100)|number_format(2, '.')| replace({".00" : ""})}}%</span>#}
+    {#{%else%}#}
+    {#<span class="pull-right text-red">0%</span>#}
+    {#{% endif%}    #}
+    {#</a>#}
+    {#</li>#}
+    {#<li>#}
+    {#<a href="{{ path('ConsulterFeuilleParValidation', { 'validation': 1 }) }}">Feuilles Validées #}
+    {#{%if not (NBFeuilleDePresence() == 0)%}#}
+    {#<span class="pull-right text-green">{{((NBFeuilleValidee() / NBFeuilleDePresence())*100)|number_format(2, '.')| replace({".00" : ""})}}%</span>#}
+    {#{%else%}#}
+    {#<span class="pull-right text-green">0%</span>#}
+    {#{% endif%}   #}
+    {#</a>#}
+    {#</li>#}
+    {#</ul>#}
+    {#</div>#}
+    {#</div>#}
+    {#</div>#}
+
+    {#<div class="col-md-6">#}
+
+    {#<div class="card card-primary">#}
+    {#<div class="card-header with-border">#}
+    {#<h3 class="card-title" style="color:#1E5584">Validation des rapports d'intervention</h3>#}
+    {#<div class="card-tools pull-right">#}
+    {#<button type="button" class="btn btn-card-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>#}
+    {#</div>#}
+    {#</div>#}
+    {#<div class="card-body">#}
+    {#<div class="row">#}
+    {#<div class="col-md-6">#}
+    {#<div class="chart-responsive">#}
+    {#<canvas id="pieChartRapportIntervention" height="120"></canvas>#}
+    {#</div>#}
+    {#</div>#}
+    {#<div class="col-md-6">#}
+    {#<ul class="chart-legend clearfix">#}
+    {#<li> Le nombre total de rapports d'intervention<b> {{NBRapport()}}</b></li>#}
+    {#<li><i class="fa fa-circle-o text-red"></i> Non Validé</li>#}
+    {#<li><i class="fa fa-circle-o text-green"></i> Validé</li>#}
+    {#</ul>#}
+    {#</div>#}
+    {#<!-- /.col -->#}
+    {#</div>#}
+    {#<!-- /.row -->#}
+    {#</div>#}
+    {#<!-- /.card-body -->#}
+    {#<div class="card-footer no-padding">#}
+    {#<ul class="nav nav-pills nav-stacked">#}
+    {#<li>#}
+    {#<a href="{{ path('ConsulterRapportParValidation', { 'validation': 0 }) }}">Rapport Non Validés#}
+    {#{%if not (NBRapport() == 0)%}#}
+    {#<span class="pull-right text-red">{{((NBRapportNonValide() / NBRapport())*100)|number_format(2, '.')| replace({".00" : ""})}}%</span>#}
+    {#{%else%}#}
+    {#<span class="pull-right text-red">0%</span>#}
+    {#{% endif%}#}
+    {#</a>#}
+    {#</li>#}
+    {#<li>#}
+    {#<a href="{{ path('ConsulterRapportParValidation', { 'validation': 1 }) }}">Rapports Validés #}
+    {#{%if not (NBRapport() == 0)%}#}
+    {#<span class="pull-right text-green">{{((NBRapportValide() / NBRapport())*100)|number_format(2, '.')| replace({".00" : ""})}}%</span>#}
+    {#{%else%}#}
+    {#<span class="pull-right text-green">0%</span>#}
+    {#{% endif%}    #}
+    {#</a>#}
+    {#</li>#}
+    {#</ul>#}
+    {#</div>#}
+    {#</div>#}
+    {#</div>#}
+
+    {#</div>#}
+
+    {#<!-- Intervention -->                                #}
+    {#<div class="row">#}
+    {#<div class="col-md-12">#}
+
+    {#<div class="card card-primary">#}
+    {#<div class="card-header with-border">#}
+    {#<h3 class="card-title" style="color:#1E5584">Interventions</h3>#}
+    {#<div class="card-tools pull-right">#}
+    {#<button type="button" class="btn btn-card-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>#}
+    {#</div>#}
+    {#</div>#}
+    {#<div class="card-body">#}
+    {#<div class="row">#}
+    {#<div class="col-md-9">#}
+    {#<p class="text-center">#}
+    {#<strong>Interventions de l'année {{annee}}</strong>#}
+    {#</p>#}
+
+    {#<div class="chart">#}
+    {#<!-- Sales Chart Canvas -->#}
+    {#<canvas id="barChart" style="height:280px"></canvas>#}
+    {#</div>#}
+    {#<!-- /.chart-responsive -->#}
+    {#</div>#}
+    {#<!-- /.col -->#}
+    {#<div class="col-md-3">#}
+    {#<p class="text-center">#}
+    {#<strong>Statistiques d'interventions</strong>#}
+    {#</p>#}
+
+    {#<a href="{{path('ConsulterRapportPartType', {'typeIntervention': 'Formation de perfectionnement sur site'})}}">#}
+    {#<div class="progress-group">#}
+    {#<span class="progress-text">Formation de perfectionnement sur site</span>#}
+    {#<span class="progress-number"><b>{{NBInterventionFormationProfSurSite}}/{{NBRapport()}}</b></span>#}
+
+    {#<div class="progress sm">#}
+    {#{%if not (NBRapport() == 0)%}#}
+    {#<div class="progress-bar" style="width: {{((NBInterventionFormationProfSurSite / NBRapport())*100)|number_format(2, '.')| replace({".00" : ""})}}% ;  background-color:#1E5584 !important"></div>#}
+    {#{%else%}#}
+    {#<div class="progress-bar"  style="width: 0% ;  background-color:#1E5584 !important" ></div>#}
+    {#{% endif%} #}
+    {#</div>#}
+    {#</div>#}
+    {#</a>#}
+    {#<a href="{{path('ConsulterRapportPartType', {'typeIntervention': 'Asssistance sur site'})}}">#}
+    {#<div class="progress-group">#}
+    {#<span class="progress-text">Asssistance sur site</span>#}
+    {#<span class="progress-number"><b>{{NBInterventionAssistanecSurSite}}/{{NBRapport()}}</b></span>#}
+    {#<div class="progress sm">#}
+    {#{%if not (NBRapport() == 0)%}#}
+    {#<div class="progress-bar" style="width: {{((NBInterventionAssistanecSurSite / NBRapport())*100)|number_format(2, '.')| replace({".00" : ""})}}% ;  background-color:#1000A5 !important"></div>#}
+    {#{%else%}#}
+    {#<div class="progress-bar"  style="width: 0% ;  background-color:#1000A5 !important" ></div>#}
+    {#{% endif%} #}
+    {#</div>#}
+    {#</div>#}
+    {#</a>#}
+    {#<a href="{{path('ConsulterRapportPartType', {'typeIntervention': 'Intervention technique'})}}">#}
+    {#<div class="progress-group">#}
+    {#<span class="progress-text">Intervention technique</span>#}
+    {#<span class="progress-number"><b>{{NBInterventionTechnique}}/{{NBRapport()}}</b></span>#}
+
+    {#<div class="progress sm">#}
+    {#{%if not (NBRapport() == 0)%}#}
+    {#<div class="progress-bar"  style="width: {{((NBInterventionTechnique / NBRapport())*100)|number_format(2, '.')| replace({".00" : ""})}}% ;  background-color:#21A49E !important" ></div>#}
+    {#{%else%}#}
+    {#<div class="progress-bar"  style="width: 0% ;  background-color:#21A49E !important" ></div>#}
+    {#{% endif%}  #}
+    {#</div>#}
+    {#</div>#}
+    {#</a>#}
+    {#<a href="{{path('ConsulterRapportPartType', {'typeIntervention': 'Audit'})}}">#}
+    {#<div class="progress-group">#}
+    {#<span class="progress-text">Audit</span>#}
+    {#<span class="progress-number"><b>{{NBInterventionAudit}}/{{NBRapport()}}</b></span>#}
+
+    {#<div class="progress sm">#}
+    {#{%if not (NBRapport() == 0)%}#}
+    {#<div class="progress-bar progress-bar-yellow" style="width: {{(NBInterventionAudit / NBRapport())*100}}% ;  background-color:#0796FE !important"></div>#}
+    {#{%else%}#}
+    {#<div class="progress-bar"  style="width: 0% ;  background-color:#0796FE !important" ></div>#}
+    {#{% endif%}    #}
+    {#</div>#}
+    {#</div>#}
+    {#</a>#}
+    {#<!-- /.progress-group -->#}
+    {#</div>#}
+    {#<!-- /.col -->#}
+    {#</div>#}
+    {#<!-- /.row -->#}
+    {#</div>#}
+    {#<!-- /.card-body -->#}
+    {#</div>#}
+    {#</div>#}
+    {#</div>                               #}
+
+    {#<!-- Derniers Clients -->#}
+    {#<div class="row">#}
+    {#<div class="col-md-12">#}
+    {#<div class="card card-primary">#}
+    {#<div class="card-header with-border">#}
+    {#<h3 class="card-title" style="color:#1E5584">Derniers Clients</h3>#}
+    {#<div class="card-tools pull-right">#}
+    {#<button type="button" class="btn btn-card-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>#}
+    {#</div>#}
+    {#</div>#}
+    {#<div class="card-body">#}
+    {#<br>#}
+    {#<table class="table1">#}
+    {#<thead>#}
+    {#<tr class="row1 header blue">#}
+    {#<th class="cell1">#}
+    {#Client#}
+    {#</th>#}
+    {#<th class="cell1">#}
+    {#Email#}
+    {#</th>#}
+    {#<th class="cell1">#}
+    {#<center> Date d'adhesion</center>#}
+    {#</th>#}
+    {#<th class="cell1">#}
+    {#<center> Action </center>#}
+    {#</th>#}
+    {#</tr>#}
+    {#</thead>#}
+    {#<tbody>#}
+    {#{% for clt in LastClients%}#}
+    {#<tr class="row1">#}
+    {#<td class="cell1">#}
+    {#{{clt.raisonSociale}}#}
+    {#</td>#}
+    {#<td class="cell1">#}
+    {#{{clt.adresseMailClient}}#}
+    {#</td>#}
+    {#<td class="cell1">#}
+    {#<center>{{clt.dateAdhesionClient|date('d-m-Y')}}</center>#}
+    {#</td>#}
+    {#<td class="cell1">#}
+    {#<center>#}
+    {#<a href="{{ path('ConsulterUnClient', { 'id': clt.id }) }}"><img src="{{ asset('Template/Consulter.png') }}"  title="Consulter les informations de {{clt.raisonSociale}}"></a>#}
+    {#<a href="{{ path('ModifierClient', { 'id': clt.id }) }}"><img src="{{ asset('Template/Editer.png') }}"  title="Modifier {{clt.raisonSociale}}"></a>#}
+    {#<a href="{{ path('SupprimerUnClient', { 'id': clt.id }) }}"><img src="{{ asset('Template/SupprimerUser.png') }}"  title="Supprimer {{clt.raisonSociale}}"></a>#}
+    {#</center> #}
+    {#</td>#}
+    {#</tr>#}
+    {#{% endfor%}#}
+    {#</tbody>#}
+    {#</table>#}
+    {#</div>#}
+
+    {#</div>#}
+    {#</div>#}
+    {#</div>#}
+
+
+
+
+
+    {#</div>#}
+
+{% endblock %}
+
+                {% block script %}
+                    {{ parent() }}
+                    <!-- ChartJS -->
+                    <script src="{{ asset('Template/bower_components/Chart.js/Chart.js') }}"></script>
+                    <script src="{{ asset('Template/dist/js/pages/dashboard2.js') }}"></script>
+
+                    <!-- Fin ChartJS -->
+                    {#<script>#}
+                    {#var pieChartCanvas = $('#pieChart').get(0).getContext('2d');#}
+                    {#var pieChart = new Chart(pieChartCanvas);#}
+                    {#//var data = "";// haka mezelou string#}
+                    {#//data = $.parseJSON(data);// lehna 3malna el parse bech ywali objet json#}
+                    {#//console.log(data);#}
+                    {#var PieData = [#}
+                    {#{#}
+                    {#value: '{{ NBFactureNonTraite() }}', // hetha nombre facture mta3 chnoa ?#}
+                    {#color: '#DBD6DE',#}
+                    {#highlight: '#DBD6DE',#}
+                    {#label: 'Non Traitée'#}
+                    {#},#}
+                    {#{#}
+                    {#value: '{{ NBFactureValide() }}',#}
+                    {#color: '#00C0EF',#}
+                    {#highlight: '#00C0EF',#}
+                    {#label: 'Validée'#}
+                    {#},#}
+                    {#{#}
+                    {#value: '{{ NBFactureReglementEnCours() }}',#}
+                    {#color: '#688DBC',#}
+                    {#highlight: '#688DBC',#}
+                    {#label: 'Règlement en cours'#}
+                    {#},#}
+                    {#{#}
+                    {#value: '{{ NBFactureReglementPret() }}',#}
+                    {#color: '#00A65A',#}
+                    {#highlight: '#00A65A',#}
+                    {#label: 'Règlement prêt'#}
+                    {#},#}
+                    {#{#}
+                    {#value: '{{ NBFactureRefusee() }}',#}
+                    {#color: '#DF4B39',#}
+                    {#highlight: '#DF4B39',#}
+                    {#label: 'Refusée'#}
+                    {#}#}
+                    {#];#}
+                    {#var pieOptions = {#}
+                    {#// Boolean - Whether we should show a stroke on each segment#}
+                    {#segmentShowStroke: true,#}
+                    {#// String - The colour of each segment stroke#}
+                    {#segmentStrokeColor: '#fff',#}
+                    {#// Number - The width of each segment stroke#}
+                    {#segmentStrokeWidth: 1,#}
+                    {#// Number - The percentage of the chart that we cut out of the middle#}
+                    {#percentageInnerCutout: 50, // This is 0 for Pie charts#}
+                    {#// Number - Amount of animation steps#}
+                    {#animationSteps: 100,#}
+                    {#// String - Animation easing effect#}
+                    {#animationEasing: 'easeOutBounce',#}
+                    {#// Boolean - Whether we animate the rotation of the Doughnut#}
+                    {#animateRotate: true,#}
+                    {#// Boolean - Whether we animate scaling the Doughnut from the centre#}
+                    {#animateScale: false,#}
+                    {#// Boolean - whether to make the chart responsive to window resizing#}
+                    {#responsive: true,#}
+                    {#// Boolean - whether to maintain the starting aspect ratio or not when responsive, if set to false, will take up entire container#}
+                    {#maintainAspectRatio: false,#}
+
+                    {#// String - A tooltip template#}
+                    {#tooltipTemplate: '<%=value %> <%=label%>'#}
+                    {#};#}
+                    {#// Create pie or douhnut chart#}
+                    {#// You can switch between pie and douhnut using the method below.#}
+                    {#pieChart.Doughnut(PieData, pieOptions);#}
+                    {#</script>#}
+                    {#<script>#}
+                    {#var pieChartCanvas = $('#pieChartRapportIntervention').get(0).getContext('2d');#}
+                    {#var pieChart = new Chart(pieChartCanvas);#}
+                    {#//var data = "";// haka mezelou string#}
+                    {#//data = $.parseJSON(data);// lehna 3malna el parse bech ywali objet json#}
+                    {#//console.log(data);#}
+                    {#var PieData = [#}
+                    {#{#}
+                    {#value: '{{ NBRapportValide() }}',#}
+                    {#color: '#00A65A',#}
+                    {#highlight: '#00A65A',#}
+                    {#label: 'Rapport validé'#}
+                    {#},#}
+                    {#{#}
+                    {#value: '{{ NBRapportNonValide() }}',#}
+                    {#color: '#DF4B39',#}
+                    {#highlight: '#DF4B39',#}
+                    {#label: 'Rapport non validé'#}
+                    {#}#}
+                    {#];#}
+                    {#var pieOptions = {#}
+                    {#// Boolean - Whether we should show a stroke on each segment#}
+                    {#segmentShowStroke: true,#}
+                    {#// String - The colour of each segment stroke#}
+                    {#segmentStrokeColor: '#fff',#}
+                    {#// Number - The width of each segment stroke#}
+                    {#segmentStrokeWidth: 1,#}
+                    {#// Number - The percentage of the chart that we cut out of the middle#}
+                    {#percentageInnerCutout: 50, // This is 0 for Pie charts#}
+                    {#// Number - Amount of animation steps#}
+                    {#animationSteps: 100,#}
+                    {#// String - Animation easing effect#}
+                    {#animationEasing: 'easeOutBounce',#}
+                    {#// Boolean - Whether we animate the rotation of the Doughnut#}
+                    {#animateRotate: true,#}
+                    {#// Boolean - Whether we animate scaling the Doughnut from the centre#}
+                    {#animateScale: false,#}
+                    {#// Boolean - whether to make the chart responsive to window resizing#}
+                    {#responsive: true,#}
+                    {#// Boolean - whether to maintain the starting aspect ratio or not when responsive, if set to false, will take up entire container#}
+                    {#maintainAspectRatio: false,#}
+
+                    {#// String - A tooltip template#}
+                    {#tooltipTemplate: '<%=value %> <%=label%>'#}
+                    {#};#}
+                    {#// Create pie or douhnut chart#}
+                    {#// You can switch between pie and douhnut using the method below.#}
+                    {#pieChart.Doughnut(PieData, pieOptions);#}
+                    {#</script>#}
+                    {#<script>#}
+                    {#var pieChartCanvas = $('#pieChartFeuilleIntervention').get(0).getContext('2d');#}
+                    {#var pieChart = new Chart(pieChartCanvas);#}
+                    {#//var data = "";// haka mezelou string#}
+                    {#//data = $.parseJSON(data);// lehna 3malna el parse bech ywali objet json#}
+                    {#//console.log(data);#}
+                    {#var PieData = [#}
+                    {#{#}
+                    {#value: '{{ NBFeuilleValidee() }}',#}
+                    {#color: '#00A65A',#}
+                    {#highlight: '#00A65A',#}
+                    {#label: 'Feuille validée'#}
+                    {#},#}
+                    {#{#}
+                    {#value: '{{ NBFeuilleNonValidee() }}',#}
+                    {#color: '#DF4B39',#}
+                    {#highlight: '#DF4B39',#}
+                    {#label: 'Feuille non validée'#}
+                    {#}#}
+                    {#];#}
+                    {#var pieOptions = {#}
+                    {#// Boolean - Whether we should show a stroke on each segment#}
+                    {#segmentShowStroke: true,#}
+                    {#// String - The colour of each segment stroke#}
+                    {#segmentStrokeColor: '#fff',#}
+                    {#// Number - The width of each segment stroke#}
+                    {#segmentStrokeWidth: 1,#}
+                    {#// Number - The percentage of the chart that we cut out of the middle#}
+                    {#percentageInnerCutout: 50, // This is 0 for Pie charts#}
+                    {#// Number - Amount of animation steps#}
+                    {#animationSteps: 100,#}
+                    {#// String - Animation easing effect#}
+                    {#animationEasing: 'easeOutBounce',#}
+                    {#// Boolean - Whether we animate the rotation of the Doughnut#}
+                    {#animateRotate: true,#}
+                    {#// Boolean - Whether we animate scaling the Doughnut from the centre#}
+                    {#animateScale: false,#}
+                    {#// Boolean - whether to make the chart responsive to window resizing#}
+                    {#responsive: true,#}
+                    {#// Boolean - whether to maintain the starting aspect ratio or not when responsive, if set to false, will take up entire container#}
+                    {#maintainAspectRatio: false,#}
+
+                    {#// String - A tooltip template#}
+                    {#tooltipTemplate: '<%=value %> <%=label%>'#}
+                    {#};#}
+                    {#// Create pie or douhnut chart#}
+                    {#// You can switch between pie and douhnut using the method below.#}
+                    {#pieChart.Doughnut(PieData, pieOptions);#}
+                    {#</script>#}
+                    {#<script>#}
+                    {#$(function () {#}
+                    {#//-------------#}
+                    {#//- BAR CHART -#}
+                    {#//-------------#}
+                    {#let barData = '{{ bar }}';#}
+                    {#barData = $.parseJSON(barData);#}
+                    {#console.log('bar', barData);#}
+                    {#var barChartCanvas = $('#barChart').get(0).getContext('2d')#}
+                    {#var barChart = new Chart(barChartCanvas)#}
+                    {#var barChartData =#}
+                    {#{#}
+                    {#labels: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],#}
+                    {#datasets: [#}
+                    {#{#}
+                    {#label: 'Formation de perfectionnement sur site',#}
+                    {#fillColor: 'rgba(30, 85, 132, 1)',#}
+                    {#strokeColor: 'rgba(30, 85, 132, 1)',#}
+                    {#pointColor: 'rgba(30, 85, 132, 1)',#}
+                    {#pointStrokeColor: '#1E5584',#}
+                    {#pointHighlightFill: '#fff',#}
+                    {#pointHighlightStroke: 'rgba(220,220,220,1)',#}
+                    {#data: barData[0]#}
+                    {#},#}
+                    {#{#}
+                    {#label: 'Asssistance sur site',#}
+                    {#fillColor: 'rgba(121,183,178,0.9)',#}
+                    {#strokeColor: 'rgba(121,183,178,0.8)',#}
+                    {#pointColor: '#79B7B2',#}
+                    {#pointStrokeColor: 'rgba(121,183,178,1)',#}
+                    {#pointHighlightFill: '#fff',#}
+                    {#pointHighlightStroke: 'rgba(121,183,178,1)',#}
+                    {#data: barData[1]#}
+                    {#},#}
+                    {#{#}
+                    {#label: 'Intervention technique',#}
+                    {#fillColor: 'rgba(27,163,156,0.9)',#}
+                    {#strokeColor: 'rgba(27,163,156,0.8)',#}
+                    {#pointColor: '#3b8bba',#}
+                    {#pointStrokeColor: 'rgba(27,163,156,1)',#}
+                    {#pointHighlightFill: '#fff',#}
+                    {#pointHighlightStroke: 'rgba(27,163,156,1)',#}
+                    {#data: barData[2]#}
+                    {#},#}
+                    {#{#}
+                    {#label: 'Audit',#}
+                    {#fillColor: 'rgba(0,148,255,0.9)',#}
+                    {#strokeColor: 'rgba(0,148,255,0.8)',#}
+                    {#pointColor: '#3b8bba',#}
+                    {#pointStrokeColor: 'rgba(0,148,255,1)',#}
+                    {#pointHighlightFill: '#fff',#}
+                    {#pointHighlightStroke: 'rgba(60,141,188,1)',#}
+                    {#data: barData[3]#}
+                    {#}#}
+                    {#]#}
+                    {#}#}
+                    {#barChartData.datasets[1].fillColor = '#1000A5'#}
+                    {#barChartData.datasets[1].strokeColor = '#1000A5'#}
+                    {#barChartData.datasets[1].pointColor = '#1000A5'#}
+                    {#var barChartOptions = {#}
+                    {#//Boolean - Whether the scale should start at zero, or an order of magnitude down from the lowest value#}
+                    {#scaleBeginAtZero: true,#}
+                    {#//Boolean - Whether grid lines are shown across the chart#}
+                    {#scaleShowGridLines: true,#}
+                    {#//String - Colour of the grid lines#}
+                    {#scaleGridLineColor: 'rgba(0,0,0,.05)',#}
+                    {#//Number - Width of the grid lines#}
+                    {#scaleGridLineWidth: 1,#}
+                    {#//Boolean - Whether to show horizontal lines (except X axis)#}
+                    {#scaleShowHorizontalLines: true,#}
+                    {#//Boolean - Whether to show vertical lines (except Y axis)#}
+                    {#scaleShowVerticalLines: true,#}
+                    {#//Boolean - If there is a stroke on each bar#}
+                    {#barShowStroke: true,#}
+                    {#//Number - Pixel width of the bar stroke#}
+                    {#barStrokeWidth: 2,#}
+                    {#//Number - Spacing between each of the X value sets#}
+                    {#barValueSpacing: 5,#}
+                    {#//Number - Spacing between data sets within X values#}
+                    {#barDatasetSpacing: 1,#}
+                    {#//String - A legend template#}
+                    {#responsive: true,#}
+                    {#maintainAspectRatio: true,#}
+                    {#}#}
+
+                    {#barChartOptions.datasetFill = false#}
+                    {#barChart.Bar(barChartData, barChartOptions)#}
+                    {#})#}
+                    {#</script>#}
+
+                    {#<script>#}
+                    {#$(function () {#}
+                    {#// -----------------------#}
+                    {#// - MONTHLY SALES CHART -#}
+                    {#// -----------------------#}
+                    {#let chiffreData = '{{ Chiffre }}';#}
+                    {#chiffreData = $.parseJSON(chiffreData);#}
+                    {#// Get context with jQuery - using jQuery's .get() method.#}
+                    {#var salesChartCanvas = $('#salesChart').get(0).getContext('2d');#}
+                    {#// This will get the first returned node in the jQuery collection.#}
+                    {#var salesChart = new Chart(salesChartCanvas);#}
+                    {#console.log("cc");#}
+                    {#var salesChartData = {#}
+                    {#labels: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],#}
+                    {#datasets: [#}
+                    {#{#}
+                    {#label: 'Chiffre d\'affaires 2018',#}
+                    {#fillColor: 'rgb(30, 85, 132)',#}
+                    {#strokeColor: 'rgb(30, 85, 132)',#}
+                    {#pointColor: 'rgb(30, 85, 132)',#}
+                    {#pointStrokeColor: '#1E5584',#}
+                    {#pointHighlightFill: '#fff',#}
+                    {#pointHighlightStroke: 'rgb(220,220,220)',#}
+                    {#data: chiffreData[0]#}
+                    {#},#}
+                    {#{#}
+                    {#label: 'Chiffre d\'affaires 2017',#}
+                    {#fillColor: 'rgb(210, 214, 222)',#}
+                    {#strokeColor: 'rgb(210, 214, 222)',#}
+                    {#pointColor: 'rgb(210, 214, 222)',#}
+                    {#pointStrokeColor: '#c1c7d1',#}
+                    {#pointHighlightFill: '#fff',#}
+                    {#pointHighlightStroke: 'rgb(220,220,220)',#}
+                    {#data: chiffreData[1]#}
+                    {#}#}
+                    {#]#}
+                    {#};#}
+
+                    {#var salesChartOptions = {#}
+                    {#// Boolean - If we should show the scale at all#}
+                    {#showScale: true,#}
+                    {#// Boolean - Whether grid lines are shown across the chart#}
+                    {#scaleShowGridLines: false,#}
+                    {#// String - Colour of the grid lines#}
+                    {#scaleGridLineColor: 'rgba(0,0,0,.05)',#}
+                    {#// Number - Width of the grid lines#}
+                    {#scaleGridLineWidth: 1,#}
+                    {#// Boolean - Whether to show horizontal lines (except X axis)#}
+                    {#scaleShowHorizontalLines: true,#}
+                    {#// Boolean - Whether to show vertical lines (except Y axis)#}
+                    {#scaleShowVerticalLines: true,#}
+                    {#// Boolean - Whether the line is curved between points#}
+                    {#bezierCurve: true,#}
+                    {#// Number - Tension of the bezier curve between points#}
+                    {#bezierCurveTension: 0.3,#}
+                    {#// Boolean - Whether to show a dot for each point#}
+                    {#pointDot: false,#}
+                    {#// Number - Radius of each point dot in pixels#}
+                    {#pointDotRadius: 4,#}
+                    {#// Number - Pixel width of point dot stroke#}
+                    {#pointDotStrokeWidth: 1,#}
+                    {#// Number - amount extra to add to the radius to cater for hit detection outside the drawn point#}
+                    {#pointHitDetectionRadius: 20,#}
+                    {#// Boolean - Whether to show a stroke for datasets#}
+                    {#datasetStroke: true,#}
+                    {#// Number - Pixel width of dataset stroke#}
+                    {#datasetStrokeWidth: 2,#}
+                    {#// Boolean - Whether to fill the dataset with a color#}
+                    {#datasetFill: true,#}
+                    {#// String - A legend template#}
+                    {#maintainAspectRatio: true,#}
+                    {#// Boolean - whether to make the chart responsive to window resizing#}
+                    {#responsive: true#}
+                    {#};#}
+
+                    {#// Create the line chart#}
+                    {#salesChart.Line(salesChartData, salesChartOptions);#}
+
+                    {#// ---------------------------#}
+                    {#// - END MONTHLY SALES CHART -#}
+                    {#// ---------------------------#}
+                    {#})#}
+                    {#</script>#}
+
+                {% endblock %}

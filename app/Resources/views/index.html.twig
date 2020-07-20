@@ -1,0 +1,56 @@
+
+{% block body %}
+    <h1>Clients list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Codeclient</th>
+                <th>Raisonsociale</th>
+                <th>Clientfacture</th>
+                <th>Paysclient</th>
+                <th>Adresseclient</th>
+                <th>Villeclient</th>
+                <th>Codepostalclient</th>
+                <th>Telephone</th>
+                <th>Faxclient</th>
+                <th>Adressemailclient</th>
+                <th>Dateadhesionclient</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for client in clients %}
+            <tr>
+                <td><a href="{{ path('GestionDesClients_show', { 'codeClient': client.codeClient }) }}">{{ client.codeClient }}</a></td>
+                <td>{{ client.raisonSociale }}</td>
+                <td>{{ client.clientFacture }}</td>
+                <td>{{ client.paysClient }}</td>
+                <td>{{ client.adresseClient }}</td>
+                <td>{{ client.villeClient }}</td>
+                <td>{{ client.codePostalClient }}</td>
+                <td>{{ client.telephone }}</td>
+                <td>{{ client.faxClient }}</td>
+                <td>{{ client.adresseMailClient }}</td>
+                <td>{% if client.dateAdhesionClient %}{{ client.dateAdhesionClient|date('Y-m-d') }}{% endif %}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('GestionDesClients_show', { 'codeClient': client.codeClient }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('GestionDesClients_edit', { 'codeClient': client.codeClient }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('GestionDesClients_new') }}">Create a new client</a>
+        </li>
+    </ul>
+{% endblock %}

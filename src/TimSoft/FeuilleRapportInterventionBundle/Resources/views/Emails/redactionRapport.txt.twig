@@ -1,0 +1,31 @@
+{% set Feuille = Rapport.FeuilleDePresence %}
+<h3>Informations sur l'intervention du {{Feuille.dateIntervention|date('d-m-Y')}} effectuée par {{Feuille.intervenant}} !</h3>
+
+<b>Mode de l'intervention:</b>  {{Feuille.modeIntervention}} <br>
+<b>Date:</b>  {{Feuille.dateIntervention|date('d-m-Y')}}<br>
+<b>Lieu de l'intervention:</b>  {{Feuille.lieuIntervention}} <br>
+<b>Intervenant:</b>  {{Feuille.intervenant}} <br>
+<b>Participant:</b><br>
+{% for Participant in Feuille.participants %}
+    -  {{Participant.nomParticipant}} {{Participant.prenomParticipant}}<br>
+{% endfor%}
+
+{% if not(Feuille.heureDebutInterventionMatin == null) %}
+    <b>Horaire d'intervention (Matin) :</b> de {{Feuille.heureDebutInterventionMatin|date('H:i')}} à {{Feuille.heureFinInterventionMatin|date('H:i')}}<br>
+{% endif %}
+ {% if not(Feuille.heureDebutInterventionAM == null) %}
+    <b>Horaire d'intervention (Après-Midi) :</b> de {{Feuille.heureDebutInterventionAM|date('H:i')}} à {{Feuille.heureFinInterventionAM|date('H:i')}} <br>
+{% endif %}
+<b>Numéro de commande:</b> {{Feuille.numeroCommande}} <br>
+<b>Libellé de l'intervention:</b> {{Feuille.libelleCommande}} <br><br>
+<b>Rapport de l'intervention: <b>{{ Rapport.compteRenduIntervention }}<br><br>
+{% if Rapport.confirmationDeInterventionParClient %}
+<b>Statut du rapport: </b>Validé<br><br>
+{% else %}
+<b>Statut du rapport: </b> En attente de validation client<br>
+Veuillez procéder svp à la validation de cette intervention : <a href="http://localhost:8383/portailtimsoft/web/app_dev.php/ConsulterFeuillePresence/">« lien portail »</a> <br><br>
+
+{% endif %}
+
+Cordialement,<br>
+Direction des Opérations Timsoft !

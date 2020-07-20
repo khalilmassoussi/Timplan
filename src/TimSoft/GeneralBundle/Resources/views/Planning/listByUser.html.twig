@@ -1,0 +1,181 @@
+{% extends 'Squelette.html.twig' %}
+
+{% block Titre %}
+    Portail web de TimSoft - Feuille de présence & Rapport d'intervention
+{% endblock %}
+
+{% block Section %}
+    <h1>
+        Rédaction des feuilles de présence & rapports d’intervention
+    </h1>
+{% endblock %}
+
+
+{% block Navigation %}
+    <li class="breadcrumb-item active">Rediger FP & RI</li>
+{% endblock %}
+{% block SideBar %}
+
+{% endblock %}
+{% block Contenu %}
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fullcalendar/core@4.1.0/main.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@4.1.0/main.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@4.1.0/main.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@4.1.0/main.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/interaction@4.1.0/main.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@4.1.0/main.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@4.1.0/main.min.js"></script>
+    <script src="https://unpkg.com/@fullcalendar/core@4.3.1/locales-all.js"></script>
+    {#<script src="https://unpkg.com/@fullcalendar/interaction@4.3.0/main.min.js"></script>#}
+    <script src="https://unpkg.com/@fullcalendar/list@4.3.0/main.min.js"></script>
+    <script src='http://fullcalendar.io/js/fullcalendar-2.1.1/lib/moment.min.js'></script>
+    <script src='http://fullcalendar.io/js/fullcalendar-2.1.1/lib/jquery.min.js'></script>
+    <script src="http://fullcalendar.io/js/fullcalendar-2.1.1/lib/jquery-ui.custom.min.js"></script>
+    <script src='http://fullcalendar.io/js/fullcalendar-2.1.1/fullcalendar.min.js'></script>
+
+    <style>
+    </style>
+    <div class="col-lg-12">
+        <div class="card">
+            {#            <div class="card-header with-border">#}
+            {#                <h2 class="card-title" style="color:#1E5584">Mes plannings confirmé</h2>#}
+            {#            </div>#}
+            <div class="card-tools pull-center">
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        {#{{ dump(plannings) }}#}
+                        <table style="width: 100%" class="table table-bordered table-striped dataTable" id="myTable">
+                            <thead>
+                            <tr class="row1 header blue">
+                                <td style="display: none"></td>
+                                <td class="cell1">Date</td>
+                                <td class="cell1">Client</td>
+                                <td class="cell1">Libellé Intervention</td>
+                                {% if app.user.roleUtilisateur =='ROLE_ADMIN' %}
+                                    <td class="cell1">Intervenant</td>
+                                {% endif %}
+                                <td class="cell1">Commande</td>
+                                <td class="cell1">
+                                    <center>Action</center>
+                                </td>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for pl in plannings %}
+                                <tr class="row1">
+                                    <td style="display: none">{{ pl.id }}</td>
+                                    <td class="cell1 diff">
+                                        {{ pl.start|date("d/m/Y") }}
+                                    </td>
+                                    <td class="cell1">
+                                        {% if pl.lc %}
+                                            {{ pl.lc.commande.client.raisonSociale }}
+                                        {% endif %}
+                                    </td>
+                                    <td class="cell1">
+                                        {% if pl.lc %}
+                                            {{ pl.lc.libelle }}
+                                        {% endif %}
+                                    </td>
+                                    {% if app.user.roleUtilisateur =='ROLE_ADMIN' or app.user.roleUtilisateur =='ROLE_GESTIONNAIRE' %}
+                                        <td class="cell1">{{ pl.utilisateur }}</td>
+                                    {% endif %}
+                                    <td class="cell1">
+                                        {% if pl.lc %}
+                                            {{ pl.lc.commande.nCommande }}
+                                        {% endif %}
+                                    </td>
+                                    <td class="cell1">
+
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/fosjsrouting/js/router.min.js') }}"></script>
+    <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
+    <script>
+        $(document).ready(function () {
+            var table = $('#myTable').DataTable({
+                language: {
+                    processing: "Traitement en cours...",
+                    search: "Rechercher&nbsp;:",
+                    lengthMenu: "Afficher _MENU_ &eacute;l&eacute;ments",
+                    info: "Affichage de l'&eacute;lement _START_ &agrave; _END_ sur _TOTAL_ &eacute;l&eacute;ments",
+                    infoEmpty: "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
+                    infoFiltered: "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
+                    infoPostFix: "",
+                    loadingRecords: "Chargement en cours...",
+                    zeroRecords: "Aucun &eacute;l&eacute;ment &agrave; afficher",
+                    emptyTable: "Aucune donnée disponible dans le tableau",
+                    paginate: {
+                        first: "Premier",
+                        previous: "Précédent",
+                        next: "Suivant",
+                        last: "Dernier"
+                    },
+                    aria: {
+                        sortAscending: ": activer pour trier la colonne par ordre croissant",
+                        sortDescending: ": activer pour trier la colonne par ordre décroissant"
+                    },
+                    "processing": true,
+                    "serverSide": true,
+                    /*"ajax": "''"*/
+                },
+                "columnDefs": [{
+                    "targets": -1,
+                    "data": null,
+                    "defaultContent": "<center><a href='#'><i class=\"fas fa-pen fa-lg\" title='Remplir la feuille de présence'></i></center>"
+                }],
+                "order": [[0, "desc"]]
+            });
+            $('#myTable tbody').on('click', 'a', function () {
+                var data = table.row($(this).parents('tr')).data();
+                $.ajax({
+                    type: "POST",
+                    url: '{{ path('RemplirFeuillePresence') }}',
+                    data: 'action=update&id=' + data[0],
+                    // async: false,
+                    success: function (data) {
+                        {#alert('{{ path('RemplirFeuillePresence') }}');#}
+                        // window.location.href = Routing.generate('ModifierFeuillePresence', {
+                        //     id: data.id
+                        // }, true);
+                        Routing.setPort(null);
+                        location.replace(Routing.generate('ModifierFeuillePresence', {
+                            id: data.id
+                        }, true));
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'success',
+                            title: 'Feuille de présence ajoutée avec succès',
+                            showConfirmButton: false,
+                            timer: 2500
+                        });
+                        // alert("Feuille de présence ajoutée avec succès");
+                    },
+                    error: function () {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Quelque chose c\'est mal passé. Merci d\'essayer plus tard',
+                        })
+                    }
+
+                });
+                //   alert(data[0]);
+            });
+        });
+    </script>
+{% endblock %}

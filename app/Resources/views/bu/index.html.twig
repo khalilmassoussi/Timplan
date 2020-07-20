@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Bus list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Libelle</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for bu in bus %}
+            <tr>
+                <td><a href="{{ path('bu_show', { 'id': bu.id }) }}">{{ bu.id }}</a></td>
+                <td>{{ bu.libelle }}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('bu_show', { 'id': bu.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('bu_edit', { 'id': bu.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('bu_new') }}">Create a new bu</a>
+        </li>
+    </ul>
+{% endblock %}

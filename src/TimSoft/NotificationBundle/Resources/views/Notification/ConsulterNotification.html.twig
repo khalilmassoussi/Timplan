@@ -1,0 +1,154 @@
+{% extends 'Squelette.html.twig' %}
+
+{% block Titre %}
+    Portail web de TimSoft - Mes Notifications
+{% endblock %}
+
+{% block Section %} Notifications
+
+{% endblock %}
+
+{% block Navigation %}
+    <li class="active">Mes Notifications</li>
+{% endblock %}
+
+{% block Contenu %}
+
+    <div class="col-md-9">
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h2 class="box-title" style="color:#1E5584">Toutes Mes Notifications</h2>
+            </div>
+            <div class="box-body">
+                <br>
+                <br>
+                <table id="TableNotification" class="display" style="width:100%">
+                    <thead>
+                    <tr class="row1 header blue">
+                        <th class="cell1">
+                            Titre
+                        </th>
+                        <th class="cell1">
+                            Responsable
+                        </th>
+                        <th class="cell1">
+                            Date
+                        </th>
+                        <th class="cell1">
+                            Action
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for Notification in Notifications %}
+                        {% if Notification.vu == 0 %}
+                            <tr class="row1">
+                            <td class="cell1">
+                                <b> {{ Notification.Notification.title }}</b>
+                            </td>
+                            <td class="cell1">
+                                <b> {{ Notification.Notification.responsable }}</b>
+                            </td>
+                            <td class="cell1">
+                                <b>{{ Notification.Notification.date|date('d-m-Y à H:i') }}</b>
+                            </td>
+                        {% else %}
+                            <tr class="row1">
+                            <td class="cell1">
+                                {{ Notification.Notification.title }}
+                            </td>
+                            <td class="cell1">
+                                {{ Notification.Notification.responsable }}
+                            </td>
+                            <td class="cell1">
+                                {{ Notification.Notification.date|date('d-m-Y à H:i') }}
+                            </td>
+                        {% endif %}
+                        <td class="cell1">
+                            {% if Notification.Notification.parameters == null %}
+                                <a href="{{ path(Notification.Notification.route) }}"
+                                   onclick="ModifVu({{ Notification.id }})"><img
+                                            src="{{ asset('Template/Consulter.png') }}"
+                                            title="Consulter la notification"></a>
+                            {% else %}
+                                <a href="{{ path(Notification.Notification.route, Notification.Notification.parameters) }}"
+                                   onclick="ModifVu({{ Notification.id }})"><img
+                                            src="{{ asset('Template/Consulter.png') }}"
+                                            title="Consulter la notification"></a>
+                            {% endif %}
+                            {% if Notification.vu %}
+                                <img src="{{ asset('Template/Vu.png') }}" title="Déjà Vu">
+                            {% else %}
+                                <a onclick="ModifVu({{ Notification.id }})"><img src="{{ asset('Template/Vu.png') }}"
+                                                                                 title="Marquer Comme Vu"></a>
+                            {% endif %}
+                        </td>
+                        </tr>
+
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <br>
+            </div>
+        </div>
+        <br><br>
+    </div>
+{% endblock %}
+
+{% block script %}
+    {{ parent() }}
+    <script type="text/javascript">
+        function ModifVu($id) {
+            alert($id);
+            $.ajax({
+                type: 'post',
+                //url: Routing.generate('ChangerStatutNotification', {id: $id }),
+                url: '{{ path('ChangerStatutNotification') }}',
+                data: 'action=update&id=' + $id
+            });
+        }
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var table = $('#TableNotification').DataTable({
+                language: {
+                    processing: "Traitement en cours...",
+                    search: "Rechercher&nbsp;:",
+                    lengthMenu: "Afficher _MENU_ &eacute;l&eacute;ments",
+                    info: "Affichage de l'&eacute;lement _START_ &agrave; _END_ sur _TOTAL_ &eacute;l&eacute;ments",
+                    infoEmpty: "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
+                    infoFiltered: "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
+                    infoPostFix: "",
+                    loadingRecords: "Chargement en cours...",
+                    zeroRecords: "Aucun &eacute;l&eacute;ment &agrave; afficher",
+                    emptyTable: "Aucune donnée disponible dans le tableau",
+                    paginate: {
+                        first: "Premier",
+                        previous: "Précédent",
+                        next: "Suivant",
+                        last: "Dernier"
+                    },
+                    aria: {
+                        sortAscending: ": activer pour trier la colonne par ordre croissant",
+                        sortDescending: ": activer pour trier la colonne par ordre décroissant"
+                    },
+                    "processing": true,
+                    "serverSide": true,
+                    /*"ajax": "''"*/
+                },
+                "paging": true,
+                "ordering": true,
+                "info": true,
+                "aoColumns": [
+                    null,
+                    null,
+                    null,
+                    {"bSortable": false}
+                ],
+                "order": [[2, "desc"]]
+            });
+
+        });
+    </script>
+
+{% endblock %}

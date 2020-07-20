@@ -1,0 +1,118 @@
+{% extends 'Squelette.html.twig' %}
+
+{% block Titre %}
+    Portail web de TimSoft - Consultation de la facture N°{{Facture.numeroFacture }}
+{%endblock %}
+
+{%block Section %} 
+    <h1>
+        Gestion des clients
+        <small>Consultation d'une facture</small>
+    </h1>
+{% endblock %}
+
+
+{% block Navigation %}
+    {% if AutorisationAcces('ConsulterFactures' , Utilisateur) %} 
+        <li><a href="{{path('ConsulterFactures')}}">Consulter la liste des factures</a></li>
+     {%endif%} 
+    <li class="active">Modification d'une facture</li>
+    {%endblock %}
+
+
+{%block Contenu %}
+    <div class="col-md-9">
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h2 class="box-title" style="color:#1E5584">Informations de la facture N°{{ Facture.numeroFacture }}</h2>
+            </div>
+            <div class="box-tools pull-center">
+            </div>
+            <div class="box-body" id="DivCente">
+                <div class="row">
+                    <br><br>
+                    <div class="col-md-6">
+                         <table width="400" id="DivCente">
+                            <tr>
+                                <th scope="row" style="padding: 15px 0px 0px 0px"><div align="left">Numéro facture:</div></th>
+                                <td style="padding: 15px 0px 0px 0px">{{Facture.numeroFacture}}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row" style="padding: 15px 0px 0px 0px"><div align="left">Client:</div></th>
+                                <td style="padding: 15px 0px 0px 0px">{{Facture.client}}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row" style="padding: 15px 0px 0px 0px"><div align="left">Montant TTC:</div></th>
+                                <td style="padding: 15px 0px 0px 0px">{{Facture.montantTTCFacture}}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row" style="padding: 15px 0px 0px 0px"><div align="left">Statut Facture:</div></th>
+                                <td style="padding: 15px 0px 0px 0px">{{Facture.statutFacture}}</td>
+                            </tr>
+                        </table>		
+                    </div>
+                    <div class="col-md-6">
+                         <table width="400" id="DivCente">
+                            <tr>
+                                <th scope="row" style="padding: 15px 0px 0px 0px"><div align="left">Date:</div></th>
+                                <td style="padding: 15px 0px 0px 0px">{{Facture.dateFacture|date('d-m-Y')}}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row" style="padding: 15px 0px 0px 0px"><div align="left">Nature de la facture:</div></th>
+                                <td style="padding: 15px 0px 0px 0px">{{Facture.natureFacture}}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row" style="padding: 15px 0px 0px 0px"><div align="left">Aperçu de la facture:</div></th>
+                                <td style="padding: 15px 0px 0px 0px"><a  href="{{ asset('uploads/Factures/')}}{{Facture.facturePDF}}">Voir</a></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <br><br>
+                <div class="form-group">
+                   {% if AutorisationAcces('ConsulterFactures' , Utilisateur) %} 
+                    <a href="{{ path('ConsulterFactures')}}"><button type="submit" class="btn btn-primary btn-block btn-flat">Retour à toutes les factures</button></a>
+                   {% endif%}
+                   {% if AutorisationAcces('MesFactures' , Utilisateur) %} 
+                    <a href="{{ path('MesFactures')}}"><button type="submit" class="btn btn-primary btn-block btn-flat">Retour à toutes les factures</button></a>
+                   {% endif%}
+                   
+                    {% if AutorisationAcces('ModifierFacture' , Utilisateur) %} 
+                     <br>
+                    <a href="{{ path('ModifierFacture', { 'id': Facture.id }) }}"><button class="btn btn-primary btn-block btn-flat">Modifier</button></a>
+                   {% endif%}
+                   {% if AutorisationAcces('SupprimerFacture' , Utilisateur) %} 
+                    <br>
+                    <a href="#" data-href="{{ path('SupprimerFacture', { 'id': Facture.id }) }}" class="btn btn-primary btn-block btn-flat"  data-toggle="modal" data-target="#confirm-delete" >Supprimer</a>
+                {% endif%}
+                    <br>
+                    <a href="{{ asset('uploads/Factures/')}}{{Facture.facturePDF}}"><button type="submit" class="btn btn-primary btn-block btn-flat">Télécharger</button></a>
+                    </div>
+            </div>
+        </div>
+    </div>
+     <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                Confirmation de suppression
+            </div>
+            <div class="modal-body">
+                Voulez Vous vraiment supprimer {{Facture}} ?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                <a class="btn btn-primary btn-ok">Supprimer</a>
+            </div>
+        </div>
+    </div>
+</div>                
+{% endblock %}
+{% block script %}
+  {{ parent() }}
+  <script>
+$('#confirm-delete').on('show.bs.modal', function(e) {
+    $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
+});
+</script>
+  {% endblock %}

@@ -1,0 +1,78 @@
+tim_soft_tasks:
+    resource: "@TimSoftTasksBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
+tim_soft_commande:
+    resource: "@TimSoftCommandeBundle/Resources/config/routing.yml"
+    prefix:   /Commande
+
+tim_soft_bu:
+    resource: "@TimSoftBuBundle/Resources/config/routing.yml"
+calendar:
+    resource: "@CalendarBundle/Resources/config/routing.yaml"
+
+tim_soft_notification:
+    resource: "@TimSoftNotificationBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
+tim_soft_droit_acces:
+    resource: "@TimSoftDroitAccesBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
+tim_soft_general_feuille_de_presence:
+    resource: "@TimSoftGeneralBundle/Controller/FeuilleDePresenceController.php"
+    type:     annotation
+
+tim_soft_feuille_rapport_intervention:
+    resource: "@TimSoftFeuilleRapportInterventionBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
+tim_soft_facture:
+    resource: "@TimSoftFactureBundle/Controller/"
+    type:     annotation
+    prefix:   /GestionFacture/
+
+fos_user:
+    resource: "@FOSUserBundle/Resources/config/routing/all.xml"
+
+tim_soft_general:
+    resource: "@TimSoftGeneralBundle/Resources/config/routing.yml"
+    prefix:   /
+
+tim_soft_client:
+    resource: "@TimSoftClientBundle/Resources/config/routing.yml"
+    prefix:   /GestionClient/
+
+tim_soft_utilisateur:
+    resource: "@TimSoftUtilisateurBundle/Resources/config/routing.yml"
+    prefix:   /GestionUtilisateur/
+    
+tim_soft_notification:
+    resource: "@TimSoftNotificationBundle/Resources/config/routing.yml"
+    prefix:   /Notification/
+    
+app.swagger_ui:
+    path: /api/doc
+    methods: GET
+    defaults: { _controller: nelmio_api_doc.controller.swagger_ui }
+    
+app.swagger:
+    path: /api/doc.json
+    methods: GET
+    defaults: { _controller: nelmio_api_doc.controller.swagger }
+    
+# app/config/routing.yml
+fos_js_routing:
+    resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"
+
+tim_soft_preCommande:
+    resource: "@TimSoftCommandeBundle/Controller/"
+    type:     annotation
+    prefix:   /precommande/
+
+dependent_select:
+    resource: '@DependentSelectBundle/Resources/config/routing.xml'

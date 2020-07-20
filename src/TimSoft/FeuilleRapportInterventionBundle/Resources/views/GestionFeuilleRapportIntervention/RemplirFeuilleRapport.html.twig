@@ -1,0 +1,700 @@
+{% extends 'Squelette.html.twig' %}
+
+{% block Titre %}
+    Portail web de TimSoft - Feuille de Présence & Rapport d'intervention
+{%endblock %}
+
+{%block Section %} 
+    Feuille de présence & Rapport d'intervention
+    <small>Remplissage</small>
+{% endblock %}
+
+
+{% block Navigation %}
+    <li class="active">Feuille de présence & rapport d'intervention</li>
+    {%endblock %}
+
+
+{% block css %}
+    {{ parent() }}
+    <style>
+    .RI .chosen-container{
+            width: 100% !important;
+        }
+    </style>
+    <style>
+        #DivAR {display: none;}
+        #DivRemarqueClient {display: none;}
+    </style>
+    <!-- Bootstrap time Picker -->
+    <link rel="stylesheet" href="{{ asset('Template/plugins/timepicker/bootstrap-timepicker.min.css')}}">
+{% endblock %}
+
+{%block Contenu %}
+    <div class="col-md-9">
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h2 class="box-title" style="color:#1E5584">Feuille de présence & Rapport d'intervention</h2>
+            </div>
+            <div class="box-tools pull-center">
+            </div>
+            <div class="box-body">
+                <div class="nav-tabs-custom">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a data-toggle="tab" href="#Feuille">FEUILLE DE PRÉSENCE</a></li>
+                        <li><a data-toggle="tab" href="#Rapport">RAPPORT D'INTERVENTION</a></li>
+                    </ul>
+                    <div class="tab-content">
+
+
+                        <div id="Feuille" class="tab-pane fade in active">
+                            {{ form_start(form, {'method': 'POST' } ) }}
+                            {{form_errors(form) }}
+                            {{ form_errors(form.numeroCommande) }}
+                            {{ form_errors(form.libelleCommande) }}
+                            {{ form_errors(form.modeIntervention) }}
+                            {{ form_errors(form.statutValidation) }}
+                            {{ form_errors(form.heureDebutInterventionMatin) }}
+                            {{ form_errors(form.heureFinInterventionMatin) }}
+                            {{ form_errors(form.heureDebutInterventionAM) }}
+                            {{ form_errors(form.heureFinInterventionAM) }}
+                            <h3>FEUILLE DE PRÉSENCE</h3>
+                            {#<div align="right">
+                                <table width="50">
+                                    <tr>
+                                        <td scope="col" style="padding : 15px">Validée</td>
+                                        <td style="padding : 15px">{{ form_widget(form.statutValidation) }}</td>
+                                    </tr>
+                                </table>
+                            </div>#}
+                            {{ form_widget(form.statutValidation  , { 'attr' : { 'style':'display:none'} }) }}
+                            <div class="col-md-13">
+                                <div class="box box-primary">
+                                    <div class="box-header with-border">
+                                        <h2 class="box-title" style="color:#1E5584">Coordonnées client</h2>
+                                    </div>
+                                    <div class="box-body">
+                                        <!-- time Picker -->
+                                        {#<div class="bootstrap-timepicker">
+                                          <div class="form-group">
+                                            <label>Time picker:</label>
+                          
+                                            <div class="input-group">
+                                              <input type="text" class="form-control timepicker">
+                          
+                                              <div class="input-group-addon">
+                                                <i class="fa fa-clock-o"></i>
+                                              </div>
+                                            </div>
+                                            <!-- /.input group -->
+                                          </div>
+                                          <!-- /.form group -->
+                                        </div>#}
+
+                                        <table width="700">
+                                            <tr>
+                                                <th width="200" scope="row" style="padding: 15px 0px 0px 0px"><div align="left">Client:</div></th>
+                                                <td style="padding: 15px 0px 0px 0px">{{ form_widget(form.client) }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row" style="padding: 15px 0px 0px 0px"><div align="left">Code Client:</div></th>
+                                                <td style="padding: 15px 0px 0px 0px"><label style="font-weight: normal;" for="codeClient"></label></td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row" style="padding: 15px 0px 0px 0px"><div align="left">Téléphone:</div></th>
+                                                <td style="padding: 15px 0px 0px 0px"><label style="font-weight: normal;" for="telephone"></label></td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row" style="padding: 15px 0px 0px 0px"><div align="left">Adresse:</div></th>
+                                                <td style="padding: 15px 0px 0px 0px"><label style="font-weight: normal;" for="adresse"></label></td>
+                                            </tr>
+                                        </table>			
+                                    </div>
+                                </div>  
+                            </div>
+                            <div class="col-md-13">
+                                <div class="box box-primary">
+                                    <div class="box-header with-border">
+                                        <h2 class="box-title" style="color:#1E5584">Type intervention</h2>
+                                    </div>
+                                    <div class="box-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <table width="700">
+                                                    <tr>
+                                                        <th width="200" scope="row" style="padding: 15px 0px 0px 0px"><div align="left">Mode d'intervention:</div></th>
+                                                        <td style="padding: 15px 0px 0px 0px">
+                                                            {{ form_widget(form.modeIntervention, {'attr' : {'class' : 'form-control'}} ) }} 
+                                                        </td>
+                                                    </tr>
+                                                </table>				  
+                                            </div>
+                                        </div>  
+                                    </div>
+                                </div>
+                            </div>
+                            {{ form_widget(form.intervenant  , { 'attr' : { 'style':'display:none'} }) }}
+
+                            <div class="col-md-13">
+                                <div class="box box-primary">
+                                    <div class="box-header with-border">
+                                        <h2 class="box-title" style="color:#1E5584"> Visa intervenant</h2>
+                                    </div>
+                                    <div class="box-body">
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <table width="700">
+                                                    <tr>
+                                                        <th width="200" scope="row" style="padding: 15px 0px 0px 0px"><div align="left">Intervenant:</div></th>
+                                                        <td style="padding: 15px 0px 0px 0px">{{app.user.nomUtilisateur}} {{app.user.prenomUtilisateur}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row" style="padding: 15px 0px 0px 0px"><div align="left">Société:</div></th>
+                                                        <td style="padding: 15px 0px 0px 0px">{{app.user.client}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row" style="padding: 15px 0px 0px 0px"><div align="left">Numéro de commande:</div></th>
+                                                        <td style="padding: 15px 0px 0px 0px">{{ form_widget(form.numeroCommande, {'attr' : {'class' : 'form-control'}}) }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row" style="padding: 15px 0px 0px 0px"><div align="left">Libellé commande:</div></th>
+                                                        <td style="padding: 15px 0px 0px 0px">{{ form_widget(form.libelleCommande, {'attr' : {'class' : 'form-control'}}) }}</td>
+                                                    </tr>
+
+                                                    <tr>
+                                                        <th scope="row" style="padding: 15px 0px 0px 0px"><div align="left">Date de l'intervention:</div></th>
+                                                        <td style="padding: 15px 0px 0px 0px">{{ form_widget(form.dateIntervention, {'attr' : {'class' : 'form-control'}}) }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row" style="padding: 15px 0px 0px 0px"><div align="left">Signature</div></th>
+                                                        <td style="padding: 15px 0px 0px 0px"></td>
+                                                    </tr>
+                                                </table>
+                                                <table width="700">
+                                                    <tr>
+                                                        <th width="200" scope="col" style="padding: 15px 0px 0px 0px">Matin de </th>
+                                                        <th  scope="col" style="padding: 15px 0px 0px 0px">
+                                                            <div class="bootstrap-timepicker">
+                                                                <div class="input-group">
+                                                                    {{ form_widget(form.heureDebutInterventionMatin) }}
+
+                                                                    <div class="input-group-addon">
+                                                                        <i class="fa fa-clock-o"></i>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </th>
+                                                        <th width="30" scope="col" style="padding: 15px 15px 0px 15px">  à  </th>
+                                                        <th scope="col" style="padding: 15px 0px 0px 0px">
+                                                            <div class="bootstrap-timepicker">
+                                                                <div class="input-group">
+                                                                    {{ form_widget(form.heureFinInterventionMatin) }}
+
+                                                                    <div class="input-group-addon">
+                                                                        <i class="fa fa-clock-o"></i>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="col" style="padding: 15px 0px 0px 0px">Après-Midi de </th>
+                                                        <th  scope="col" style="padding: 15px 0px 0px 0px">
+                                                            <div class="bootstrap-timepicker">
+                                                                <div class="input-group">
+                                                                    {{ form_widget(form.heureDebutInterventionAM) }}
+                                                                    <div class="input-group-addon">
+                                                                        <i class="fa fa-clock-o"></i>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </th>
+                                                        <th width="30" scope="col" style="padding: 15px 15px 0px 15px">  à  </th>
+                                                        <th scope="col" style="padding: 15px 0px 0px 0px">
+                                                            <div class="bootstrap-timepicker">
+                                                                <div class="input-group">
+                                                                    {{ form_widget(form.heureFinInterventionAM) }}
+                                                                    <div class="input-group-addon">
+                                                                        <i class="fa fa-clock-o"></i>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </th>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>  
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        <div class="col-md-13">
+                            <div class="box box-primary">
+                                <div class="box-header with-border">
+                                    <h2 class="box-title" style="color:#1E5584">Participants</h2>
+                                </div>
+                                <div class="box-body">
+                                    <div align="right" style="padding-right: 0px; padding-bottom: 5px">
+                                        <a onclick="addParticipant()" pull-right><img src="{{ asset('Template/add.png') }}">Ajouter un participant</a>
+                                    </div>
+                                    <table class="table table-bordered">
+                                        <tr class="row1 header blue">
+                                            <th><center>Nom</center></th>
+                                        <th><center>Prénom</center></th>
+                                        <th><center>Adresse mail</center></th>
+                                        <th><center>Action</center></th>
+                                        </tr>
+                                        <tbody id="participantsBody" data-prototype="{{ form_widget(form.participants.vars.prototype)|e('html_attr') }}">
+                                            {#el boucle hethi ta3melha fil vue de modification bech t'affichi le9dom
+                                            {% for participant in form.participants %}
+                                                <tr>
+                                                    <td></td>
+                                                    <td>{{form_widget(participant.nomParticipant) }}</td>
+                                                    <td>#prenom#</td>
+                                                    <td>#mail#</td>
+                                                    <td><a class="btn btn-primary">Supprimer</a></td>
+                                                </tr>  
+                                            {% endfor %}#}
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
+                        </div>			
+                        {{ form_rest(form) }} 
+                        <div>
+                            <button type="reset" class="btn btn-primary btn-block btn-flat">Annuler</button>
+                            <br>
+                            <button type="submit" class="btn btn-primary btn-block btn-flat">Enregister</button>
+                        </div>
+                        {{form_widget(form._token)}}
+                        {{ form_end(form) }}
+                    </div>
+
+                    <div id="Rapport" class="tab-pane fade">
+                        {{ form_start(form1, { 'method': 'POST' } ) }}
+                        {{form_errors(form1) }}
+                        <h3>RAPPORT D'INTERVENTION</h3>
+                        <div class="col-md-13">
+                            <div class="box box-primary">
+                                <div class="box-header with-border">
+                                    <h2 class="box-title" style="color:#1E5584">Coordonnées client</h2>
+                                </div>
+                                <div class="box-body">
+                                    <div class="col-md-6">
+                                        <table width="700">
+                                            <tr>
+                                                <th scope="row" style="padding: 15px 0px 0px 0px" width="200"><div align="left">Intervention:</div></th>
+                                                <td class="RI" style="padding: 15px 0px 0px 0px">{{ form_widget(form1.FeuilleDePresence) }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row" style="padding: 15px 0px 0px 0px"><div align="left">Client:</div></th>
+                                                <td style="padding: 15px 0px 0px 0px"><label style="font-weight: normal;" for="raisonSocialeRapport"></label></td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row" style="padding: 15px 0px 0px 0px"><div align="left">Code Client:</div></th>
+                                                <td style="padding: 15px 0px 0px 0px"><label style="font-weight: normal;" for="codeClientRapport"></label></td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row" style="padding: 15px 0px 0px 0px"><div align="left">Téléphone:</div></th>
+                                                <td style="padding: 15px 0px 0px 0px"><label style="font-weight: normal;" for="telephoneRapport"></label></td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row" style="padding: 15px 0px 0px 0px"><div align="left">Adresse:</div></th>
+                                                <td style="padding: 15px 0px 0px 0px"><label style="font-weight: normal;" for="adresseClientRapport"></label></td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row" style="padding: 15px 0px 0px 0px"><div align="left">Type d'intervention:</div></th>
+                                                <td style="padding: 15px 0px 0px 0px">
+                                                    {{ form_widget(form1.typeIntervention, {'attr' : {'class' : 'form-control'}} ) }} 
+                                                </td>
+                                            </tr>
+                                        </table>
+                                                                                        <br>
+
+                                    </div>
+                                    <br><br>
+                                </div>
+                            </div>
+
+                            <div class="col-md-13">
+                                <div class="box box-primary">
+                                    <div class="box-header with-border">
+                                        <h3 class="box-title" style="color:#1E5584">Rapport de l'intervention
+                                        </h3>
+                                    </div>
+                                    <div class="box-body pad">
+                                        {{ form_widget(form1.compteRenduIntervention, {'attr' : {'class' : 'textarea' , 'style': 'width: 100%; height: 200px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;', 'placeholder' : 'Ecrire le compte rendu de l\'intervention ici...'}} ) }}
+                                    </div>
+
+                                    <br><br>
+                                </div>
+
+                            </div>
+
+                            <div class="col-md-13">
+                                <div class="box box-primary">
+                                    <div class="box-header with-border">
+                                        <h3 class="box-title" style="color:#1E5584">Fichiers join
+                                        </h3>
+                                    </div>
+                                    Joindre des fichiers 
+                                    {# <ul class="fichiersJoin" data-prototype="{{ form_widget(form1.fichiersJoin.vars.prototype)|e('html_attr') }}">
+                                                         {{form_row(form1.fichiersJoin)}}
+                                     </ul>#}
+
+
+                                    <div class="box-body">
+                                        <div align="right" style="padding-right: 0px; padding-bottom: 5px">
+                                            <a onclick="addFichier()"><img src="{{ asset('Template/add.png') }}">Ajouter un fichier</a>
+                 </div>
+                                        
+
+                                        <table class="table table-bordered">
+                                            <tr class="row1 header blue">
+                                                <th><center>Type</center></th>
+                                            <th><center>Nom</center></th>
+                                            <th><center>Fichier</center></th>
+                                            <th><center>Envoyer par mail</center></th>
+                                            <th><center>Action</center></th>
+                                            </tr>
+                                            <tbody id="fichiersBody" data-prototype="{{ form_widget(form1.fichiersJoin.vars.prototype)|e('html_attr') }}">
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+
+                                    <br><br>
+                                </div>
+                            </div>
+
+
+                            <div class="col-md-13">
+                                <div class="box box-primary">
+                                    <div class="box-header">
+                                        <h3 class="box-title">Remarques client
+                                        </h3>
+                                    </div>
+                                    <div class="form-group" style="padding: 0px 0px 0px 10px">
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" name="RemarqueClt" id="optionsRadios1" value="option1" checked onclick="MontrerDiv()">
+                                                Rien à signaler
+                                            </label>
+                                        </div>
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" name="RemarqueClt" id="AjouterRemarqueClient" onclick="MontrerDiv()">
+                                                Point d'attention soulevé
+                                            </label>
+                                        </div>
+                                        <div id="DivRemarqueClient" style="padding: 0px 0px 0px 15px"> 
+                                            <table width="800">
+                                                <td scope="col">
+                                                    <div align="left">
+                                                        <div class="form-group">
+                                                            <label>Remarque(s) client:</label>
+                                                            {{ form_widget(form1.remarqueClient, {'attr' : {'class' : 'textarea' , 'style': 'width: 95%; height: 200px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;', 'placeholder' : 'Ecrire le commentaire du client ici...'}} ) }}
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </table>
+                                            
+                                        </div>
+                                    </div>
+                                    <br><br>
+                                </div>
+                            </div>
+
+                            <h3>Validation client & intervenant</h3>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="box box-primary">
+                                        <div class="box-header with-border">
+                                            <h2 class="box-title" style="color:#1E5584">Validation client</h2>
+                                        </div>
+                                        <div class="box-body">
+                                            <div class="row">
+                                                <div class="col-md-5">
+                                                    <div class="form-group">
+                                                        <table width="400">
+                                                            <tr>
+                                                                <th scope="row"><div align="left">Fait à:</div></th>
+                                                                <td><label style="font-weight: normal;" for="lieuInterventionRapport"></label></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th scope="row"><div align="left">Le:</div></th>
+                                                                <td><label style="font-weight: normal;" for="dateInterventionRapport"></label></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th scope="row"><div align="left">Client:</div></th>
+                                                                <td><label style="font-weight: normal;" for="raisonSocialeRapport"></label></td>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>  
+                                            {{ form_widget(form1.confirmationDeInterventionParClient  , { 'attr' : { 'style':'display:none'} }) }}
+                                           {# <div>{{form_widget(form1.confirmationDeInterventionParClient)}}  J'atteste la validité des éléments ci-dessus</div>#}
+                                        </div>
+                                    </div> 
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="box box-primary">
+                                        <div class="box-header with-border">
+                                            <h2 class="box-title" style="color:#1E5584">Validation intervenant</h2>
+                                        </div>
+                                        <div class="box-body">
+                                            <div class="row">
+                                                <div class="col-md-8">
+                                                    <table width="400">
+                                                        <tr>
+                                                            <th scope="row"><div align="left">Fait à:</div></th>
+                                                            <td><label style="font-weight: normal;" for="lieuInterventionRapport"></label></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row"><div align="left">Le:</div></th>
+                                                            <td><label style="font-weight: normal;" for="dateInterventionRapport"></label></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row"><div align="left">Intervenant:</div></th>
+                                                            <td><label style="font-weight: normal;" for="nomIntervenantRapport"></label> <label style="font-weight: normal;" for="prenomIntervenantRapport"></label></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row"><div align="left">Qualité:</div></th>
+                                                            <td><label style="font-weight: normal;" for="qualiteIntervenantRapport"></label></td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                            </div>  
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div>
+                                <button type="reset" class="btn btn-primary btn-block btn-flat">Annuler</button>
+                                <br>
+                                <button type="submit" class="btn btn-primary btn-block btn-flat">Enregister</button>
+                            </div>
+
+                        </div>  
+                        {{form_widget(form1._token)}}
+                        {{ form_end(form1) }}
+                    </div>
+
+
+
+
+
+
+                </div>
+            </div></div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block script %}
+    {{ parent() }}
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script src="{{asset('js/sf_collection_analyzer.js')}}"></script>
+    <script src="{{asset('js/select.js')}}"></script>
+    <script type="text/javascript">
+                                                        function MontrerDiv()
+                                                        {
+                                                            if (document.getElementById('AjouterRemarqueClient').checked === true)
+                                                            {
+                                                                document.getElementById('DivRemarqueClient').style.display = "block";
+                                                            } else {
+                                                                document.getElementById('DivRemarqueClient').style.display = "none";
+                                                            }
+                                                        }
+    </script>
+
+    <script type="text/javascript">
+        function AjouterReferent()
+        {
+            if (document.getElementById('BAR').onclick)
+            {
+                document.getElementById('DivAR').style.display = "block";
+            } else {
+                document.getElementById('DivAR').style.display = "none";
+            }
+        }
+    </script>
+    <script type="text/javascript">
+        var $collectionHolder;
+// setup an "add un fichier" link
+        var $addFichierLink = $('<a href="#" class="add_fichier">Ajouter un fichier</a>');
+        var $newLinkLi = $('<li></li>').append($addFichierLink);
+
+        jQuery(document).ready(function () {
+            // Get the ul that holds the collection of tags
+            $collectionHolder = $('ul.fichiersJoin');
+
+            $collectionHolder.find('li').each(function () {
+                addFichierFormDeleteLink($(this));
+            });
+            // add the "add a tag" anchor and li to the tags ul
+            $collectionHolder.append($newLinkLi);
+
+            // count the current form inputs we have (e.g. 2), use that as the new
+            // index when inserting a new item (e.g. 2)
+            $collectionHolder.data('index', $collectionHolder.find(':input').length);
+
+            $addFichierLink.on('click', function (e) {
+                // prevent the link from creating a "#" on the URL
+                e.preventDefault();
+
+                // add a new tag form (see next code block)
+                addFichierForm($collectionHolder, $newLinkLi);
+            });
+
+            function addFichierForm($collectionHolder, $newLinkLi) {
+                // Get the data-prototype explained earlier
+                var prototype = $collectionHolder.data('prototype');
+
+                // get the new index
+                var index = $collectionHolder.data('index');
+
+                var newForm = prototype;
+                // You need this only if you didn't set 'label' => false in your tags field in TaskType
+                // Replace '__name__label__' in the prototype's HTML to
+                // instead be a number based on how many items we have
+                // newForm = newForm.replace(/__name__label__/g, index);
+
+                // Replace '__name__' in the prototype's HTML to
+                // instead be a number based on how many items we have
+                newForm = newForm.replace(/__name__/g, index);
+
+                // increase the index with one for the next item
+                $collectionHolder.data('index', index + 1);
+
+                // Display the form in the page in an li, before the "Add a tag" link li
+                var $newFormLi = $('<li></li>').append(newForm);
+                $newLinkLi.before($newFormLi);
+                addFichierFormDeleteLink($newFormLi);
+
+            }
+
+            function addFichierFormDeleteLink($tagFormLi) {
+                var $removeFormA = $('<a href="#">Supprimer ce fichier</a>');
+                $tagFormLi.append($removeFormA);
+
+                $removeFormA.on('click', function (e) {
+                    // prevent the link from creating a "#" on the URL
+                    e.preventDefault();
+
+                    // remove the li for the tag form
+                    $tagFormLi.remove();
+                });
+            }
+        });
+    </script>
+
+    <script type="text/javascript">
+
+        function deleteFichier(btn) {
+            //alert('delete');
+            $(btn).closest('.bloc1').remove();
+        }
+        function fichierTemplate() {
+            return `
+    <tr class="bloc1">
+        <td>#type#</td>
+        <td>#nom#</td>
+        <td>#fichier#</td>
+        <td><center>#envoyer#</center></td>
+        <td><center><a onclick="deleteFichier(this)"><img src="{{ asset('Template/SupprimerUser.png') }}"  title="Supprimer le Fichier"></a></center></td>
+    </tr>    
+    `;
+        }
+        var _counter = 0;
+        function addFichier() {
+            var prototype = $('#fichiersBody').attr('data-prototype');
+            var _prototypeDOM = $('<div/>').html(prototype).contents();//---Make sure to convert the prototype into DOM.
+            var temp = SFCollectionAnalyzer.buildTemplate(_prototypeDOM, fichierTemplate());
+            var block = temp.replace(/__name__/g, _counter);//--temp is still using "__name__" so you just need to replace it with the counter
+            $('#fichiersBody').append(block);
+            _counter++;
+        }
+
+    </script>
+
+    <script type="text/javascript">
+
+        function deleteParticipant(btn) {
+            //alert('delete');
+            $(btn).closest('.bloc').remove();
+        }
+        function participantTemplate() {
+            return `
+    <tr class="bloc">
+        <td>#nom#</td>
+        <td>#prenom#</td>
+        <td>#mail#</td>
+        <td><center><a onclick="deleteParticipant(this)"><img src="{{ asset('Template/SupprimerUser.png') }}"  title="Supprimer le participant"></a></center></td>
+    </tr>    
+    `;
+        }
+        var _counter = 0;
+        function addParticipant() {
+            var prototype = $('#participantsBody').attr('data-prototype');
+            var _prototypeDOM = $('<div/>').html(prototype).contents();//---Make sure to convert the prototype into DOM.
+            var temp = SFCollectionAnalyzer.buildTemplate(_prototypeDOM, participantTemplate());
+            var block = temp.replace(/__name__/g, _counter);//--temp is still using "__name__" so you just need to replace it with the counter
+            $('#participantsBody').append(block);
+            _counter++;
+        }
+
+    </script>
+
+
+    <!-- bootstrap time picker -->
+    <script src="{{ asset('Template/plugins/timepicker/bootstrap-timepicker.min.js')}}"></script>
+
+    <script>
+        $(function () {
+            //Timepicker
+            $('.timepickerDM').timepicker({
+                showInputs: false,
+                defaultTime: "08:30",
+                
+            })
+        })
+    </script>
+    <script>
+        $(function () {
+            //Timepicker
+            $('.timepickerFM').timepicker({
+                showInputs: false,
+                defaultTime: "13:00",
+                
+            })
+        })
+    </script>
+    <script>
+        $(function () {
+            //Timepicker
+            $('.timepickerDAM').timepicker({
+                showInputs: false,
+                defaultTime: "14:30",
+                
+            })
+        })
+    </script>
+    <script>
+        $(function () {
+            //Timepicker
+            $('.timepickerFAM').timepicker({
+                showInputs: false,
+                defaultTime: "18:00",
+                
+            })
+        })
+    </script>
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends 'Squelette.html.twig' %}
+
+{% block Titre %}
+    Portail web de TimSoft - Feuille de présence
+{%endblock %}
+
+{%block Section %} 
+    <h1>
+        Notifications
+        <small>Consultation d'une notification</small>
+    </h1>
+{% endblock %}
+
+
+{% block Navigation %}
+    {% if AutorisationAcces('AllNotifications' , Utilisateur) %} 
+        <li><a href="{{path('AllNotifications')}}">Mes notifications</a></li>
+        {%endif%}
+
+    <li class="active">Consultation d'une notification</li>
+    {%endblock %}
+
+
+{%block Contenu %}
+    <div class="col-md-9">
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h2 class="box-title" style="color:#1E5584">Informations</h2>
+            </div>
+            <div class="box-body">
+                <br>		
+                    <div class="row">
+                        <div class="col-md-12">
+                                <div class="box-body">
+                                    <div class="row">
+                                        <div class="col-md-5">
+                                            <div class="form-group">
+                                               <table width="600">
+                                                    <tr>
+                                                        <th scope="row"><div align="left">Sujet:</div></th>
+                                                        <td>{{Notification.Title}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row"><div align="left">Description:</div></th>
+                                                        <td>{{Notification.description}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row"><div align="left">Responsable:</div></th>
+                                                        <td>{{Notification.responsable}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row"><div align="left">Date:</div></th>
+                                                        <td>{{Notification.date|date('d-m-Y à H:i')}}</td>
+                                                    </tr>
+                                                </table>
+                                            </div>				
+                                        </div>
+                                    </div>  
+                                </div>
+                        </div>
+                    </div>
+                <br>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,241 @@
+{% extends 'Squelette.html.twig' %}
+
+{% block Titre %}
+    Portail web de TimSoft - Les Utilisateurs
+{% endblock %}
+
+{% block Section %}
+    Gestion des utilisateurs
+    <small>Consulter la liste des utilisateurs</small>
+{% endblock %}
+
+{% block Navigation %}
+    <li class="breadcrumb-item active">Consulter la liste des utilisateurs</li>
+{% endblock %}
+{% block SideBar %}
+{% endblock %}
+{% block Contenu %}
+    {% for message in app.flashes('OK-Suppression') %}
+        <div class="flash-notice">
+            <body onLoad="$('#my-modal').modal('show');">
+            <div id="my-modal" class="modal fade">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Validation de suppression</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            {{ message }}
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </body>
+        </div>
+    {% endfor %}
+
+    {% for message in app.flashes('OK-Reactivation') %}
+        <div class="flash-notice">
+            <body onLoad="$('#my-modal').modal('show');">
+            <div id="my-modal" class="modal fade">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Validation de réactivation</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            {{ message }}
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </body>
+        </div>
+    {% endfor %}
+
+    {% for message in app.flashes('OK-Deactivation') %}
+        <div class="flash-notice">
+            <body onLoad="$('#my-modal').modal('show');">
+            <div id="my-modal" class="modal fade">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Validation de déactivation</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            {{ message }}
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </body>
+        </div>
+    {% endfor %}
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div align="right" style="padding-right: 0px; padding-bottom: 5px">
+                    <a href="{{ path('fos_user_registration_register') }}" class="btn-primary btn"><i
+                                class="fas fa-user-plus"></i> Ajouter un utilisateur</a>
+                </div>
+                <br>
+                <table id="TableUtilisateur" class="table table-bordered table-striped dataTable" style="width:100%">
+                    <thead>
+                    <tr class="row1 header blue">
+                        <th class="cell1">
+                            Nom
+                        </th>
+                        <th class="cell1">
+                            Prénom
+                        </th>
+                        <th class="cell1">
+                            Téléphone
+                        </th>
+                        <th class="cell1">
+                            E-Mail
+                        </th>
+                        <th class="cell1">
+                            Société
+                        </th>
+                        <th class="cell1">
+                            Catégorie
+                        </th>
+                        <th class="cell1">
+                            <center> Action</center>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% if Utilisateurs is defined %}
+                        {% for utilisateur in Utilisateurs %}
+                            {% if (utilisateur.enabled) and (utilisateur.confirmationToken == NULL) and (utilisateur.statutProfil) %} {# le profil est activé #}
+                                <tr class="row1">
+                            {% elseif not(utilisateur.enabled) and not(utilisateur.confirmationToken == NULL) %} {# Compte pas encore activé #}
+                                <tr class="row1" style="color: Gray;">
+                            {% elseif not(utilisateur.statutProfil) %} {# le profil est déactivé #}
+                                <tr class="row1"  style="color: #800;" >
+                            {% endif %}
+                            <td class="cell1">
+                                {{ utilisateur.nomUtilisateur }}
+                            </td>
+                            <td class="cell1">
+                                {{ utilisateur.prenomUtilisateur }}
+                            </td>
+                            <td class="cell1">
+                                {{ utilisateur.telephoneUtilisateur }}
+                            </td>
+                            <td class="cell1">
+                                {{ utilisateur.email }}
+                            </td>
+                            <td class="cell1">
+                                {% if utilisateur.client %}
+                                    {{ utilisateur.client.raisonSociale }}
+                                {% endif %}
+                            </td>
+                            <td class="cell1">
+                                {% set role = utilisateur.roleUtilisateur %}
+                                {% if ( role == 'ROLE_ADMIN') %}Administrateur
+                                {% elseif ( role == 'ROLE_CONSULTANT') %}Consultant
+                                {% elseif ( role == 'ROLE_CLIENT') %}Client
+                                {% elseif ( role == 'ROLE_GESTIONNAIRE') %}Gestionnaire
+                                {% elseif ( role == 'ROLE_CHEF') %}BU Manager
+                                {% endif %}
+                            </td>
+                            <td class="cell1">
+                                <center><a href="{{ path('ConsulterUnUtilisateur', { 'id': utilisateur.id }) }}">
+                                        <i class="fas fa-search fa-lg"
+                                           title="Consulter les informations de {{ utilisateur.nomUtilisateur }} {{ utilisateur.prenomUtilisateur }}"></i>
+                                    </a>
+                                    <a href="{{ path('fos_user_profile_edit_utilisateur', { 'id': utilisateur.id }) }}">
+                                        <i class="fas fa-edit fa-lg"
+                                           title="Modifier {{ utilisateur.nomUtilisateur }} {{ utilisateur.prenomUtilisateur }}"></i>
+                                    </a>
+                                    <a href="{{ path('SupprimerUnUtilisateur', { 'id': utilisateur.id }) }}">
+                                        <i class="fas fa-trash-alt fa-lg"
+                                           title="Supprimer {{ utilisateur.nomUtilisateur }} {{ utilisateur.prenomUtilisateur }}"></i>
+                                    </a>
+                                    {% if not(utilisateur.statutProfil) %}
+                                        <a href="{{ path('ReactiverUtilisateur', { 'id': utilisateur.id }) }}">
+                                            <i class="fas fa-arrow-circle-up fa-lg" style="color: green"
+                                               title="Réactiver {{ utilisateur.nomUtilisateur }} {{ utilisateur.prenomUtilisateur }}"></i></a>
+                                    {% else %}
+                                        <a href="{{ path('DeactiverUnUtilisateur', { 'id': utilisateur.id }) }}">
+                                            <i class="fas fa-ban fa-lg" style="color: red"
+                                               title="Désactiver {{ utilisateur.nomUtilisateur }} {{ utilisateur.prenomUtilisateur }}"></i></a>
+                                    {% endif %}
+                                </center>
+                            </td>
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
+                    </tbody>
+                </table>
+                <br>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var table = $('#TableUtilisateur').DataTable({
+                language: {
+                    processing: "Traitement en cours...",
+                    search: "Rechercher&nbsp;:",
+                    lengthMenu: "Afficher _MENU_ &eacute;l&eacute;ments",
+                    info: "Affichage de l'&eacute;lement _START_ &agrave; _END_ sur _TOTAL_ &eacute;l&eacute;ments",
+                    infoEmpty: "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
+                    infoFiltered: "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
+                    infoPostFix: "",
+                    loadingRecords: "Chargement en cours...",
+                    zeroRecords: "Aucun &eacute;l&eacute;ment &agrave; afficher",
+                    emptyTable: "Aucune donnée disponible dans le tableau",
+                    paginate: {
+                        first: "Premier",
+                        previous: "Précédent",
+                        next: "Suivant",
+                        last: "Dernier"
+                    },
+                    aria: {
+                        sortAscending: ": activer pour trier la colonne par ordre croissant",
+                        sortDescending: ": activer pour trier la colonne par ordre décroissant"
+                    },
+                    "processing": true,
+                    "serverSide": true,
+                    /*"ajax": "''"*/
+                },
+                "paging": true,
+                "ordering": true,
+                "info": true,
+                "aoColumns": [
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    {"bSortable": false}
+                ],
+                "columnDefs": [
+                    {"width": "10%", "targets": 2},
+                    {"width": "14%", "targets": 6}
+                ]
+            });
+
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,88 @@
+{
+    "name": "nesrine/portailtimsoft",
+    "license": "proprietary",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+        "": "src/"
+    },
+        "classmap": [
+            "app/AppKernel.php",
+            "app/AppCache.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        },
+        "files": [
+            "vendor/symfony/symfony/src/Symfony/Component/VarDumper/Resources/functions/dump.php"
+        ]
+    },
+    "require": {
+        "php": ">=7.1",
+        "ext-curl": "*",
+        "beberlei/doctrineextensions": "^1.2",
+        "doctrine/doctrine-bundle": "^1.6",
+        "doctrine/orm": "^2.5",
+        "dompdf/dompdf": "^0.8.2",
+        "evercodelab/dependent-select-bundle": "^1.0",
+        "friendsofsymfony/jsrouting-bundle": "^2.2",
+        "friendsofsymfony/rest-bundle": "^2.3",
+        "friendsofsymfony/user-bundle": "~2.0",
+        "incenteev/composer-parameter-handler": "^2.0",
+        "jms/serializer-bundle": "^2.3",
+        "knplabs/knp-paginator-bundle": "^2.7",
+        "liuggio/excelbundle": "^2.1",
+        "madmis/activity-log-bundle": "^0.2.3",
+        "mgilet/notification-bundle": "^2.0",
+        "mrad/notifications-bundle": "^1.0",
+        "nelmio/api-doc-bundle": "^3.1",
+        "phpoffice/phpspreadsheet": "^1.9",
+        "sensio/distribution-bundle": "^5.0.19",
+        "sensio/framework-extra-bundle": "^5.0.0",
+        "symfony/monolog-bundle": "^3.1.0",
+        "symfony/polyfill-apcu": "^1.0",
+        "symfony/swiftmailer-bundle": "^2.6.4",
+        "symfony/symfony": "3.4.*",
+        "tattali/calendar-bundle": "^1.1",
+        "twig/extensions": "^1.5",
+        "twig/twig": "^1.0||^2.0",
+        "vich/uploader-bundle": "1.3.1"
+    },
+    "require-dev": {
+        "sensio/generator-bundle": "^3.0",
+        "symfony/phpunit-bridge": "^3.0"
+    },
+    "scripts": {
+        "symfony-scripts": [
+            "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
+        ],
+        "post-install-cmd": [
+            "@symfony-scripts"
+        ],
+        "post-update-cmd": [
+            "@symfony-scripts"
+        ]
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "symfony-app-dir": "app",
+        "symfony-bin-dir": "bin",
+        "symfony-var-dir": "var",
+        "symfony-web-dir": "web",
+        "symfony-tests-dir": "tests",
+        "symfony-assets-install": "relative",
+        "incenteev-parameters": {
+            "file": "app/config/parameters.yml"
+        },
+        "branch-alias": null
+    }
+}

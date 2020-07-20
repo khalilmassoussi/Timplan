@@ -1,0 +1,42 @@
+<div class="navbar-custom-menu" style="padding: 0px  0px 0px 50px">
+    <ul class="nav navbar-nav">
+        <li class="dropdown notifications-menu">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                <i class="fa fa-bell-o"></i>
+                <span class="label label-warning">{{NotificationNonVu|length}}</span>
+            </a>
+
+            <ul class="dropdown-menu">
+                <li class="header"><b>{{NotificationNonVu|length}} nouvelle(s) notification(s)</b></li>
+                <li>
+                    <!-- inner menu: contains the actual data -->
+                    <ul class="menu">
+                        {% for Notification in Notifications%}
+                            <li class="header">
+                                {% if Notification.Notification.parameters == null%}
+                                    <a href="{{path(Notification.Notification.route)}}"  onclick="ModifVu({{Notification.Notification.id}})" >
+                                    {% else %}
+                                        <a href="{{ path(Notification.Notification.route, Notification.Notification.parameters)}}"  onclick="ModifVu({{Notification.Notification.id}})" >
+                                        {%endif%}
+                                        {% if (Notification.seen == 0)%}
+                                            <b><i class="fa fa-circle text-light-blue"></i> {{Notification.Notification.title}}
+                                                <br>
+                                                <small>{{Notification.description}}</small>
+                                                <br>
+                                                <small><i class="fa fa-clock-o"></i> {{Notification.Notification.date|date('d-m-Y H:i')}} par {{Notification.Notification.responsable}}</small></b>
+                                            {% else %}
+                                            <i class="fa fa-circle text-light-blue"></i> {{Notification.Notification.title}}
+                                            <br>
+                                            <small>{{Notification.Notification.description}}</small>
+                                            <br>
+                                            <small><i class="fa fa-clock-o"></i> {{Notification.Notification.date|date('d-m-Y H:i')}} par {{Notification.Notification.responsable}}</small>
+                                        {% endif%}
+                                        <br>
+                                    </a>   
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </li>
+                <li class="footer"><a href="{{path('AllNotifications')}}">Voir Toutes</a></li>
+            </ul>
+        </li>

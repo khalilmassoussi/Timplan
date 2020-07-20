@@ -1,0 +1,170 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8"/>
+    <title>Rapport de l'intervention du {{ Rapport.FeuilleDePresence.dateIntervention|date('d-m-Y') }}
+        par {{ Rapport.FeuilleDePresence.intervenant }} pour {{ Rapport.FeuilleDePresence.client }}</title>
+    <link rel="stylesheet" href="style.css" type="text/css"/>
+    <style>
+        header {
+            padding: 10px 10px; /*Marge verticale*/
+            background-color: #1E5584; /*Couleur de fond*/
+        }
+
+        html, body, p {
+            margin: 0;
+            padding: 0;
+        }
+
+        .contentStyle {
+            margin: 10px 25px 80px 25px; /*centrer la colonne*/
+            padding: 25px; /*margin interne*/
+        }
+
+        footer {
+            background-color: #1E5584; /*Couleur de fond*/
+            padding: 10px 10px 21px 0px; /*Marge verticale*/
+            position: absolute;
+            bottom: 0px;
+            width: 100%;
+            text-align: center; /*texte centré*/
+            color: #FFFFFF;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div>
+        <img src="{{ app.request.getSchemeAndHttpHost()~ asset('Template/Webp.net-resizeimage.png') }}"
+             style="height:70px;">
+    </div>
+</header>
+<div style=" text-align: center;"><h1>RAPPORT D'INTERVENTION</h1></div>
+<div class="contentStyle">
+
+    <div style="border: 2px solid #1E5584; padding: 3px; background-color: #FFFFFF; -moz-border-radius-topleft: 5px; -moz-border-radius-topright: 5px; -moz-border-radius-bottomright: 5px; -moz-border-radius-bottomleft: 5px;">
+        <center><h3>Rapport de l'intervention du {{ Rapport.FeuilleDePresence.dateIntervention|date('d-m-Y') }}
+                effectuée par {{ Rapport.FeuilleDePresence.intervenant }}
+                pour {{ Rapport.FeuilleDePresence.client }}</h3></center>
+    </div>
+    <br>
+    <div style="border: 1px solid #1E5584; padding: 5px 10px; background-color: #FFFFFF; -moz-border-radius-topleft: 5px; -moz-border-radius-topright: 5px; -moz-border-radius-bottomright: 5px; -moz-border-radius-bottomleft: 5px;">
+        <strong>Information sur l'intervention</strong>
+        <HR width=100%>
+        <div class="form-group">
+            <table width="400">
+                <tr>
+                    <th scope="row" width="150">
+                        <div align="left">Date de l'intervention:</div>
+                    </th>
+                    <td>{{ Rapport.FeuilleDePresence.dateIntervention|date('d-m-Y') }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">
+                        <div align="left">Intervenant:</div>
+                    </th>
+                    <td>{{ Rapport.FeuilleDePresence.intervenant }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">
+                        <div align="left">Numéro de commande:</div>
+                    </th>
+                    <td>{{ Rapport.FeuilleDePresence.numeroCommande }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">
+                        <div align="left">Libellé de la commande:</div>
+                    </th>
+                    <td>{{ Rapport.FeuilleDePresence.libelleCommande }}</td>
+                </tr>
+            </table>
+            <div style="padding-left: 15px">
+                <table width="300">
+                    {% if not(Rapport.FeuilleDePresence.heureDebutInterventionMatin == null) %}
+                        <tr>
+                            <th scope="col">Matin:</th>
+                            <td>De {{ Rapport.FeuilleDePresence.heureDebutInterventionMatin|date('H:i') }}
+                                à {{ Rapport.FeuilleDePresence.heureFinInterventionMatin|date('H:i') }}</td>
+                        </tr>
+                    {% endif %}
+
+                    {% if not(Rapport.FeuilleDePresence.heureDebutInterventionAM == null) %}
+                        <tr>
+                            <th scope="col">Après-Midi:</th>
+                            <td>De {{ Rapport.FeuilleDePresence.heureDebutInterventionAM|date('H:i') }}
+                                à {{ Rapport.FeuilleDePresence.heureFinInterventionAM|date('H:i') }}</td>
+                        </tr>
+                    {% endif %}
+                </table>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div style="border: 1px solid #1E5584; padding: 5px 10px; background-color: #FFFFFF; -moz-border-radius-topleft: 5px; -moz-border-radius-topright: 5px; -moz-border-radius-bottomright: 5px; -moz-border-radius-bottomleft: 5px;">
+        <strong>Coordonnées du client</strong>
+        <HR width=100%>
+        <div class="form-group">
+            <table width="800">
+                <tr>
+                    <th scope="row" width="150">
+                        <div align="left">Société:</div>
+                    </th>
+                    <td>{{ Rapport.FeuilleDePresence.client.raisonSociale }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">
+                        <div align="left">Adresse:</div>
+                    </th>
+                    <td>{{ Rapport.FeuilleDePresence.client.adresseClient }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">
+                        <div align="left">Email:</div>
+                    </th>
+                    <td>{{ Rapport.FeuilleDePresence.client.adresseMailClient }}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <br>
+
+    <br>
+    <div style="border: 1px solid #1E5584; padding: 5px; background-color: #FFFFFF; -moz-border-radius-topleft: 5px; -moz-border-radius-topright: 5px; -moz-border-radius-bottomright: 5px; -moz-border-radius-bottomleft: 5px;">
+        <strong>Rapport</strong>
+        <HR width=100%>
+        <table width="100%">
+            <tr>
+                <th>
+                    {#                    <div align="left">Type de l'intervention:</div>#}
+                </th>
+                {#                <td>{{ Rapport.typeIntervention }}</td>#}
+            </tr>
+            <tr>
+                <th>
+                    <div align="left">Compte rendu:</div>
+                </th>
+                <td>{{ Rapport.compteRenduIntervention }} </td>
+            </tr>
+            {% if not (Rapport.remarqueClient == NULL) %}
+                <tr>
+                    <th>
+                        <div align="left">Remarque(s) client:</div>
+                    </th>
+                    <td>{{ Rapport.remarqueClient }}</td>
+                </tr>
+            {% endif %}
+        </table>
+    </div>
+    <br>
+</div>
+
+
+<footer>
+    <strong>7, AV Taher ben Ammar, El Manar II-2092 Tunis. TUNISIE <br></strong>
+    <strong>Tél:</strong>+216 70 860 870 / 70 860 122 <strong>Fax:</strong> +216 71 884 132 <strong>E-mail:</strong>
+    contacts@timsoft.com.tn
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,24 @@
+bu_index:
+    path:     /
+    defaults: { _controller: "TimSoftBuBundle:Default:index" }
+    methods:  GET
+
+bu_show:
+    path:     /{id}/show
+    defaults: { _controller: "TimSoftBuBundle:Bu:show" }
+    methods:  GET
+
+bu_new:
+    path:     /new
+    defaults: { _controller: "TimSoftBuBundle:Bu:new" }
+    methods:  [GET, POST]
+
+bu_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "TimSoftBuBundle:Bu:edit" }
+    methods:  [GET, POST]
+
+bu_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "TimSoftBuBundle:Bu:delete" }
+

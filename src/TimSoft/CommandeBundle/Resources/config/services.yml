@@ -1,0 +1,12 @@
+services:
+  commande_bundle.service.listener:
+    class: TimSoft\GeneralBundle\Listener\FullCalendarListener
+    tags:
+          - { name: 'kernel.event_listener', event: 'calendar.set_data', method: load }
+  TimSoft\GeneralBundle\Listener\FullCalendarListener:
+    arguments:
+    tags:
+      - { name: 'kernel.event_listener', event: 'calendar.set_data', method: load }
+#    tim_soft_commande.example:
+#        class: TimSoft\CommandeBundle\Example
+#        arguments: ["@service_id", "plain_value", "%parameter%"]

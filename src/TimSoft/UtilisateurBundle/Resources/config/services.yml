@@ -1,0 +1,10 @@
+services:
+#    tim_soft_utilisateur.example:
+#        class: TimSoft\UtilisateurBundle\Example
+#        arguments: ["@service_id", "plain_value", "%parameter%"]
+
+
+    tim_soft_utilisateur.utilisateur.voter:
+        class: TimSoft\UtilisateurBundle\Security\UtilisateurVoter
+        tags: 
+            - { name: security.voter }

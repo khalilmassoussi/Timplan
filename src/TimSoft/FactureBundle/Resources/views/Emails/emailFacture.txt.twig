@@ -1,0 +1,15 @@
+<h3>Informations concernant la facture N° {{Facture.numeroFacture}} du {{Facture.dateFacture|date('d-m-Y')}}</h3>
+
+
+<b>Numero de la facture:</b>  {{Facture.numeroFacture}} <br><br>
+<b>Type:</b>  {{Facture.natureFacture}} <br><br>
+<b>Date:</b>  {{Facture.dateFacture|date('d-m-Y')}}<br><br>
+<b>Client:</b>  {{Facture.client}} <br><br>
+<b>Montant TTC:</b>  {{Facture.montantTTCFacture}} <br><br>
+<b>Statut:</b>  {{Facture.statutFacture}}<br><br>
+{% if Facture.statutFacture == 'Refusée' %}
+    <b>Cause refus:</b>  {{Facture.causeRefusFacture}}<br><br>
+{%endif%}
+
+Cordialement,<br><br>
+L'équipe de TimSoft !

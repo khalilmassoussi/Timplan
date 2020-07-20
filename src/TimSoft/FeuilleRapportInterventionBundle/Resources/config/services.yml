@@ -1,0 +1,13 @@
+services:
+#    tim_soft_feuille_rapport_intervention.example:
+#        class: TimSoft\FeuilleRapportInterventionBundle\Example
+#        arguments: ["@service_id", "plain_value", "%parameter%"]
+    tim_soft_feuille_rapport_intervention.voter:
+        class: TimSoft\FeuilleRapportInterventionBundle\Security\FeuilleVoter
+        tags: 
+            - { name: security.voter }
+            
+    tim_soft_feuille_rapport_intervention.rapport.voter:
+            class: TimSoft\FeuilleRapportInterventionBundle\Security\RapportVoter
+            tags: 
+                - { name: security.voter }   

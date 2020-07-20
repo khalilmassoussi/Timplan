@@ -1,0 +1,283 @@
+{% extends 'Squelette.html.twig' %}
+
+{% block Titre %}
+    Portail web de TimSoft - Mon Planning
+{% endblock %}
+
+{% block Section %}
+    <h1>
+        Consulter Mon Planning
+        <small></small>
+    </h1>
+{% endblock %}
+
+
+{% block Navigation %}
+    {#{% if AutorisationAcces('Consultercommandes' , Utilisateur) %}#}
+    {#<li><a href="{{path('Consultercommandes')}}">Consulter la liste des commandes</a></li>#}
+    {#{%endif%}#}
+    {#<li class="active">Modification d'une commande</li>#}
+{% endblock %}
+{% block Contenu %}
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fullcalendar/core@4.1.0/main.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@4.1.0/main.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@4.1.0/main.min.css">
+    <link href='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.css' rel='stylesheet'/>
+    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@4.1.0/main.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/interaction@4.1.0/main.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@4.1.0/main.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@4.1.0/main.min.js"></script>
+    <script src="https://unpkg.com/@fullcalendar/core@4.3.1/locales-all.js"></script>
+    {#<script src="https://unpkg.com/@fullcalendar/interaction@4.3.0/main.min.js"></script>#}
+    <script src="https://unpkg.com/@fullcalendar/list@4.3.0/main.min.js"></script>
+    <script src='http://fullcalendar.io/js/fullcalendar-2.1.1/lib/moment.min.js'></script>
+    {#<script src='http://fullcalendar.io/js/fullcalendar-2.1.1/lib/jquery.min.js'></script>#}
+    {#<script src="http://fullcalendar.io/js/fullcalendar-2.1.1/lib/jquery-ui.custom.min.js"></script>#}
+    {#<script src='http://fullcalendar.io/js/fullcalendar-2.1.1/fullcalendar.min.js'></script>#}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-modal/2.2.5/js/bootstrap-modal.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-modal/2.2.5/css/bootstrap-modal-bs3patch.css"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-modal/2.2.5/css/bootstrap-modal.css"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-modal/2.2.5/img/ajax-loader.gif"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-modal/2.2.5/js/bootstrap-modal.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-modal/2.2.5/js/bootstrap-modalmanager.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-modal/2.2.5/js/bootstrap-modalmanager.min.js"></script>
+    <style>
+        #external-events {
+            /*position: fixed;*/
+            z-index: 2;
+            top: 20px;
+            left: 20px;
+            width: 150px;
+            padding: 0 10px;
+            border: 1px solid #ccc;
+            background: #eee;
+        }
+
+        #external-events .fc-event {
+            margin: 1em 0;
+            cursor: move;
+        }
+
+        #calendar-container {
+            position: relative;
+            z-index: 1;
+            /*margin-left: 200px;*/
+        }
+
+        #calendar {
+            /*max-width: 900px;*/
+            /*margin: 20px auto;*/
+        }
+    </style>
+    <div class="col-md-12">
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h2 class="box-title" style="color:#1E5584">Mon Planning</h2>
+            </div>
+            <div class="box-tools pull-center">
+            </div>
+            <div class="box-body">
+                <div id='calendar'></div>
+            </div>
+        </div>
+    </div>
+    <div id="fullCalModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span> <span
+                                class="sr-only">close</span></button>
+                    <h4 id="eventInfo" class="modal-title"></h4>
+                </div>
+                <div id="modalBody" class="modal-body">
+                    <div class="nav-tabs-custom">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a data-toggle="tab" href="#Realisations">Realisations</a>
+                            </li>
+                            <li><a data-toggle="tab" href="#Informations">Informations</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div id="Realisations" class="tab-pane fade in active">
+                                <div class="box box-primary">
+                                    <div class="box-body">
+                                        <div class="col-md-6">
+                                            <div class="row"><b>Commence le: </b> <span id="startTime"></span></div>
+                                            <br>
+                                            <div class="row"><b>Statut: </b><span id="Statut"></span></div>
+                                            <br>
+                                            <div class="row"><b>Intervenant: </b><span id="Intervenant"></span>
+                                            </div>
+                                            <br>
+                                            <div class="row"><b>Facturation: </b><span
+                                                        id="Facturation"></span> <a href="#" class="changer">Changer</a>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="row"><b>Jusqu'au: </b> <span id="endTime"></span></div>
+                                            <br>
+                                            <div class="row"><b>Journée Supplémentaire: </b><span id="JSup"></span>
+                                            </div>
+                                            <br>
+                                            <div class="row"><b>Ressource Accompagnement: </b><span
+                                                        id="Accompagnement"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="Informations" class="tab-pane fade">
+                                <div class="box box-primary">
+                                    <div class="box-body">
+                                        <div class="col-md-6">
+                                        <span>
+                                <b>Client: </b>
+                                <span id="client"></span></span>
+                                            <span class="row"><b>Telephone: </b><span id="Telephone"></span></span>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <span><b>Adresse: </b><span id="adresse"></span></span>
+                                            <span class="row"><b>Ville: </b><span id="ville"></span></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success" data-dismiss="modal">Valider</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Rejeter</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {#<div id="eventContent" title="Details">#}
+    {#<b>Debut:</b> <span id="startTime"></span><br>#}
+    {#<b>Fin:</b> <span id="endTime"></span><br><br>#}
+    {#<b>Titre: </b> <span id="eventInfo"></span>#}
+    {#<div><b>Client: </b>#}
+    {#<span id="client"></span>#}
+    {#</div>#}
+    {#</div>#}
+{% endblock %}
+    {% block SideBar %}
+    {% endblock %}
+    {% block script %}
+        {{ parent() }}
+        <script
+                src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"
+                integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30="
+                crossorigin="anonymous"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                $(".changer").on("click", function () {
+                    console.log(this.id);
+                    $.ajax({
+                        url: '{{ path('FacturationPlanning') }}',
+                        data: 'action=update&id=' + this.id,
+                        type: "POST",
+                        success: function (data) {
+                            $("#Facturation").html(data.Facturation);
+                        },
+                        error: function () {
+                            alert("Vous ne pouvez pas faire cette action");
+                        },
+                    });
+                });
+                $("#dialog1").dialog({
+                    autoOpen: false
+                });
+                var initialLocaleCode = 'fr';
+                var calendarEl = document.getElementById('calendar');
+
+                var calendar = new FullCalendar.Calendar(calendarEl, {
+                    locale: initialLocaleCode,
+                    defaultView: 'dayGridWeek',
+                    views: {
+                        customWeek: {
+                            type: 'timeline',
+                            duration: {weeks: 1},
+                            slotDuration: {days: 1},
+                            buttonText: 'Custom Week'
+                        }
+                    },
+                    eventRender: function (event, element) {
+
+                    },
+                    dayClick: function (date, jsEvent, view) {
+                        alert('Clicked on: ' + date.format());
+                        alert('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
+                        alert('Current view: ' + view.name);
+                        // change the day's background color just for fun
+                        $(this).css('background-color', 'red');
+                    },
+                    eventClick: function (event) {
+                        var xhr = $.ajax({
+                            url: '{{ path('plans') }}',
+                            data: 'action=update&id=' + event.event.id,
+                            type: "POST",
+                            success: function (data) {
+                                moment.locale('fr');
+                                console.log(moment(1316116057189).fromNow());
+                                if (data.allDay) {
+                                    $("#startTime").html(moment(event.event.start).format('LL'));
+                                    $("#endTime").html(moment(data.end).format('LL'));
+                                } else {
+                                    $("#startTime").html(moment(event.event.start).format('LLL'));
+                                    $("#endTime").html(moment(data.end).format('LLL'));
+                                }
+                                $("#eventInfo").html(event.event.title);
+                                $("#Telephone").html(data.Telephone);
+                                $("#fullCalModal").modal();
+                                $("#client").html(data.Client);
+                                $("#adresse").html(data.Lieux);
+                                $("#ville").html(data.Ville);
+                                $("#Statut").html(data.Statut);
+                                if (data.JSupplementaire) {
+                                    $("#JSup").html('Oui');
+                                } else {
+                                    $("#JSup").html('Non');
+                                }
+                                $("#Intervenant").html(data.Intervenant);
+                                $("#Facturation").html(data.Facturation);
+                                $(".changer").attr('id', data.id);
+                                if (data.Accompagnement) {
+                                    $("#Accompagnement").html(data.Accompagnement);
+                                } else {
+                                    $("#Accompagnement").html("")
+                                }
+                            },
+                            error: function () {
+                                alert("erreur lors de l'appel de l'url dans POST event/drop : contactez l'administrateur du site");
+                            },
+                        });
+                    },
+                    navLinks: true,
+                    firstDay: 1,
+                    eventLimit: true, // allow "more" link when too many events
+                    events: {
+                        url: "{{ path('getbuPlans') }}",
+                    },
+                    plugins: ['interaction', 'dayGrid', 'timeGrid', 'list'],
+                    header: {
+                        left: 'prev,next today',
+                        center: 'title',
+                        right: 'dayGridMonth,timeGridMonth,timeGridDay,listMonth,dayGridWeek'
+                    },
+                    eventTimeFormat: { // like '14:30:00'
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit',
+                        hour12: false
+
+                    },
+                });
+
+                calendar.render();
+            });
+            $('#calendar').css('font-size', '15px');
+        </script>
+
+    {% endblock %}

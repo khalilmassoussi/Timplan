@@ -1,0 +1,71 @@
+tim_soft_utilisateur_homepage:
+    path:     /
+    defaults: { _controller: TimSoftUtilisateurBundle:Default:index }
+
+AjouterUtilisateur:
+    path:     /AjouterUtilisateur
+    defaults: { _controller: TimSoftUtilisateurBundle:GestionUtilisateur:AjouterUtilisateur }   
+
+ConsulterUtilisateur:
+    path:     /ConsulterUtilisateurs
+    defaults: { _controller: TimSoftUtilisateurBundle:GestionUtilisateur:ConsulterUtilisateur }
+    
+ConsulterUtilisateurActif:
+    path:     /ConsulterUtilisateursActifs
+    defaults: { _controller: TimSoftUtilisateurBundle:GestionUtilisateur:ConsulterUtilisateurActif }
+    
+ConsulterUtilisateurActif:
+    path:     /ConsulterUtilisateursActives
+    defaults: { _controller: TimSoftUtilisateurBundle:GestionUtilisateur:ConsulterUtilisateurActif }
+ 
+ConsulterUtilisateurDeactive:
+    path:     /ConsulterUtilisateursDeactives
+    defaults: { _controller: TimSoftUtilisateurBundle:GestionUtilisateur:ConsulterUtilisateurDeactive }
+    
+ConsulterUtilisateurInvalid:
+    path:     /ConsulterUtilisateursInvalids
+    defaults: { _controller: TimSoftUtilisateurBundle:GestionUtilisateur:ConsulterUtilisateurInvalid }
+
+ConsulterUnUtilisateur:
+    path:     /ConsulterUnUtilisateur/{id}
+    defaults: { _controller: TimSoftUtilisateurBundle:GestionUtilisateur:ConsulterUnUtilisateur }
+    
+SupprimerUnUtilisateur:
+    path:     /SupprimerUnUtilisateur/{id}
+    defaults: { _controller: TimSoftUtilisateurBundle:GestionUtilisateur:SupprimerUnUtilisateur }
+  
+SupprimerUtilisateur:
+    path:     /SupprimerUtilisateur/{id}
+    defaults: { _controller: TimSoftUtilisateurBundle:GestionUtilisateur:SupprimerUtilisateur }
+    
+DeactiverUnUtilisateur:
+    path:     /DeactiverUnUtilisateur/{id}
+    defaults: { _controller: TimSoftUtilisateurBundle:GestionUtilisateur:DeactiverUnUtilisateur }
+  
+DeactiverUtilisateur:
+    path:     /DeactiverUtilisateur/{id}
+    defaults: { _controller: TimSoftUtilisateurBundle:GestionUtilisateur:DeactiverUtilisateur }
+
+ReactiverUtilisateur:
+    path:     /ReactiverUtilisateur/{id}
+    defaults: { _controller: TimSoftUtilisateurBundle:GestionUtilisateur:ReactiverUtilisateur }
+    
+ReconfirmationMailUtilisateur:
+    path:     /ConfirmationMailUtilisateur/{confirmationModifMail}
+    defaults: { _controller: TimSoftUtilisateurBundle:GestionUtilisateur:ReconfirmationMailUtilisateur }
+getUsers:
+    path:     /getusers
+    defaults: { _controller: TimSoftUtilisateurBundle:GestionUtilisateur:getUsers }
+getAllUsers:
+    path:     /getallusers
+    defaults: { _controller: TimSoftUtilisateurBundle:GestionUtilisateur:getAllUsers }
+getUsersBySociete:
+    path:     /getUsersBySociete
+    defaults: { _controller: TimSoftUtilisateurBundle:GestionUtilisateur:getBySociete }
+    methods:  [GET, POST]
+findByBus:
+    path:     /getUsersByBu
+    defaults: { _controller: TimSoftUtilisateurBundle:GestionUtilisateur:getByBus }
+
+
+

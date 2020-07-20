@@ -1,0 +1,102 @@
+{% extends 'Squelette.html.twig' %}
+
+{% block Titre %}
+    Portail web de TimSoft - Importation des clients
+{% endblock %}
+
+{% block Section %} Gestion des clients
+    <small>Importation des clients</small>
+{% endblock %}
+
+
+{% block Navigation %}
+    <li class="breadcrumb-item active">Importation des clients</li>
+{% endblock %}
+
+{% block SideBar %}
+{% endblock %}
+{% block Contenu %}
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header with-border">
+                <h2 class="card-title" style="color:#1E5584">Importation des clients</h2>
+            </div>
+            <div class="card-body">
+                {{ form_start(form) }}
+                {{ form_errors(form.listeClient) }}
+                <br>
+                <label>Pour importer une liste de clients, assurez-vous que votre fichier Excel est de la forme
+                    suivante:</label>
+                <br>
+                <img src="{{ asset('Template/Excel.PNG') }}" width="100%">
+                <div class="row">
+                    <div class="col-md-6">
+
+                        <br>
+
+                        <div class="file-upload bg-white shadow rounded-lg">
+                            <label for="fileUpload" class="file-upload rounded-pill shadow">
+                                <i class="fa fa-upload mr-2"></i>Sélectionner le fichier à importer ...
+                            </label>
+                            {#                            <label>Sélectionner le fichier à importer</label>#}
+                            {{ form_widget(form.listeClient , {'attr' : {'class' : 'form-control-file'}} ) }}
+
+                        </div>
+                        {#                        <div class="file-upload">#}
+                        {#                            <input type="file"/>#}
+                        {#                            <i class="fa fa-arrow-up"></i>#}
+                        {#                        </div>#}
+                    </div>
+
+
+                </div>
+            </div>
+            <table width="30%" align="center">
+                <tr>
+                    <td width="50%">
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary btn-block">Importer</button>
+                        </div>
+                    </td>
+                    <td width="50%">
+                        <div class="form-group">
+                            <button type="reset" class="btn btn-secondary btn-block">Annuler</button>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+            {{ form_widget(form._token) }}
+            {{ form_end(form) }}
+
+        </div>
+    </div>
+{% endblock %}
+
+{% block css %}
+    {{ parent() }}
+
+    <style>
+    </style>
+{% endblock %}
+
+{% block script %}
+    {{ parent() }}
+    <script>
+        //  document.getElementById('timsoft_generalbundle_importerClient').addEventListener('submit', onSubmit);
+
+        // function onSubmit(event) {
+        //   //  event.preventDefault();
+        //     alert("cc");
+        //     // var formData = new FormData();
+        //     // formData.append("upload[file]", document.getElementById("file").files[0]);
+        //     // formData.append("upload[name]", document.getElementById("name").value);
+        //     //
+        //     // var xhr = new XMLHttpRequest();
+        //     // xhr.open("POST", "/upload");
+        //     // xhr.addEventListener('load', onRequestComplete, false);
+        //     // xhr.upload.addEventListener("load", onUploadComplete, false);
+        //     // xhr.upload.addEventListener("progress", onUploadProgress, false);
+        //     // xhr.send(formData);
+        // }
+    </script>
+{% endblock %}

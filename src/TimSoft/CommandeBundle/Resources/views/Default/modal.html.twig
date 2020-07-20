@@ -1,0 +1,297 @@
+<div id="fullCalModal" class="modal fade">
+    <div class="modal-dialog  modal-lg" style="width:820px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 id="eventInfo" class="modal-title"></h4>
+                <button type="button" class="close" data-dismiss="modal" id="close"><span
+                            aria-hidden="true">×</span> <span
+                            class="sr-only">close</span></button>
+            </div>
+            <div id="modalBody" class="modal-body">
+                <div class="card card-primary card-outline card-outline-tabs">
+                    <div class="card-header p-0 border-bottom-0">
+                        <ul class="nav nav-tabs">
+                            <li class="nav-item"><a data-toggle="tab" href="#Realisations" class="nav-link active">Détail
+                                    Intervention</a>
+                            </li>
+                            <li class="nav-item"><a data-toggle="tab" href="#Informations" class="nav-link">Détail
+                                    Client</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-body">
+                        <div class="tab-content">
+                            <div id="Realisations" class="tab-pane fade active show">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                            <div style="white-space:nowrap; width: 60%">
+                                                <label>Commence le: </label>
+                                                <input id="datepicker" name="data" type="text"
+                                                       style="display:inline-block"
+                                                       class="form-control col" autocomplete="off"/>
+                                                <span id="startTime" hidden></span>
+                                            </div>
+                                        </div>
+                                        <br class="planning">
+                                        <div class="form-group row"><b>Statut: </b>
+                                            <span class="col">
+                                                <select id="Statut">
+                                                <option>Proposé</option>
+                                                <option>Confirmé</option>
+                                                <option>Rejeté</option>
+                                                <option>En attente</option>
+                                                <option disabled>Terminé</option>
+                                            </select>
+                                               </span>
+                                        </div>
+                                        <br>
+                                        <div class="form-group row"><b>Intervenant: </b><span id="Intervenant"
+                                                                                              class="col"></span>
+                                        </div>
+                                        <br>
+                                        <div class="form-group row"><b>Facturation: </b>
+                                            <span class="col">
+                                                    <input type="radio" name="Facturation" value="Facturé" id="Facturé">
+                                                    Facturable
+                                                    <input type="radio" name="Facturation" value="Gratuit" id="Gratuit">
+                                                    Gratuit
+                                                </span>
+                                        </div>
+                                        <br>
+                                        <div class="form-group row"><b>
+                                                <label class="form-label">Lieu: </label></b>
+                                            <span class="col">
+                                                    <input type="radio" name="Lieu" value="SurSite" id="SurSite">
+                                                    Sur site
+                                                    <input type="radio" name="Lieu" value="aDistance" id="aDistance">
+                                                    A distance
+                                                </span>
+                                        </div>
+                                        <br>
+                                        <div class="row">
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="row"><b>Jusqu'au: </b> <span id="endTime" class="col"></span>
+                                        </div>
+                                        <br>
+                                        <span id="AllDay" class="row">
+
+                                            <span class="form-check col-md-3">
+                                                    <input type="checkbox" name="allday" value="Matin" id="Matin"
+                                                           class="form-check-input">
+                                                   <label class="form-check-label">Matin</label>
+                                             </span>
+                                            <span class="form-check col-md-6">
+                                                <input type="checkbox" name="allday" value="Midi" id="Midi"
+                                                       class="form-check-input">
+                                               <label class="form-check-label">Après-midi</label>
+                                            </span>
+                                        </span>
+                                        <br>
+                                        <div class="row"><b>Journée Supplémentaire: </b> <span id="JSup"
+                                                                                               class="col"></span>
+                                        </div>
+                                        <br>
+                                        <div class="row"><b>Ressource D'accompagnement: </b>
+                                            <div id="Accompagnement" style="display: inline-flex" class="col">
+                                                <span class="form-check">
+                                                    <input type="radio" name="accompagnements" value="Oui" id="Oui"
+                                                           class="form-check-input">
+                                                    Oui
+                                                </span>
+                                                <span class="form-check">
+                                                    <input type="radio" name="accompagnements" value="Non" id="Non">
+                                                    Non
+                                                     </span>
+                                            </div>
+                                        </div>
+                                        <div class="row"><span id="container"></span></div>
+                                        <div class="row">
+                                            <a id="commentaire" href="#">Ajouter un commentaire</a>
+                                            <span id="commentaireChamps" style="width: 100%;"><textarea
+                                                        name="comment" id='textArea'
+                                                        placeholder="Ajouter votre commentaire..."
+                                                        style="width: 100%"
+                                                        class="form-control"></textarea></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="Informations" class="tab-pane fade">
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                            <b>Client: </b>
+                                            <span id="client"></span>
+                                        </div>
+                                        <br>
+                                        <div class="row"><b>Téléphone: </b><span id="Telephone"></span></div>
+                                        <br>
+                                        <div class="row"><b>Chef de projet client: </b>
+
+                                        </div>
+                                        <div class="row"><span id="container1"></span></div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="row"><b>Adresse: </b><span id="adresse"></span></div>
+                                        <br>
+                                        <div class="row"><b>Ville: </b><span id="ville"></span></div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-dismiss="modal" id="Sauvegarder">
+                    <i class="far fa-save"></i>
+                    Sauvegarder
+                </button>
+                {% if AutorisationAcces('deletePlanning' , Utilisateur) %}
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" id="Supprimer">
+                        <i class="far fa-trash-alt"></i>
+                        Supprimer
+                    </button>
+                {% endif %}
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="Fermer">
+                    <i class="far fa-window-close"></i>
+                    Fermer
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{#<script#}
+{#        src="https://code.jquery.com/jquery-3.5.1.js"#}
+{#        integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="#}
+{#        crossorigin="anonymous"></script>#}
+{#<script#}
+{#        src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"#}
+{#        integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30="#}
+{#        crossorigin="anonymous"></script>#}
+<script>
+    function CalendarModalData(data) {
+        {% if not AutorisationAcces('modifinterv' , Utilisateur) %}
+        if (data.resourceIds[0] !== {{ Utilisateur.id }}) {
+            $(":input").prop("disabled", true);
+            $('#Fermer').prop("disabled", false);
+        }
+        {% endif %}
+        client = data.Client.id;
+        moment.locale('fr');
+        app_user = {{ app.user.roleUtilisateur|json_encode()|raw }};
+        if (data.Statut === 'Terminé' && app_user !== 'ROLE_ADMIN') {
+            console.log(app_user);
+            $(':input').each(function () {
+                $(this).attr("disabled", true);
+                if (app_user == 'ROLE_ADMIN') {
+                    $('#Supprimer').attr("disabled", false)
+                }
+            });
+            $('#Fermer').attr("disabled", false);
+            $('#close').attr("disabled", false);
+        }
+        if (data.allDay) {
+            $('#Matin').prop('checked', true);
+            $('#Midi').prop('checked', true);
+
+        } else {
+            if (moment(data.start).hours() > 12) {
+                $('#Midi').prop('checked', true);
+                console.log('Midi',
+                    moment(data.end).hours()
+                );
+            } else {
+                $('#Matin').prop('checked', true);
+                console.log('Matin',
+                    moment(data.end).hours()
+                );
+            }
+        }
+        $("#startTime").val(moment(data.start).format('LL'));
+        $('#datepicker').datepicker({
+            format: 'd MM yyyy',
+            language: 'fr'
+        }).on('changeDate', function (e) {
+            $("#endTime").html(moment(e.date).format('LL'));
+            $("#startTime").val(moment(e.date).format('LL'));
+            console.log(moment(e.date).format('LLL'));
+        });
+        $("#datepicker").datepicker("setDate", moment(data.start).format('LL'));
+        // $('#datepicker').val(moment(data.start).format('d MM '));
+        // $("#datepicker").datepicker('update', moment(data.start).format('LL'));
+        $("#endTime").html(moment(data.end).format('LL'));
+        if (data.type === 'TeteCommande') {
+            $("#eventInfo").html('CC ' + data.nCommande + ' - ' + data.title + ' - ' + data.libelle);
+        } else {
+            $("#eventInfo").html('Pré ' + data.nCommande + ' - ' + data.title + ' - ' + data.libelle);
+        }
+        console.log(data);
+        $("#Telephone").html(data.Telephone);
+        $("#client").html(data.Client.raisonSociale);
+        $(".planning").attr('id', data.id);
+        $("#adresse").html(data.Lieux);
+        $("#ville").html(data.Ville);
+        $("#Statut").val(data.Statut);
+        if (data.JSupplementaire) {
+            $("#JSup").html('Oui');
+        } else {
+            $("#JSup").html('Non');
+        }
+        $("#Intervenant").html(data.Intervenant);
+        console.log(data);
+        if (data.Facturation === 'Gratuit') {
+            $('#Gratuit').prop('checked', true);
+        } else if (data.Facturation === 'Facturé') {
+            $('#Facturé').prop('checked', true);
+        }
+        if (data.UtilisateurClient) {
+            $("#users1 option[value=" + data.UtilisateurClient.id + "]").attr('selected', 'selected');
+            console.log("aaaaaaaaaaaa => " + data.UtilisateurClient.id);
+            $('#users1').select2({
+                placeholder: "Choisir un utilisateur",
+                allowClear: true
+            });
+        } else {
+            $('#users1').val(null).trigger('change');
+            $('#users1').select2({
+                placeholder: "Choisir un utilisateur",
+                allowClear: true
+            });
+        }
+        if (data.Accompagnements.length > 0) {
+            var selectedItems = [];
+            $.each(data.Accompagnements, function (key, value) {
+                selectedItems.push(value.id);
+                console.log(value.nomUtilisateur + ' ' + value.prenomUtilisateur);
+            });
+            $('#users').select2().val(selectedItems).trigger("change");
+            console.log(selectedItems);
+            $("#container").show();
+            $('#Oui').prop('checked', true);
+        } else {
+            $("#container").hide();
+            $("#users").val("");
+            $('#Non').prop('checked', true);
+        }
+        if (data.Lieu === 'Sur Site') {
+            $('#SurSite').prop('checked', true);
+        } else if (data.Lieu === 'à distance') {
+            $('#aDistance').prop('checked', true);
+        }
+        if (data.Commentaire) {
+            $('#textArea').show();
+            $('#textArea').html(data.Commentaire);
+        } else {
+            $('#commentaire').show();
+            $('#textArea').hide()
+        }
+        $("#fullCalModal").modal();
+    }
+</script>

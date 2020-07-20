@@ -1,0 +1,64 @@
+{% extends 'Squelette.html.twig' %}
+{% block Titre %}
+    Portail web de TimSoft - Gestion des activités
+{% endblock %}
+
+{% block Section %}
+    <h1>
+        Gestion des activités
+    </h1>
+{% endblock %}
+
+
+{% block Navigation %}
+    <li class="breadcrumb-item active">Activités</li>
+{% endblock %}
+{% block Contenu %}
+    <h1>Taskevents list</h1>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Site</th>
+            <th>Etiquette</th>
+            <th>Statut</th>
+            <th>Motif</th>
+            <th>Progression</th>
+            <th>Start</th>
+            <th>End</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for taskEvent in taskEvents %}
+            <tr>
+                <td><a href="{{ path('taskevent_show', { 'id': taskEvent.id }) }}">{{ taskEvent.id }}</a></td>
+                <td>{{ taskEvent.site }}</td>
+                <td>{{ taskEvent.etiquette }}</td>
+                <td>{{ taskEvent.statut }}</td>
+                <td>{{ taskEvent.motif }}</td>
+                <td>{{ taskEvent.progression }}</td>
+                <td>{% if taskEvent.start %}{{ taskEvent.start|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{% if taskEvent.end %}{{ taskEvent.end|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('taskevent_show', { 'id': taskEvent.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('taskevent_edit', { 'id': taskEvent.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('taskevent_new') }}">Create a new taskEvent</a>
+        </li>
+    </ul>
+{% endblock %}

@@ -1,0 +1,19 @@
+<h3>Rapport de l'intervention du {{Rapport.feuilleDePresence.dateIntervention|date('d-m-Y')}} effectuée par {{Rapport.feuilleDePresence.Intervenant}} !</h3>
+
+
+<b>Date de l'intervention:</b>{{Rapport.FeuilleDePresence.dateIntervention|date('d-m-Y')}}<br>
+<b>Horaire d'intervention (Matin) :</b> de {{Rapport.feuilleDePresence.heureDebutInterventionMatin|date('H:i')}} à {{Rapport.feuilleDePresence.heureFinInterventionMatin|date('H:i')}}<br>
+<b>Horaire d'intervention (Après-Midi) :</b> de {{Rapport.feuilleDePresence.heureDebutInterventionAM|date('H:i')}} à {{Rapport.feuilleDePresence.heureFinInterventionAM|date('H:i')}} <br>
+<b>Intervenant:</b> {{Rapport.feuilleDePresence.intervenant}} <br>
+<b>Participant:</b><br>
+{% for Participant in Rapport.feuilleDePresence.participants %}
+    - {{Participant.nomParticipant}} {{Participant.prenomParticipant}} <br>
+{% endfor%}
+<br>
+<b>Compte rendu:</b> {{Rapport.compteRenduIntervention}}<br>
+<b>Type d'intervention:</b>{{Rapport.typeIntervention}}<br>
+<b>Remarque(s) client: </b> {{Rapport.remarqueClient}}<br><br><br>
+
+
+Cordialement,<br>
+L'équipe de TimSoft !

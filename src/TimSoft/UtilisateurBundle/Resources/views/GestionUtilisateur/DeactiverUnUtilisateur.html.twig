@@ -1,0 +1,76 @@
+{% extends 'Squelette.html.twig' %}
+
+{% block Titre %}
+    Portail web de TimSoft - Déactivation de {{utilisateur.nomUtilisateur}} {{utilisateur.prenomUtilisateur}}
+{%endblock %}
+
+{%block Section %} 
+     Gestion des utilisateurs
+        <small>Déactivation d'un utilisateur</small>
+{% endblock %}
+
+{% block Navigation %}
+    <li><a href="{{path('ConsulterUtilisateur')}}">Consulter la liste des utilisateurs</a></li>
+    <li class="active">Déactivation du compte d'un utilisateur</li>
+    {%endblock %}
+
+{%block Contenu %}
+    <div class="col-md-9">
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h2 class="box-title" style="color:#1E5584">Informations de {{utilisateur.nomUtilisateur}} {{utilisateur.prenomUtilisateur}}</h2>
+                <div class="box-tools pull-center">
+                </div>
+            </div>
+            <div class="box-body" id="DivCente">
+                <div class="row">
+                    <div class="col-md-6">
+                        <table width="400">
+                            <tr>
+                                <th scope="row" style="padding: 15px 0px 0px 0px"><div align="left">Nom:</div></th>
+                                <td style="padding: 15px 0px 0px 0px">{{utilisateur.nomUtilisateur}}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row" style="padding: 15px 0px 0px 0px"><div align="left">Email:</div></th>
+                                <td style="padding: 15px 0px 0px 0px">{{utilisateur.email}}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row" style="padding: 15px 0px 0px 0px"><div align="left">Société:</div></th>
+                                <td style="padding: 15px 0px 0px 0px">{{utilisateur.client.raisonSociale}}</td>
+                            </tr>
+                        </table>
+
+                    </div>
+                    <div class="col-md-6">
+                        <table width="400">
+                            <tr>
+                                <th scope="row" style="padding: 15px 0px 0px 0px" width="30%"><div align="left">Prénom:</div></th>
+                                <td style="padding: 15px 0px 0px 0px">{{utilisateur.prenomUtilisateur}}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row" style="padding: 15px 0px 0px 0px"><div align="left">Téléphone:</div></th>
+                                <td style="padding: 15px 0px 0px 0px">{{utilisateur.telephoneUtilisateur}}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row" style="padding: 15px 0px 0px 0px"><div align="left">Catégorie:</div></th>
+                                <td style="padding: 15px 0px 0px 0px">
+                                     {%set role = utilisateur.roleUtilisateur %}
+                                        {% if ( role == 'ROLE_ADMIN')%}Administrateur
+                                        {% elseif ( role == 'ROLE_CONSULTANT') %}Consultant
+                                        {% elseif ( role == 'ROLE_CLIENT') %}Client
+                                        {% elseif ( role == 'ROLE_GESTIONNAIRE') %}Gestionnaire
+                                        {%endif%}
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <br>
+                <div class="form-group">
+                    <br>
+                    <a href="{{ path('DeactiverUtilisateur', { 'id': utilisateur.id }) }}"><button type="submit" class="btn btn-primary btn-block btn-flat">Déactiver</button></a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

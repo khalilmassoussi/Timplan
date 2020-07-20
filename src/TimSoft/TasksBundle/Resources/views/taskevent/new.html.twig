@@ -1,0 +1,26 @@
+{% extends 'Squelette.html.twig' %}
+{% block Titre %}
+    Portail web de TimSoft - Gestion des activités
+{% endblock %}
+
+{% block Section %}
+    <h1>
+        Gestion des activités
+    </h1>
+{% endblock %}
+
+
+{% block Navigation %}
+    <li class="breadcrumb-item active">Activités</li>
+{% endblock %}
+{% block Contenu %}
+    <h1>Taskevent creation</h1>
+
+    {% include '@TimSoftTasks/taskevent/newForm.html.twig' %}
+
+    <ul>
+        <li>
+            <a href="{{ path('taskevent_index') }}">Back to the list</a>
+        </li>
+    </ul>
+{% endblock %}

@@ -1,0 +1,370 @@
+{% extends 'Squelette.html.twig' %}
+
+{% block Titre %}
+    Portail web de TimSoft - Feuille de présence
+{% endblock %}
+
+{% block Section %}
+    <h1>
+        Feuille de présence
+        <small>Consultation</small>
+    </h1>
+{% endblock %}
+{% block SideBar %}
+{% endblock %}
+{% block Navigation %}
+    {% if AutorisationAcces('ConsulterFeuillesRapportIntervention' , Utilisateur) %}
+        <li class="breadcrumb-item"><a href="{{ path('ConsulterFeuillesRapportIntervention') }}">Consulter les FP & RI
+                d'intervention </a></li>
+    {% endif %}
+    <li class="breadcrumb-item active">Consultation d'une FP</li>
+{% endblock %}
+
+
+{% block Contenu %}
+    {% for message in app.flashes('OK-Ajout-Feuille') %}
+        <div class="flash-notice">
+            <body onLoad="$('#my-modal').modal('show');">
+            <div id="my-modal" class="modal fade">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title">Validation d'ajout !</h4>
+                        </div>
+                        <div class="modal-body">
+                            {{ message }}
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </body>
+        </div>
+    {% endfor %}
+    {% for message in app.flashes('OK-Modification-Feuille') %}
+        <div class="flash-notice">
+            <body onLoad="$('#my-modal').modal('show');">
+            <div id="my-modal" class="modal fade">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title">Validation de la modification</h4>
+                        </div>
+                        <div class="modal-body">
+                            {{ message }}
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </body>
+        </div>
+    {% endfor %}
+
+    {% for message in app.flashes('FeuilleValide') %}
+        <div class="flash-notice">
+            <body onLoad="$('#my-modal').modal('show');">
+            <div id="my-modal" class="modal fade">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title">Erreur Modification</h4>
+                        </div>
+                        <div class="modal-body">
+                            {{ message }}
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </body>
+        </div>
+    {% endfor %}
+    <div class="col-md-12">
+        <div class="card card-primary">
+            <div class="card-header with-border d-flex p-0">
+                <h2 class="card-title p-3">FEUILLE DE PRÉSENCE</h2>
+                <div class="ml-auto p-2" data-toggle="btn-toggle">
+                    {% if Feuille.statutValidation %}
+                        <button type="button" class="btn btn-default btn-sm active" title="Feuille validée"
+                                disabled><b> Validation Feuille </b><i class="fa fa-square text-green"></i></button>
+                    {% else %}
+                        <a>
+                            <button type="button" class="btn btn-default btn-sm" title="Feuille non encore validée"
+                                    disabled><b> Validation Feuille </b><i class="fa fa-square text-red"></i>
+                            </button>
+                        </a>{% endif %}
+                </div>
+            </div>
+            <div align="right" style="padding-right: 10px; padding-bottom: 15px ;  padding-top: 15px">
+                <div class="card-tools pull-right" data-toggle="tooltip">
+
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="col-md-13">
+                    <div class="card card-default">
+                        <div class="card-header with-border">
+                            <h2 class="card-title" style="color:#1E5584">Coordonnées client</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="col-md-13">
+                                <div class="form-group">
+                                    <table width="700">
+                                        <tr>
+                                            <th width="200" scope="row">
+                                                <div align="left">Code Client:</div>
+                                            </th>
+                                            <td>{{ Feuille.client.codeClient }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">
+                                                <div align="left">Client:</div>
+                                            </th>
+                                            <td>{{ Feuille.client.raisonSociale }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">
+                                                <div align="left">Téléphone:</div>
+                                            </th>
+                                            <td>{{ Feuille.client.telephone }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">
+                                                <div align="left">Adresse:</div>
+                                            </th>
+                                            <td>{{ Feuille.client.adresseClient }}</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-13">
+                    <div class="card card-default">
+                        <div class="card-header with-border">
+                            <h2 class="card-title" style="color:#1E5584 ">Participants</h2>
+                        </div>
+                        <div class="card-body">
+                            {% if (Feuille.participants|length) >0 %}
+
+                                <table class="table table-bordered">
+                                    <tr class="row1 header blue">
+                                        <th>
+                                            <center>Participant</center>
+                                        </th>
+                                        <th>
+                                            <center>Validation Travail</center>
+                                        </th>
+                                    </tr>
+                                    {% for Participant in Feuille.participants %}
+                                        <tr>
+                                            <td>{{ Participant.nomParticipant }} {{ Participant.prenomParticipant }}</td>
+
+                                            <td>
+                                                <center>{{ Participant.adresseMailParticipant }}</center>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </table>
+                            {% else %}
+                                Aucun participant pour cette intervention
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <br>
+                <div class="col-md-13">
+                    <div class="card card-default">
+                        <div class="card-header with-border">
+                            <h2 class="card-title" style="color:#1E5584">Visa intervenant</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <table width="800">
+                                        <tr>
+                                            <th scope="row" width="200">
+                                                <div align="left">Intervenant:</div>
+                                            </th>
+                                            <td>{{ Feuille.intervenant.nomUtilisateur }} {{ Feuille.intervenant.prenomUtilisateur }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">
+                                                <div align="left">Société:</div>
+                                            </th>
+                                            <td>{{ Feuille.intervenant.client }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">
+                                                <div align="left">Numéro de commande:</div>
+                                            </th>
+                                            <td>{{ Feuille.numeroCommande }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">
+                                                <div align="left">Libellé commande:</div>
+                                            </th>
+                                            <td><p>{{ Feuille.libelleCommande }}</p></td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">
+                                                <div align="left">Fait à:</div>
+                                            </th>
+                                            <td>{{ Feuille.lieuIntervention }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">
+                                                <div align="left">Le:</div>
+                                            </th>
+                                            <td>{{ Feuille.dateIntervention|date('d-m-Y') }}</td>
+                                        </tr>
+                                        {% if not(Feuille.heureDebutInterventionMatin == null) or not (Feuille.heureDebutInterventionAM == null) %}
+                                        <tr>
+                                            <th scope="row">
+                                                <div align="left">Signature</div>
+                                            </th>
+                                            <td></td>
+                                        </tr>
+                                    </table>
+                                    {% else %}
+                                        </table>
+                                        <br>
+                                        <p>L'horaire de l'intervention n'est pas indiqué !</p>
+
+                                    {% endif %}
+
+
+                                    <div style="padding-left: 15px">
+                                        <table width="400">
+                                            {% if not(Feuille.heureDebutInterventionMatin == null) %}
+                                                <tr>
+                                                    <th width="185" scope="col">Matin:</th>
+                                                    <td>De {{ Feuille.heureDebutInterventionMatin|date('H:i') }}
+                                                        à {{ Feuille.heureFinInterventionMatin|date('H:i') }}</td>
+                                                </tr>
+                                            {% endif %}
+                                            {% if not(Feuille.heureDebutInterventionAM == null) %}
+                                                <tr>
+                                                    <th width="185" scope="col">Après-Midi:</th>
+                                                    <td>De {{ Feuille.heureDebutInterventionAM|date('H:i') }}
+                                                        à {{ Feuille.heureFinInterventionAM|date('H:i') }}</td>
+                                                </tr>
+                                            {% endif %}
+                                        </table>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <div class="col-md-13">
+                        <div class="card card-default">
+                            <div class="card-header with-border">
+                                <h2 class="card-title" style="color:#1E5584">Commentaires</h2>
+                            </div>
+                            <div class="card-body">
+                                {% if Feuille.intervention.commentaire %}
+                                    {{ Feuille.intervention.commentaire }}
+                                {% else %}
+                                    Aucun commentaire
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <br>
+
+            </div>
+            <div class="card-footer">
+                <table width="50%" align="center">
+                    <tr>
+                        {% if AutorisationAcces('ConsulterFeuillesRapportIntervention' , Utilisateur) %}
+                            <td width="25%">
+                                <a href="{{ path('ConsulterFeuillesRapportIntervention') }}">
+                                    <button class="btn btn-secondary btn-block"><i
+                                                class="far fa-window-close fa-lg" title="Retour"></i>
+                                    </button>
+                                </a>
+                            </td>
+                        {% endif %}
+                        {% if not( Feuille.statutValidation ) %}
+                            {% if AutorisationAcces('ModifierFeuillePresence' , Utilisateur) %}
+                                <td width="25%">
+                                    <a href="{{ path('ModifierFeuillePresence', { 'id': Feuille.id }) }}">
+                                        <button class="btn btn-primary btn-block"
+                                                title="Modifier la feuille de présence"><i
+                                                    class="fas fa-edit fa-lg"></i>
+                                        </button>
+                                    </a>
+                                </td>
+                            {% endif %}
+                        {% endif %}
+                        {% if AutorisationAcces('TelechargerFeuillePresence' , Utilisateur) %}
+                            <td width="25%">
+                                <a href="{{ path('TelechargerFeuillePresence', { 'id': Feuille.id }) }}">
+                                    <button type="submit" class="btn btn-info btn-block"><i
+                                                class="fas fa-download fa-lg" title="Télécharger"></i>
+                                    </button>
+                                </a>
+                            </td>
+                        {% endif %}
+                        {% if AutorisationAcces('ModifierFeuillePresence' , Utilisateur) %}
+                            <td width="25%">
+                                <a href="#" data-href="{{ path('SupprimerFeuille', { 'id': Feuille.id }) }}"
+                                   class="btn btn-danger btn-block" data-toggle="modal"
+                                   data-target="#confirm-delete"><i class="far fa-trash-alt fa-lg"
+                                                                    title="Supprimer la feuille de présence"></i>
+                                </a>
+                            </td>
+                        {% endif %}
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <br><br>
+    </div>
+    <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    Confirmation de suppression
+                </div>
+                <div class="modal-body">
+                    Voulez Vous vraiment supprimer {{ Feuille }} ?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                    <a class="btn btn-primary btn-ok">Supprimer</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block script %}
+    {{ parent() }}
+    <script>
+        $('#confirm-delete').on('show.bs.modal', function (e) {
+            $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,239 @@
+{% extends 'Squelette.html.twig' %}
+
+{% block Titre %}
+    Portail web de TimSoft - Suppression d'un rapport d'intervention
+{%endblock %}
+
+{%block Section %} 
+    Rapport d'intervention
+    <small>Suppression</small>
+{% endblock %}
+
+
+{% block Navigation %}
+    {% if AutorisationAcces('ConsulterFeuillesRapportIntervention' , Utilisateur) %} 
+        <li><a href="{{path('ConsulterFeuillesRapportIntervention')}}">Consulter les feuilles de présence & rapport d'intervention </a></li>
+        {%endif%}
+    <li class="active">Suppression d'un rapport d'intervention</li>
+    {%endblock %}
+
+
+{%block Contenu %}
+    <div class="col-md-9">
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h2 class="box-title" style="color:#1E5584">Rapport d'intervention</h2>
+            </div>
+            <div class="box-tools pull-center">
+            </div>
+            <div class="box-body">
+
+                <h3>RAPPORT D'INTERVENTION</h3>
+                <br>	
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="box box-primary">
+                            <div class="box-header with-border">
+                                <h2 class="box-title" style="color:#1E5584">Coordonnées client</h2>
+                            </div>
+                            <div class="box-body">
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <div class="form-group">
+                                            <table width="400">
+                                                <tr>
+                                                    <th scope="row"><div align="left">Code Client:</div></th>
+                                                    <td>{{Rapport.FeuilleDePresence.client.codeClient}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row"><div align="left">Client:</div></th>
+                                                    <td>{{Rapport.FeuilleDePresence.client}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row"><div align="left">Téléphone:</div></th>
+                                                    <td>{{Rapport.FeuilleDePresence.client.telephone}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row"><div align="left">Adresse:</div></th>
+                                                    <td>{{Rapport.FeuilleDePresence.client.adresseClient}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row"><div align="left">Type d'intervention   :</div></th>
+                                                    <td>{{Rapport.typeIntervention}}</td>
+                                                </tr>
+                                            </table>
+                                        </div>				
+                                    </div>
+                                </div>  
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="box box-primary">
+                            <div class="box-header with-border">
+                                <h2 class="box-title" style="color:#1E5584">Fichiers Join</h2>
+                            </div>
+                            <div class="box-body">
+                                <table class="table table-bordered">
+                                    <tr class="row1 header blue">
+                                        <th><center>Fichier</center></th>
+                                    <th><center>Action</center></th>
+                                    </tr>
+                                    {% for Fichier in Rapport.FichiersJoin %}
+                                        <tr>
+                                            <td>{{Fichier.nomFichierJoin}}</td>
+                                            <td><center><a  href="{{ asset('uploads/FichiersJoin/')}}{{Fichier.contenuFichierJoin}}"><img src="{{ asset('Template/Consulter.png') }}"  title="Consulter le fichier"></a><a href="{{ asset('uploads/FichiersJoin/')}}{{Fichier.contenuFichierJoin}}"><img src="{{ asset('Template/Telecharger.png') }}"  title="Télécharger le fichier"></a></center></td>                           
+                                        </tr>
+                                    {% endfor%}
+                                </table>
+                            </div>
+                        </div>
+                    </div>			
+
+                </div>
+
+                <div class="col-md-13">
+
+                    <div class="col-md-13">
+                        <div class="box box-primary">
+                            <div class="box-header">
+                                <h3 class="box-title" style="color:#1E5584">Rapport de l'intervention
+                                </h3>
+                            </div>
+                            <div class="box-body">
+                                <p align="justify">
+                                    {{Rapport.compteRenduIntervention}}
+                                </p>
+                                <br>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-13">
+                        <div class="box box-primary">
+                            <div class="box-header">
+                                <h3 class="box-title" style="color:#1E5584">Remarques client
+                                </h3>
+                            </div>
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <p> {% if (Rapport.remarqueClient == null)%}
+                                        Aucune Remarque
+                                        {% else %} {{Rapport.remarqueClient}}
+                                            {% endif%}
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <br><br>
+                                </div>
+
+                            </div>
+                            <h3>Validation client & intervenant</h3>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="box box-primary">
+                                        <div class="box-header with-border">
+                                            <h2 class="box-title" style="color:#1E5584">Validation client</h2>
+                                        </div>
+                                        <div class="box-body">
+                                            <div class="row">
+                                                <div class="col-md-5">
+                                                    <div class="form-group">
+                                                        <table width="400">
+                                                            <tr>
+                                                                <th scope="row"><div align="left">Fait à:</div></th>
+                                                                <td>{{Rapport.FeuilleDePresence.lieuIntervention}}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th scope="row"><div align="left">Le:</div></th>
+                                                                <td>{{Rapport.FeuilleDePresence.dateIntervention|date('d-m-Y')}}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th scope="row"><div align="left">Client:</div></th>
+                                                                <td>{{Rapport.FeuilleDePresence.client}}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Statut:</th>
+                                                                <td>{% if (Rapport.confirmationDeInterventionParClient)%}
+                                                                    validé
+                                                                    {% else %} Non Validé
+                                                                        {% endif%}
+                                                                        </td>
+                                                                    </tr>
+                                                                </table>
+                                                            </div>				
+                                                        </div>
+                                                    </div>  
+                                                </div>
+                                            </div> 
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="box box-primary">
+                                                <div class="box-header with-border">
+                                                    <h2 class="box-title" style="color:#1E5584">Validation intervenant</h2>
+                                                </div>
+                                                <div class="box-body">
+                                                    <div class="row">
+                                                        <div class="col-md-8">
+                                                            <table width="400">
+                                                                <tr>
+                                                                    <th scope="row"><div align="left">Fait à:</div></th>
+                                                                    <td>{{Rapport.FeuilleDePresence.lieuIntervention}}</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th scope="row"><div align="left">Le:</div></th>
+                                                                    <td>{{Rapport.FeuilleDePresence.dateIntervention|date('d-m-Y')}}</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th scope="row"><div align="left">Intervenant:</div></th>
+                                                                    <td>{{Rapport.FeuilleDePresence.intervenant.nomUtilisateur}} {{Rapport.FeuilleDePresence.intervenant.prenomUtilisateur}}</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th scope="row"><div align="left">Qualité:</div></th>
+                                                                    <td>Consultant(e)</td>
+                                                                </tr>
+                                                            </table>
+                                                        </div>
+                                                    </div>  
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% if AutorisationAcces('ConsulterFeuillesRapportIntervention' , Utilisateur) %} <div>
+                                            <a href="#" data-href="{{path('ConsulterFeuillesRapportIntervention', { 'id': Rapport.id }) }}" class="btn btn-primary btn-block btn-flat"  data-toggle="modal" data-target="#confirm-delete">Supprimer</a>
+                                        </div><li><a href="{{path('ConsulterFeuillesRapportIntervention')}}">Consulter les feuilles de présence & rapport d'intervention </a></li>
+                                    {%endif%}
+
+                                    <br>
+                                </div>  
+                            </div>
+                        </div>		
+                    </div>
+                    <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    Confirmation de suppression
+                                </div>
+                                <div class="modal-body">
+                                    Voulez Vous vraiment supprimer {{Rapport}} ?
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                                    <a class="btn btn-primary btn-ok">Supprimer</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>                    
+                    {% endblock %}
+                        {% block script %}
+                            {{ parent() }}
+                            <script>
+                                $('#confirm-delete').on('show.bs.modal', function (e) {
+                                    $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
+                                });
+                            </script>
+                        {% endblock %}

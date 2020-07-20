@@ -1,0 +1,32 @@
+<div class="modal fade" id="generer{{ commande.id }}">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="title">Modification</h4>
+            </div>
+            <div class="modal-body" id="modifierCModalBody">
+                {{ form_start(form, { 'method' : 'post', 'action': path('preCommandeGenerer', { 'id' : commande.id }) }) }}
+                {{ form_row(form.nCommande, {'attr': {'class': 'form-control'}}) }}
+                {{ form_row(form.client, {'attr': {'class': 'form-control'}}) }}
+                {{ form_row(form.datePiece, {'attr': {'class': 'form-control js-datepicker'}}) }}
+                {{ form_row(form.buManager, {'attr': {'class': 'form-control'}}) }}
+
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Sauvegarder</button>
+            </div>
+        </div>
+    </div>
+    {{ form_end(form) }}
+</div>
+<script>
+    // jQuery(document).ready(function () {
+    //     $('#timsoft_commandebundle_tetecommande_datePiece').datepicker({
+    //             format: 'yyyy-mm-dd'
+    //         }
+    //     );
+    // });
+
+
+</script>

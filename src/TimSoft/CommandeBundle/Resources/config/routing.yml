@@ -1,0 +1,52 @@
+tim_soft_commande_homepage:
+  path:     /
+  defaults: { _controller: TimSoftCommandeBundle:Default:index }
+ImportCmd:
+  path:     /ImporterCmd
+  defaults: { _controller: TimSoftCommandeBundle:Default:importerClient }
+listerCmd:
+  path:     /ListerCmd
+  defaults: { _controller: TimSoftCommandeBundle:Default:listerCmd }
+AfficherCmd:
+  path:     /Afficher/{id}
+  defaults: { _controller: TimSoftCommandeBundle:Default:afficherCmd }
+  options:
+    expose: true
+addUserToCmd:
+  path:     /addUser
+  defaults: { _controller: TimSoftCommandeBundle:Default:addUser }
+remplacer:
+  path:     /remplacer
+  defaults: { _controller: TimSoftCommandeBundle:Default:remplacer }
+  methods:  [POST]
+  options:
+    expose: true
+supprimer:
+  path:     /supprimer/{id}
+  defaults: { _controller: TimSoftCommandeBundle:Default:supprimer }
+  options:
+    expose: true
+export:
+  path:     /export
+  defaults: { _controller: TimSoftCommandeBundle:Default:export }
+  options:
+    expose: true
+modifierCmd:
+  path:     /modifier
+  defaults: { _controller: TimSoftCommandeBundle:Default:modifier }
+  options:
+    expose: true
+supprimerLC:
+  path:     /supprimerLC
+  defaults: { _controller: TimSoftCommandeBundle:Default:supprimerLC }
+  options:
+    expose: true
+
+modifierC:
+  path:     /modifierC/{id}
+  defaults: { _controller: TimSoftCommandeBundle:Default:modifierC }
+  options:
+    expose: true
+getCommandes:
+  path:     /all
+  defaults: { _controller: TimSoftCommandeBundle:Default:getCommandes }

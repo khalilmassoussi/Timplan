@@ -1,0 +1,67 @@
+
+{% block body %}
+    <h1>Client</h1>
+
+    <table>
+        <tbody>
+            <tr>
+                <th>Codeclient</th>
+                <td>{{ client.codeClient }}</td>
+            </tr>
+            <tr>
+                <th>Raisonsociale</th>
+                <td>{{ client.raisonSociale }}</td>
+            </tr>
+            <tr>
+                <th>Clientfacture</th>
+                <td>{{ client.clientFacture }}</td>
+            </tr>
+            <tr>
+                <th>Paysclient</th>
+                <td>{{ client.paysClient }}</td>
+            </tr>
+            <tr>
+                <th>Adresseclient</th>
+                <td>{{ client.adresseClient }}</td>
+            </tr>
+            <tr>
+                <th>Villeclient</th>
+                <td>{{ client.villeClient }}</td>
+            </tr>
+            <tr>
+                <th>Codepostalclient</th>
+                <td>{{ client.codePostalClient }}</td>
+            </tr>
+            <tr>
+                <th>Telephone</th>
+                <td>{{ client.telephone }}</td>
+            </tr>
+            <tr>
+                <th>Faxclient</th>
+                <td>{{ client.faxClient }}</td>
+            </tr>
+            <tr>
+                <th>Adressemailclient</th>
+                <td>{{ client.adresseMailClient }}</td>
+            </tr>
+            <tr>
+                <th>Dateadhesionclient</th>
+                <td>{% if client.dateAdhesionClient %}{{ client.dateAdhesionClient|date('Y-m-d') }}{% endif %}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('GestionDesClients_index') }}">Back to the list</a>
+        </li>
+        <li>
+            <a href="{{ path('GestionDesClients_edit', { 'codeClient': client.codeClient }) }}">Edit</a>
+        </li>
+        <li>
+            {{ form_start(delete_form) }}
+                <input type="submit" value="Delete">
+            {{ form_end(delete_form) }}
+        </li>
+    </ul>
+{% endblock %}

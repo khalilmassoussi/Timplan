@@ -1,0 +1,583 @@
+{% extends 'Squelette.html.twig' %}
+
+{% block Titre %}
+    Portail web de TimSoft - Modification d'un rapport d'intervention
+{% endblock %}
+
+{% block Section %}
+    Rapport d'intervention
+    <small>Modification</small>
+{% endblock %}
+{% block SideBar %}
+{% endblock %}
+{% block Navigation %}
+    {% if AutorisationAcces('ConsulterFeuillesRapportIntervention' , Utilisateur) %}
+        <li class="breadcrumb-item"><a href="{{ path('ConsulterFeuillesRapportIntervention') }}">Consulter les FP &
+                RI</a></li>
+    {% endif %}
+    <li class="breadcrumb-item active">Modification d'un rapport d'intervention</li>
+{% endblock %}
+
+
+{% block Contenu %}
+{% for message in app.flashes('RapportNV') %}
+    <div class="flash-notice">
+        <body onLoad="$('#my-modal').modal('show');">
+        <div id="my-modal" class="modal fade">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">Validation obligatoire du client</h4>
+                    </div>
+                    <div class="modal-body">
+                        {{ message }}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </body>
+    </div>
+{% endfor %}
+
+<div class="col-md-12">
+
+    {{ form_start(form1, { 'method': 'POST' } ) }}
+    {{ form_errors(form1) }}
+    {#            <h3>RAPPORT D'INTERVENTION</h3>#}
+    {% if (RoleUser == "Administrateur") or (RoleUser == "Gestionnaire") or (RoleUser == "Consultant") or (RoleUser == "BU Manager") %}
+    <div class="col-md-13">
+        <div class="card">
+            <div class="card-header with-border">
+                <h2 class="card-title" style="color:#1E5584">Coordonnées client</h2>
+            </div>
+            <div class="card-body">
+                <div class="col-md-6">
+                    <table width="800">
+                        <tr>
+                            <th scope="row" style="padding: 15px 0px 0px 0px" width="250">
+                                <div align="left">Intervention:</div>
+                            </th>
+                            <td style="padding: 15px 0px 0px 0px">{{ form_widget(form1.FeuilleDePresence ) }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row" style="padding: 15px 0px 0px 0px">
+                                <div align="left">Client:</div>
+                            </th>
+                            <td style="padding: 15px 0px 0px 0px"><label style="font-weight: normal;"
+                                                                         for="raisonSociale">{{ Rapport.FeuilleDePresence.client }}</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row" style="padding: 15px 0px 0px 0px">
+                                <div align="left">Code Client:</div>
+                            </th>
+                            <td style="padding: 15px 0px 0px 0px"><label style="font-weight: normal;"
+                                                                         for="codeClient">{{ Rapport.FeuilleDePresence.client.codeClient }}</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row" style="padding: 15px 0px 0px 0px">
+                                <div align="left">Téléphone:</div>
+                            </th>
+                            <td style="padding: 15px 0px 0px 0px"><label style="font-weight: normal;"
+                                                                         for="telephone">{{ Rapport.FeuilleDePresence.client.telephone }}</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row" style="padding: 15px 0px 0px 0px">
+                                <div align="left">Adresse:</div>
+                            </th>
+                            <td style="padding: 15px 0px 0px 0px"><label style="font-weight: normal;"
+                                                                         for="adresseClient">{{ Rapport.FeuilleDePresence.client.adresseClient }}</label>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <br><br>
+                {#<div class="col-md-6">
+                    <div class="form-group">
+                        <table width="400">
+                            <tr>
+                                <th scope="row" style="padding: 15px 0px 0px 0px"><div align="left">Type d'intervention:</div></th>
+                                <td style="padding: 15px 0px 0px 0px">
+                                    {{ form_widget(form1.typeIntervention) }}
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>#}
+            </div>
+        </div>
+
+        <div class="col-md-13">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Rapport de l'intervention
+                    </h3>
+                </div>
+                <div class="card-body pad">
+                    {{ form_widget(form1.compteRenduIntervention, {'attr' : {'class' : 'form-control' , 'style': 'width: 100%; height: 200px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;', 'placeholder' : 'Rédiger le compte rendu !'}} ) }}
+                    <div style="color: red">  {{ form_errors(form1.compteRenduIntervention, {'attr': { 'style': 'color:red'}}) }}</div>
+                </div>
+                <br><br>
+            </div>
+        </div>
+
+        <div class="col-md-13">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Remarques client
+                    </h3>
+                </div>
+                <div class="card-body" {# style="padding: 0px 0px 0px 10px " #} >
+                    {#{% if  (Rapport.remarqueClient == NULL) %}#}
+                    {#<div class="radio">#}
+                    {#<label>#}
+                    {#<input type="radio" name="RemarqueClt" id="optionsRadios1" value="option1"#}
+                    {#checked onclick="MontrerDiv()">#}
+                    {#Rien à signaler#}
+                    {#</label>#}
+                    {#</div>#}
+                    {#<div class="radio">#}
+                    {#<label>#}
+                    {#<input type="radio" name="RemarqueClt" id="AjouterRemarqueClient"#}
+                    {#onclick="MontrerDiv()">#}
+                    {#Point d'attention soulevé#}
+                    {#</label>#}
+                    {#</div>#}
+                    {#{% else %}#}
+                    {#<div class="radio">#}
+                    {#<label>#}
+                    {#<input type="radio" name="RemarqueClt" id="optionsRadios1" value="option1"#}
+                    {#onclick="MontrerDiv()">#}
+                    {#Rien à signaler#}
+                    {#</label>#}
+                    {#</div>#}
+                    {#<div class="radio">#}
+                    {#<label>#}
+                    {#<input type="radio" name="RemarqueClt" id="AjouterRemarqueClient" checked#}
+                    {#onclick="MontrerDiv()">#}
+                    {#Point d'attention soulevé#}
+                    {#</label>#}
+                    {#</div>#}
+                    {#{% endif %}#}
+                    <div id="DivRemarqueClient">
+                        <table style="width: 100%">
+                            <td scope="col">
+                                <div align="left">
+                                    {#                                    <label>Remarque(s) client:</label>#}
+                                    <div>
+                                        {{ form_widget(form1.remarqueClient, {'attr' : {'class' : 'form-control' , 'style': 'width: 100%; height: 200px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;', 'placeholder' : 'Ecrire le commentaire du client ici...', 'disabled':'ture'}} ) }}
+                                    </div>
+                                </div>
+                            </td>
+                        </table>
+                    </div>
+                </div>
+                <br>
+            </div>
+        </div>
+
+
+        <div class="col-md-13">
+            <div class="card">
+                <div class="card-header with-border">
+                    <h2 class="card-title" style="color:#1E5584">Fichiers Joints</h2>
+                </div>
+                {#                <div class="card-body">#}
+                {#                    #}
+                {#                </div>#}
+                <div class="card-body">
+                    <div align="right">
+                        <table width="200">
+                            <tr>
+                                <td style="padding : 15px">
+                                <td scope="col" style="padding : 15px"><a onclick="addFichier()"
+                                                                          style="cursor: pointer">
+                                        <i class="fas fa-plus"></i> Ajouter un fichier</a>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <table class="table table-bordered">
+                        <tr class="row1 header blue">
+                            {#                                    <th>#}
+                            {#                                        <center></center>#}
+                            {#                                    </th>#}
+                            <th>
+                                <center>Nom</center>
+                            </th>
+                            <th>
+                                <center>Fichier</center>
+                            </th>
+                            <th>
+                                <center>Envoyer par mail</center>
+                            </th>
+                            <th>
+                                <center>Action</center>
+                            </th>
+                        </tr>
+                        <tbody id="fichiersBody"
+                               data-prototype="{{ form_widget(form1.fichiersJoin.vars.prototype)|e('html_attr') }}">
+
+                        </tr>
+                        {% for Fichier in form1.fichiersJoin %}
+                            <tr class="bloc1">
+                                {#                                        <td></td>#}
+                                <td>{{ form_widget(Fichier.nomFichierJoin) }}</td>
+                                <td>{{ form_widget(Fichier.fichierFile, {'required': false}) }}</td>
+                                <td>
+                                    <center>{{ form_widget(Fichier.sendParMail) }}</center>
+                                </td>
+                                {# <td><center><a  href="{{ asset('uploads/FichiersJoin/')}}{% for fichier1 in Rapport.fichiersJoin %}{%if (fichier1.id == Fichier.id) %}{{fichier1.contenuFichierJoin}}{%endif%}{%endfor%}"><img src="{{ asset('Template/Consulter.png') }}"  title="Consulter le fichier"></a><a onclick="deleteFichier(this)"><img src="{{ asset('Template/SupprimerUser.png') }}"  title="Supprimer le participant"></a></center></td>#}
+                                <td>
+                                    <center><a onclick="deleteFichier(this)"><img
+                                                    src="{{ asset('Template/SupprimerUser.png') }}"
+                                                    title="Supprimer le participant"></a></center>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+        {{ form_widget(form1.confirmationDeInterventionParClient  , { 'attr' : { 'style':'display:none'} }) }}
+
+        {% else %}
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header with-border">
+                        <h2 class="card-title" style="color:#1E5584">Coordonnées client</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <table width="400">
+                                        <tr>
+                                            <th scope="row">
+                                                <div align="left">Code Client:</div>
+                                            </th>
+                                            <td>{{ Rapport.FeuilleDePresence.client.codeClient }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">
+                                                <div align="left">Client:</div>
+                                            </th>
+                                            <td>{{ Rapport.FeuilleDePresence.client }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">
+                                                <div align="left">Téléphone:</div>
+                                            </th>
+                                            <td>{{ Rapport.FeuilleDePresence.client.telephone }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">
+                                                <div align="left">Adresse:</div>
+                                            </th>
+                                            <td>{{ Rapport.FeuilleDePresence.client.adresseClient }}</td>
+                                        </tr>
+                                        {#                                                <tr>#}
+                                        {#                                                    <th scope="row">#}
+                                        {#                                                        <div align="left">Type d'intervention:</div>#}
+                                        {#                                                    </th>#}
+                                        {#                                                    <td>{{ Rapport.typeIntervention }}</td>#}
+                                        {#                                                </tr>#}
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header with-border">
+                        <h2 class="card-title" style="color:#1E5584">Fichiers Joints</h2>
+                    </div>
+                    <div class="card-body">
+                        {% if (Rapport.FichiersJoin|length)>0 %}
+                            <table class="table table-bordered">
+                                <tr class="row1 header blue">
+                                    <th>
+                                        <center>Fichier</center>
+                                    </th>
+                                    <th>
+                                        <center>Action</center>
+                                    </th>
+                                </tr>
+                                {% for Fichier in Rapport.FichiersJoin %}
+                                    <tr>
+                                        <td>{{ Fichier.nomFichierJoin }}</td>
+                                        <td>
+                                            <center>
+                                                <a href="{{ asset('uploads/FichiersJoin/') }}{{ Fichier.contenuFichierJoin }}"><img
+                                                            src="{{ asset('Template/Consulter.png') }}"
+                                                            title="Consulter le fichier"></a><a
+                                                        href="{{ asset('uploads/FichiersJoin/') }}{{ Fichier.contenuFichierJoin }}"><img
+                                                            src="{{ asset('Template/Telecharger.png') }}"
+                                                            title="Télécharger le fichier"></a></center>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        {% else %}
+                            Aucun fichier joint pour ce rapport
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-md-13">
+
+            <div class="col-md-13">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Rapport de l'intervention
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <p align="justify">
+                            {{ Rapport.compteRenduIntervention }}
+                        </p>
+                        <br>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-13">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Remarques client
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <p> {% if (Rapport.remarqueClient == null) %}
+                                    {{ form_widget(form1.remarqueClient, {'attr' : {'class' : 'textarea' , 'style': 'width: 100%; height: 200px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;', 'placeholder' : 'Ecrire le commentaire du client ici...'}} ) }}
+                                {% else %}
+                                    {{ form_widget(form1.remarqueClient, {'attr' : {'class' : 'textarea' , 'style': 'width: 100%; height: 200px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;', 'placeholder' : 'Ecrire le commentaire du client ici...'}} ) }}
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+
+                    <br><br>
+                </div>
+
+            </div>
+            {#                    {{ form_widget(form1.typeIntervention  , { 'attr' : { 'style':'display:none'} }) }}#}
+            {{ form_widget(form1.compteRenduIntervention  , { 'attr' : { 'style':'display:none'} }) }}
+            {{ form_widget(form1.remarqueClient  , { 'attr' : { 'style':'display:none'} }) }}
+            {{ form_widget(form1.FeuilleDePresence  , { 'attr' : { 'style':'display:none'} }) }}
+            {{ form_widget(form1.fichiersJoin  , { 'attr' : { 'style':'display:none'} }) }}
+
+
+            {% endif %}
+
+            {#            <h3>Validation client & intervenant</h3>#}
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header with-border">
+                            <h2 class="card-title" style="color:#1E5584">Validation client</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <div class="form-group">
+                                        <table width="400">
+                                            <tr>
+                                                <th scope="row">
+                                                    <div align="left">Fait à:</div>
+                                                </th>
+                                                <td><label style="font-weight: normal;"
+                                                           for="lieuIntervention">{{ Rapport.FeuilleDePresence.lieuIntervention }}</label>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">
+                                                    <div align="left">Le:</div>
+                                                </th>
+                                                <td><label style="font-weight: normal;"
+                                                           for="dateIntervention">{{ Rapport.FeuilleDePresence.dateIntervention|date('d-m-Y') }}</label>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">
+                                                    <div align="left">Client:</div>
+                                                </th>
+                                                <td><label style="font-weight: normal;"
+                                                           for="raisonSociale">{{ Rapport.FeuilleDePresence.client }}</label>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            {% if app.user.client == Rapport.FeuilleDePresence.client %}
+                                <div>{{ form_widget(form1.confirmationDeInterventionParClient) }} J'atteste la
+                                    validité des éléments ci-dessus
+                                </div>
+                            {% else %}
+                                {{ form_widget(form1.confirmationDeInterventionParClient  , { 'attr' : { 'style':'display:none'} }) }}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header with-border">
+                            <h2 class="card-title" style="color:#1E5584">Validation intervenant</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <table width="400">
+                                        <tr>
+                                            <th scope="row">
+                                                <div align="left">Fait à:</div>
+                                            </th>
+                                            <td><label style="font-weight: normal;"
+                                                       for="lieuIntervention">{{ Rapport.FeuilleDePresence.lieuIntervention }}</label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">
+                                                <div align="left">Le:</div>
+                                            </th>
+                                            <td><label style="font-weight: normal;"
+                                                       for="dateIntervention">{{ Rapport.FeuilleDePresence.dateIntervention|date('d-m-Y') }}</label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">
+                                                <div align="left">Intervenant:</div>
+                                            </th>
+                                            <td><label style="font-weight: normal;"
+                                                       for="nomIntervenant">{{ Rapport.FeuilleDePresence.intervenant.nomUtilisateur }}</label>
+                                                <label style="font-weight: normal;"
+                                                       for="prenomIntervenant">{{ Rapport.FeuilleDePresence.intervenant.prenomUtilisateur }}</label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">
+                                                <div align="left">Qualité:</div>
+                                            </th>
+                                            <td><label style="font-weight: normal;"
+                                                       for="qualiteIntervenant">Consultant(e)</label>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="col">
+                    <table style="width: 50%" align="center">
+                        <tr>
+                            <td style="width: 50%;">
+                                <button type="reset" class="btn btn-secondary btn-block">
+                                    Annuler
+                                </button>
+                            </td>
+                            <td style="width: 50%;">
+                                <a href="#" class="btn btn-primary btn-block" data-toggle="modal"
+                                   data-target="#confirm-modif" style="cursor: pointer">
+                                    Enregister modification(s)</a>
+                            </td>
+                        </tr>
+                        {#<button type="submit" class="btn btn-primary btn-block btn-flat">Enregister</button>#}
+                    </table>
+                </div>
+            </div>
+        </div>
+        {{ form_widget(form1.fichiersJoin  , { 'attr' : { 'style':'display:none'} }) }}
+        {{ form_widget(form1._token) }}
+        {{ form_end(form1) }}
+
+        <div class="modal fade" id="confirm-modif" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        Confirmation de modification
+                    </div>
+                    <div class="modal-body">
+                        Voulez-vous terminer ?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                        <a class="btn btn-primary btn-ok"
+                           onclick="$('form[name=timsoft_generalbundle_rapportintervention]').submit();"
+                           style="cursor: pointer">Terminer</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endblock %}
+
+        {% block script %}
+            {{ parent() }}
+            <script type="text/javascript"
+                    src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+            <script src="{{ asset('js/sf_collection_analyzer.js') }}"></script>
+            <script src="{{ asset('js/select.js') }}"></script>
+            <script type="text/javascript">
+                function MontrerDiv() {
+                    if (document.getElementById('AjouterRemarqueClient').checked === true) {
+                        document.getElementById('DivRemarqueClient').style.display = "block";
+                    } else {
+                        document.getElementById('DivRemarqueClient').style.display = "none";
+                    }
+                }
+            </script>
+            <script type="text/javascript">
+
+                function deleteFichier(btn) {
+                    //alert('delete');
+                    $(btn).closest('.bloc1').remove();
+                }
+
+                function fichierTemplate() {
+                    return `
+    <tr class="bloc1">
+
+        <td>#nom#</td>
+        <td>#fichier#</td>
+        <td><center>#envoyer#</center></td>
+        <td><center><a onclick="deleteFichier(this)"><img src="{{ asset('Template/SupprimerUser.png') }}"  title="Supprimer le Fichier"></a></center></td>
+    </tr>    
+    `;
+                }
+
+                var _counter = 100;
+
+                function addFichier() {
+                    var prototype = $('#fichiersBody').attr('data-prototype');
+                    var _prototypeDOM = $('<div/>').html(prototype).contents();//---Make sure to convert the prototype into DOM.
+                    var temp = SFCollectionAnalyzer.buildTemplate(_prototypeDOM, fichierTemplate());
+                    var block = temp.replace(/__name__/g, _counter);//--temp is still using "__name__" so you just need to replace it with the counter
+                    $('#fichiersBody').append(block);
+                    _counter++;
+                }
+
+            </script>
+        {% endblock %}

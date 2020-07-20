@@ -1,0 +1,827 @@
+{% extends 'Squelette.html.twig' %}
+
+{% block Titre %}
+    Portail web de TimSoft - Consultation de la commande N°{{ commande.nCommande }}
+{% endblock %}
+
+{% block Section %}
+    <h1>
+        Gestion des commandes
+        <small>Consultation d'une commande</small>
+    </h1>
+{% endblock %}
+{% block Navigation %}
+    {#    {% if AutorisationAcces('Consultercommandes' , Utilisateur) %}#}
+    {#        <li class="breadcrumb-item"><a href="{{ path('Consultercommandes') }}">Consulter la liste des commandes</a></li>#}
+    {#    {% endif %}#}
+    <li class="breadcrumb-item active">Consultation d'une commande</li>
+{% endblock %}
+{% block SideBar %}
+{% endblock %}
+{% block Contenu %}
+    {#{% for message in app.flashes('OK-Modification') %}#}
+    {#<div class="flash-notice">#}
+<body onLoad="$('#my-modal').modal('show');">
+{#<div id="my-modal" class="modal fade">#}
+{#<div class="modal-dialog">#}
+{#<div class="modal-content">#}
+{#<div class="modal-header">#}
+{#<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>#}
+{#<h4 class="modal-title">Validation de la modification</h4>#}
+{#</div>#}
+{#<div class="modal-body">#}
+{#{{message}}#}
+{#</div>#}
+{#<div class="modal-footer">#}
+{#<button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>#}
+{#</div>#}
+{#</div>#}
+{#</div>#}
+{#</div>#}
+{#</body>#}
+{#</div>#}
+{#{% endfor %}#}
+{#{% for message in app.flashes('OK-Ajout') %}#}
+{#<div class="flash-notice">#}
+{#<body onLoad="$('#my-modal').modal('show');">#}
+{#<div id="my-modal" class="modal fade">#}
+{#<div class="modal-dialog">#}
+{#<div class="modal-content">#}
+{#<div class="modal-header">#}
+{#<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>#}
+{#<h4 class="modal-title">Validation d'ajout !</h4>#}
+{#</div>#}
+{#<div class="modal-body">#}
+{#{{message}}#}
+{#</div>#}
+{#<div class="modal-footer">#}
+{#<button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>#}
+{#</div>#}
+{#</div>#}
+{#</div>#}
+{#</div>#}
+{#</body>#}
+{#</div>#}
+{#{% endfor %}#}
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header with-border">
+            <h2 class="card-title" style="color:#1E5584">Informations de la commande N°{{ commande.nCommande }}</h2>
+        </div>
+        <div class="card-tools pull-center">
+        </div>
+        <div class="card-body">
+            <br>
+            <div class="row">
+                <div class="col-md-6">
+
+                    <table width="400">
+                        <tr>
+                            <th scope="row" style="padding: 15px 0px 0px 0px" width="40%">
+                                <div align="left">Numéro de commande:</div>
+                            </th>
+                            <td style="padding: 15px 0px 0px 0px" id="nCommande">{{ commande.nCommande }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row" style="padding: 15px 0px 0px 0px">
+                                <div align="left">Client:</div>
+                            </th>
+                            <td style="padding: 15px 0px 0px 0px">{{ commande.client }}</td>
+                        </tr>
+                        {% if commande.buManager %}
+                            <tr>
+                                <th scope="row" style="padding: 15px 0px 0px 0px">Business Manager</th>
+                                <td style="padding: 15px 0px 0px 0px">{{ commande.buManager }}</td>
+                            </tr>
+                        {% endif %}
+                    </table>
+                </div>
+                <div class="col-md-6">
+
+                    <table width="400" id="DivCente">
+                        <tr>
+                            <th scope="row" style="padding: 15px 0px 0px 0px">
+                                <div align="left">Date:</div>
+                            </th>
+                            <td style="padding: 15px 0px 0px 0px">{{ commande.datePiece|date('d-m-Y') }}</td>
+                        </tr>
+                        <tr>
+                            <th></th>
+
+                            <td style="padding: 15px 0px 0px 0px">
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row" style="padding: 15px 0px 0px 0px">
+                                <div align="left">Prix Total:</div>
+                            </th>
+                            <td style="padding: 15px 0px 0px 0px">{{ commande.prixTotal|number_format(3, ',', ' ') }}</td>
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <td></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <br>
+            <div>
+                <button type="button" class="btn btn-primary" data-toggle="modal"
+                        data-target="#myModal" onclick="myGeeks()" id="modal" disabled>
+                    <i class="ion-forward" style="font-size: 16px"></i>
+                    Affecter
+                </button>
+
+                <div align="right">
+                    {% if AutorisationAcces('modifierC' , Utilisateur) %}
+                        <a href="#edit{{ commande.id }}" data-toggle="modal">
+                            <button class="btn btn-success" title="Modifier">
+                                <i class="fas fa-edit fa-lg"></i>
+                            </button>
+                        </a>
+                    {% endif %}
+                    {% if AutorisationAcces('supprimer' , Utilisateur) %}
+                        <a href="#" id="SupprimerC">
+                            <button class="btn btn-danger" title="Supprimer">
+                                <i class="fas fa-trash fa-lg"></i>
+                            </button>
+                        </a>
+                    {% endif %}
+                </div>
+
+            </div>
+            <br>
+            <br>
+
+            <form>
+                <table id="TableClient" class="table table-bordered table-striped dataTable"
+                       style="width:100%; font-size: 13.5px">
+                    <thead>
+                    <tr class="row1 header blue">
+                        <th class="cell1" hidden>id</th>
+                        <th class="cell1">Choisir</th>
+                        <th class="cell1">
+                            Libellé
+                        </th>
+                        <th class="cell1 SumHeader">
+                            <center>Qté (J)</center>
+                        </th>
+                        <th class="cell1 SumHeader">
+                            <center>Montant HT</center>
+                        </th>
+                        <th class="cell1 SumHeader">
+                            <center>Qté restante</center>
+                        </th>
+                        <th class="cell1 SumHeader">
+                            <center>Prix de vente</center>
+                        </th>
+                        <th class="cell1 SumHeader">
+                            <center>Montant Restant</center>
+                        </th>
+                        <th class="cell1 SumHeader">
+                            <center>RAP</center>
+                        </th>
+                        <th class="cell1">
+                            <center>BU</center>
+                        </th>
+                        <th class="cell1">
+                            <center>Action</center>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tfoot>
+                    <tr>
+                        <th hidden></th>
+                        <th></th>
+                        <th class="text-right">Total:</th>
+                        <th class="SumRows text-center"></th>
+                        <th class="SumRows text-center"></th>
+                        <th class="SumRows text-center"></th>
+                        <th class="SumRows text-center"></th>
+                        <th class="SumRows text-center"></th>
+                        <th class="SumRows text-center"></th>
+                        <th></th>
+                        <th></th>
+
+                    </tr>
+                    </tfoot>
+                    <tbody>
+                    {% for lc in commande.lignCommandes %}
+                        <tr class="row1" id="tr{{ lc.id }}">
+                            <td hidden>{{ lc.id }}</td>
+                            <td>
+                                <div class="form-check">
+                                    <center><input type="checkbox" class="form-check-input" value="{{ lc.id }}"
+                                                   name="checkbox" id="{{ lc.id }}"></center>
+                                    {#                                    <label class="form-check-label" for="exampleCheck1">Check me out</label>#}
+                                </div>
+                                {#                                <div class="custom-control custom-checkbox">#}
+                                {#                                    <center><input type="checkbox" class="custom-control-input"#}
+                                {#                                                   value="{{ lc.id }}" name="checkbox" id="{{ lc.id }}">#}
+                                {#                                    </center>#}
+                                {#                                </div>#}
+                            </td>
+                            <td class="cell1">
+                                {{ lc.libelle }}
+                            </td>
+                            <td class="cell1 text-center">
+                                {{ lc.quantite }}
+                            </td>
+                            <td class="cell1 text-center">
+                                {{ lc.montantHT|number_format(3, ',', ' ') }}
+                            </td>
+                            <td class="cell1 text-center">
+                                {{ lc.QteRestante }}
+                            </td>
+                            <td class="cell1 prix text-center" id="prix">
+                                {{ lc.calcul|number_format(3, ',', ' ') }}
+                            </td>
+                            <td class="cc text-center" id="{{ lc.id }}"
+                                align="center">{{ lc.MRestant|number_format(3, ',', ' ') }}</td>
+                            <td class="cell1 text-center" id="{{ lc.id }}" align="center">
+                                {{ lc.JRestant }}
+                            </td>
+                            <td class="cell1 text-center prix">
+                                <center>{{ lc.bu }}</center>
+                            </td>
+
+                            <td class="cell1 text-center action">
+                                <center>
+                                    {% if AutorisationAcces('modifierCmd' , Utilisateur) %}
+                                        <a class="modifier" href="#" title="Modifier"><i
+                                                    class="fas fa-edit fa-lg"></i></a>
+                                    {% endif %}
+                                    {% if AutorisationAcces('supprimerLC' , Utilisateur) %}
+                                        <a class="supprimer" href="#" title="Supprimer" id=""><i
+                                                    class="fas fa-trash fa-lg"></i></a>
+                                    {% endif %}
+                                </center>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </form>
+            <p id="sudo" style="color:green;font-size:30px;"></p>
+        </div>
+    </div>
+
+</div>
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Sélectionner un consultant</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <form method="post" action="{{ path('addUserToCmd') }}">
+                <div class="modal-body">
+                    <input type="text" id="input" name="post" hidden>
+                    <button class="btn btn-primary" id="render">Afficher les utilisateur des autres BU</button>
+                    <br>
+                    <br>
+                    <table id="TableClient1" class="table table-bordered table-striped dataTable" style="width:100%">
+                        <thead>
+                        <tr class="row1 header blue">
+                            <th class="cell1">Choisir
+                            </th>
+                            <th class="cell1">
+                                Nom et prénom
+                            </th>
+                            <th class="cell1">
+                                Rôle
+                            </th>
+                            <th class="cell1">
+                                BU
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for user in getUsersByBu(app.user.id) %}
+                            <tr class="row1">
+                                <td class="cell1">
+                                    <input type="radio" name="user" value="{{ user.id }}">
+                                </td>
+                                <td class="cell1">
+                                    <label for="dewey">{{ user.nomUtilisateur }} {{ user.prenomUtilisateur }}</label>
+                                </td>
+                                {% if ( user.roleUtilisateur == 'ROLE_ADMIN') %} {% set RoleUser = 'Administrateur' %}
+                                {% elseif ( user.roleUtilisateur == 'ROLE_CONSULTANT') %}{% set RoleUser = 'Consultant' %}
+                                {% elseif ( user.roleUtilisateur == 'ROLE_GESTIONNAIRE') %}{% set RoleUser = 'Gestionnaire' %}
+                                {% elseif ( user.roleUtilisateur == 'ROLE_CHEF') %}{% set RoleUser = 'BU Manager' %}
+                                {% endif %}
+                                <td class="cell1">{{ RoleUser }}</td>
+                                <td class="cell1">
+                                    {% for bu in user.bus %}
+                                        {{ bu.libelle }}
+                                    {% endfor %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+
+                        </tbody>
+
+                    </table>
+                    <br>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Valider</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+<div class="modal fade" id="interventions" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="title">Les interventions</h4>
+            </div>
+            <div class="modal-body">
+                <table id="intervention" width="100%" class="table table-bordered table-striped dataTable">
+                    <thead>
+                    <tr>
+                        <td>
+                            Date
+                        </td>
+                        <td>
+                            Durée
+                        </td>
+                        <td>
+                            Intervenant
+                        </td>
+                        <td>
+                            Statut
+                        </td>
+                        <td>
+                            Journée supplémentaire
+                        </td>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="modal fade" id="modifierModal" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="title">Modification</h4>
+            </div>
+            <div class="modal-body">
+                <table class="table">
+                    <tr>
+                        <td>Libelle</td>
+                        <td><input type="text" id="libelle" class="form-control"></td>
+                    </tr>
+                    <tr>
+                        <td>Quantité</td>
+                        <td><input type="number" id="Quantité" class="form-control"></td>
+                    </tr>
+                    <tr>
+                        <td>Montant HT</td>
+                        <td><input type="number" id="MontantHT" class="form-control" step="0.001"></td>
+                    </tr>
+                    <tr>
+                        <td>Quantité restante</td>
+                        <td><input type="number" id="Qrestante" class="form-control"></td>
+                    </tr>
+
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" id="save">Sauvegarder</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+{{ render(controller('TimSoftCommandeBundle:Default:modifierC', { 'id' : commande.id } )) }}
+{#{% include '@TimSoftCommande/Default/modelModifier.html.twig' %}#}
+
+{% endblock %}
+{% block css %}
+    {{ parent() }}
+    <style>
+        #choisir {
+            /*pointer-events: none;*/
+        }
+
+        #TableClient tr {
+            cursor: pointer;
+        }
+    </style>
+{% endblock %}
+{% block script %}
+    {{ parent() }}
+    <script src="https://cdn.datatables.net/plug-ins/1.10.9/api/sum().js"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.min.js'></script>
+    <script src="//cdn.datatables.net/plug-ins/1.10.20/sorting/datetime-moment.js" type="text/javascript"></script>
+    <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js"></script>
+    <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
+    <script type="text/javascript">
+        function formatMoney(number, decPlaces, decSep, thouSep) {
+            decPlaces = isNaN(decPlaces = Math.abs(decPlaces)) ? 2 : decPlaces,
+                decSep = typeof decSep === "undefined" ? "." : decSep;
+            thouSep = typeof thouSep === "undefined" ? "," : thouSep;
+            var sign = number < 0 ? "-" : "";
+            var i = String(parseInt(number = Math.abs(Number(number) || 0).toFixed(decPlaces)));
+            var j = (j = i.length) > 3 ? j % 3 : 0;
+
+            return sign +
+                (j ? i.substr(0, j) + thouSep : "") +
+                i.substr(j).replace(/(\decSep{3})(?=\decSep)/g, "$1" + thouSep) +
+                (decPlaces ? decSep + Math.abs(number - i).toFixed(decPlaces).slice(2) : "");
+        }
+
+        function currencyFormatDE(num) {
+            return (
+                num
+                    .toFixed(3) // always two decimal digits
+                    .replace('.', ',') // replace decimal point character with ,
+                    .replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1 ')
+            ) // use . as a separator
+        }
+
+        $(document).ready(function () {
+
+            $.fn.dataTable.moment('LL');
+
+            var table1 = $('#TableClient1').DataTable({
+                language: {
+                    processing: "Traitement en cours...",
+                    search: "Rechercher&nbsp;:",
+                    lengthMenu: "Afficher _MENU_ &eacute;l&eacute;ments",
+                    info: "Affichage de l'&eacute;lement _START_ &agrave; _END_ sur _TOTAL_ &eacute;l&eacute;ments",
+                    infoEmpty: "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
+                    infoFiltered: "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
+                    infoPostFix: "",
+                    loadingRecords: "Chargement en cours...",
+                    zeroRecords: "Aucun &eacute;l&eacute;ment &agrave; afficher",
+                    emptyTable: "Aucune donnée disponible dans le tableau",
+                    paginate: {
+                        first: "Premier",
+                        previous: "Précédent",
+                        next: "Suivant",
+                        last: "Dernier"
+                    },
+                    aria: {
+                        sortAscending: ": activer pour trier la colonne par ordre croissant",
+                        sortDescending: ": activer pour trier la colonne par ordre décroissant"
+                    },
+                    "processing": true,
+                    "serverSide": true,
+                    /*"ajax": "''"*/
+                },
+                "paging": true,
+                "ordering": true,
+                "info": true,
+
+            });
+
+            var table = $('#TableClient').DataTable({
+                language: {
+                    processing: "Traitement en cours...",
+                    search: "Rechercher&nbsp;:",
+                    lengthMenu: "Afficher _MENU_ &eacute;l&eacute;ments",
+                    info: "Affichage de l'&eacute;lement _START_ &agrave; _END_ sur _TOTAL_ &eacute;l&eacute;ments",
+                    infoEmpty: "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
+                    infoFiltered: "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
+                    infoPostFix: "",
+                    loadingRecords: "Chargement en cours...",
+                    zeroRecords: "Aucun &eacute;l&eacute;ment &agrave; afficher",
+                    emptyTable: "Aucune donnée disponible dans le tableau",
+                    paginate: {
+                        first: "Premier",
+                        previous: "Précédent",
+                        next: "Suivant",
+                        last: "Dernier"
+                    },
+                    aria: {
+                        sortAscending: ": activer pour trier la colonne par ordre croissant",
+                        sortDescending: ": activer pour trier la colonne par ordre décroissant"
+                    },
+                    "processing": true,
+                    "serverSide": true,
+                    /*"ajax": "''"*/
+                },
+                "paging": true,
+                "ordering": true,
+                "info": true,
+                "initComplete": function (settings, json) {
+                    this.api().columns('.SumHeader').every(function (index) {
+                        var column = this;
+                        console.log(index);
+                        var indexx = index;
+                        var sum = column
+                            .data()
+                            .reduce(function (a, b) {
+                                a = a.toString().replace(",", ".");
+                                a = a.replace(new RegExp(' ', 'g'), '');
+                                a = parseFloat(a);
+                                if (isNaN(a)) {
+                                    a = 0;
+                                }
+                                b = b.toString().replace(",", ".");
+                                b = b.replace(new RegExp(' ', 'g'), '');
+                                b = parseFloat(b);
+                                if (isNaN(b)) {
+                                    b = 0;
+                                }
+                                if (indexx === 8 || indexx === 5 || indexx === 3) {
+                                    return a + b;
+                                } else {
+
+                                    return currencyFormatDE(a + b, 3, ',', ' ');
+                                }
+                            });
+                        $(column.footer()).html(sum);
+
+                    });
+                },
+                "columnDefs": [
+                    {"width": "23%", "targets": 2},
+                    {"width": "1%", "targets": 5},
+                    {"width": "1%", "targets": 3}
+                ],
+            });
+            moment.locale('fr');
+            var tdClicked;
+            var interventions = $('#intervention').DataTable({
+                language: {
+                    processing: "Traitement en cours...",
+                    search: "Rechercher&nbsp;:",
+                    lengthMenu: "Afficher _MENU_ &eacute;l&eacute;ments",
+                    info: "Affichage de l'&eacute;lement _START_ &agrave; _END_ sur _TOTAL_ &eacute;l&eacute;ments",
+                    infoEmpty: "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
+                    infoFiltered: "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
+                    infoPostFix: "",
+                    loadingRecords: "Chargement en cours...",
+                    zeroRecords: "Aucun &eacute;l&eacute;ment &agrave; afficher",
+                    emptyTable: "Aucune donnée disponible dans le tableau",
+                    paginate: {
+                        first: "Premier",
+                        previous: "Précédent",
+                        next: "Suivant",
+                        last: "Dernier"
+                    },
+                    aria: {
+                        sortAscending: ": activer pour trier la colonne par ordre croissant",
+                        sortDescending: ": activer pour trier la colonne par ordre décroissant"
+                    },
+                    "processing": true,
+                    "serverSide": true,
+                    /*"ajax": "''"*/
+                },
+                columnDefs: [
+                    {
+                        "data": "hire_date", "title": "Hire Date", "render": function (data, type) {
+                            return type === 'sort' ? data : moment(data).format('L');
+                        }
+                    }
+                ],
+            });
+            let id;
+            $('#TableClient tbody').on('click', '.modifier', function (e) {
+                e.preventDefault();
+                var data = table.row($(this).parents('tr')).data();
+                console.log($(data[10]).text());
+                id = data[0];
+                $('#libelle').val(data[2]);
+                $('#Quantité').val(data[3]);
+                MT = data[4].replace(/\s/g, '');
+                console.log(parseFloat(MT.replace(',', '.')));
+                $('#MontantHT').val(parseFloat(MT.replace(',', '.')));
+                $('#Qrestante').val(data[5]);
+                $('#modifierModal').modal();
+            });
+            $('#save').on('click', function () {
+                var libelle = $('#libelle').val();
+                var Quantite = $('#Quantité').val();
+                var MontantHT = $('#MontantHT').val();
+                var Qrestante = $('#Qrestante').val();
+                // var buManager = $('#buManager').val();
+                $.ajax({
+                    type: "POST",
+                    url: '{{ path('modifierCmd') }}',
+                    data: {
+                        'id': id,
+                        'libelle': libelle,
+                        'Quantite': Quantite,
+                        'MontantHT': MontantHT,
+                        'Qrestante': Qrestante,
+                        // 'buManager': buManager
+                    },
+                    success: function (result) {
+                        location.reload();
+
+                    },
+                    error: 'error'
+                });
+            });
+            $('.supprimer').on('click', function (e) {
+                var data = table.row($(this).parents('tr')).data();
+                id = data[0];
+                e.preventDefault();
+                $.ajax({
+                    type: "POST",
+                    url: '{{ path('supprimerLC') }}',
+                    data: {
+                        'id': id,
+
+                    },
+                    success: function (result) {
+                        table.row('#tr' + id).remove().draw();
+                        console.log(id);
+
+                    },
+                    error: 'error'
+                });
+            });
+            $('#modifierC').on('click', function (e) {
+                e.preventDefault();
+                $.ajax({
+                    type: "POST",
+                    url: '{{ path('modifierC', {'id':app.request.get('id') }) }}',
+                    success: function (result) {
+                        $('#modifierCModal').modal();
+                        $('#modifierCModalBody').html(result);
+
+                    },
+                    error: 'error'
+                });
+            });
+            $(document).on("click", "#TableClient td", function (e) {
+
+                if (($(this).is(':nth-child(2)') === true) || $(this).is(':last-child') === true) {
+                } else {
+                    var data = table.row(this).data()[1];
+                    var cc = $(data).find('.form-check-input').val();
+                    {#Routing.setBaseUrl({{ app.request.getBaseURL() }});#}
+                    Routing.setPort('');
+                    $.ajax({
+                        type: "GET",
+                        url: Routing.generate('jsonPlanningByLc', {id: cc}, true),
+                        // data: null,
+                        success: function (result) {
+                            console.log('-----first------');
+                            interventions.clear().draw();
+                            $("#interventions").modal();
+                            $("#title").html('Les interventions: ' + result[0].libelle);
+                            $.each(result, function (key, value) {
+                                let date;
+                                var Supplementaire;
+                                if (value.allDay) {
+                                    date = 'Toute la journée'
+                                } else if (moment(data.start).hours() > 12) {
+                                    date = 'Après-midi';
+                                } else {
+                                    date = 'Matin'
+                                }
+                                if (value.JSupplementaire) {
+                                    Supplementaire = 'Oui'
+                                } else {
+                                    Supplementaire = 'Non'
+                                }
+                                interventions.row.add([
+                                    moment(value.start).format('LL'),
+                                    date,
+                                    value.Intervenant,
+                                    value.Statut,
+                                    Supplementaire,
+                                ]).draw(false);
+                            });
+                        },
+                        error: function (result) {
+                            console.log(result);
+                        }
+                    });
+                }
+
+            });
+
+            $('#render').on('click', function (e) {
+                e.preventDefault();
+                $(this).prop('disabled', true);
+                $.ajax({
+                    url: '{{ path('getUsers') }}',
+                    async: false,
+                    dataType: 'json',
+                    type: "POST",
+                    success: function (result) {
+                        $.each(result, function (key, value) {
+                            if (value.roleUtilisateur != 'ROLE_CLIENT') {
+                                var myObj, i, j, x = "";
+                                var y = Object.keys(value.bus).length;
+                                for (i in value.bus) {
+                                    if (i == y - 1) {
+                                        x += value.bus[i].libelle;
+                                    } else {
+                                        x += value.bus[i].libelle + ', ';
+                                    }
+                                }
+                                console.log(x);
+                                var HtmlToAdd = '<input name="user" type="radio" value="' + value.id + '">';
+                                var role;
+                                if (value.roleUtilisateur == 'ROLE_CHEF') {
+                                    role = 'BU Manager'
+                                }
+                                if (value.roleUtilisateur == 'ROLE_CONSULTANT') {
+                                    role = 'Consultant'
+                                }
+                                if (value.roleUtilisateur == 'ROLE_ADMIN') {
+                                    role = 'Administrateur'
+                                }
+                                if (value.roleUtilisateur == 'ROLE_GESTIONNAIRE') {
+                                    role = 'Gestionnaire'
+                                }
+                                table1.row.add([
+                                    HtmlToAdd,
+                                    value.nomUtilisateur + " " + value.prenomUtilisateur,
+                                    role,
+                                    x
+                                ]).draw(false);
+                            }
+                        });
+                    },
+                    error: function (data) {
+                    }
+                })
+            });
+
+            $('#SupprimerC').on('click', function (e) {
+
+                Swal.fire({
+                    title: 'Souhaitez-vous réellement supprimer cette commande?',
+                    // text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Oui, supprimez-la!',
+                    cancelButtonText: 'Annuler',
+                }).then((result) => {
+                    if (result.value) {
+                        window.location = '{{ path('supprimer', {id: commande.id}) }}';
+                        Swal.fire(
+                            'Supprimé!',
+                            'La commande a été supprimée.',
+                            'success'
+                        );
+                    }
+                })
+            })
+            {#$.ajax({#}
+            {#    url: '{{ path('getAllUsers') }}',#}
+            {#    //data: 'action=update&id=' + this.id,#}
+            {#    type: "POST",#}
+            {#    //  async: false,#}
+            {#    success: function (data) {#}
+            {#        $.each(data, function (i, item) {#}
+            {#            $('#buManager').append($('<option>', {#}
+            {#                value: item.id,#}
+            {#                text: item.prenomUtilisateur + ' ' + item.nomUtilisateur#}
+            {#            }));#}
+            {#        });#}
+            {#        console.log(data);#}
+            {#    },#}
+            {#    error: function () {#}
+            {#        alert("Vous ne pouvez pas faire cette action");#}
+            {#    },#}
+            {#});#}
+        });
+
+        function myGeeks() {
+            var arr = $.map($('input:checkbox:checked'), function (e, i) {
+                return +e.value;
+            });
+            console.log(arr);
+            $("#input").val(arr);
+        }
+
+        // $('#input.custom-control-input').change(function () {
+        //     $('#modal').prop("disabled", !this.checked);
+        // });
+        jQuery("input[name='checkbox']").change(function () {
+            $('#modal').prop("disabled", !this.checked);
+        });
+
+    </script>
+{% endblock %}

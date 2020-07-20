@@ -1,0 +1,182 @@
+{% extends 'Squelette.html.twig' %}
+
+{% block Titre %}
+    Portail web de TimSoft - Suppression d'une feuille de présence
+{%endblock %}
+
+{%block Section %} 
+    Feuille de présence
+    <small>Suppression</small>
+{% endblock %}
+
+
+{% block Navigation %}
+    {% if AutorisationAcces('ConsulterFeuillesRapportIntervention' , Utilisateur) %} <div>
+            <li><a href="{{path('ConsulterFeuillesRapportIntervention')}}">Consulter les feuilles de présence & rapport d'intervention </a></li>
+            {%endif%}
+        <li class="active">Suppression d'une feuille de présence</li>
+        {%endblock %}
+
+
+    {%block Contenu %}
+        <div class="col-md-9">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h2 class="box-title" style="color:#1E5584">FEUILLE DE PRÉSENCE</h2>
+                </div>
+                <div class="box-body">
+                    <br>			  
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="box box-primary">
+                                <div class="box-header with-border">
+                                    <h2 class="box-title" style="color:#1E5584">Coordonnées client</h2>
+                                </div>
+                                <div class="box-body">
+                                    <div class="row">
+                                        <div class="col-md-5">
+                                            <div class="form-group">
+                                                <table width="400">
+                                                    <tr>
+                                                        <th scope="row"><div align="left">Code Client:</div></th>
+                                                        <td>{{Feuille.client.codeClient}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row"><div align="left">Client:</div></th>
+                                                        <td>{{Feuille.client.raisonSociale}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row"><div align="left">Téléphone:</div></th>
+                                                        <td>{{Feuille.client.telephone}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row"><div align="left">Adresse:</div></th>
+                                                        <td>{{Feuille.client.adresseClient}}</td>
+                                                    </tr>
+                                                </table>
+                                            </div>				
+                                        </div>
+                                    </div>  
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="box box-primary">
+                                <div class="box-header with-border">
+                                    <h2 class="box-title" style="color:#1E5584">Participants</h2>
+                                </div>
+                                <div class="box-body">
+                                    {% if (Feuille.participants|length) >0 %}
+
+                                        <table class="table table-bordered">
+                                            <tr class="row1 header blue">
+                                                <th><center>Participant</center></th>
+                                            <th><center>Validation Travail</center></th>
+                                            </tr>
+                                            {% for Participant in Feuille.participants %}
+                                                <tr>
+                                                    <td>{{Participant.nomParticipant}} {{Participant.prenomParticipant}}</td>
+                                                    <td><center>Validé</center></td>                           
+                                                </tr>
+                                            {% endfor%}
+                                        </table>
+                                    {% else%}
+                                        Aucun participant pour cette intervention
+                                    {% endif%}
+                                </div>
+                            </div>
+                        </div>			
+
+                    </div>
+
+                    <div class="col-md-13">
+                        <div class="box box-primary">
+                            <div class="box-header with-border">
+                                <h2 class="box-title" style="color:#1E5584">Visa intervenant</h2>
+                            </div>
+                            <div class="box-body">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <table width="800">
+                                            <tr>
+                                                <th scope="row" width="200"><div align="left">Intervenant:</div></th>
+                                                <td>{{Feuille.intervenant.nomUtilisateur}} {{Feuille.intervenant.prenomUtilisateur}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row"><div align="left">Société:</div></th>
+                                                <td>{{Feuille.intervenant.client}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row"><div align="left">Numéro de commande:</div></th>
+                                                <td>{{Feuille.numeroCommande}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row"><div align="left">Libellé commande:</div></th>
+                                                <td><p>{{Feuille.libelleCommande}}</p></td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row"><div align="left">Fait à:</div></th>
+                                                <td>{{Feuille.lieuIntervention}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row"><div align="left">Le:</div></th>
+                                                <td>{{Feuille.dateIntervention|date('d-m-Y')}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row"><div align="left">Signature</div></th>
+                                                <td></td>
+                                            </tr>
+                                        </table>
+                                        <div style="padding-left: 15px">
+                                            <table width="400">
+                                                <tr>
+                                                    <th width="185" scope="col">Matin:</th>
+                                                    <td>De {{Feuille.heureDebutInterventionMatin|date('H:i')}} à {{Feuille.heureFinInterventionMatin|date('H:i')}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th width="185" scope="col">Après-Midi:</th>
+                                                    <td>De {{Feuille.heureDebutInterventionAM|date('H:i')}} à {{Feuille.heureFinInterventionAM|date('H:i')}}</td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>  
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    {% if AutorisationAcces('SupprimerFeuille' , Utilisateur) %} <div>
+                            <div>
+                                <a href="#" data-href="{{path('SupprimerFeuille', { 'id': Feuille.id }) }}" class="btn btn-primary btn-block btn-flat"  data-toggle="modal" data-target="#confirm-delete" >Supprimer</a>
+                            </div>
+                        {%endif%}
+                        <br>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            Confirmation de suppression
+                        </div>
+                        <div class="modal-body">
+                            Voulez Vous vraiment supprimer {{Feuille}} ?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                            <a class="btn btn-primary btn-ok">Supprimer</a>
+                        </div>
+                    </div>
+                </div>
+            </div>                
+        {% endblock %}
+        {% block script %}
+            {{ parent() }}
+            <script>
+                $('#confirm-delete').on('show.bs.modal', function (e) {
+                    $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
+                });
+            </script>
+        {% endblock %}

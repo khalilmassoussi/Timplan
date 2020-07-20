@@ -1,0 +1,92 @@
+<div id="showTask" class="modal fade">
+    <div class="modal-dialog  modal-lg" style="width:820px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 id="eventInfo" class="modal-title">Afficher un Task</h4>
+                <button type="button" class="close" data-dismiss="modal" id="close"><span
+                            aria-hidden="true">×</span> <span
+                            class="sr-only">close</span></button>
+            </div>
+            <div id="modalBody" class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <table width="100%">
+                            {% if taskEvent.allDay %}
+                                <tr>
+                                    <td>Début</td>
+                                    <td>{{ taskEvent.start|localizeddate('none', 'none', null, null, 'dd MMMM Y') }}</td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td>Début</td>
+                                    <td>{{ taskEvent.start|localizeddate('none', 'none', null, null, 'dd MMMM Y hh:mm') }}</td>
+                                </tr>
+                            {% endif %}
+                            <tr>
+                                <td>Intervenant</td>
+                                <td>{{ taskEvent.utilisateur }}</td>
+                            </tr>
+                            <tr>
+                                <td>Activite</td>
+                                <td>{{ taskEvent.activite.libelle }}</td>
+                            </tr>
+                            <tr>
+                                <td>Statut</td>
+                                <td>{{ taskEvent.statut }}</td>
+                            </tr>
+                            <tr>
+                                <td>Etiquette</td>
+                                <td>{{ taskEvent.etiquette }}</td>
+                            </tr>
+                            <tr>
+                                <td>Progression</td>
+                                <td>{{ taskEvent.progression }}</td>
+                            </tr>
+                        </table>
+
+                    </div>
+                    <div class="col-md-6">
+                        <table width="100%">
+                            {% if taskEvent.allDay %}
+                                <tr>
+                                    <td>Fin</td>
+                                    <td>{{ taskEvent.end|localizeddate('none', 'none', null, null, 'dd MMMM Y') }}</td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td>Fin</td>
+                                    <td>{{ taskEvent.end|localizeddate('none', 'none', null, null, 'dd MMMM Y hh:mm') }}</td>
+                                </tr>
+                            {% endif %}
+                            <tr>
+                                <td>Client</td>
+                                <td>{{ taskEvent.client }}</td>
+                            </tr>
+                            <tr>
+                                <td>Task</td>
+                                <td>{{ taskEvent.task.libelle }}</td>
+                            </tr>
+                            <tr>
+                                <td>Site</td>
+                                <td>{{ taskEvent.site }}</td>
+                            </tr>
+                            <tr>
+                                <td>Motif</td>
+                                <td>{{ taskEvent.motif }}</td>
+                            </tr>
+                            <tr>
+                                <td>Rapport</td>
+                                <td>{{ taskEvent.rapport }}</td>
+                            </tr>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <input type="button" value="Fermer"/>
+            </div>
+
+        </div>
+    </div>
+</div>

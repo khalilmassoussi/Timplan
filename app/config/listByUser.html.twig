@@ -1,0 +1,154 @@
+﻿{% extends 'Squelette.html.twig' %}
+
+{% block Titre %}
+    Portail web de TimSoft - Feuille de présence & Rapport d'intervention
+{% endblock %}
+
+{% block Section %}
+    <h1>
+        Feuille de présence & Rapport d'intervention
+        <small>Les Plannings</small>
+    </h1>
+{% endblock %}
+
+
+{% block Navigation %}
+    <li class="active">Plannings</li>
+{% endblock %}
+{% block SideBar %}
+
+{% endblock %}
+{% block Contenu %}
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fullcalendar/core@4.1.0/main.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@4.1.0/main.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@4.1.0/main.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@4.1.0/main.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/interaction@4.1.0/main.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@4.1.0/main.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@4.1.0/main.min.js"></script>
+    <script src="https://unpkg.com/@fullcalendar/core@4.3.1/locales-all.js"></script>
+    {#<script src="https://unpkg.com/@fullcalendar/interaction@4.3.0/main.min.js"></script>#}
+    <script src="https://unpkg.com/@fullcalendar/list@4.3.0/main.min.js"></script>
+    <script src='http://fullcalendar.io/js/fullcalendar-2.1.1/lib/moment.min.js'></script>
+    <script src='http://fullcalendar.io/js/fullcalendar-2.1.1/lib/jquery.min.js'></script>
+    <script src="http://fullcalendar.io/js/fullcalendar-2.1.1/lib/jquery-ui.custom.min.js"></script>
+    <script src='http://fullcalendar.io/js/fullcalendar-2.1.1/fullcalendar.min.js'></script>
+    <script src="{{ asset('bundles/fosjsrouting/js/router.min.js') }}"></script>
+    <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
+    <style>
+    </style>
+    <div class="col-lg-12">
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h2 class="box-title" style="color:#1E5584">Mes Plannings</h2>
+            </div>
+            <div class="box-tools pull-center">
+            </div>
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        {#{{ dump(plannings) }}#}
+                        <table style="width: 100%" class="display row-border" id="myTable">
+                            <thead>
+                            <tr class="row1 header blue">
+                                <td style="display:none;"></td>
+                                <td class="cell1">Date</td>
+                                <td class="cell1">Client</td>
+                                <td class="cell1">Libelle Intervention</td>
+                                <td class="cell1">Commande</td>
+                                <td class="cell1">
+                                    <center>Action</center>
+                                </td>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for pl in plannings %}
+                                <tr class="row1">
+                                    <td style="display:none;">{{ pl.id }}</td>
+                                    <td class="cell1 diff">
+                                        {{ pl.start|date("d/m/Y") }}
+                                    </td>
+                                    <td class="cell1">
+                                        {{ pl.lc.commande.client.raisonSociale }}
+                                    </td>
+                                    <td class="cell1">{{ pl.lc.libelle }}</td>
+                                    <td class="cell1">
+                                        {{ pl.lc.commande.nCommande }}
+                                    </td>
+                                    <td class="cell1">
+
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+    {{ parent() }}
+    <script>
+        $(document).ready(function () {
+            var table = $('#myTable').DataTable({
+                language: {
+                    processing: "Traitement en cours...",
+                    search: "Rechercher&nbsp;:",
+                    lengthMenu: "Afficher _MENU_ &eacute;l&eacute;ments",
+                    info: "Affichage de l'&eacute;lement _START_ &agrave; _END_ sur _TOTAL_ &eacute;l&eacute;ments",
+                    infoEmpty: "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
+                    infoFiltered: "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
+                    infoPostFix: "",
+                    loadingRecords: "Chargement en cours...",
+                    zeroRecords: "Aucun &eacute;l&eacute;ment &agrave; afficher",
+                    emptyTable: "Aucune donnée disponible dans le tableau",
+                    paginate: {
+                        first: "Premier",
+                        previous: "Précédent",
+                        next: "Suivant",
+                        last: "Dernier"
+                    },
+                    aria: {
+                        sortAscending: ": activer pour trier la colonne par ordre croissant",
+                        sortDescending: ": activer pour trier la colonne par ordre décroissant"
+                    },
+                    "processing": true,
+                    "serverSide": true,
+                    /*"ajax": "''"*/
+                },
+                "columnDefs": [{
+                    "targets": -1,
+                    "data": null,
+                    "defaultContent": "<center><a href='#'><img src='/Template/Editer.png' title=\"Remplir la feuille de présence\"></center>"
+                }]
+            });
+            $('#myTable tbody').on('click', 'a', function () {
+                var data = table.row($(this).parents('tr')).data();
+                $.ajax({
+                    type: "POST",
+                    url: '{{ path('RemplirFeuillePresence') }}',
+                    data: 'action=update&id=' + data[0],
+                    success: function (data) {
+                        {#{% set id = data.id %}#}
+                        // var id = data.id;
+                        {#let route = "{{ path('ModifierFeuillePresence', {'id': data.id})|escape('js') }}";#}
+
+                       {#  window.location.href = Routing.generate('ModifierFeuillePresence', {
+                             'id': data.id
+                        });  #}
+                        alert("Feuille de présence ajoutée avec succès");
+                    },
+                    error: function () {
+                        alert("Erreur");
+                    }
+
+                });
+                //   alert(data[0]);
+            });
+        });
+
+    </script>
+{% endblock %}

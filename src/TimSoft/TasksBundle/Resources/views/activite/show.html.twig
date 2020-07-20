@@ -1,0 +1,43 @@
+<div class="modal fade" id="show{{ activite.id }}">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Details d'activité</h4>
+            </div>
+            <div class="modal-body">
+
+                <table class="table table-striped dataTable">
+                    <tbody>
+                    <tr>
+                        <th>Libelle</th>
+                        <td>{{ activite.libelle }}</td>
+                    </tr>
+                    <tr>
+                        <th>Tasks</th>
+                        <td>
+                            <ul>
+                                {% for task in activite.tasks %}
+                                    <li>{{ task.libelle }}</li>
+                                {% endfor %}
+                            </ul>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-dismiss="modal">Revenir à la liste</button>
+
+                <a href="{{ path('activite_delete', { 'id':activite.id }) }}">
+                    <button class="btn btn-danger">Supprimer</button>
+                </a>
+
+                <a href="{{ path('activite_edit', {'id': activite.id}) }}" data-toggle="modal">
+                    <button class="btn btn-default">Modifier</button>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
