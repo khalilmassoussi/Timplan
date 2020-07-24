@@ -18,7 +18,7 @@
 {% endblock %}
 {% block Contenu %}
     <div class="col-md-12">
-        <div class="card">
+        <div class="card card-outline card-primary">
             {#            <div class="card-header with-border">#}
             {#                <h2 class="card-title" style="color:#1E5584">La liste des feuilles de présence & rapport#}
             {#                    d'intervention</h2>#}
@@ -81,7 +81,9 @@
                                 </td>
                                 <td>
                                     {% if Feuille.numLivraison %}
-                                        <a href="#" class="username" data-type="text" data-pk="{{ Feuille.id }}"
+                                        <a href="#" class="username"
+                                           data-type="text"
+                                           data-pk="{{ Feuille.id }}"
                                            data-title="Enter username"
                                            data-value="{{ Feuille.numLivraison }}"
                                            data-tpl='
@@ -112,14 +114,16 @@
                                 <td>
                                     {% if Feuille.statutValidation %}
                                         {% if AutorisationAcces('ConsulterFeuillePresence' , Utilisateur) %}
-                                            <a href="{{ path('ConsulterFeuillePresence', { 'id': Feuille.id }) }}">
+                                            <a class="btn btn-sm btn-default"
+                                               href="{{ path('ConsulterFeuillePresence', { 'id': Feuille.id }) }}">
                                                 <i class="fas fa-search fa-lg"
                                                    title="Consulter la feuille de présence"></i>
                                             </a>
                                         {% endif %}
                                     {% endif %}
                                     {% if AutorisationAcces('TelechargerFeuillePresence' , Utilisateur) %}
-                                        <a href="{{ path('TelechargerFeuillePresence', { 'id': Feuille.id }) }}">
+                                        <a class="btn btn-sm btn-info"
+                                           href="{{ path('TelechargerFeuillePresence', { 'id': Feuille.id }) }}">
                                             <i class="fas fa-download fa-lg" title="Télécharger la feuille"></i>
                                         </a>
                                     {% endif %}
@@ -216,7 +220,7 @@
                         .columns(5)
                         .search('null')
                         .draw();
-                }  else if($(this).prop("checked") == false){
+                } else if ($(this).prop("checked") == false) {
                     table
                         .columns(5)
                         .search('')

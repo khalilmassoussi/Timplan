@@ -8,7 +8,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use TimSoft\CommandeBundle\Entity\PreTeteCommande;
-use TimSoft\CommandeBundle\Entity\TeteCommande;
 use TimSoft\GeneralBundle\Entity\NotificationUtilisateur;
 use TimSoft\GeneralBundle\Entity\Planning;
 use TimSoft\NotificationBundle\Entity\Notification;
@@ -740,5 +739,40 @@ class PlanningController extends Controller
     {
         $plannings = $this->getDoctrine()->getRepository('TimSoftGeneralBundle:Planning')->findByLc($id);
         return new JsonResponse($plannings);
+    }
+
+    public function editAction(Request $request, Planning $planning)
+    {
+        $editForm = $this->createForm('TimSoft\GeneralBundle\Form\PlanningType', $planning);
+        $editForm->handleRequest($request);
+
+        if ($editForm->isSubmitted() && $editForm->isValid()) {
+//            print_r(json_encode($editForm->get('temps')->getData()));
+            $temps = $editForm->get('temps')->getData();
+            if (in_array('Matin', $temps) && in_array('Après-midi', $temps)) {
+                $planning->setAllDay(true);
+            } elseif (in_array('Matin', $temps) && !in_array('Après-midi', $temps)) {
+                $planning->setAllDay(false);
+                $planning->setStart($editForm->get('start')->getData());
+                $planning->getStart()->setTime(8, 30);
+                var_dump(json_encode($editForm->get('start')->getData()));
+                $planning->setEnd($editForm->get('end')->getData());
+                $planning->getEnd()->setTime(13, 00);
+                var_dump(json_encode($editForm->get('end')->getData()));
+            } elseif (!in_array('Matin', $temps) && in_array('Après-midi', $temps)) {
+                $planning->setAllDay(false);
+                $planning->setStart($editForm->get('start')->getData());
+                $planning->getStart()->setTime(14, 00);
+                $planning->setEnd($editForm->get('end')->getData());
+                $planning->getEnd()->setTime(18, 00);
+            }
+            $this->getDoctrine()->getManager()->persist($planning);
+            $this->getDoctrine()->getManager()->flush();
+            return new JsonResponse($planning);
+        }
+        return $this->render('@TimSoftGeneral/Planning/editPlanning.html.twig', array(
+            'planning' => $planning,
+            'edit_form' => $editForm->createView(),
+        ));
     }
 }

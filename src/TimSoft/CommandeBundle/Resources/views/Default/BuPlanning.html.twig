@@ -82,6 +82,11 @@
             display: block;
         }
 
+        .fc-title-wrap > .fc-title {
+            white-space: normal;
+            /*width: 75%;*/
+        }
+
         /*.fc-event {*/
         /*height: 60px !important;*/
         /*}*/
@@ -120,11 +125,19 @@
 
     </style>
     <div class="col-md-12">
-        <div class="card card-primary">
+        <div class="card card-outline card-primary">
             <div class="card-header">
-                <h2 class="card-title">Calendrier</h2>
-            </div>
-            <div class="card-tools pull-center">
+                <h3 class="card-title">
+                    <a href="#" id="addTaskButton">
+                        <button class="btn btn-primary">Ajouter une Task</button>
+                    </a>
+                </h3>
+                <div class="card-tools">
+                    <a href="#" id="export" class="btn btn-info btn-sm"
+                       title="Télécharger le planning">
+                        <i class="fas fa-download fa-2x"></i>
+                    </a>
+                </div>
             </div>
             <div class="card-body">
                 <div class="col-md-12" align="center">
@@ -137,34 +150,30 @@
                             {% endfor %}
                         </select>
                     </div>
-
                     <div align="center" class="form-group">
-                        <select id="usersBu" class="form-control select2 select2-hidden-accessible" multiple="multiple"
+                        <select id="usersBu" class="form-control select2 select2-hidden-accessible"
+                                multiple="multiple"
                                 style="width: 50%;" data-placeholder="Choisir un utilisateur">
                             <option></option>
                         </select>
 
                     </div>
                 </div>
-                <div align="right">
-                    <a style="text-align: right" href="#" id="export" class="btn btn-default"
-                       title="Télécharger le planning">
-                        <i class="fas fa-download fa-2x"></i>
-                    </a>
+                <div class="row">
+                    <div class="col-md-6">
+
+                    </div>
+                    <div class="col-md-6 text-right">
+
+                    </div>
                 </div>
-                <div align="left">
-                    <a href="#" id="addTaskButton">
-                        <button class="btn btn-primary">Ajouter une activité</button>
-                    </a>
-                </div>
-                <div class="row" align="center">
+                <div class="col-lg-12" align="center">
                     <div id='calendar'></div>
                 </div>
 
             </div>
         </div>
     </div>
-
     {% include '@TimSoftCommande/Default/modal.html.twig' %}
     {#    {{ render(controller('TimSoftTasksBundle:TaskEvent:new')) }}#}
 
@@ -271,6 +280,7 @@
                     resourceText: function (resource) {
                         return resource.title;
                     },
+                    resourceAreaWidth: '20%',
                     resources: function (fetchInfo, successCallback, failureCallback) {
                         getResources(function (resources) {
                             successCallback(resources);
@@ -279,7 +289,7 @@
                     resourceRender: function (info) {
                     },
                     eventClick: function (event) {
-                        var autorise = {{ (AutorisationAcces('modifTaskEvent' , app.user)) }}
+                        var autorise = {{ (AutorisationAcces('modifTaskEvent' , app.user)) }};
                         if (event.event.extendedProps.type != 'TaskEvent') {
                             var xhr = $.ajax({
                                 url: '{{ path('plans') }}',
@@ -361,8 +371,10 @@
                             }
                         }
                         if (event.event.extendedProps.type == 'TaskEvent') {
+                            $(event.el).find('.fc-title').css('width', '75%');
                             if (event.event.allDay === false) {
                                 $(event.el).height('auto');
+
                                 $(event.el).find('.fc-title').prepend('<b>Client: </b>');
                                 $(event.el).append('<br><span><b>Task: </b>' + event.event.extendedProps.task + '</span>');
                                 $(event.el).append('<p>Heure: ' + moment(event.event.start).format("HH:mm") + '</p>');
@@ -371,6 +383,34 @@
                                 $(event.el).find('.fc-title').prepend('<b>Client: </b>');
                                 $(event.el).append('<br><span><b>Task: </b>' + event.event.extendedProps.task + '</span>');
 
+                            }
+                            $(event.el).append('<br><b>Lieu: </b>' + event.event.extendedProps.Lieu);
+                            $(event.el).append('<div class="ribbon-wrapper"><div class="ribbon">' + event.event.extendedProps.etiquette + '</div></div>');
+                            if (event.event.extendedProps.etiquette === 'Important') {
+                                $(event.el).find('div.ribbon').each(function (index) {
+                                    // $(this).addClass('badge-warning');
+                                    $(this).addClass('bg-warning');
+                                    $(this).css('font-size', '80%');
+
+                                });
+                            } else if (event.event.extendedProps.etiquette === 'Urgent') {
+                                $(event.el).find('div.ribbon').each(function (index) {
+                                    $(this).addClass('bg-danger');
+                                    // $(this).css('font-size', '0.6vw');
+
+                                });
+                            } else if (event.event.extendedProps.etiquette === 'Moyen') {
+                                $(event.el).find('div.ribbon').each(function (index) {
+                                    $(this).addClass('bg-info');
+                                    // $(this).css('font-size', '0.6vw');
+
+                                });
+                            } else if (event.event.extendedProps.etiquette === 'Peu') {
+                                $(event.el).find('div.ribbon').each(function (index) {
+                                    $(this).addClass('bg-light');
+                                    // $(this).css('font-size', '0.6vw');
+
+                                });
                             }
                         } else {
                             if (event.event.allDay === false) {
@@ -382,6 +422,7 @@
                                     $(event.el).append('<br><b>Matin</b>');
                                 }
                             }
+                            $(event.el).append('<br><b>Lieu: </b>' + event.event.extendedProps.Lieu);
                         }
                         // calendar.setOption('height', '450');
                     },

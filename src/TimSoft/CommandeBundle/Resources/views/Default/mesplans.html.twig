@@ -69,28 +69,22 @@
     </style>
 
     <div class="col-md-12">
-        <div class="card">
-            {#            <div class="card-header with-border">#}
-            {#                <h2 class="card-title" style="color:#1E5584">Mon Planning</h2>#}
-            {#            </div>#}
-            <div class="card-tools pull-center">
+        <div class="card card-outline card-primary">
+            <div class="card-header with-border">
+                <h3 class="card-title">
+                    <a href="#" id="addTaskButton">
+                        <button class="btn btn-primary">Ajouter une Task</button>
+                    </a>
+                </h3>
+
+                <div class="card-tools">
+                    <a href="#" id="export" class="btn btn-info btn-sm"
+                       title="Télécharger le planning">
+                        <i class="fas fa-download fa-2x"></i>
+                    </a>
+                </div>
             </div>
             <div class="card-body">
-                <div class="text-right">
-                    <div align="right">
-                        <a style="text-align: right" href="#" id="export" class="btn btn-default"
-                           title="Télécharger le planning">
-                            <i class="fas fa-download fa-2x"></i>
-                        </a>
-                    </div>
-                    <div align="left">
-                        <a href="#" id="addTaskButton">
-                            <button class="btn btn-primary">Ajouter une activité</button>
-                        </a>
-                    </div>
-                </div>
-                <br>
-                {#<button class="printBtn hidden-print">Print</button>#}
                 <div id='calendar'></div>
             </div>
         </div>
@@ -108,8 +102,6 @@
         {#                src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"#}
         {#                integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30="#}
         {#                crossorigin="anonymous"></script>#}
-
-
         <script>
             $('.printBtn').on('click', function () {
                 window.print();
@@ -211,7 +203,7 @@
                     header: {
                         left: 'prev,next today',
                         center: 'title',
-                        right: 'dayGridMonth,dayGridWeek,timeGridMonth,dayGridDay'
+                        right: 'dayGridMonth,dayGridWeek,timeGridDay'
                     },
                     editable: (app_user === "ROLE_ADMIN"),
                     eventDurationEditable: false,
@@ -224,89 +216,43 @@
                     minTime: '08:30:00',
                     maxTime: '18:30:00',
                     allDay: true,
-                    eventDrop: function (event) {
-                        var start = new Date(event.event.start);
-                        var end = new Date(event.event.end);
-                        if (event.newResource) {
-                            var xhr = $.ajax({
-                                url: '{{ path('appBundle_drop') }}',
-                                data: 'action=update&title=' + event.event.title + '&start=' + GetNow(event.event.start) + '&end=' + GetNow(event.event.end) + '&id=' + event.event.id + '&all_day=' + event.event.allDay
-                                    + '&User=' + event.newResource.id,
-                                type: "POST",
-                                //  async: false,
-                                success: function (data) {
-                                    calendar.refetchEvents();
-                                },
-                                error: function () {
-                                    alert("Vous ne pouvez pas faire cette action");
-                                    calendar.refetchEvents();
-                                },
-                            });
-                        } else {
-                            var xhr = $.ajax({
-                                url: '{{ path('appBundle_drop') }}',
-                                data: 'action=update&title=' + event.event.title + '&start=' + GetNow(event.event.start) + '&end=' + GetNow(event.event.end) + '&id=' + event.event.id + '&all_day=' + event.event.allDay
-                                    + '&User=' + null,
-                                type: "POST",
-                                success: function (data) {
-                                    calendar.refetchEvents();
-                                },
-                                error: function () {
-                                    calendar.refetchEvents();
-                                    alert("Vous ne pouvez pas faire cette action");
-                                },
-                            });
-                        }
-                    },
                     forceEventDuration: true,
                     eventClick: function (event) {
                         if (event.event.extendedProps.type != 'TaskEvent') {
-                            var xhr = $.ajax({
-                                url: '{{ path('plans') }}',
-                                data: 'action=update&id=' + event.event.id,
-                                type: "POST",
-                                async: false,
-                                success: function (data) {
-                                    $.ajax({
-                                        url: '{{ path('getUsersBySociete') }}',
-                                        data: 'action=update&id=' + data.Client.id,
-                                        type: "POST",
-                                        async: false,
-                                        success: function (data) {
-                                            console.log(data);
-                                            $('#users1').empty();
-                                            $.each(data, function (i, item) {
-                                                console.log(item);
-                                                console.log("--------------------");
-                                                $('#users1').append('<option value="' + item.id + '">' + item.nomUtilisateur + ' ' + item.prenomUtilisateur + '</option>');
-                                            });
-                                            // $('#users1').val(null).trigger('change')
-                                        },
-                                        error: function () {
-                                            alert("Vous ne pouvez pas faire cette action");
-                                        },
-                                    });
-                                    CalendarModalData(data);
-                                },
-                                error: function () {
-                                    alert("erreur lors de l'appel de l'url dans POST event/drop : contactez l'administrateur du site");
-                                }
+                            editPlanningModal(event, calendar);
 
-                                ,
-                            });
+                            {#var xhr = $.ajax({#}
+                            {#url: '{{ path('plans') }}',#}
+                            {#data: 'action=update&id=' + event.event.id,#}
+                            {#type: "POST",#}
+                            {#async: false,#}
+                            {#success: function (data) {#}
+                            {#$.ajax({#}
+                            {#url: '{{ path('getUsersBySociete') }}',#}
+                            {#data: 'action=update&id=' + data.Client.id,#}
+                            {#type: "POST",#}
+                            {#async: false,#}
+                            {#success: function (data) {#}
+                            {#console.log(data);#}
+                            {#$('#users1').empty();#}
+                            {#$.each(data, function (i, item) {#}
+                            {#console.log(item);#}
+                            {#console.log("--------------------");#}
+                            {#$('#users1').append('<option value="' + item.id + '">' + item.nomUtilisateur + ' ' + item.prenomUtilisateur + '</option>');#}
+                            {#});#}
+                            {#},#}
+                            {#error: function () {#}
+                            {#alert("Vous ne pouvez pas faire cette action");#}
+                            {#},#}
+                            {#});#}
+                            {#CalendarModalData(data);#}
+                            {#},#}
+                            {#error: function () {#}
+                            {#alert("erreur lors de l'appel de l'url dans POST event/drop : contactez l'administrateur du site");#}
+                            {#},#}
+                            {#});#}
                         } else {
-                            $.ajax({
-                                url: Routing.generate('taskevent_edit', {id: event.event.id}),
-                                method: 'post',
-                                // dataType: 'json',
-                                success: function (data) {
-                                    $("#renderEdit").html(data);
-                                    $('#editTask').modal();
-                                    $('form[name="edit"]').submit(function () {
-                                        calendar.refetchEvents();
-                                    });
-                                },
-                            });
+                            editTaskEvent(event, calendar);
                         }
                     },
                     eventResize: function (event) {
@@ -341,9 +287,37 @@
                             calendar.height = 450;
                             $(event.el).height('auto');
                             $(event.el).find('.fc-title').prepend('<b>Client: </b>');
-                            if (event.event.extendedProps.type == 'TaskEvent') {
+                            if (event.event.extendedProps.type === 'TaskEvent') {
                                 $(event.el).append('<b>Task:</b> ' + event.event.extendedProps.libelle +
-                                    '<br><b>Lieu: </b>' + event.event.extendedProps.Lieu);
+                                    '<br><b>Lieu: </b>' + event.event.extendedProps.Lieu + '<div class="ribbon-wrapper"><div class="ribbon">' + event.event.extendedProps.etiquette + '</div></div>');
+                                if (event.event.extendedProps.etiquette === 'Important') {
+                                    $(event.el).find('div.ribbon').each(function (index) {
+                                        // $(this).addClass('badge-warning');
+                                        $(this).addClass('bg-warning');
+                                        $(this).css('font-size', '80%');
+
+                                    });
+                                } else if (event.event.extendedProps.etiquette === 'Urgent') {
+                                    $(event.el).find('div.ribbon').each(function (index) {
+                                        $(this).addClass('bg-danger');
+                                        // $(this).css('font-size', '0.6vw');
+
+                                    });
+                                } else if (event.event.extendedProps.etiquette === 'Moyen') {
+                                    $(event.el).find('div.ribbon').each(function (index) {
+                                        $(this).addClass('bg-info');
+                                        // $(this).css('font-size', '0.6vw');
+
+                                    });
+                                } else if (event.event.extendedProps.etiquette === 'Peu') {
+                                    $(event.el).find('div.ribbon').each(function (index) {
+                                        $(this).addClass('bg-light');
+                                        // $(this).css('font-size', '0.6vw');
+
+                                    });
+                                }
+                                $(event.el).each(function (index) {
+                                });
                             } else {
                                 $(event.el).append('<b>Libellé:</b> ' + event.event.extendedProps.libelle +
                                     '<br><b>Lieu: </b>' + event.event.extendedProps.Lieu);
@@ -356,9 +330,38 @@
                                 }
                             }
                         } else if (event.view.type === 'dayGridMonth' && event.event.allDay) {
-
                             $(event.el).height('auto');
                             $(event.el).append(event.event.extendedProps.libelle);
+                            if (event.event.extendedProps.type === 'TaskEvent') {
+                                $(event.el).find('.fc-content').css('width', '90%');
+                                $(event.el).append('<div class="ribbon-wrapper"><div class="ribbon">' + event.event.extendedProps.etiquette + '</div></div>');
+                                if (event.event.extendedProps.etiquette === 'Important') {
+                                    $(event.el).find('div.ribbon').each(function (index) {
+                                        // $(this).addClass('badge-warning');
+                                        $(this).addClass('bg-warning');
+                                        $(this).css('font-size', '70%');
+
+                                    });
+                                } else if (event.event.extendedProps.etiquette === 'Urgent') {
+                                    $(event.el).find('div.ribbon').each(function (index) {
+                                        $(this).addClass('bg-danger');
+                                        // $(this).css('font-size', '0.6vw');
+
+                                    });
+                                } else if (event.event.extendedProps.etiquette === 'Moyen') {
+                                    $(event.el).find('div.ribbon').each(function (index) {
+                                        $(this).addClass('bg-info');
+                                        // $(this).css('font-size', '0.6vw');
+
+                                    });
+                                } else if (event.event.extendedProps.etiquette === 'Peu') {
+                                    $(event.el).find('div.ribbon').each(function (index) {
+                                        $(this).addClass('bg-light');
+                                        // $(this).css('font-size', '0.6vw');
+
+                                    });
+                                }
+                            }
                         }
                     },
                 });
@@ -369,7 +372,6 @@
                         requestAjax('facturation', $('.planning').attr('id'))
                     } else if (this.value === 'Facturé') {
                         requestAjax('facturation', $('.planning').attr('id'))
-
                     }
                 });
                 $('input:radio[name=accompagnements]').change(function () {
@@ -389,7 +391,6 @@
                         requestAjax('Lieu', $('.planning').attr('id'), 'Sur Site')
                     } else if (this.value === 'aDistance') {
                         requestAjax('Lieu', $('.planning').attr('id'), 'à distance')
-
                     }
                 });
                 f();

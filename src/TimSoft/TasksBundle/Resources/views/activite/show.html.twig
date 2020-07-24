@@ -7,7 +7,7 @@
             </div>
             <div class="modal-body">
 
-                <table class="table table-striped dataTable">
+                <table class="table table-striped">
                     <tbody>
                     <tr>
                         <th>Libelle</th>
@@ -34,10 +34,17 @@
                     <button class="btn btn-danger">Supprimer</button>
                 </a>
 
-                <a href="{{ path('activite_edit', {'id': activite.id}) }}" data-toggle="modal">
-                    <button class="btn btn-default">Modifier</button>
+                <a id="{{ activite.id }}" href="{{ path('activite_edit', {'id': activite.id}) }}" data-toggle="modal">
+                    <button class="btn btn-primary">Modifier</button>
                 </a>
             </div>
         </div>
     </div>
 </div>
+<script src="{{ asset('Template2/plugins/jquery/jquery.min.js') }}"></script>
+<script>
+    var id = {{ activite.id|json_encode|raw }};
+    $('#' + id).on('click', function (e) {
+        window.location.href = '{{ path('activite_edit', {'id': activite.id}) }}';
+    })
+</script>

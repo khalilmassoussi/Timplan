@@ -14,44 +14,46 @@
 {% block SideBar %}
 {% endblock %}
 {% block Contenu %}
-    <div class="col-md-12">
+    <div class="col-md-2">
         <!--   <div style="border: 2px solid #1E5584; padding: 3px; background-color: #FFFFFF; -moz-border-radius-topleft: 5px; -moz-border-radius-topright: 5px; -moz-border-radius-bottomright: 5px; -moz-border-radius-bottomleft: 5px;">-->
-        <div class="card card-primary">
-            {#            <div class="card-header with-border">#}
-            {#                <h2 class="card-title" style="color:#1E5584">Liste de toutes les commandes </h2>#}
-            {#            </div>#}
+        <div class="card card-outline card-warning">
+            {#<div class="card-header">#}
+            {#</div>#}
             <div class="card-body">
-                <br>
                 <div class="container">
-                    <div class="row">
-                        <div class="col">
-                             <span style="width: 20%">
-                        {% if ('Gestion des clients' in Rubriques) %}
+                    <div class="row mb-1">
+                        <button class="btn btn-info" id="plus">Afficher toutes les commandes</button>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="btn-group">
                             {% if AutorisationAcces('ImportCmd' , Utilisateur) %}
-                                <a href="{{ path('ImportCmd') }}" class="btn btn-default">
+                                <a href="{{ path('ImportCmd') }}" class="btn btn-success">
                                     <i class="fas fa-file-upload fa-2x" title="Importer des commandes"></i>
-{#                                    Importer des commandes#}
+                                    {#                                    Importer des commandes#}
                                 </a>
                             {% endif %}
-                        {% endif %}
-                                 {#                    {% if AutorisationAcces('ImportCmd' , Utilisateur) %}#}
-                        <a href="{{ path('export') }}" class="btn btn-default">
-                            <i class="fas fa-file-download fa-2x" title="Exporter les commandes"></i>
-{#                            Exporter les commandes#}
-                        </a>
-                        {#                    {% endif %}#}
-                    </span>
-                        </div>
-                        <div class="col" style="text-align: right">
-                            <button class="btn btn-primary" id="plus">Afficher toutes les commandes</button>
+                            {#                    {% if AutorisationAcces('ImportCmd' , Utilisateur) %}#}
+                            <a href="{{ path('export') }}" class="btn btn-secondary">
+                                <i class="fas fa-file-download fa-2x" title="Exporter les commandes"></i>
+
+                            </a>
+
                         </div>
                     </div>
                 </div>
-                {#                <span><b>Date: </b><input type="text" name="daterange" value="01/01/2018 - 01/15/2018"#}
-                {#                                          class="daterange"/></span>#}
-                <br>
-                <table id="TableClient" class="table table-striped dataTable" style="width:100%"
-                       cellspacing="0">
+
+            </div>
+        </div>
+    </div>
+    <div class="col-md-10">
+        <div class="card card-primary card-outline">
+            <div class="card-header with-border">
+                <h2 class="card-title">Liste de toutes les commandes </h2>
+            </div>
+            <div class="card-body">
+
+                <table id="TableClient" class="table table-striped dataTable"
+                       cellspacing="0" style="width: 100%;">
                     <thead>
                     <tr>
                         <th>
@@ -120,6 +122,11 @@
                     {% endfor %}
                     </tbody>
                 </table>
+
+                {#                <span><b>Date: </b><input type="text" name="daterange" value="01/01/2018 - 01/15/2018"#}
+                {#                                          class="daterange"/></span>#}
+                {#<br>#}
+
                 <br>
             </div>
         </div>
@@ -235,7 +242,7 @@
                                 });
                             if (index === 1) {
                                 $("#Date select").css("display", "none");
-                                $("#dates").append('<div class="input-group"><div class="input-group-prepend"><span class="input-group-text"><i class="glyphicon glyphicon-calendar fa fa-calendar"></span></i></div><input type="text" style="width: 200px" name="daterange" class="form-control daterange"/></div>');
+                                $("#dates").append('<div class="input-group" style="flex-wrap: inherit"><div class="input-group-prepend"><span class="input-group-text"><i class="glyphicon glyphicon-calendar fa fa-calendar"></span></i></div><input type="text" style="width: 200px" name="daterange" class="form-control daterange"/></div>');
 
                             }
                             if (index === 4) {
@@ -271,15 +278,15 @@
                     ],
                 });
                 $('.daterange').daterangepicker({
-                    ranges: {
-                        "Today": [moment(), moment()],
-                        'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                        '7 last days': [moment().subtract(6, 'days'), moment()],
-                        '30 last days': [moment().subtract(29, 'days'), moment()],
-                        'This month': [moment().startOf('month'), moment().endOf('month')],
-                        'Last month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
-                        'Blank date': [moment("01-01-0001"), moment("01-01-0001")]
-                    },
+                    // ranges: {
+                    //     "Today": [moment(), moment()],
+                    //     'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                    //     '7 last days': [moment().subtract(6, 'days'), moment()],
+                    //     '30 last days': [moment().subtract(29, 'days'), moment()],
+                    //     'This month': [moment().startOf('month'), moment().endOf('month')],
+                    //     'Last month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+                    //     'Blank date': [moment("01-01-0001"), moment("01-01-0001")]
+                    // },
                     autoUpdateInput: false,
                     opens: "left",
                     locale: {

@@ -66,7 +66,7 @@
         </div>
     {% endfor %}
     <div class="col-md-12">
-    <div class="card">
+    <div class="card card-outline card-primary">
     <div class="card-header with-border">
         <h2 class="card-title" style="color:#1E5584">Informations de <b>{{ client.raisonSociale }}</b></h2>
     </div>
@@ -152,273 +152,273 @@
             {% set NBClientFacture = client.clientFacture|length %}
             {% set NBFactures = Factures|length %}
             {% set NBFeuilles = Feuilles|length %}
-{#            <table style="width: 100%">#}
-{#                <tr>#}
-{#                    {% if(NBUtilisateur != 0 ) %}#}
+            {#            <table style="width: 100%">#}
+            {#                <tr>#}
+            {#                    {% if(NBUtilisateur != 0 ) %}#}
 
-{#                        <td><h5> Utilisateurs associés à <b>{{ client.raisonSociale }}</b></h5></td>#}
-{#                        <td>#}
-{#                            <div align="right" style="padding-right: 0px; padding-bottom: 2px"><a#}
-{#                                        href="{{ path('fos_user_registration_register') }}">#}
-{#                                    <i class="fas fa-user-plus"></i>Ajouter un utilisateur</a></div>#}
-{#                            <table class="table1">#}
-{#                                <tr class="row1 header blue">#}
-{#                                    <th class="cell1">#}
-{#                                        Nom#}
-{#                                    </th>#}
-{#                                    <th class="cell1">#}
-{#                                        Prénom#}
-{#                                    </th>#}
-{#                                    <th class="cell1">#}
-{#                                        Téléphone#}
-{#                                    </th>#}
-{#                                    <th class="cell1">#}
-{#                                        E-Mail#}
-{#                                    </th>#}
-{#                                    <th class="cell1">#}
-{#                                        Catégorie#}
-{#                                    </th>#}
-{#                                    <th class="cell1">#}
-{#                                        <center>Action</center>#}
-{#                                    </th>#}
-{#                                </tr>#}
-{#                                {% if utilisateurs is defined %}#}
-{#                                    {% for utilisateur in utilisateurs %}#}
-{#                                        {% if (utilisateur.enabled) and (utilisateur.confirmationToken == NULL) %}#}
-{#                                            <tr class="row1">#}
-{#                                        {% elseif not(utilisateur.enabled) and (utilisateur.confirmationToken == NULL) %}#}
-{#                                            <tr class="row1" style="color: #800;">#}
-{#                                        {% elseif not(utilisateur.enabled) %}#}
-{#                                            <tr class="row1"  style="color: Gray;" >#}
-{#                                        {% endif %}#}
-{#                                        <td class="cell1">#}
-{#                                            {{ utilisateur.nomUtilisateur }}#}
-{#                                        </td>#}
-{#                                        <td class="cell1">#}
-{#                                            {{ utilisateur.prenomUtilisateur }}#}
-{#                                        </td>#}
-{#                                        <td class="cell1">#}
-{#                                            {{ utilisateur.telephoneUtilisateur }}#}
-{#                                        </td>#}
-{#                                        <td class="cell1">#}
-{#                                            {{ utilisateur.email }}#}
-{#                                        </td>#}
-{#                                        <td class="cell1">#}
-{#                                            {% set role= utilisateur.roleUtilisateur %}#}
-{#                                            {% if ( role == 'ROLE_ADMIN') %}Administrateur#}
-{#                                            {% elseif ( role == 'ROLE_CONSULTANT') %}Consultant#}
-{#                                            {% elseif ( role == 'ROLE_CLIENT') %}Client#}
-{#                                            {% elseif ( role == 'ROLE_GESTIONNAIRE') %}Gestionnaire#}
-{#                                            {% endif %}#}
-{#                                        </td>#}
-{#                                        <td class="cell1" data-title="Active">#}
-{#                                            <center>#}
-{#                                                <a href="{{ path('ConsulterUnUtilisateur', { 'id': utilisateur.id }) }}"><img#}
-{#                                                            src="{{ asset('Template/Consulter.png') }}"#}
-{#                                                            title="Consulter les informations de {{ utilisateur.nomUtilisateur }} {{ utilisateur.prenomUtilisateur }}"></a>#}
-{#                                                <a href="{{ path('fos_user_profile_edit_utilisateur', { 'id': utilisateur.id }) }}"><img#}
-{#                                                            src="{{ asset('Template/Editer.png') }}"#}
-{#                                                            title="Modifier {{ utilisateur.nomUtilisateur }} {{ utilisateur.prenomUtilisateur }}"></a>#}
-{#                                                <a href="{{ path('SupprimerUnUtilisateur', { 'id': utilisateur.id }) }}"><img#}
-{#                                                            src="{{ asset('Template/SupprimerUser.png') }}"#}
-{#                                                            title="Supprimer {{ utilisateur.nomUtilisateur }} {{ utilisateur.prenomUtilisateur }}"></a>#}
-{#                                                <a href="ArchiverUtilisateur.php"><img#}
-{#                                                            src="{{ asset('Template/Archiver.png') }}"#}
-{#                                                            title="Déactiver {{ utilisateur.nomUtilisateur }} {{ utilisateur.prenomUtilisateur }}"></a>#}
-{#                                            </center>#}
-{#                                        </td>#}
-{#                                        </tr>#}
-{#                                    {% endfor %}#}
-{#                                {% endif %}#}
-{#                            </table>#}
-{#                        </td>#}
-{#                    {% endif %}#}
-{#                </tr>#}
-{#                <tr>#}
-{#                    {% if (NBClientFacture != 0) %}#}
-{#                        <td><h5> Clients facturés associés à <b>{{ client.raisonSociale }}</b></h5></td>#}
-{#                        <td>#}
-{#                            <div align="right" style="padding-right: 0px; padding-bottom: 2px"><a#}
-{#                                        href="{{ path('AjouterClient') }}">#}
-{#                                    0<img src="{{ asset('Template/Add.png') }}">Ajouter un client</a></div>#}
-{#                            <table class="table1">#}
-{#                                <tr class="row1 header blue">#}
-{#                                    <th class="cell1">#}
-{#                                        Code Client#}
-{#                                    </th>#}
-{#                                    <th class="cell1">#}
-{#                                        Nom client facturé#}
-{#                                    </th>#}
-{#                                    <th class="cell1">#}
-{#                                        Téléphone#}
-{#                                    </th>#}
-{#                                    <th class="cell1">#}
-{#                                        E-Mail#}
-{#                                    </th>#}
-{#                                    <th width="100" class="cell1">#}
-{#                                        <center> Action</center>#}
-{#                                    </th>#}
-{#                                </tr>#}
-{#                                {% if client.clientFacture %}#}
-{#                                    {% for clientF in client.clientFacture %}#}
-{#                                        <tr class="row1">#}
-{#                                            <td class="cell1">#}
-{#                                                {{ clientF.codeClient }}#}
-{#                                            </td>#}
-{#                                            <td class="cell1">#}
-{#                                                {{ clientF.raisonSociale }}#}
-{#                                            </td>#}
-{#                                            <td class="cell1">#}
-{#                                                {{ clientF.telephone }}#}
-{#                                            </td>#}
-{#                                            <td class="cell1">#}
-{#                                                {{ clientF.adresseMailClient }}#}
-{#                                            </td>#}
-{#                                            <td class="cell1" data-title="Active">#}
-{#                                                <center>#}
-{#                                                    <a href="{{ path('ConsulterUnClient', { 'id': clientF.id }) }}"><img#}
-{#                                                                src="{{ asset('Template/Consulter.png') }}"#}
-{#                                                                title="Consulter les informations de {{ clientF.raisonSociale }}"></a>#}
-{#                                                    <a href="{{ path('ModifierClient', { 'id': clientF.id }) }}"><img#}
-{#                                                                src="{{ asset('Template/Editer.png') }}"#}
-{#                                                                title="Modifier {{ clientF.raisonSociale }}"></a>#}
-{#                                                    <a href="{{ path('SupprimerUnClient', { 'id': clientF.id }) }}"><img#}
-{#                                                                src="{{ asset('Template/SupprimerUser.png') }}"#}
-{#                                                                title="Supprimer {{ clientF.raisonSociale }}"></a>#}
-{#                                                </center>#}
-{#                                            </td>#}
-{#                                        </tr>#}
-{#                                    {% endfor %}#}
-{#                                {% endif %}#}
-{#                            </table>#}
-{#                        </td>#}
-{#                    {% endif %}#}
-{#                </tr>#}
-{#                <tr>#}
-{#                    {% if (NBFactures != 0) %}#}
-{#                        <td><h5> Factures associées à <b>{{ client.raisonSociale }}</b></h5></td>#}
-{#                        <td>#}
-{#                            <div align="right" style="padding-right: 0px; padding-bottom: 2px"><a#}
-{#                                        href="{{ path('AjouterFacture') }}"><img src="{{ asset('Template/add.png') }}">Ajouter#}
-{#                                    une facture </a></div>#}
-{#                            <table id="TableFacture" class="display" style="width:100%">#}
-{#                                <thead>#}
-{#                                <tr class="row1 header blue">#}
-{#                                    <th class="cell1">#}
-{#                                        N° Facture#}
-{#                                    </th>#}
-{#                                    <th class="cell1">#}
-{#                                        Client#}
-{#                                    </th>#}
-{#                                    <th class="cell1">#}
-{#                                        Date#}
-{#                                    </th>#}
-{#                                    <th class="cell1">#}
-{#                                        Nature#}
-{#                                    </th>#}
-{#                                    <th class="cell1">#}
-{#                                        Statut#}
-{#                                    </th>#}
-{#                                    <th class="cell1">#}
-{#                                        Montant TTC#}
-{#                                    </th>#}
-{#                                    <th class="cell1">#}
-{#                                        <center> Action</center>#}
-{#                                    </th>#}
-{#                                </tr>#}
-{#                                </thead>#}
-{#                                <tbody>#}
-{#                                {% for Facture in Factures %}#}
-{#                                    <tr class="row1">#}
-{#                                        <td class="cell1">#}
-{#                                            <center> {{ Facture.numeroFacture }} </center>#}
-{#                                        </td>#}
-{#                                        <td class="cell1">#}
-{#                                            {{ Facture.client }}#}
-{#                                        </td>#}
-{#                                        <td class="cell1">#}
-{#                                            <center> {{ Facture.dateFacture|date('d-m-Y') }} </center>#}
-{#                                        </td>#}
-{#                                        <td class="cell1">#}
-{#                                            <center>  {{ Facture.natureFacture }} </center>#}
-{#                                        </td>#}
-{#                                        <td class="cell1">#}
-{#                                            {{ Facture.statutFacture }}#}
-{#                                            <button id="Bouton1" onclick="EnableSelect()"><img#}
-{#                                                        src="{{ asset('Template/Editer.png') }}"></button>#}
-{#                                        </td>#}
-{#                                        <td class="cell1">#}
-{#                                            <center> {{ Facture.montantTTCFacture }} </center>#}
-{#                                        </td>#}
-{#                                        <td class="cell1">#}
-{#                                            <center>#}
-{#                                                <a href="{{ path('ConsulterUneFacture', { 'id': Facture.id }) }}"><img#}
-{#                                                            src="{{ asset('Template/Consulter.png') }}"#}
-{#                                                            title="Consulter la facture"></a>#}
-{#                                                {% if is_granted('ROLE_ADMIN') %}#}
-{#                                                    <a href="{{ path('ModifierFacture', { 'id': Facture.id }) }}"><img#}
-{#                                                                src="{{ asset('Template/Editer.png') }}"#}
-{#                                                                title="Modifier la facture"></a>#}
-{#                                                    <a href="{{ path('SupprimerUneFacture', { 'id': Facture.id }) }}"><img#}
-{#                                                                src="{{ asset('Template/SupprimerUser.png') }}"#}
-{#                                                                title="Supprimer la facture"></a>#}
-{#                                                {% endif %}#}
-{#                                                <a href="{{ asset('uploads/Factures/') }}{{ Facture.facturePDF }}"><img#}
-{#                                                            src="{{ asset('Template/Telecharger.png') }}"#}
-{#                                                            title="Télécharger la facture"></a>#}
-{#                                            </center>#}
-{#                                        </td>#}
-{#                                    </tr>#}
-{#                                {% endfor %}#}
-{#                                </tbody>#}
-{#                            </table>#}
-{#                        </td>#}
-{#                    {% endif %}#}
-{#                </tr>#}
+            {#                        <td><h5> Utilisateurs associés à <b>{{ client.raisonSociale }}</b></h5></td>#}
+            {#                        <td>#}
+            {#                            <div align="right" style="padding-right: 0px; padding-bottom: 2px"><a#}
+            {#                                        href="{{ path('fos_user_registration_register') }}">#}
+            {#                                    <i class="fas fa-user-plus"></i>Ajouter un utilisateur</a></div>#}
+            {#                            <table class="table1">#}
+            {#                                <tr class="row1 header blue">#}
+            {#                                    <th class="cell1">#}
+            {#                                        Nom#}
+            {#                                    </th>#}
+            {#                                    <th class="cell1">#}
+            {#                                        Prénom#}
+            {#                                    </th>#}
+            {#                                    <th class="cell1">#}
+            {#                                        Téléphone#}
+            {#                                    </th>#}
+            {#                                    <th class="cell1">#}
+            {#                                        E-Mail#}
+            {#                                    </th>#}
+            {#                                    <th class="cell1">#}
+            {#                                        Catégorie#}
+            {#                                    </th>#}
+            {#                                    <th class="cell1">#}
+            {#                                        <center>Action</center>#}
+            {#                                    </th>#}
+            {#                                </tr>#}
+            {#                                {% if utilisateurs is defined %}#}
+            {#                                    {% for utilisateur in utilisateurs %}#}
+            {#                                        {% if (utilisateur.enabled) and (utilisateur.confirmationToken == NULL) %}#}
+            {#                                            <tr class="row1">#}
+            {#                                        {% elseif not(utilisateur.enabled) and (utilisateur.confirmationToken == NULL) %}#}
+            {#                                            <tr class="row1" style="color: #800;">#}
+            {#                                        {% elseif not(utilisateur.enabled) %}#}
+            {#                                            <tr class="row1"  style="color: Gray;" >#}
+            {#                                        {% endif %}#}
+            {#                                        <td class="cell1">#}
+            {#                                            {{ utilisateur.nomUtilisateur }}#}
+            {#                                        </td>#}
+            {#                                        <td class="cell1">#}
+            {#                                            {{ utilisateur.prenomUtilisateur }}#}
+            {#                                        </td>#}
+            {#                                        <td class="cell1">#}
+            {#                                            {{ utilisateur.telephoneUtilisateur }}#}
+            {#                                        </td>#}
+            {#                                        <td class="cell1">#}
+            {#                                            {{ utilisateur.email }}#}
+            {#                                        </td>#}
+            {#                                        <td class="cell1">#}
+            {#                                            {% set role= utilisateur.roleUtilisateur %}#}
+            {#                                            {% if ( role == 'ROLE_ADMIN') %}Administrateur#}
+            {#                                            {% elseif ( role == 'ROLE_CONSULTANT') %}Consultant#}
+            {#                                            {% elseif ( role == 'ROLE_CLIENT') %}Client#}
+            {#                                            {% elseif ( role == 'ROLE_GESTIONNAIRE') %}Gestionnaire#}
+            {#                                            {% endif %}#}
+            {#                                        </td>#}
+            {#                                        <td class="cell1" data-title="Active">#}
+            {#                                            <center>#}
+            {#                                                <a href="{{ path('ConsulterUnUtilisateur', { 'id': utilisateur.id }) }}"><img#}
+            {#                                                            src="{{ asset('Template/Consulter.png') }}"#}
+            {#                                                            title="Consulter les informations de {{ utilisateur.nomUtilisateur }} {{ utilisateur.prenomUtilisateur }}"></a>#}
+            {#                                                <a href="{{ path('fos_user_profile_edit_utilisateur', { 'id': utilisateur.id }) }}"><img#}
+            {#                                                            src="{{ asset('Template/Editer.png') }}"#}
+            {#                                                            title="Modifier {{ utilisateur.nomUtilisateur }} {{ utilisateur.prenomUtilisateur }}"></a>#}
+            {#                                                <a href="{{ path('SupprimerUnUtilisateur', { 'id': utilisateur.id }) }}"><img#}
+            {#                                                            src="{{ asset('Template/SupprimerUser.png') }}"#}
+            {#                                                            title="Supprimer {{ utilisateur.nomUtilisateur }} {{ utilisateur.prenomUtilisateur }}"></a>#}
+            {#                                                <a href="ArchiverUtilisateur.php"><img#}
+            {#                                                            src="{{ asset('Template/Archiver.png') }}"#}
+            {#                                                            title="Déactiver {{ utilisateur.nomUtilisateur }} {{ utilisateur.prenomUtilisateur }}"></a>#}
+            {#                                            </center>#}
+            {#                                        </td>#}
+            {#                                        </tr>#}
+            {#                                    {% endfor %}#}
+            {#                                {% endif %}#}
+            {#                            </table>#}
+            {#                        </td>#}
+            {#                    {% endif %}#}
+            {#                </tr>#}
+            {#                <tr>#}
+            {#                    {% if (NBClientFacture != 0) %}#}
+            {#                        <td><h5> Clients facturés associés à <b>{{ client.raisonSociale }}</b></h5></td>#}
+            {#                        <td>#}
+            {#                            <div align="right" style="padding-right: 0px; padding-bottom: 2px"><a#}
+            {#                                        href="{{ path('AjouterClient') }}">#}
+            {#                                    0<img src="{{ asset('Template/Add.png') }}">Ajouter un client</a></div>#}
+            {#                            <table class="table1">#}
+            {#                                <tr class="row1 header blue">#}
+            {#                                    <th class="cell1">#}
+            {#                                        Code Client#}
+            {#                                    </th>#}
+            {#                                    <th class="cell1">#}
+            {#                                        Nom client facturé#}
+            {#                                    </th>#}
+            {#                                    <th class="cell1">#}
+            {#                                        Téléphone#}
+            {#                                    </th>#}
+            {#                                    <th class="cell1">#}
+            {#                                        E-Mail#}
+            {#                                    </th>#}
+            {#                                    <th width="100" class="cell1">#}
+            {#                                        <center> Action</center>#}
+            {#                                    </th>#}
+            {#                                </tr>#}
+            {#                                {% if client.clientFacture %}#}
+            {#                                    {% for clientF in client.clientFacture %}#}
+            {#                                        <tr class="row1">#}
+            {#                                            <td class="cell1">#}
+            {#                                                {{ clientF.codeClient }}#}
+            {#                                            </td>#}
+            {#                                            <td class="cell1">#}
+            {#                                                {{ clientF.raisonSociale }}#}
+            {#                                            </td>#}
+            {#                                            <td class="cell1">#}
+            {#                                                {{ clientF.telephone }}#}
+            {#                                            </td>#}
+            {#                                            <td class="cell1">#}
+            {#                                                {{ clientF.adresseMailClient }}#}
+            {#                                            </td>#}
+            {#                                            <td class="cell1" data-title="Active">#}
+            {#                                                <center>#}
+            {#                                                    <a href="{{ path('ConsulterUnClient', { 'id': clientF.id }) }}"><img#}
+            {#                                                                src="{{ asset('Template/Consulter.png') }}"#}
+            {#                                                                title="Consulter les informations de {{ clientF.raisonSociale }}"></a>#}
+            {#                                                    <a href="{{ path('ModifierClient', { 'id': clientF.id }) }}"><img#}
+            {#                                                                src="{{ asset('Template/Editer.png') }}"#}
+            {#                                                                title="Modifier {{ clientF.raisonSociale }}"></a>#}
+            {#                                                    <a href="{{ path('SupprimerUnClient', { 'id': clientF.id }) }}"><img#}
+            {#                                                                src="{{ asset('Template/SupprimerUser.png') }}"#}
+            {#                                                                title="Supprimer {{ clientF.raisonSociale }}"></a>#}
+            {#                                                </center>#}
+            {#                                            </td>#}
+            {#                                        </tr>#}
+            {#                                    {% endfor %}#}
+            {#                                {% endif %}#}
+            {#                            </table>#}
+            {#                        </td>#}
+            {#                    {% endif %}#}
+            {#                </tr>#}
+            {#                <tr>#}
+            {#                    {% if (NBFactures != 0) %}#}
+            {#                        <td><h5> Factures associées à <b>{{ client.raisonSociale }}</b></h5></td>#}
+            {#                        <td>#}
+            {#                            <div align="right" style="padding-right: 0px; padding-bottom: 2px"><a#}
+            {#                                        href="{{ path('AjouterFacture') }}"><img src="{{ asset('Template/add.png') }}">Ajouter#}
+            {#                                    une facture </a></div>#}
+            {#                            <table id="TableFacture" class="display" style="width:100%">#}
+            {#                                <thead>#}
+            {#                                <tr class="row1 header blue">#}
+            {#                                    <th class="cell1">#}
+            {#                                        N° Facture#}
+            {#                                    </th>#}
+            {#                                    <th class="cell1">#}
+            {#                                        Client#}
+            {#                                    </th>#}
+            {#                                    <th class="cell1">#}
+            {#                                        Date#}
+            {#                                    </th>#}
+            {#                                    <th class="cell1">#}
+            {#                                        Nature#}
+            {#                                    </th>#}
+            {#                                    <th class="cell1">#}
+            {#                                        Statut#}
+            {#                                    </th>#}
+            {#                                    <th class="cell1">#}
+            {#                                        Montant TTC#}
+            {#                                    </th>#}
+            {#                                    <th class="cell1">#}
+            {#                                        <center> Action</center>#}
+            {#                                    </th>#}
+            {#                                </tr>#}
+            {#                                </thead>#}
+            {#                                <tbody>#}
+            {#                                {% for Facture in Factures %}#}
+            {#                                    <tr class="row1">#}
+            {#                                        <td class="cell1">#}
+            {#                                            <center> {{ Facture.numeroFacture }} </center>#}
+            {#                                        </td>#}
+            {#                                        <td class="cell1">#}
+            {#                                            {{ Facture.client }}#}
+            {#                                        </td>#}
+            {#                                        <td class="cell1">#}
+            {#                                            <center> {{ Facture.dateFacture|date('d-m-Y') }} </center>#}
+            {#                                        </td>#}
+            {#                                        <td class="cell1">#}
+            {#                                            <center>  {{ Facture.natureFacture }} </center>#}
+            {#                                        </td>#}
+            {#                                        <td class="cell1">#}
+            {#                                            {{ Facture.statutFacture }}#}
+            {#                                            <button id="Bouton1" onclick="EnableSelect()"><img#}
+            {#                                                        src="{{ asset('Template/Editer.png') }}"></button>#}
+            {#                                        </td>#}
+            {#                                        <td class="cell1">#}
+            {#                                            <center> {{ Facture.montantTTCFacture }} </center>#}
+            {#                                        </td>#}
+            {#                                        <td class="cell1">#}
+            {#                                            <center>#}
+            {#                                                <a href="{{ path('ConsulterUneFacture', { 'id': Facture.id }) }}"><img#}
+            {#                                                            src="{{ asset('Template/Consulter.png') }}"#}
+            {#                                                            title="Consulter la facture"></a>#}
+            {#                                                {% if is_granted('ROLE_ADMIN') %}#}
+            {#                                                    <a href="{{ path('ModifierFacture', { 'id': Facture.id }) }}"><img#}
+            {#                                                                src="{{ asset('Template/Editer.png') }}"#}
+            {#                                                                title="Modifier la facture"></a>#}
+            {#                                                    <a href="{{ path('SupprimerUneFacture', { 'id': Facture.id }) }}"><img#}
+            {#                                                                src="{{ asset('Template/SupprimerUser.png') }}"#}
+            {#                                                                title="Supprimer la facture"></a>#}
+            {#                                                {% endif %}#}
+            {#                                                <a href="{{ asset('uploads/Factures/') }}{{ Facture.facturePDF }}"><img#}
+            {#                                                            src="{{ asset('Template/Telecharger.png') }}"#}
+            {#                                                            title="Télécharger la facture"></a>#}
+            {#                                            </center>#}
+            {#                                        </td>#}
+            {#                                    </tr>#}
+            {#                                {% endfor %}#}
+            {#                                </tbody>#}
+            {#                            </table>#}
+            {#                        </td>#}
+            {#                    {% endif %}#}
+            {#                </tr>#}
 
-{#                <tr>#}
-{#                    {% if(NBUtilisateur == 0 ) %}#}
-{#                        <td><h5><b>{{ client.raisonSociale }}</b> n'a pas d'utilisateurs !</h5></td>#}
-{#                        <td>#}
-{#                            <div align="right">#}
-{#                                <a href="{{ path('fos_user_registration_register') }}">#}
-{#                                    <i class="fas fa-user-plus"></i> Ajouter un utilisateur</a>#}
-{#                            </div>#}
-{#                        </td>#}
-{#                    {% endif %}#}
-{#                </tr>#}
-{#                <tr>#}
-{#                    {% if(NBClientFacture == 0 ) %}#}
-{#                        <td>#}
-{#                            <h5><b>{{ client.raisonSociale }}</b> n'a pas de clients facturés !</h5>#}
-{#                        </td>#}
-{#                        <td>#}
-{#                            <div align="right" style="padding-right: 0px; padding-bottom: 2px">#}
-{#                                <a href="{{ path('AjouterClient') }}">#}
-{#                                    <i class="fas fa-plus-circle"></i>Ajouter un client</a>#}
-{#                            </div>#}
-{#                        </td>#}
-{#                    {% endif %}#}
-{#                </tr>#}
-{#                <tr>#}
-{#                    {% if(NBFactures == 0 ) %}#}
-{#                        <td><h5><b>{{ client.raisonSociale }}</b> n'a pas de factures !</h5></td>#}
-{#                        <td>#}
-{#                            <div align="right" style="padding-right: 0px; padding-bottom: 2px"><a#}
-{#                                        href="{{ path('AjouterFacture') }}">#}
-{#                                    <i class="fas fa-plus-circle"></i>Ajouter une#}
-{#                                    facture </a></div>#}
-{#                        </td>#}
-{#                    {% endif %}#}
-{#                </tr>#}
-{#            </table>#}
+            {#                <tr>#}
+            {#                    {% if(NBUtilisateur == 0 ) %}#}
+            {#                        <td><h5><b>{{ client.raisonSociale }}</b> n'a pas d'utilisateurs !</h5></td>#}
+            {#                        <td>#}
+            {#                            <div align="right">#}
+            {#                                <a href="{{ path('fos_user_registration_register') }}">#}
+            {#                                    <i class="fas fa-user-plus"></i> Ajouter un utilisateur</a>#}
+            {#                            </div>#}
+            {#                        </td>#}
+            {#                    {% endif %}#}
+            {#                </tr>#}
+            {#                <tr>#}
+            {#                    {% if(NBClientFacture == 0 ) %}#}
+            {#                        <td>#}
+            {#                            <h5><b>{{ client.raisonSociale }}</b> n'a pas de clients facturés !</h5>#}
+            {#                        </td>#}
+            {#                        <td>#}
+            {#                            <div align="right" style="padding-right: 0px; padding-bottom: 2px">#}
+            {#                                <a href="{{ path('AjouterClient') }}">#}
+            {#                                    <i class="fas fa-plus-circle"></i>Ajouter un client</a>#}
+            {#                            </div>#}
+            {#                        </td>#}
+            {#                    {% endif %}#}
+            {#                </tr>#}
+            {#                <tr>#}
+            {#                    {% if(NBFactures == 0 ) %}#}
+            {#                        <td><h5><b>{{ client.raisonSociale }}</b> n'a pas de factures !</h5></td>#}
+            {#                        <td>#}
+            {#                            <div align="right" style="padding-right: 0px; padding-bottom: 2px"><a#}
+            {#                                        href="{{ path('AjouterFacture') }}">#}
+            {#                                    <i class="fas fa-plus-circle"></i>Ajouter une#}
+            {#                                    facture </a></div>#}
+            {#                        </td>#}
+            {#                    {% endif %}#}
+            {#                </tr>#}
+            {#            </table>#}
             <br>
-{#            <br><br>#}
+            {#            <br><br>#}
             <table align="center">
                 <tr>
                     <td>
                         <a href="{{ path('ConsulterClient') }}">
-                            <button class="btn btn-primary btn-block">
+                            <button class="btn btn-secondary btn-block">
                                 <i class="fas fa-backward fa-lg" title="Retour à la liste de tous les clients"></i>
                             </button>
                         </a>
@@ -444,4 +444,5 @@
         </div>
         </div>
     {% endif %}
+
 {% endblock %}

@@ -16,9 +16,9 @@
 {% endblock %}
 {% block Contenu %}
     <div class="col-md-12">
-        <div class="card">
+        <div class="card card-primary card-outline">
             <div class="card-header with-border">
-                <h2 class="card-title" style="color:#1E5584">Ajouter une activité</h2>
+                <h2 class="card-title">Ajouter une activité</h2>
             </div>
             <div class="card-tools pull-center">
             </div>
@@ -62,7 +62,7 @@
 {% endblock %}
 {% block script %}
     {{ parent() }}
-    <script src="{{ asset('Template2/plugins/jquery/jquery.min.js') }}"></script>
+    {#<script src="{{ asset('Template2/plugins/jquery/jquery.min.js') }}"></script>#}
     <script>
         $(document).ready(function () {
             $('div #timsoft_tasksbundle_activite_tasks').parent().parent().hide();

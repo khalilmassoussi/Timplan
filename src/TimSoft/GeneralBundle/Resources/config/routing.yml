@@ -130,3 +130,8 @@ oCalendar:
   path:    /oCalendar
   defaults:  { _controller: TimSoftGeneralBundle:Default:oCalendar }
 
+editPlanning:
+  path:    /planning/edit/{id}
+  defaults:  { _controller: TimSoftGeneralBundle:Planning:edit }
+  options:
+    expose: true

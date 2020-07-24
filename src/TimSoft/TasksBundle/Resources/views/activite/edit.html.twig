@@ -11,14 +11,14 @@
 
 
 {% block Navigation %}
-    <li class="breadcrumb-item">Activités</li>
+    <li class="breadcrumb-item"><a href="{{ path('activite_index') }}">Activités</a></li>
     <li class="breadcrumb-item active">Modifier Activité</li>
 {% endblock %}
 {% block Contenu %}
     <div class="col-md-12">
-        <div class="card">
+        <div class="card card-primary card-outline">
             <div class="card-header with-border">
-                <h2 class="card-title" style="color:#1E5584">Modification de l'activité {{ activite.libelle }}</h2>
+                <h2 class="card-title">Modification de l'activité {{ activite.libelle }}</h2>
             </div>
             <div class="card-tools pull-center">
             </div>

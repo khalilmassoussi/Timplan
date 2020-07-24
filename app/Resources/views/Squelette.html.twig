@@ -149,7 +149,7 @@
     {% elseif ( role == 'ROLE_GESTIONNAIRE') %}{% set RoleUser = 'Gestionnaire' %}
     {% elseif ( role == 'ROLE_CHEF') %}{% set RoleUser = 'BU Manager' %}
     {% endif %}
-    <body class="skin-blue sidebar-mini  pace-primary pace-done">
+    <body class="skin-blue sidebar-mini pace-primary pace-done">
     <div class="wrapper">
         <nav class="main-header navbar navbar-expand navbar-white navbar-light">
             <!-- Left navbar links -->
@@ -161,9 +161,9 @@
 
                     <a href="{{ path('tim_soft_client_homepage') }}" class="nav-link">Accueil</a>
                 </li>
-                <li class="nav-item d-none d-sm-inline-block">
-                    <a href="#" class="nav-link">Contact</a>
-                </li>
+                {#<li class="nav-item d-none d-sm-inline-block">#}
+                {#<a href="#" class="nav-link">Contact</a>#}
+                {#</li>#}
             </ul>
 
             <!-- Right navbar links -->
@@ -643,7 +643,6 @@
     </div>
 {% endblock %}
 {% block script %}
-
     <script>
         /**
          * This function will be triggered each time a data comes from the server
@@ -721,7 +720,6 @@
     <script src="{{ asset('Template2/plugins/fullcalendar-bootstrap/main.min.js') }}"></script>
 
 
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/locale/fr.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
     <link rel="stylesheet" type="text/css"
@@ -731,6 +729,36 @@
     <script src="{{ asset('Template2/plugins/pace-progress/pace.min.js') }}"></script>
     {#    <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>#}
     <script>
+        function editPlanningModal(event, calendar) {
+            $.ajax({
+                url: Routing.generate('editPlanning', {id: event.event.id}),
+                method: 'post',
+                // dataType: 'json',
+                success: function (data) {
+                    $("#renderEdit").html(data);
+                    $('#editPlanning').modal();
+                    $('#editPlanning').on('hidden.bs.modal', function () {
+                        calendar.refetchEvents();
+                    });
+                },
+            });
+        }
+
+        function editTaskEvent(event, calendar) {
+            $.ajax({
+                url: Routing.generate('taskevent_edit', {id: event.event.id}),
+                method: 'post',
+                // dataType: 'json',
+                success: function (data) {
+                    $("#renderEdit").html(data);
+                    $('#editTask').modal();
+                    $('#editTask').on('hidden.bs.modal', function () {
+                        calendar.refetchEvents();
+                    });
+                },
+            });
+        }
+
         $(document).ready(function () {
             $('#addTaskEvent').on('click', function (e) {
                 e.preventDefault();

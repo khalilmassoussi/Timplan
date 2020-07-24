@@ -100,11 +100,19 @@
 
     </style>
     <div class="col-md-12">
-        <div class="card">
-            {#            <div class="card-header with-border">#}
-            {#                <h2 class="card-title" style="color:#1E5584">Les plannings par utilisateur</h2>#}
-            {#            </div>#}
-            <div class="card-tools pull-center">
+        <div class="card card-outline card-primary">
+            <div class="card-header with-border">
+                <h3 class="card-title">
+                    <a href="#" id="addTaskButton">
+                        <button class="btn btn-primary">Ajouter une activité</button>
+                    </a>
+                </h3>
+                <div class="card-tools pull-center">
+                    <a href="#" id="export" class="btn btn-info btn-sm"
+                       title="Télécharger le planning">
+                        <i class="fas fa-download fa-2x"></i>
+                    </a>
+                </div>
             </div>
             <div class="card-body">
                 <div class="col-md-12">
@@ -115,17 +123,6 @@
                                 <option value="{{ client.id }}">{{ client.raisonSociale }}</option>
                             {% endfor %}
                         </select>
-                    </div>
-                    <div align="right">
-                        <a style="text-align: right" href="#" id="export" class="btn btn-default"
-                           title="Télécharger le planning">
-                            <i class="fas fa-download fa-2x"></i>
-                        </a>
-                    </div>
-                    <div align="left">
-                        <a href="#" id="addTaskButton">
-                            <button class="btn btn-primary">Ajouter une activité</button>
-                        </a>
                     </div>
                     <div class="row">
                         <div id='calendar'></div>
@@ -217,7 +214,7 @@
                     header: {
                         left: 'prev,next today',
                         center: 'title',
-                        right: 'dayGridMonth,dayGridWeek,timeGridMonth,dayGridDay'
+                        right: 'dayGridMonth,dayGridWeek,timeGridDay'
                     },
                     editable: (app_user === "ROLE_ADMIN"),
                     eventDurationEditable: false,
@@ -266,51 +263,9 @@
                     forceEventDuration: true,
                     eventClick: function (event) {
                         if (event.event.extendedProps.type != 'TaskEvent') {
-                            var xhr = $.ajax({
-                                url: '{{ path('plans') }}',
-                                data: 'action=update&id=' + event.event.id,
-                                type: "POST",
-                                async: false,
-                                success: function (data) {
-                                    $.ajax({
-                                        url: '{{ path('getUsersBySociete') }}',
-                                        data: 'action=update&id=' + data.Client.id,
-                                        type: "POST",
-                                        async: false,
-                                        success: function (data) {
-                                            // console.log(data);
-                                            $('#users1').empty();
-                                            $.each(data, function (i, item) {
-                                                // console.log(item);
-                                                // console.log("--------------------");
-                                                $('#users1').append('<option value="' + item.id + '">' + item.nomUtilisateur + ' ' + item.prenomUtilisateur + '</option>');
-                                            });
-                                            // $('#users1').val(null).trigger('change')
-                                        },
-                                        error: function () {
-                                            alert("Vous ne pouvez pas faire cette action");
-                                        },
-                                    });
-                                    CalendarModalData(data);
-                                },
-                                error: function () {
-                                    alert("erreur lors de l'appel de l'url dans POST event/drop : contactez l'administrateur du site");
-                                },
-
-                            });
+                            editPlanningModal(event, calendar);
                         } else {
-                            $.ajax({
-                                url: Routing.generate('taskevent_edit', {id: event.event.id}),
-                                method: 'post',
-                                // dataType: 'json',
-                                success: function (data) {
-                                    $("#renderEdit").html(data);
-                                    $('#editTask').modal();
-                                    $('form[name="edit"]').submit(function () {
-                                        calendar.refetchEvents();
-                                    });
-                                },
-                            });
+                            editTaskEvent(event, calendar);
                         }
                     },
                     eventResize: function (event) {
@@ -351,6 +306,34 @@
                                 if (event.event.allDay === false) {
                                     $(event.el).append('<p>Heure: ' + moment(event.event.start).format("HH:mm") + '</p>');
                                 }
+                                $(event.el).append('<div class="ribbon-wrapper"><div class="ribbon">' + event.event.extendedProps.etiquette + '</div></div>');
+                                if (event.event.extendedProps.etiquette === 'Important') {
+                                    $(event.el).find('div.ribbon').each(function (index) {
+                                        // $(this).addClass('badge-warning');
+                                        $(this).addClass('bg-warning');
+                                        $(this).css('font-size', '80%');
+
+                                    });
+                                } else if (event.event.extendedProps.etiquette === 'Urgent') {
+                                    $(event.el).find('div.ribbon').each(function (index) {
+                                        $(this).addClass('bg-danger');
+                                        // $(this).css('font-size', '0.6vw');
+
+                                    });
+                                } else if (event.event.extendedProps.etiquette === 'Moyen') {
+                                    $(event.el).find('div.ribbon').each(function (index) {
+                                        $(this).addClass('bg-info');
+                                        // $(this).css('font-size', '0.6vw');
+
+                                    });
+                                } else if (event.event.extendedProps.etiquette === 'Peu') {
+                                    $(event.el).find('div.ribbon').each(function (index) {
+                                        $(this).addClass('bg-light');
+                                        // $(this).css('font-size', '0.6vw');
+
+                                    });
+                                }
+
                             } else {
                                 $(event.el).find('.fc-title').prepend('<b>Client: </b>');
                                 $(event.el).append('<b>Libellé:</b> ' + event.event.extendedProps.libelle +
@@ -366,6 +349,36 @@
                         } else if (event.view.type === 'dayGridMonth' && event.event.allDay) {
                             $(event.el).height('auto');
                             $(event.el).append(event.event.extendedProps.libelle);
+                        }
+                        if (event.event.extendedProps.type === 'TaskEvent') {
+                            $(event.el).find('.fc-content').css('width', '90%');
+                            $(event.el).append('<div class="ribbon-wrapper"><div class="ribbon">' + event.event.extendedProps.etiquette + '</div></div>');
+                            if (event.event.extendedProps.etiquette === 'Important') {
+                                $(event.el).find('div.ribbon').each(function (index) {
+                                    // $(this).addClass('badge-warning');
+                                    $(this).addClass('bg-warning');
+                                    $(this).css('font-size', '70%');
+
+                                });
+                            } else if (event.event.extendedProps.etiquette === 'Urgent') {
+                                $(event.el).find('div.ribbon').each(function (index) {
+                                    $(this).addClass('bg-danger');
+                                    // $(this).css('font-size', '0.6vw');
+
+                                });
+                            } else if (event.event.extendedProps.etiquette === 'Moyen') {
+                                $(event.el).find('div.ribbon').each(function (index) {
+                                    $(this).addClass('bg-info');
+                                    // $(this).css('font-size', '0.6vw');
+
+                                });
+                            } else if (event.event.extendedProps.etiquette === 'Peu') {
+                                $(event.el).find('div.ribbon').each(function (index) {
+                                    $(this).addClass('bg-light');
+                                    // $(this).css('font-size', '0.6vw');
+
+                                });
+                            }
                         }
                     },
                     lazyFetching: false,

@@ -2,25 +2,19 @@
 
 namespace TimSoft\TasksBundle\Form;
 
-use Doctrine\ORM\EntityManagerInterface;
-use Evercode\DependentSelectBundle\Form\Type\DependentFilteredEntityType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\RadioType;
 use Symfony\Component\Form\Extension\Core\Type\RangeType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use TimSoft\TasksBundle\Entity\Activite;
-use function Matrix\add;
 
 class TaskEventType extends AbstractType
 {
@@ -111,6 +105,7 @@ class TaskEventType extends AbstractType
             ])
             ->add('motif', TextType::class, array(
                 'attr' => ['placeholder' => 'Motif de blocage'],
+                'required' => false,
             ));
         $formModifier = function (FormInterface $form, Activite $activite = null) {
             $tasks = null === $activite ? [] : $activite->getTasks();

@@ -38,7 +38,7 @@
         </div>
     {% endfor %}
     <div class="col-md-12">
-        <div class="card">
+        <div class="card card-outline card-primary">
             {#            <div class=" card-header with-border">#}
             {#                <h2 class="card-title" style="color:#1E5584">Importation des commandes</h2>#}
             {#            </div>#}
@@ -64,25 +64,27 @@
 
                 </div>
             </div>
-            <table align="center" width="50%">
-                <tr>
-                    <td width="50%">
-                        <div class="form-group" align="center">
-                            <button type="reset" class="btn btn-default btn-block">
-                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                                Annuler
-                            </button>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="form-group" align="center">
-                            <button type="submit" class="btn btn-primary btn-block"><span
-                                        class="glyphicon glyphicon-import" aria-hidden="true"></span>Importer
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-            </table>
+            <div class="card-footer">
+                <table  class="float-right">
+                    <tr>
+                        <td width="50%">
+                            <div class="form-group" align="center">
+                                <button type="reset" class="btn btn-default btn-block">
+                                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                    Annuler
+                                </button>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group" align="center">
+                                <button type="submit" class="btn btn-primary btn-block"><span
+                                            class="glyphicon glyphicon-import" aria-hidden="true"></span>Importer
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
             {{ form_widget(form._token) }}
             {{ form_end(form) }}
 

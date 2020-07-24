@@ -17,40 +17,42 @@
     {#<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"> </script> #}
     {#<link rel="stylesheet" hre="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css#}
     {#"></link>#}
-    <div class="col-md-12">
-
-        <!--   <div style="border: 2px solid #1E5584; padding: 3px; background-color: #FFFFFF; -moz-border-radius-topleft: 5px; -moz-border-radius-topright: 5px; -moz-border-radius-bottomright: 5px; -moz-border-radius-bottomleft: 5px;">-->
-        <div class="card card-primary">
-            {#            <div class="card-header with-border">#}
-            {#                <h2 class="card-title" style="color:#1E5584">Liste de toutes les commandes </h2>#}
-            {#            </div>#}
+    <div class="col-md-2">
+        <div class="card card-warning card-outline">
+            {#<div class="card-header">#}
+            {#</div>#}
             <div class="card-body">
-                <br>
                 <div class="container">
-                    <div class="row">
-                        <div class="col">
-                    <span style="width: 20%">
+                    <div class="row justify-content-center">
+                        <div class="mb-1">
+                            <button class="btn btn-info" id="plus">Afficher toutes les précommandes</button>
+                        </div>
+                        <div class="btn-group">
                             {% if AutorisationAcces('preCommandeImport' , Utilisateur) %}
-                                <a href="{{ path('preCommandeImport') }}" class="btn btn-default">
+                                <a href="{{ path('preCommandeImport') }}" class="btn btn-success">
                                     <i class="fas fa-file-upload fa-2x" title="Importer des précommandes"></i>
                                 </a>
                             {% endif %}
-                        {#                    {% if AutorisationAcces('ImportCmd' , Utilisateur) %}#}
-                        <a href="{{ path('export') }}" class="btn btn-default">
-                            <i class="fas fa-file-download fa-2x" title="Exporter les précommandes"></i>
-{#                            Exporter les commandes#}
-                        </a>
-                        {#                    {% endif %}#}
-                    </span>
-                        </div>
-                        <div class="col" style="text-align: right">
-                            <button class="btn btn-primary" id="plus">Afficher toutes les précommandes</button>
+                            <a href="{{ path('export') }}" class="btn btn-secondary">
+                                <i class="fas fa-file-download fa-2x" title="Exporter les précommandes"></i>
+                            </a>
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-10">
+        <!--   <div style="border: 2px solid #1E5584; padding: 3px; background-color: #FFFFFF; -moz-border-radius-topleft: 5px; -moz-border-radius-topright: 5px; -moz-border-radius-bottomright: 5px; -moz-border-radius-bottomleft: 5px;">-->
+        <div class="card card-primary card-outline">
+            <div class="card-header with-border">
+                <h2 class="card-title">Liste de toutes les précommandes </h2>
+            </div>
+            <div class="card-body">
+
+
                 {#                <span><b>Date: </b><input type="text" name="daterange" value="01/01/2018 - 01/15/2018"#}
                 {#                                          class="daterange"/></span>#}
-                <br>
                 <table id="TableClient" class="table table-striped dataTable" style="width:100%"
                        cellspacing="0">
                     <thead>
@@ -125,7 +127,8 @@
                             <td>
                                 {% if AutorisationAcces('preCommandeAfficher' , Utilisateur) %}
                                     <center>
-                                        <a href="{{ path('preCommandeAfficher', { 'id': cmd.id }) }}">
+                                        <a
+                                                href="{{ path('preCommandeAfficher', { 'id': cmd.id }) }}">
                                             <i class="fas fa-search fa-lg" title="Consulter la précommande"></i>
                                         </a>
                                     </center>
@@ -134,25 +137,6 @@
                         </tr>
                     {% endfor %}
                     </tbody>
-                    {#                    <tfoot>#}
-                    {#                    <tr>#}
-                    {#                        <th>#}
-                    {#                            N° Commande#}
-                    {#                        </th>#}
-                    {#                        <th>#}
-                    {#                            Date#}
-                    {#                        </th>#}
-                    {#                        <th>#}
-                    {#                            Client#}
-                    {#                        </th>#}
-                    {#                        <th>#}
-                    {#                            Bu#}
-                    {#                        </th>#}
-                    {#                        <th>#}
-                    {#                            Action#}
-                    {#                        </th>#}
-                    {#                    </tr>#}
-                    {#                    </tfoot>#}
                 </table>
                 <br>
             </div>
@@ -249,10 +233,9 @@
                 },
                 initComplete: function () {
                     let that = this;
-
                     that.api().columns().every(function (index) {
                         let column = this;
-                        var select = $('<select class="select2" id="select"><option value=""></option></select>')
+                        var select = $('<select class="select2"><option value=""></option></select>')
                             .appendTo($(column.header()))
                             .on('change', function () {
                                 var val = $.fn.dataTable.util.escapeRegex(
@@ -262,10 +245,9 @@
                                     .search(val)
                                     .draw();
                             });
-                        $('#select').select2();
                         if (index === 1) {
                             $("#Date select").css("display", "none");
-                            $("#dates").append('<div class="input-group"><div class="input-group-prepend"><span class="input-group-text"><i class="glyphicon glyphicon-calendar fa fa-calendar"></span></i></div><input type="text" style="width: 200px" name="daterange" class="form-control daterange"/></div>');
+                            $("#dates").append('<div class="input-group" style="flex-wrap: nowrap"><div class="input-group-prepend"><span class="input-group-text"><i class="glyphicon glyphicon-calendar fa fa-calendar"></span></i></div><input type="text" style="width: 200px" name="daterange" class="form-control daterange"/></div>');
 
                         }
                         if (index === 4) {
@@ -301,15 +283,6 @@
                 ],
             });
             $('.daterange').daterangepicker({
-                ranges: {
-                    "Today": [moment(), moment()],
-                    'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                    '7 last days': [moment().subtract(6, 'days'), moment()],
-                    '30 last days': [moment().subtract(29, 'days'), moment()],
-                    'This month': [moment().startOf('month'), moment().endOf('month')],
-                    'Last month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
-                    'Blank date': [moment("01-01-0001"), moment("01-01-0001")]
-                },
                 autoUpdateInput: false,
                 opens: "left",
                 locale: {
@@ -396,7 +369,6 @@
 
             });
 
-
             $(".daterange").on('cancel.daterangepicker', function (ev, picker) {
                 ev.preventDefault();
                 $(this).val('');
@@ -428,10 +400,12 @@
                         alert("Vous ne pouvez pas faire cette action");
                     },
                 });
-            })
+            });
+
+            // $('.select2').each(function () {
+            //     $(this).select2();
+            // });
         });
-
-
 
     </script>
 {% endblock %}

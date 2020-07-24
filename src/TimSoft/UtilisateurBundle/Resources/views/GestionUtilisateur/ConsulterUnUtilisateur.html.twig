@@ -244,7 +244,7 @@
                         <td>
                             {% if (utilisateur.id != app.user.id ) %}
                                 <a href="{{ path('ConsulterUtilisateur') }}">
-                                    <button type="submit" class="btn btn-default btn-block">
+                                    <button type="submit" class="btn btn-secondary btn-block">
                                         <i class="fas fa-backward fa-lg"
                                            title="Retour à la liste de tous les utilisateurs"></i>
                                     </button>
@@ -262,7 +262,7 @@
                         {% else %}
                             <td>
                                 <a href="{{ path('fos_user_profile_edit') }}"
-                                   class="btn btn-primary btn-block btn-flat">
+                                   class="btn btn-primary btn-block">
                                     <i class="fas fa-edit fa-lg"
                                        title="Modifier Mon Profil"></i>
                                 </a>
@@ -288,7 +288,7 @@
                                     </a>
                                 {% else %}
                                     <a href="{{ path('DeactiverUnUtilisateur', { 'id': utilisateur.id }) }}">
-                                        <button type="submit" class="btn btn-secondary btn-block">
+                                        <button type="submit" class="btn btn-warning btn-block">
                                             <i class="fas fa-ban fa-lg"
                                                title="Désactiver le compte de {{ utilisateur.nomUtilisateur }} {{ utilisateur.prenomUtilisateur }}"></i>
                                         </button>

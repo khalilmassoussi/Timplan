@@ -65,17 +65,14 @@
             </div>
         {% endfor %}
         <!--   <div style="border: 2px solid #1E5584; padding: 3px; background-color: #FFFFFF; -moz-border-radius-topleft: 5px; -moz-border-radius-topright: 5px; -moz-border-radius-bottomright: 5px; -moz-border-radius-bottomleft: 5px;">-->
-        <div class="card">
+        <div class="card card-outline card-primary">
             <div class="card-header with-border">
                 <h2 class="card-title" style="color:#1E5584">Liste de tous les clients</h2>
-            </div>
-
-            <div class="card-body">
-                <br>
-                {% if ('Gestion des clients' in Rubriques) %}
-                    <div align="right" style="padding-right: 0px; padding-bottom: 5px">
+                <div class="card-tools">
+                    {% if ('Gestion des clients' in Rubriques) %}
                         {% if AutorisationAcces('AjouterClient' , Utilisateur) %}
-                            <a href="{{ path('AjouterClient') }}" class="btn btn-default"><i class="fas fa-plus"></i>
+                            <a href="{{ path('AjouterClient') }}" class="btn btn-default"><i
+                                        class="fas fa-plus"></i>
                                 Ajouter
                                 un client </a>
                         {% endif %}
@@ -84,9 +81,12 @@
                                         class="fas fa-file-import"></i> Importer
                                 des clients</a>
                         {% endif %}
-                    </div>
-                {% endif %}
-                <br>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="card-body">
+
                 <table id="TableClient" class="table table-bordered table-striped dataTable" style="width:100%">
                     <thead>
                     <tr class="row1 header blue">
@@ -124,18 +124,27 @@
                             </td>
                             <td class="cell1" style="text-align: center">
                                 {% if AutorisationAcces('ConsulterUnClient' , Utilisateur) %}
-                                    <a href="{{ path('ConsulterUnClient', { 'id': client.id }) }}"><i
-                                                class="fas fa-search fa-lg" title="Consulter {{ client.raisonSociale }}"></i></a>
+                                    <a class="btn btn-default btn-sm"
+                                       href="{{ path('ConsulterUnClient', { 'id': client.id }) }}"><i
+                                                class="fas fa-search fa-lg"
+                                                title="Consulter {{ client.raisonSociale }}"></i>
+                                    </a>
                                 {% endif %}
                                 {% if AutorisationAcces('ModifierClient' , Utilisateur) %}
-                                    <a href="{{ path('ModifierClient', { 'id': client.id }) }}"><i
-                                                class="fas fa-edit fa-lg" title="Modifier {{ client.raisonSociale }}"></i></a>
+                                    <a class="btn btn-primary btn-sm"
+                                       href="{{ path('ModifierClient', { 'id': client.id }) }}"><i
+                                                class="fas fa-edit fa-lg"
+                                                title="Modifier {{ client.raisonSociale }}"></i>
+                                    </a>
                                 {% endif %}
                                 {% if AutorisationAcces('SupprimerUnClient' , Utilisateur) %}
-                                    <a href="{{ path('SupprimerUnClient', { 'id': client.id }) }}"><i
-                                                class="fas fa-trash-alt fa-lg"
-                                                title="Supprimer {{ client.raisonSociale }}"
-                                        style="color: #dc3545"></i></a>
+                                    <a class="btn btn-danger btn-sm"
+                                       href="{{ path('SupprimerUnClient', { 'id': client.id }) }}">
+                                        <i class="fas fa-trash-alt fa-lg"
+                                           title="Supprimer {{ client.raisonSociale }}">
+
+                                        </i>
+                                    </a>
                                 {% endif %}
                             </td>
                         </tr>

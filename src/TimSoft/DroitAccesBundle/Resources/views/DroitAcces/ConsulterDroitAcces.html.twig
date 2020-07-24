@@ -43,7 +43,7 @@
 {% block SideBar %}{% endblock %}
 {% block Contenu %}
     <div class="col-md-12">
-        <div class="card">
+        <div class="card card-primary card-outline">
             <div class="card-body">
                 <table id="TableDroit" class="table table-bordered table-hover dataTable" style="width:100%">
                     <thead>
@@ -146,10 +146,14 @@
                                 {% endif %}
                             </td>
                             {% if AutorisationAcces('ModifierDroitAcces' , Utilisateur) %}
-                                <td class="cell1">
-                                    <center><a href="{{ path('ModifierDroitAcces', { 'id': Droit.id }) }}"><img
-                                                    src="{{ asset('Template/Editer.png') }}"
-                                                    title="Modifier le droit d'accès"></a></center>
+                                <td class="cell1 text-center">
+                                    <a class="btn btn-primary btn-sm"
+                                       href="{{ path('ModifierDroitAcces', { 'id': Droit.id }) }}">
+                                        <i class="fas fa-edit fa-lg"
+                                           title="Modifier le droit d'accès {{ Droit.nomDroit }}"></i>
+                                        {#<img src="{{ asset('Template/Editer.png') }}"#}
+                                        {#title="Modifier le droit d'accès">#}
+                                    </a>
                                 </td>
                             {% endif %}
                         </tr>

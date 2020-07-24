@@ -3,6 +3,10 @@
 namespace TimSoft\DroitAccesBundle\Extensions;
 
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use TimSoft\CommandeBundle\Entity\LigneCommande;
+use TimSoft\CommandeBundle\Entity\PreLigneCommande;
+use TimSoft\CommandeBundle\Entity\PreTeteCommande;
+use TimSoft\CommandeBundle\Entity\TeteCommande;
 
 class TwigExtensions extends \Twig_Extension
 {
@@ -365,5 +369,16 @@ class TwigExtensions extends \Twig_Extension
         return 'Twig myCustomName Extensions';
     }
 
+    public function getTests()
+    {
+        return [
+            new \Twig_SimpleTest('PreTeteCommande', function (TeteCommande $teteCommande) {
+                return $teteCommande instanceof PreTeteCommande;
+            }),
+            new \Twig_SimpleTest('PreLigneCommande', function (LigneCommande $ligneCommande) {
+                return $ligneCommande instanceof PreLigneCommande;
+            })
+        ];
+    }
 
 }

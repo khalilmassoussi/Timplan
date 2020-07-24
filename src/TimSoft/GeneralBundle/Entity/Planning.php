@@ -2,6 +2,7 @@
 
 namespace TimSoft\GeneralBundle\Entity;
 
+
 use CalendarBundle\Entity\Event;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -281,6 +282,30 @@ class Planning extends Event implements \JsonSerializable
     public function setLieu($lieu)
     {
         $this->lieu = $lieu;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function isAllDay()
+    {
+        return $this->allDay;
+    }
+
+    /**
+     * @param mixed $allDay
+     */
+    public function setAllDay($allDay): void
+    {
+        $this->allDay = $allDay;
+    }
+
+    /**
+     * @param mixed $start
+     */
+    public function setStart($start): void
+    {
+        $this->start = $start;
     }
 
     /**

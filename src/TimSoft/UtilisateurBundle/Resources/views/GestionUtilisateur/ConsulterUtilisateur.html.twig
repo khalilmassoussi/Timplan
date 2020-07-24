@@ -6,7 +6,7 @@
 
 {% block Section %}
     Gestion des utilisateurs
-    <small>Consulter la liste des utilisateurs</small>
+    {#<small>Consulter la liste des utilisateurs</small>#}
 {% endblock %}
 
 {% block Navigation %}
@@ -84,11 +84,17 @@
         </div>
     {% endfor %}
     <div class="col-md-12">
-        <div class="card">
+        <div class="card card-outline card-primary">
+            <div class="card-header">
+                <h2 class="card-title">Consulter la liste des utilisateurs</h2>
+                <div class="card-tools">
+                    <a href="{{ path('fos_user_registration_register') }}" class="btn-primary btn btn-sm"><i
+                                class="fas fa-user-plus"></i></a>
+                </div>
+            </div>
             <div class="card-body">
                 <div align="right" style="padding-right: 0px; padding-bottom: 5px">
-                    <a href="{{ path('fos_user_registration_register') }}" class="btn-primary btn"><i
-                                class="fas fa-user-plus"></i> Ajouter un utilisateur</a>
+
                 </div>
                 <br>
                 <table id="TableUtilisateur" class="table table-bordered table-striped dataTable" style="width:100%">
@@ -153,29 +159,34 @@
                                 {% elseif ( role == 'ROLE_CHEF') %}BU Manager
                                 {% endif %}
                             </td>
-                            <td class="cell1">
-                                <center><a href="{{ path('ConsulterUnUtilisateur', { 'id': utilisateur.id }) }}">
+                            <td class="cell1" style="white-space:nowrap;">
+                                <a class="btn btn-default btn-sm"
+                                           href="{{ path('ConsulterUnUtilisateur', { 'id': utilisateur.id }) }}">
                                         <i class="fas fa-search fa-lg"
                                            title="Consulter les informations de {{ utilisateur.nomUtilisateur }} {{ utilisateur.prenomUtilisateur }}"></i>
                                     </a>
-                                    <a href="{{ path('fos_user_profile_edit_utilisateur', { 'id': utilisateur.id }) }}">
+                                    <a class="btn btn-primary btn-sm"
+                                       href="{{ path('fos_user_profile_edit_utilisateur', { 'id': utilisateur.id }) }}">
                                         <i class="fas fa-edit fa-lg"
                                            title="Modifier {{ utilisateur.nomUtilisateur }} {{ utilisateur.prenomUtilisateur }}"></i>
                                     </a>
-                                    <a href="{{ path('SupprimerUnUtilisateur', { 'id': utilisateur.id }) }}">
+                                    <a class="btn btn-danger btn-sm"
+                                       href="{{ path('SupprimerUnUtilisateur', { 'id': utilisateur.id }) }}">
                                         <i class="fas fa-trash-alt fa-lg"
                                            title="Supprimer {{ utilisateur.nomUtilisateur }} {{ utilisateur.prenomUtilisateur }}"></i>
                                     </a>
                                     {% if not(utilisateur.statutProfil) %}
-                                        <a href="{{ path('ReactiverUtilisateur', { 'id': utilisateur.id }) }}">
-                                            <i class="fas fa-arrow-circle-up fa-lg" style="color: green"
+                                        <a class="btn btn-success btn-sm"
+                                           href="{{ path('ReactiverUtilisateur', { 'id': utilisateur.id }) }}">
+                                            <i class="fas fa-arrow-circle-up fa-lg"
                                                title="Réactiver {{ utilisateur.nomUtilisateur }} {{ utilisateur.prenomUtilisateur }}"></i></a>
                                     {% else %}
-                                        <a href="{{ path('DeactiverUnUtilisateur', { 'id': utilisateur.id }) }}">
-                                            <i class="fas fa-ban fa-lg" style="color: red"
+                                        <a class="btn btn-warning btn-sm"
+                                           href="{{ path('DeactiverUnUtilisateur', { 'id': utilisateur.id }) }}">
+                                            <i class="fas fa-ban fa-lg"
                                                title="Désactiver {{ utilisateur.nomUtilisateur }} {{ utilisateur.prenomUtilisateur }}"></i></a>
                                     {% endif %}
-                                </center>
+
                             </td>
                             </tr>
                         {% endfor %}
@@ -232,7 +243,8 @@
                 ],
                 "columnDefs": [
                     {"width": "10%", "targets": 2},
-                    {"width": "14%", "targets": 6}
+                    // {"width": "auto", "targets": 6},
+                    // {"width": "5%", "targets": 3}
                 ]
             });
 

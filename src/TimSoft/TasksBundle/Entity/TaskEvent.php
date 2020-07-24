@@ -2,9 +2,7 @@
 
 namespace TimSoft\TasksBundle\Entity;
 
-use CalendarBundle\Entity\Event;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * TaskEvent
@@ -12,7 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Table(name="task_event")
  * @ORM\Entity(repositoryClass="TimSoft\TasksBundle\Repository\TaskEventRepository")
  */
-class TaskEvent extends Event implements \JsonSerializable
+class TaskEvent implements \JsonSerializable
 {
     /**
      * @var int
@@ -215,6 +213,14 @@ class TaskEvent extends Event implements \JsonSerializable
         return $this->start;
     }
 
+    /**
+     * @param mixed $start
+     */
+    public function setStart($start): void
+    {
+        $this->start = $start;
+    }
+
 
     /**
      * @return mixed
@@ -296,6 +302,22 @@ class TaskEvent extends Event implements \JsonSerializable
         $this->activite = $activite;
     }
 
+    /**
+     * @return mixed
+     */
+    public function isAllDay()
+    {
+        return $this->allDay;
+    }
+
+    /**
+     * @param mixed $allDay
+     */
+    public function setAllDay($allDay): void
+    {
+        $this->allDay = $allDay;
+    }
+
     public function jsonSerialize()
     {
         $class = new \ReflectionClass($this);
@@ -336,7 +358,8 @@ class TaskEvent extends Event implements \JsonSerializable
             'type' => $class->getShortName(),
             'activite' => $this->activite,
             'task' => $this->task,
-            'libelle' => $this->task
+            'libelle' => $this->task,
+            'etiquette' => $this->etiquette
         );
     }
 }

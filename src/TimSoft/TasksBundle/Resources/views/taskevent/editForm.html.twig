@@ -8,38 +8,59 @@
                             class="sr-only">close</span></button>
             </div>{{ form_start(edit_form, { 'name':'edit','method' : 'post', 'action': path('taskevent_edit', {id: taskEvent.id}) }) }}
             <div id="modalBody" class="modal-body">
-                <div class="row">
-                    <table class="table table-sm">
-                        <tr>
-                            <td colspan="2" style="text-align: center"> {{ form_row(edit_form.allDay) }}</td>
-                            {#                            <td></td>#}
-                        </tr>
-                        <tr>
-                            <td>{{ form_row(edit_form.start, {'attr': {'class': 'date form-control' , 'autocomplete': 'off'}}) }}</td>
-                            <td>{{ form_row(edit_form.end, {'attr': {'class': 'date form-control', 'autocomplete': 'off'}}) }}</td>
-                        </tr>
-                        <tr>
-                            <td>{{ form_row(edit_form.utilisateur, {'attr': {'class': 'form-control'}}) }}</td>
-                            <td>{{ form_row(edit_form.client, {'attr': {'class': 'form-control'}}) }}</td>
-                        </tr>
-                        <tr>
-                            <td>{{ form_row(edit_form.activite, {'attr': {'class': 'form-control'}}) }}</td>
-                            <td>{{ form_row(edit_form.task, {'attr': {'class': 'form-control'}}) }}</td>
-                        </tr>
-                        <tr>
-                            <td>{{ form_row(edit_form.statut, {'attr': {'class': 'form-control'}}) }}</td>
-                            <td>{{ form_row(edit_form.motif, {'attr': {'class': 'form-control'}}) }}</td>
-                        </tr>
-                        <tr>
-                            <td> {{ form_row(edit_form.etiquette, {'attr': {'class': 'form-control'}}) }}</td>
-                            <td>{{ form_row(edit_form.rapport, {'attr': {'class': 'form-control'}}) }}</td>
-                        </tr>
-                        <tr>
-                            <td> {{ form_row(edit_form.progression, {'attr': {'class': 'custom-range'}}) }}</td>
-                            <td>{{ form_row(edit_form.site, {'attr': {'class': 'form-control'}}) }}</td>
-                        </tr>
+                <div class="card">
+                    <div class="card-body">
+                        <table class="table table-borderless table-sm">
+                            <tr>
+                                <th>Type</th>
+                                <td colspan="2">
+                                    <div class="form-group">
+                                        {% for key, allDayItem in edit_form.allDay %}
+                                            <div class="form-check">
+                                                {{ form_widget(allDayItem, {'attr': {'class': 'form-check-input'}}) }}
+                                                {{ form_label(allDayItem) }}
+                                                {#                                            <input class="form-check-input" type="radio" name="radio1">#}
+                                                {#                                            <label class="form-check-label">Radio</label>#}
+                                            </div>
+                                        {% endfor %}
 
-                    </table>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Date</th>
+                                <td>{{ form_widget(edit_form.start, {'attr': {'class': 'date form-control' , 'autocomplete': 'off'}}) }}</td>
+                                <td>{{ form_widget(edit_form.end, {'attr': {'class': 'date form-control', 'autocomplete': 'off'}}) }}</td>
+                            </tr>
+                            <tr>
+                                <th>Assigner à</th>
+                                <td>{{ form_widget(edit_form.utilisateur, {'attr': {'class': 'form-control'}}) }}</td>
+                                <td>{{ form_widget(edit_form.client, {'attr': {'class': 'form-control'}}) }}</td>
+                            </tr>
+                            <tr>
+                                <th>Task</th>
+                                <td>{{ form_widget(edit_form.activite, {'attr': {'class': 'form-control'}}) }}</td>
+                                <td>{{ form_widget(edit_form.task, {'attr': {'class': 'form-control'}}) }}</td>
+                            </tr>
+                            <tr>
+                                <th>Statut</th>
+                                <td>{{ form_widget(edit_form.statut, {'attr': {'class': 'form-control'}}) }}</td>
+                                <td>{{ form_widget(edit_form.motif, {'attr': {'class': 'form-control'}}) }}</td>
+                            </tr>
+                            <tr>
+                                <th>Étiquette/Site</th>
+                                <td> {{ form_widget(edit_form.etiquette, {'attr': {'class': 'form-control'}}) }}</td>
+
+                                <td>{{ form_widget(edit_form.site, {'attr': {'class': 'form-control'}}) }}</td>
+
+                            </tr>
+                            <tr>
+                                <th></th>
+                                <td> {{ form_row(edit_form.progression, {'attr': {'class': 'custom-range'}}) }}</td>
+                                <td>{{ form_widget(edit_form.rapport, {'attr': {'class': 'form-control'}}) }}</td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
@@ -95,13 +116,14 @@
                 type: 'POST',
                 dataType: "json",
             }).done(function (response) {
-                $('#addTask').modal('hide');
+                $('#editTask').modal('hide');
                 if (response.PlanningExist) {
                     alert('Message');
                 }
             });
         }
     });
+    var slider = $('form[name="edit"] #timsoft_tasksbundle_taskevent_progression');
     $(document).ready(function () {
         var editTask = $('form[name="edit"]');
         $.datetimepicker.setLocale('fr');
@@ -317,23 +339,54 @@
             $('form[name="edit"] #timsoft_tasksbundle_taskevent_motif').parent().hide();
         }
         $statut.on('change', function (e) {
-            console.log(this.value)
-            if (this.value !== 'Bloqué') {
-                $('form[name="edit"] #timsoft_tasksbundle_taskevent_motif').parent().hide();
-            } else {
-                $('form[name="edit"] #timsoft_tasksbundle_taskevent_motif').parent().show();
-            }
-        })
-        var label = $("label[for='" + 'timsoft_tasksbundle_taskevent_progression' + "']");
-        var slider = $('form[name="edit"] #timsoft_tasksbundle_taskevent_progression')
-        var val = slider.parent();
-        label.append('<div id="prog" style="display: inline-block"></div>')
-        var newV = $('#prog');
-        newV.html('&nbsp;' + {{ taskEvent.progression }} +'%');
-        slider.on('change', function () {
             console.log(this.value);
+            if (this.value !== 'Bloqué') {
+                $('form[name="new"] #timsoft_tasksbundle_taskevent_motif').parent().hide();
+                if (this.value === 'Done') {
+                    slider.val(100);
+                    sliderVal();
+                }
+                if (this.value === 'To DO') {
+                    slider.val(0);
+                    sliderVal();
+                }
+                if (this.value === 'In Progress') {
+                    slider.val(1);
+                    sliderVal();
+                }
+            } else {
+                $('form[name="new"] #timsoft_tasksbundle_taskevent_motif').parent().show();
+                slider.val(0);
+                sliderVal();
+            }
+            sliderVal();
+        });
+        sliderVal();
+    });
+    var label = $("label[for='" + 'timsoft_tasksbundle_taskevent_progression' + "']");
+    label.append(': <div id="prog" style="display: inline-block"></div>');
+
+    function sliderVal() {
+
+        var val = slider.parent();
+        var newV = $('#prog');
+        newV.html('&nbsp;' + slider.val() + '%');
+        newV.css('background-color', perc2color(slider.val()));
+        slider.on('change', function () {
+            newV.css('background-color', perc2color(this.value));
             newV.html('&nbsp;' + this.value + '%');
         });
-    });
-
+    }
+    function perc2color(perc) {
+        var r, g, b = 0;
+        if (perc < 50) {
+            r = 255;
+            g = Math.round(5.1 * perc);
+        } else {
+            g = 255;
+            r = Math.round(510 - 5.10 * perc);
+        }
+        var h = r * 0x10000 + g * 0x100 + b * 0x1;
+        return '#' + ('000000' + h.toString(16)).slice(-6);
+    }
 </script>

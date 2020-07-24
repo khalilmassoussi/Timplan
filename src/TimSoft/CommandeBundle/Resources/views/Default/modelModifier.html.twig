@@ -7,12 +7,27 @@
             </div>
             <div class="modal-body" id="modifierCModalBody">
                 {{ form_start(form, { 'method' : 'post', 'action': path('modifierC', { 'id' : commande.id }) }) }}
-                {{ form_row(form.nCommande, {'attr': {'class': 'form-control'}}) }}
-                {{ form_row(form.client, {'attr': {'class': 'form-control'}}) }}
-                {{ form_row(form.datePiece, {'attr': {'class': 'form-control js-datepicker'}}) }}
-                {{ form_row(form.buManager, {'attr': {'class': 'form-control'}}) }}
+                <table class="table table-borderless">
+                    <tr>
+                        <th class="float-right">{{ form_label(form.nCommande) }}</th>
+                        <td>{{ form_widget(form.nCommande, {'attr': {'class': 'form-control'}}) }}</td>
+                    </tr>
+                    <tr>
+                        <th class="float-right">{{ form_label(form.client) }}</th>
+                        <td>{{ form_widget(form.client, {'attr': {'class': 'form-control'}}) }}</td>
+                    </tr>
+                    <tr>
+                        <th class="float-right">{{ form_label(form.datePiece) }}</th>
+                        <td>{{ form_widget(form.datePiece, {'attr': {'class': 'form-control js-datepicker'}}) }}</td>
+                    </tr>
+                    <tr>
+                        <th class="float-right"> {{ form_label(form.buManager) }}</th>
+                        <td> {{ form_widget(form.buManager, {'attr': {'class': 'form-control'}}) }}</td>
+                    </tr>
+                </table>
             </div>
             <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
                 <button type="submit" class="btn btn-primary">Sauvegarder</button>
             </div>
         </div>
@@ -23,6 +38,7 @@
 <script src="{{ asset('Template2/plugins/jquery-ui/jquery-ui.min.js') }}"></script>
 <script>
     $(document).ready(function () {
+        $('#timsoft_commandebundle_tetecommande_client').select2();
         $('#timsoft_commandebundle_tetecommande_buManager').select2();
         $('#timsoft_commandebundle_tetecommande_datePiece').datepicker({
                 format: 'yyyy-mm-dd'

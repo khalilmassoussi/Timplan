@@ -1,0 +1,218 @@
+<style>
+    /*table {*/
+    /*border-spacing: 15px;*/
+    /*}*/
+    th {
+        width: 15%;
+    }
+
+    .error {
+        color: red;
+    }
+</style>
+<div id="editPlanning" class="modal fade">
+    <div class="modal-dialog  modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 id="eventInfo" class="modal-title">
+                    {% if planning.lc.commande is PreTeteCommande %}
+                        Pré {{ planning.lc.commande.nCommande }} - {{ planning.lc.commande.client }} - {{ planning.lc.libelle }}
+                    {% else %}
+                        CC {{ planning.lc.commande.nCommande }} - {{ planning.lc.commande.client }} - {{ planning.lc.libelle }}
+                    {% endif %}
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" id="close"><span
+                            aria-hidden="true">×</span> <span
+                            class="sr-only">close</span></button>
+            </div>
+            {{ form_start(edit_form, { 'name':'editP','method' : 'post', 'action': path('editPlanning', {id: planning.id}) }) }}
+            <div id="modalBody" class="modal-body">
+                <div class="card card-outline card-primary card-outline-tabs">
+                    <div class="card-header p-0 pt-1">
+                        <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="custom-tabs-one-home-tab" data-toggle="pill"
+                                   href="#DétailIntervention" role="tab" aria-controls="custom-tabs-one-home"
+                                   aria-selected="true">Détail Intervention</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="custom-tabs-one-profile-tab" data-toggle="pill"
+                                   href="#DétailClient" role="tab" aria-controls="custom-tabs-one-profile"
+                                   aria-selected="false">Détail Client</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="custom-tabs-one-profile-tab" data-toggle="pill"
+                                   href="#DétailCommande" role="tab" aria-controls="custom-tabs-one-profile"
+                                   aria-selected="false">Détail Commande</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-body">
+                        <div class="tab-content" id="custom-tabs-four-tabContent">
+                            <div class="tab-pane fade show active" id="DétailIntervention" role="tabpanel">
+                                <table class="table table-borderless table-sm" style="table-layout: fixed">
+                                    <tr>
+                                        <th>Temps</th>
+                                        <td>
+                                            <div class="form-group temps">
+                                                {% for key, allDayItem in edit_form.temps %}
+                                                    <div class="form-check">
+                                                        {{ form_widget(allDayItem, {'attr': {'class': 'form-check-input'}}) }}
+                                                        {{ form_label(allDayItem) }}
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                        </td>
+                                        <th>Journée Supplémentaire</th>
+                                        <td>
+                                            {% if planning.jSupplementaire %}
+                                                Oui
+                                            {% else %}
+                                                Non
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Date</th>
+                                        <td>{{ form_widget(edit_form.start, {'attr': {'class': 'date form-control ignore' , 'autocomplete': 'off'}}) }}</td>
+                                        <th>Fin</th>
+                                        <td>{{ form_widget(edit_form.end, {'attr': {'class': 'date form-control ignore' , 'autocomplete': 'off'}}) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Intervenant</th>
+                                        <td>{{ form_widget(edit_form.utilisateur, {'attr': {'class': 'form-control'}}) }}</td>
+                                        <th>Accompagnements</th>
+                                        <td>{{ form_widget(edit_form.accompagnements, {'attr': {'class': 'form-control'}}) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Statut</th>
+                                        <td>{{ form_widget(edit_form.statut, {'attr': {'class': 'form-control'}}) }}</td>
+                                        <th>Commentaire</th>
+                                        <td>{{ form_widget(edit_form.commentaire, {'attr': {'class': 'form-control'}}) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Facturation</th>
+                                        <td>
+                                            <div class="form-group">
+                                                {% for key, allDayItem in edit_form.facturation %}
+                                                    <div class="form-check">
+                                                        {{ form_widget(allDayItem, {'attr': {'class': 'form-check-input'}}) }}
+                                                        {{ form_label(allDayItem) }}
+                                                    </div>
+                                                {% endfor %}
+
+                                            </div>
+                                        </td>
+                                        <th>Lieu</th>
+                                        <td>
+                                            <div class="form-group">
+                                                {% for key, allDayItem in edit_form.lieu %}
+                                                    <div class="form-check">
+                                                        {{ form_widget(allDayItem, {'attr': {'class': 'form-check-input'}}) }}
+                                                        {{ form_label(allDayItem) }}
+                                                    </div>
+                                                {% endfor %}
+
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="tab-pane fade" id="DétailClient" role="tabpanel">
+                                <table class="table table-borderless table-sm">
+                                    <tr>
+                                        <th>Client</th>
+                                        <td>{{ planning.lc.commande.client }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Téléphone</th>
+                                        <td>{{ planning.lc.commande.client.telephone }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Adresse</th>
+                                        <td>{{ planning.lc.commande.client.adresseClient }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Chef de projet client</th>
+                                        <td>{{ form_widget(edit_form.confirmePar, {'attr': {'class': 'form-control'}}) }}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="tab-pane fade" id="DétailCommande" role="tabpanel">
+                                <table class="table table-borderless table-sm">
+                                    <tr>
+                                        <th>N° Commande</th>
+                                        <td>{{ planning.lc.commande.nCommande }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Date</th>
+                                        <td>{{ planning.lc.commande.datePiece|date('d-m-Y') }}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-dismiss="modal">
+                    <i class="fas fa-window-close fa-lg"></i>
+                </button>
+                {% if AutorisationAcces('deletePlanning' , Utilisateur) %}
+                    <a href="{{ path('deletePlanning', {id: planning.id}) }}" class="btn btn-danger">
+                        <i class="fas fa-trash fa-lg"></i>
+                    </a>
+                {% endif %}
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save fa-lg"></i></button>
+            </div>
+            {{ form_end(edit_form) }}
+        </div>
+    </div>
+</div>
+<script type="text/javascript"
+        src="https://cdn.jsdelivr.net/npm/jquery-validation@1.17.0/dist/localization/messages_fr.js"></script>
+
+<script>
+    $('#timsoft_generalbundle_planning_accompagnements').select2();
+    $('#timsoft_generalbundle_planning_utilisateur').select2();
+
+    $(document).ready(function () {
+        // $('form[name="editP"]').validate({
+        //     ignore: '.ignore',
+        //     // ignore: '#timsoft_generalbundle_planning_end',
+        //     rules: {
+        //         'timsoft_generalbundle_planning[temps][]': {
+        //             required: true
+        //         },
+        //     },
+        //     errorPlacement: function (error, element) {
+        //         //error.insertBefore(element);
+        //         error.insertAfter(element.closest('div'));
+        //     },
+        // });
+    });
+    $('form[name="editP"]').submit(function (event) {
+        event.preventDefault();
+        var cc = new FormData(this);
+        var url = "{{ path('editPlanning',{ id: planning.id }) }}";
+        var formSerialize = $(this).serialize();
+
+        $.ajax({
+            url: url,
+            data: formSerialize,
+            type: 'POST',
+            dataType: "json",
+        }).done(function (response) {
+            $('#editPlanning').modal('hide');
+        });
+    });
+
+    $('#timsoft_generalbundle_planning_start').datepicker({
+        format: 'd MM yyyy',
+        language: 'fr'
+    }).on('changeDate', function (e) {
+        $("#timsoft_generalbundle_planning_end").val(moment(e.date).format('LL'));
+
+    });
+</script>

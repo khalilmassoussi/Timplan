@@ -91,7 +91,6 @@
             type: $form.attr('method'),
             data: data,
             success: function (html) {
-                console.log(html);
                 // Replace current position field ...
                 $('#timsoft_tasksbundle_taskevent_task').replaceWith(
                     // ... with the returned one from the AJAX response.
@@ -101,11 +100,10 @@
             }
         });
     });
-    {#$('#timsoft_tasksbundle_taskevent_activite option[value={{ taskEvent.task.activite.id }}]').prop('selected', true);#}
-    {#$('#timsoft_tasksbundle_taskevent_activite').val({{ taskEvent.task.activite.id }});#}
 </script>
 <script>
     $('form[name="new"]').submit(function (event) {
+        console.log('xx');
         event.preventDefault();
         if (new Date($('form[name="new"] #timsoft_tasksbundle_taskevent_start').datetimepicker('getValue')) > new Date($('form[name="new"] #timsoft_tasksbundle_taskevent_end').datetimepicker('getValue'))) {
             alert('Date non valable, veuillez la vérifier et réessayer');
@@ -124,7 +122,7 @@
             }).done(function (response) {
                 $('#addTask').modal('hide');
                 if (response.PlanningExist) {
-                    alert('Message');
+                    // alert('Message');
                 }
             });
         }
@@ -136,6 +134,7 @@
         // }, 'JSON');
 
     });
+    var slider = $('form[name="new"] #timsoft_tasksbundle_taskevent_progression');
     $(document).ready(function () {
         // you may need to change this code if you are not using Bootstrap Datepicker
         $.datetimepicker.setLocale('fr');
@@ -240,26 +239,45 @@
         });
         $('form[name="new"] #timsoft_tasksbundle_taskevent_motif').parent().hide();
         $('form[name="new"] #timsoft_tasksbundle_taskevent_statut').on('change', function (e) {
-            console.log(this.value)
             if (this.value !== 'Bloqué') {
                 $('form[name="new"] #timsoft_tasksbundle_taskevent_motif').parent().hide();
+                if (this.value === 'Done') {
+                    slider.val(100);
+                    sliderVal();
+                }
+                if (this.value === 'To DO') {
+                    slider.val(0);
+                    sliderVal();
+                }
+                if (this.value === 'In Progress') {
+                    slider.val(1);
+                    sliderVal();
+                }
             } else {
                 $('form[name="new"] #timsoft_tasksbundle_taskevent_motif').parent().show();
+                slider.val(0);
+                sliderVal();
             }
-        })
-        var label = $("label[for='" + 'timsoft_tasksbundle_taskevent_progression' + "']");
-        var slider = $('form[name="new"] #timsoft_tasksbundle_taskevent_progression')
+            sliderVal();
+        });
         slider.val(0);
+        sliderVal();
+
+    });
+    var label = $("label[for='" + 'timsoft_tasksbundle_taskevent_progression' + "']");
+    label.append(': <div id="prog" style="display: inline-block"></div>');
+
+    function sliderVal() {
+
         var val = slider.parent();
-        label.append(': <div id="prog" style="display: inline-block"></div>')
         var newV = $('#prog');
         newV.html('&nbsp;' + slider.val() + '%');
-        newV.css('background-color', perc2color(slider.val()))
+        newV.css('background-color', perc2color(slider.val()));
         slider.on('change', function () {
             newV.css('background-color', perc2color(this.value));
             newV.html('&nbsp;' + this.value + '%');
         });
-    });
+    }
 
     function perc2color(perc) {
         var r, g, b = 0;
