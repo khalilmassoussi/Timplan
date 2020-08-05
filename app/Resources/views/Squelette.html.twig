@@ -83,7 +83,7 @@
         <link rel="stylesheet" href="{{ asset('Template2/plugins/overlayScrollbars/css/OverlayScrollbars.min.css') }}">
         <!-- Daterange picker -->
         <link rel="stylesheet"
-              href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker3.min.css"/>
+              href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css"/>
         <link rel="stylesheet" href="{{ asset('Template2/plugins/daterangepicker/daterangepicker.css') }}">
         <!-- summernote -->
         <link rel="stylesheet" href="{{ asset('Template2/plugins/summernote/summernote-bs4.css') }}">
@@ -730,6 +730,37 @@
     {#    <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>#}
     <script>
         function editPlanningModal(event, calendar) {
+            {% if not AutorisationAcces('modifinterv' , app.user) %}
+            var id;
+            if (typeof event.event._def.extendedProps.resourceIds !== 'undefined') {
+                id = event.event._def.extendedProps.resourceIds[0];
+            } else {
+                id = event.event._def.resourceIds[0];
+            }
+            if (id !== {{ app.user.id }} || event.event.extendedProps.statut === 'Terminé') {
+                $.ajax({
+                    url: Routing.generate('showPlanning', {id: event.event.id}),
+                    method: 'post',
+                    // dataType: 'json',
+                    success: function (data) {
+                        $("#renderEdit").html(data);
+                        $('#showPlanning').modal();
+                    },
+                });
+            } else {
+                $.ajax({
+                    url: Routing.generate('editPlanning', {id: event.event.id}),
+                    method: 'post',
+                    // dataType: 'json',
+                    success: function (data) {
+                        $("#renderEdit").html(data);
+                        $('#editPlanning').modal();
+                        $('#editPlanning').on('hidden.bs.modal', function () {
+                            calendar.refetchEvents();
+                        });
+                    },
+                });
+            } {% else %}
             $.ajax({
                 url: Routing.generate('editPlanning', {id: event.event.id}),
                 method: 'post',
@@ -742,9 +773,47 @@
                     });
                 },
             });
+            {% endif %}
+
         }
 
         function editTaskEvent(event, calendar) {
+            {% if not AutorisationAcces('modifTaskEvent' , app.user) %}
+            var id;
+            if (typeof event.event._def.extendedProps.resourceIds !== 'undefined') {
+                id = event.event._def.extendedProps.resourceIds[0];
+            } else {
+                id = event.event._def.resourceIds[0];
+            }
+            if (id !== {{ app.user.id }} || event.event.extendedProps.Statut === 'Done') {
+                $.ajax({
+                    url: Routing.generate('taskevent_show', {id: event.event.id}),
+                    method: 'get',
+                    // dataType: 'json',
+                    success: function (data) {
+                        $("#renderEdit").html(data);
+                        $('#showTask').modal();
+                        $('#showTask').on('hidden.bs.modal', function () {
+                            calendar.refetchEvents();
+                        });
+                    },
+                });
+            } else {
+                console.log(event);
+                $.ajax({
+                    url: Routing.generate('taskevent_edit', {id: event.event.id}),
+                    method: 'post',
+                    // dataType: 'json',
+                    success: function (data) {
+                        $("#renderEdit").html(data);
+                        $('#editTask').modal();
+                        $('#editTask').on('hidden.bs.modal', function () {
+                            calendar.refetchEvents();
+                        });
+                    },
+                });
+            }
+            {% else %}
             $.ajax({
                 url: Routing.generate('taskevent_edit', {id: event.event.id}),
                 method: 'post',
@@ -757,6 +826,7 @@
                     });
                 },
             });
+            {% endif %}
         }
 
         $(document).ready(function () {
@@ -779,16 +849,6 @@
             // buttonsStyling: false
 
         });
-        // $body = $("body");
-        // $(document).on({
-        //     ajaxStart: function () {
-        //         $body.addClass("loading");
-        //     },
-        //     ajaxStop: function () {
-        //         $body.removeClass("loading");
-        //     }
-        // });
-
     </script>
 {% endblock %}
 </body>

@@ -1,3 +1,8 @@
+<style>
+    .table td, .table th {
+        padding: .49rem;
+    }
+</style>
 <div id="editTask" class="modal fade">
     <div class="modal-dialog  modal-xl">
         <div class="modal-content">
@@ -7,10 +12,10 @@
                             aria-hidden="true">×</span> <span
                             class="sr-only">close</span></button>
             </div>{{ form_start(edit_form, { 'name':'edit','method' : 'post', 'action': path('taskevent_edit', {id: taskEvent.id}) }) }}
-            <div id="modalBody" class="modal-body">
-                <div class="card">
+            <div id="modalBody" class="modal-body ">
+                <div class="card bg-gradient-light card-outline card-primary">
                     <div class="card-body">
-                        <table class="table table-borderless table-sm">
+                        <table class="table table-borderless">
                             <tr>
                                 <th>Type</th>
                                 <td colspan="2">
@@ -19,8 +24,6 @@
                                             <div class="form-check">
                                                 {{ form_widget(allDayItem, {'attr': {'class': 'form-check-input'}}) }}
                                                 {{ form_label(allDayItem) }}
-                                                {#                                            <input class="form-check-input" type="radio" name="radio1">#}
-                                                {#                                            <label class="form-check-label">Radio</label>#}
                                             </div>
                                         {% endfor %}
 
@@ -29,13 +32,31 @@
                             </tr>
                             <tr>
                                 <th>Date</th>
-                                <td>{{ form_widget(edit_form.start, {'attr': {'class': 'date form-control' , 'autocomplete': 'off'}}) }}</td>
-                                <td>{{ form_widget(edit_form.end, {'attr': {'class': 'date form-control', 'autocomplete': 'off'}}) }}</td>
+                                <td>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                                        </div>
+                                        {{ form_widget(edit_form.start, {'attr': {'class': 'date form-control' , 'autocomplete': 'off'}}) }}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                                        </div>
+                                        {{ form_widget(edit_form.end, {'attr': {'class': 'date form-control' , 'autocomplete': 'off'}}) }}
+                                    </div>
+                                </td>
                             </tr>
                             <tr>
                                 <th>Assigner à</th>
-                                <td>{{ form_widget(edit_form.utilisateur, {'attr': {'class': 'form-control'}}) }}</td>
-                                <td>{{ form_widget(edit_form.client, {'attr': {'class': 'form-control'}}) }}</td>
+                                <td>
+                                    {{ form_widget(edit_form.utilisateur, {'attr': {'class': 'form-control'}}) }}
+                                </td>
+                                <td>
+                                    {{ form_widget(edit_form.client, {'attr': {'class': 'form-control'}}) }}
+                                </td>
                             </tr>
                             <tr>
                                 <th>Task</th>
@@ -64,13 +85,23 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <input type="submit" value="Enregistrer les modifications" class="btn btn-primary"/>
+                <button class="btn btn-secondary" data-dismiss="modal">
+                    <i class="fas fa-window-close fa-lg"></i>
+                </button>
+                {% if AutorisationAcces('taskevent_delete' , app.user) %}
+                    <a href="{{ path('taskevent_delete', {id: taskEvent.id}) }}" class="btn btn-danger">
+                        <i class="fas fa-trash fa-lg"></i>
+                    </a>
+                {% endif %}
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save fa-lg"></i></button>
             </div>
             {{ form_end(edit_form) }}
         </div>
     </div>
 </div>
-
+<link rel="stylesheet" type="text/css"
+      href="{{ asset('Template2/plugins/datetimepicker-master/build/jquery.datetimepicker.min.css') }}"/>
+<script src="{{ asset('Template2/plugins/datetimepicker-master/build/jquery.datetimepicker.full.min.js') }}"></script>
 <script>
     var $activive = $('#timsoft_tasksbundle_taskevent_activite');
     // When sport gets selected ...
@@ -95,13 +126,11 @@
             }
         });
     });
-    {#$('#timsoft_tasksbundle_taskevent_activite option[value={{ taskEvent.task.activite.id }}]').prop('selected', true);#}
-    {#$('#timsoft_tasksbundle_taskevent_activite').val({{ taskEvent.task.activite.id }});#}
 </script>
 <script>
     $('form[name="edit"]').submit(function (event) {
         event.preventDefault();
-        if (new Date($('form[name="new"] #timsoft_tasksbundle_taskevent_start').datetimepicker('getValue')) > new Date($('form[name="new"] #timsoft_tasksbundle_taskevent_end').datetimepicker('getValue'))) {
+        if (new Date($('form[name="edit"] #timsoft_tasksbundle_taskevent_start').datetimepicker('getValue')) > new Date($('form[name="edit"] #timsoft_tasksbundle_taskevent_end').datetimepicker('getValue'))) {
             alert('Date non valable, veuillez la vérifier et réessayer');
         } else {
 
@@ -129,14 +158,15 @@
         $.datetimepicker.setLocale('fr');
         $('form[name="edit"] #timsoft_tasksbundle_taskevent_start').attr('autocomplete', 'off');
         $('form[name="edit"] #timsoft_tasksbundle_taskevent_utilisateur').select2({
-            placeholder: 'Assigner à'
+            placeholder: 'Assigner à',
+
         });
         $('form[name="edit"] #timsoft_tasksbundle_taskevent_client').select2({
             placeholder: 'Choisir le client'
         });
         $('form[name="edit"] #timsoft_tasksbundle_taskevent_start').datetimepicker({
             format: 'd F Y',
-            timepicker: false,
+            // timepicker: false,
             onShow: function (ct) {
                 this.setOptions({
                     maxDate: $('#timsoft_tasksbundle_taskevent_end').val() ? $('#timsoft_tasksbundle_taskevent_end').val() : false,
@@ -167,14 +197,14 @@
                     })
                 },
                 onChangeDateTime: function (dp, $input) {
-                    if (new Date($('form[name="new"] #timsoft_tasksbundle_taskevent_start').datetimepicker('getValue')) > new Date($('form[name="new"] #timsoft_tasksbundle_taskevent_end').datetimepicker('getValue'))) {
+                    if (new Date($('form[name="edit"] #timsoft_tasksbundle_taskevent_start').datetimepicker('getValue')) > new Date($('form[name="new"] #timsoft_tasksbundle_taskevent_end').datetimepicker('getValue'))) {
                         // alert('Date non valable, veuillez la vérifier et réessayer');
-                        $('form[name="new"] #timsoft_tasksbundle_taskevent_start').addClass('is-invalid');
-                        $('form[name="new"] #timsoft_tasksbundle_taskevent_end').addClass('is-invalid');
+                        $('form[name="edit"] #timsoft_tasksbundle_taskevent_start').addClass('is-invalid');
+                        $('form[name="edit"] #timsoft_tasksbundle_taskevent_end').addClass('is-invalid');
                         console.log($input.val());
                     } else {
-                        $('form[name="new"] #timsoft_tasksbundle_taskevent_start').removeClass('is-invalid');
-                        $('form[name="new"] #timsoft_tasksbundle_taskevent_end').removeClass('is-invalid');
+                        $('form[name="edit"] #timsoft_tasksbundle_taskevent_start').removeClass('is-invalid');
+                        $('form[name="edit"] #timsoft_tasksbundle_taskevent_end').removeClass('is-invalid');
                     }
                 }
             });
@@ -256,14 +286,14 @@
                         })
                     },
                     onChangeDateTime: function (dp, $input) {
-                        if (new Date($('form[name="new"] #timsoft_tasksbundle_taskevent_start').datetimepicker('getValue')) > new Date($('form[name="new"] #timsoft_tasksbundle_taskevent_end').datetimepicker('getValue'))) {
+                        if (new Date($('form[name="edit"] #timsoft_tasksbundle_taskevent_start').datetimepicker('getValue')) > new Date($('form[name="new"] #timsoft_tasksbundle_taskevent_end').datetimepicker('getValue'))) {
                             // alert('Date non valable, veuillez la vérifier et réessayer');
-                            $('form[name="new"] #timsoft_tasksbundle_taskevent_start').addClass('is-invalid');
-                            $('form[name="new"] #timsoft_tasksbundle_taskevent_end').addClass('is-invalid');
+                            $('form[name="edit"] #timsoft_tasksbundle_taskevent_start').addClass('is-invalid');
+                            $('form[name="edit"] #timsoft_tasksbundle_taskevent_end').addClass('is-invalid');
                             console.log($input.val());
                         } else {
-                            $('form[name="new"] #timsoft_tasksbundle_taskevent_start').removeClass('is-invalid');
-                            $('form[name="new"] #timsoft_tasksbundle_taskevent_end').removeClass('is-invalid');
+                            $('form[name="edit"] #timsoft_tasksbundle_taskevent_start').removeClass('is-invalid');
+                            $('form[name="edit"] #timsoft_tasksbundle_taskevent_end').removeClass('is-invalid');
                         }
                     }
                 });
@@ -277,14 +307,14 @@
                         })
                     },
                     onChangeDateTime: function (dp, $input) {
-                        if (new Date($('form[name="new"] #timsoft_tasksbundle_taskevent_start').datetimepicker('getValue')) > new Date($('form[name="new"] #timsoft_tasksbundle_taskevent_end').datetimepicker('getValue'))) {
+                        if (new Date($('form[name="edit"] #timsoft_tasksbundle_taskevent_start').datetimepicker('getValue')) > new Date($('form[name="new"] #timsoft_tasksbundle_taskevent_end').datetimepicker('getValue'))) {
                             // alert('Date non valable, veuillez la vérifier et réessayer');
-                            $('form[name="new"] #timsoft_tasksbundle_taskevent_start').addClass('is-invalid');
-                            $('form[name="new"] #timsoft_tasksbundle_taskevent_end').addClass('is-invalid');
+                            $('form[name="edit"] #timsoft_tasksbundle_taskevent_start').addClass('is-invalid');
+                            $('form[name="v"] #timsoft_tasksbundle_taskevent_end').addClass('is-invalid');
                             console.log($input.val());
                         } else {
-                            $('form[name="new"] #timsoft_tasksbundle_taskevent_start').removeClass('is-invalid');
-                            $('form[name="new"] #timsoft_tasksbundle_taskevent_end').removeClass('is-invalid');
+                            $('form[name="edit"] #timsoft_tasksbundle_taskevent_start').removeClass('is-invalid');
+                            $('form[name="edit"] #timsoft_tasksbundle_taskevent_end').removeClass('is-invalid');
                         }
                     }
                 });
@@ -299,14 +329,14 @@
                         })
                     },
                     onChangeDateTime: function (dp, $input) {
-                        if (new Date($('form[name="new"] #timsoft_tasksbundle_taskevent_start').datetimepicker('getValue')) > new Date($('form[name="new"] #timsoft_tasksbundle_taskevent_end').datetimepicker('getValue'))) {
+                        if (new Date($('form[name="edit"] #timsoft_tasksbundle_taskevent_start').datetimepicker('getValue')) > new Date($('form[name="new"] #timsoft_tasksbundle_taskevent_end').datetimepicker('getValue'))) {
                             // alert('Date non valable, veuillez la vérifier et réessayer');
-                            $('form[name="new"] #timsoft_tasksbundle_taskevent_start').addClass('is-invalid');
-                            $('form[name="new"] #timsoft_tasksbundle_taskevent_end').addClass('is-invalid');
+                            $('form[name="edit"] #timsoft_tasksbundle_taskevent_start').addClass('is-invalid');
+                            $('form[name="edit"] #timsoft_tasksbundle_taskevent_end').addClass('is-invalid');
                             console.log($input.val());
                         } else {
-                            $('form[name="new"] #timsoft_tasksbundle_taskevent_start').removeClass('is-invalid');
-                            $('form[name="new"] #timsoft_tasksbundle_taskevent_end').removeClass('is-invalid');
+                            $('form[name="edit"] #timsoft_tasksbundle_taskevent_start').removeClass('is-invalid');
+                            $('form[name="edit"] #timsoft_tasksbundle_taskevent_end').removeClass('is-invalid');
                         }
                     }
                 });
@@ -341,7 +371,7 @@
         $statut.on('change', function (e) {
             console.log(this.value);
             if (this.value !== 'Bloqué') {
-                $('form[name="new"] #timsoft_tasksbundle_taskevent_motif').parent().hide();
+                $('form[name="edit"] #timsoft_tasksbundle_taskevent_motif').parent().hide();
                 if (this.value === 'Done') {
                     slider.val(100);
                     sliderVal();
@@ -355,7 +385,7 @@
                     sliderVal();
                 }
             } else {
-                $('form[name="new"] #timsoft_tasksbundle_taskevent_motif').parent().show();
+                $('form[name="edit"] #timsoft_tasksbundle_taskevent_motif').parent().show();
                 slider.val(0);
                 sliderVal();
             }
@@ -377,6 +407,7 @@
             newV.html('&nbsp;' + this.value + '%');
         });
     }
+
     function perc2color(perc) {
         var r, g, b = 0;
         if (perc < 50) {

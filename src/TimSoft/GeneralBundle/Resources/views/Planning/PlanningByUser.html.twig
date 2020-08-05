@@ -263,6 +263,7 @@
                     forceEventDuration: true,
                     eventClick: function (event) {
                         if (event.event.extendedProps.type != 'TaskEvent') {
+                            console.log(event);
                             editPlanningModal(event, calendar);
                         } else {
                             editTaskEvent(event, calendar);

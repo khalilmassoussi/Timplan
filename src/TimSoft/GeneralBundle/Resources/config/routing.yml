@@ -135,3 +135,8 @@ editPlanning:
   defaults:  { _controller: TimSoftGeneralBundle:Planning:edit }
   options:
     expose: true
+showPlanning:
+  path:    /planning/show/{id}
+  defaults:  { _controller: TimSoftGeneralBundle:Planning:show }
+  options:
+    expose: true

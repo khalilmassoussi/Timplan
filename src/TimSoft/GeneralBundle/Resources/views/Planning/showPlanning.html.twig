@@ -1,16 +1,4 @@
-<style>
-    /*table {*/
-    /*border-spacing: 15px;*/
-    /*}*/
-    th {
-        width: 15%;
-    }
-
-    .error {
-        color: red;
-    }
-</style>
-<div id="editPlanning" class="modal fade">
+<div id="showPlanning" class="modal fade">
     <div class="modal-dialog  modal-xl">
         <div class="modal-content">
             <div class="modal-header bg-gradient-light">
@@ -25,7 +13,6 @@
                             aria-hidden="true">×</span> <span
                             class="sr-only">close</span></button>
             </div>
-            {{ form_start(edit_form, { 'name':'editP','method' : 'post', 'action': path('editPlanning', {id: planning.id}) }) }}
             <div id="modalBody" class="modal-body">
                 <div class="card card-outline card-primary card-outline-tabs bg-gradient-light">
                     <div class="card-header p-0 pt-1">
@@ -54,14 +41,15 @@
                                     <tr>
                                         <th>Temps</th>
                                         <td>
-                                            <div class="form-group temps">
-                                                {% for key, allDayItem in edit_form.temps %}
-                                                    <div class="form-check">
-                                                        {{ form_widget(allDayItem, {'attr': {'class': 'form-check-input'}}) }}
-                                                        {{ form_label(allDayItem) }}
-                                                    </div>
-                                                {% endfor %}
-                                            </div>
+                                            {% if planning.allDay %}
+                                                Toute la journée
+                                            {% else %}
+                                                {% if planning.start|date('H') <= 13 %}
+                                                    Matin
+                                                {% else %}
+                                                    Après-midi
+                                                {% endif %}
+                                            {% endif %}
                                         </td>
                                         <th>Journée Supplémentaire</th>
                                         <td>
@@ -74,62 +62,36 @@
                                     </tr>
                                     <tr>
                                         <th>Date</th>
-                                        <td>
-                                            <div class="input-group">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text"><i
-                                                                class="far fa-calendar-alt"></i></span>
-                                                </div>
-                                                {{ form_widget(edit_form.start, {'attr': {'class': 'date form-control ignore' , 'autocomplete': 'off'}}) }}
-                                            </div>
-                                        </td>
+                                        <td>{{ planning.start|localizeddate('long', 'none', 'fr') }}</td>
                                         <th>Fin</th>
-                                        <td>
-                                            <div class="input-group">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text"><i
-                                                                class="far fa-calendar-alt"></i></span>
-                                                </div>
-                                                {{ form_widget(edit_form.end, {'attr': {'class': 'date form-control ignore' , 'autocomplete': 'off'}}) }}
-                                            </div>
-                                        </td>
+                                        <td>{{ planning.end|localizeddate('long', 'none', 'fr') }}</td>
                                     </tr>
                                     <tr>
                                         <th>Intervenant</th>
-                                        <td>{{ form_widget(edit_form.utilisateur, {'attr': {'class': 'form-control'}}) }}</td>
+                                        <td>{{ planning.utilisateur }}</td>
                                         <th>Accompagnements</th>
-                                        <td>{{ form_widget(edit_form.accompagnements, {'attr': {'class': 'form-control'}}) }}</td>
+                                        <td>
+                                            <ul>
+                                                {% for ac in planning.accompagnements %}
+                                                    <li>{{ ac }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <th>Statut</th>
-                                        <td>{{ form_widget(edit_form.statut, {'attr': {'class': 'form-control'}}) }}</td>
+                                        <td>{{ planning.statut }}</td>
                                         <th>Commentaire</th>
-                                        <td>{{ form_widget(edit_form.commentaire, {'attr': {'class': 'form-control'}}) }}</td>
+                                        <td>{{ planning.commentaire }}</td>
                                     </tr>
                                     <tr>
                                         <th>Facturation</th>
                                         <td>
-                                            <div class="form-group">
-                                                {% for key, allDayItem in edit_form.facturation %}
-                                                    <div class="form-check">
-                                                        {{ form_widget(allDayItem, {'attr': {'class': 'form-check-input'}}) }}
-                                                        {{ form_label(allDayItem) }}
-                                                    </div>
-                                                {% endfor %}
-
-                                            </div>
+                                            {{ planning.facturation }}
                                         </td>
                                         <th>Lieu</th>
                                         <td>
-                                            <div class="form-group">
-                                                {% for key, allDayItem in edit_form.lieu %}
-                                                    <div class="form-check">
-                                                        {{ form_widget(allDayItem, {'attr': {'class': 'form-check-input'}}) }}
-                                                        {{ form_label(allDayItem) }}
-                                                    </div>
-                                                {% endfor %}
-
-                                            </div>
+                                            {{ planning.lieu }}
                                         </td>
                                     </tr>
                                 </table>
@@ -150,7 +112,7 @@
                                     </tr>
                                     <tr>
                                         <th>Chef de projet client</th>
-                                        <td>{{ form_widget(edit_form.confirmePar, {'attr': {'class': 'form-control'}}) }}</td>
+                                        <td>{{ planning.confirmePar }}</td>
                                     </tr>
                                 </table>
                             </div>
@@ -179,55 +141,7 @@
                         <i class="fas fa-trash fa-lg"></i>
                     </a>
                 {% endif %}
-                <button type="submit" class="btn btn-primary"><i class="fas fa-save fa-lg"></i></button>
             </div>
-            {{ form_end(edit_form) }}
         </div>
     </div>
 </div>
-<script type="text/javascript"
-        src="https://cdn.jsdelivr.net/npm/jquery-validation@1.17.0/dist/localization/messages_fr.js"></script>
-
-<script>
-    $('#timsoft_generalbundle_planning_accompagnements').select2();
-    $('#timsoft_generalbundle_planning_utilisateur').select2();
-
-    $(document).ready(function () {
-        // $('form[name="editP"]').validate({
-        //     ignore: '.ignore',
-        //     // ignore: '#timsoft_generalbundle_planning_end',
-        //     rules: {
-        //         'timsoft_generalbundle_planning[temps][]': {
-        //             required: true
-        //         },
-        //     },
-        //     errorPlacement: function (error, element) {
-        //         //error.insertBefore(element);
-        //         error.insertAfter(element.closest('div'));
-        //     },
-        // });
-    });
-    $('form[name="editP"]').submit(function (event) {
-        event.preventDefault();
-        var cc = new FormData(this);
-        var url = "{{ path('editPlanning',{ id: planning.id }) }}";
-        var formSerialize = $(this).serialize();
-        console.log('cc');
-        $.ajax({
-            url: url,
-            data: formSerialize,
-            type: 'POST',
-            dataType: "json",
-        }).done(function (response) {
-            $('#editPlanning').modal('hide');
-        });
-    });
-
-    $('#timsoft_generalbundle_planning_start').datepicker({
-        format: 'd MM yyyy',
-        language: 'fr'
-    }).on('changeDate', function (e) {
-        $("#timsoft_generalbundle_planning_end").val(moment(e.date).format('LL'));
-
-    });
-</script>

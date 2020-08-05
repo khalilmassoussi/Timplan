@@ -98,8 +98,7 @@ class PlanningController extends Controller
      * @return Response
      * @throws \Exception
      */
-    public
-    function addEventAction(Request $request)
+    public function addEventAction(Request $request)
     {
         if ($request->isXmlHttpRequest()) {
 
@@ -531,8 +530,7 @@ class PlanningController extends Controller
         }
     }
 
-    public
-    function accompagnementAction(Request $request)
+    public function accompagnementAction(Request $request)
     {
 
         $planning = $this->getDoctrine()->getRepository('TimSoftGeneralBundle:Planning')->find($request->get('id'));
@@ -548,8 +546,7 @@ class PlanningController extends Controller
         return new JsonResponse($request->get('type'));
     }
 
-    public
-    function getByUserAction()
+    public function getByUserAction()
     {
         if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
             throw $this->createAccessDeniedException();
@@ -562,8 +559,7 @@ class PlanningController extends Controller
         return $this->render('@TimSoftGeneral/Planning/listByUser.html.twig', array('plannings' => $planning));
     }
 
-    public
-    function getByBuAction()
+    public function getByBuAction()
     {
         if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
             throw $this->createAccessDeniedException();
@@ -572,15 +568,13 @@ class PlanningController extends Controller
         return $this->render('@TimSoftCommande/Default/BuPlanning.html.twig', array('bus' => $bus));
     }
 
-    public
-    function allPlansAction()
+    public function allPlansAction()
     {
         $plannings = $this->getDoctrine()->getRepository('TimSoftGeneralBundle:Planning')->findAll();
         return new JsonResponse($plannings);
     }
 
-    public
-    function deleteAction(Request $request)
+    public function deleteAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
         $planning = $this->getDoctrine()->getRepository('TimSoftGeneralBundle:Planning')->find($request->get('id'));
@@ -600,8 +594,7 @@ class PlanningController extends Controller
      * @return mixed
      * @throws \Exception
      */
-    public
-    function telechargerPlanningAction(Request $request)
+    public function telechargerPlanningAction(Request $request)
     {
         if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
             throw $this->createAccessDeniedException();
@@ -717,8 +710,7 @@ class PlanningController extends Controller
 //        return new Response('', 200, array('Content-Type' => 'application/pdf'));
     }
 
-    public
-    function PlanningByClientAction()
+    public function PlanningByClientAction()
     {
         if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
             throw $this->createAccessDeniedException();
@@ -727,15 +719,13 @@ class PlanningController extends Controller
         return $this->render('@TimSoftGeneral/Planning/PlanningByUser.html.twig', array('clients' => $clients));
     }
 
-    public
-    function jsonPlanningByClientAction($id)
+    public function jsonPlanningByClientAction($id)
     {
         $plannings = $this->getDoctrine()->getRepository('TimSoftGeneralBundle:Planning')->getByClient($id);
         return new JsonResponse($plannings);
     }
 
-    public
-    function getByLcAction($id)
+    public function getByLcAction($id)
     {
         $plannings = $this->getDoctrine()->getRepository('TimSoftGeneralBundle:Planning')->findByLc($id);
         return new JsonResponse($plannings);
@@ -755,10 +745,10 @@ class PlanningController extends Controller
                 $planning->setAllDay(false);
                 $planning->setStart($editForm->get('start')->getData());
                 $planning->getStart()->setTime(8, 30);
-                var_dump(json_encode($editForm->get('start')->getData()));
+//                var_dump(json_encode($editForm->get('start')->getData()));
                 $planning->setEnd($editForm->get('end')->getData());
                 $planning->getEnd()->setTime(13, 00);
-                var_dump(json_encode($editForm->get('end')->getData()));
+//                var_dump(json_encode($editForm->get('end')->getData()));
             } elseif (!in_array('Matin', $temps) && in_array('Après-midi', $temps)) {
                 $planning->setAllDay(false);
                 $planning->setStart($editForm->get('start')->getData());
@@ -768,11 +758,18 @@ class PlanningController extends Controller
             }
             $this->getDoctrine()->getManager()->persist($planning);
             $this->getDoctrine()->getManager()->flush();
-            return new JsonResponse($planning);
+            return new Response(json_encode(array('status' => 'success')));
         }
         return $this->render('@TimSoftGeneral/Planning/editPlanning.html.twig', array(
             'planning' => $planning,
             'edit_form' => $editForm->createView(),
+        ));
+    }
+
+    public function showAction(Planning $planning)
+    {
+        return $this->render('@TimSoftGeneral/Planning/showPlanning.html.twig', array(
+            'planning' => $planning,
         ));
     }
 }

@@ -35,9 +35,7 @@
                             {#                    {% if AutorisationAcces('ImportCmd' , Utilisateur) %}#}
                             <a href="{{ path('export') }}" class="btn btn-secondary">
                                 <i class="fas fa-file-download fa-2x" title="Exporter les commandes"></i>
-
                             </a>
-
                         </div>
                     </div>
                 </div>
@@ -122,11 +120,6 @@
                     {% endfor %}
                     </tbody>
                 </table>
-
-                {#                <span><b>Date: </b><input type="text" name="daterange" value="01/01/2018 - 01/15/2018"#}
-                {#                                          class="daterange"/></span>#}
-                {#<br>#}
-
                 <br>
             </div>
         </div>
@@ -134,7 +127,7 @@
 {% endblock %}
     {% block css %}
         {{ parent() }}
-        {#    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.dataTables.min.css"/>#}
+            <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.dataTables.min.css"/>
     {% endblock %}
     {% block script %}
         {{ parent() }}

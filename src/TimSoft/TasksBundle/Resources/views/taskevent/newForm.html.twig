@@ -1,3 +1,8 @@
+<style>
+    .table td, .table th {
+        padding: .49rem;
+    }
+</style>
 <div id="addTask" class="modal fade">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
@@ -8,7 +13,7 @@
                             class="sr-only">close</span></button>
             </div>{{ form_start(form, {'name':'new', 'method' : 'post', 'action': path('taskevent_new') }) }}
             <div id="modalBody" class="modal-body">
-                <div class="card">
+                <div class="card bg-gradient-light card-outline card-primary">
                     <div class="card-body">
                         <table class="table table-borderless table-sm">
                             <tr>
@@ -19,8 +24,6 @@
                                             <div class="form-check">
                                                 {{ form_widget(allDayItem, {'attr': {'class': 'form-check-input'}}) }}
                                                 {{ form_label(allDayItem) }}
-                                                {#                                            <input class="form-check-input" type="radio" name="radio1">#}
-                                                {#                                            <label class="form-check-label">Radio</label>#}
                                             </div>
                                         {% endfor %}
 
@@ -29,8 +32,20 @@
                             </tr>
                             <tr>
                                 <th>Date</th>
-                                <td>{{ form_widget(form.start, {'attr': {'class': 'date form-control' , 'autocomplete': 'off'}}) }}</td>
-                                <td>{{ form_widget(form.end, {'attr': {'class': 'date form-control', 'autocomplete': 'off'}}) }}</td>
+                                <td>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                                        </div>{{ form_widget(form.start, {'attr': {'class': 'date form-control' , 'autocomplete': 'off'}}) }}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                                        </div>{{ form_widget(form.end, {'attr': {'class': 'date form-control', 'autocomplete': 'off'}}) }}
+                                    </div>
+                                </td>
                             </tr>
                             <tr>
                                 <th>Assigner à</th>
@@ -64,7 +79,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <input type="submit" class="btn btn-primary" value="Créer"/>
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save fa-lg"></i></button>
             </div>
             {{ form_end(form) }}
         </div>

@@ -290,63 +290,27 @@
                     },
                     eventClick: function (event) {
                         var autorise = {{ (AutorisationAcces('modifTaskEvent' , app.user)) }};
-                        if (event.event.extendedProps.type != 'TaskEvent') {
-                            var xhr = $.ajax({
-                                url: '{{ path('plans') }}',
-                                data: 'action=update&id=' + event.event.id,
-                                type: "POST",
-                                success: function (data) {
-                                    $.ajax({
-                                        url: '{{ path('getUsersBySociete') }}',
-                                        data: 'action=update&id=' + data.Client.id,
-                                        type: "POST",
-                                        async: false,
-                                        success: function (data) {
-                                            $('#users1').empty();
-                                            $.each(data, function (i, item) {
-                                                // console.log(item);
-                                                // console.log("--------------------");
-                                                $('#users1').append('<option value="' + item.id + '">' + item.nomUtilisateur + ' ' + item.prenomUtilisateur + '</option>');
-
-                                            });
-                                        },
-                                        error: function () {
-                                            alert("Vous ne pouvez pas faire cette action");
-                                        },
-                                    });
-                                    CalendarModalData(data);
-                                },
-                                error: function () {
-                                    alert("erreur lors de l'appel de l'url dans POST event/drop : contactez l'administrateur du site");
-                                },
-                            });
+                        if (event.event.extendedProps.type !== 'TaskEvent') {
+                            console.log(event);
+                            editPlanningModal(event, calendar);
                         } else {
-                            if (event.event.extendedProps.idIntervenant == {{ app.user.id }} {# || {{ (AutorisationAcces('modifTaskEvent' , app.user)) }} #} || autorise != null) {
-                                $.ajax({
-                                    url: Routing.generate('taskevent_edit', {id: event.event.id}),
-                                    method: 'post',
-                                    // dataType: 'json',
-                                    success: function (data) {
-                                        $("#renderEdit").html(data);
-                                        $('#editTask').modal();
-                                        $('form[name="edit"]').submit(function () {
-                                            calendar.refetchEvents();
-                                        });
-                                    },
-                                });
-                            } else {
-                                $.ajax({
-                                    url: Routing.generate('taskevent_show', {id: event.event.id}),
-                                    method: 'get',
-                                    // dataType: 'json',
-                                    success: function (data) {
-                                        $("#renderEdit").html(data);
-                                        $('#showTask').modal();
+                            {#if (event.event.extendedProps.idIntervenant === {{ app.user.id }} #}{# || {{ (AutorisationAcces('modifTaskEvent' , app.user)) }} #}{# || autorise != null) {#}
+                            {#$.ajax({#}
+                            {#url: Routing.generate('taskevent_edit', {id: event.event.id}),#}
+                            {#method: 'post',#}
+                            {#// dataType: 'json',#}
+                            {#success: function (data) {#}
+                            {#$("#renderEdit").html(data);#}
+                            {#$('#editTask').modal();#}
+                            {#$('form[name="edit"]').submit(function () {#}
+                            {#calendar.refetchEvents();#}
+                            {#});#}
+                            {#},#}
+                            {#});#}
+                            {#} else {#}
 
-                                    },
-                                });
-                            }
-
+                            {#}#}
+                            editTaskEvent(event, calendar);
                         }
                     },
                     defaultView: 'timelineMyWeek',

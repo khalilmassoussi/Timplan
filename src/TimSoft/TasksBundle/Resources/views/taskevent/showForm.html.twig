@@ -1,5 +1,5 @@
 <div id="showTask" class="modal fade">
-    <div class="modal-dialog  modal-lg" style="width:820px;">
+    <div class="modal-dialog  modal-xl">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 id="eventInfo" class="modal-title">Afficher un Task</h4>
@@ -8,83 +8,107 @@
                             class="sr-only">close</span></button>
             </div>
             <div id="modalBody" class="modal-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <table width="100%">
-                            {% if taskEvent.allDay %}
-                                <tr>
-                                    <td>Début</td>
-                                    <td>{{ taskEvent.start|localizeddate('none', 'none', null, null, 'dd MMMM Y') }}</td>
-                                </tr>
-                            {% else %}
-                                <tr>
-                                    <td>Début</td>
-                                    <td>{{ taskEvent.start|localizeddate('none', 'none', null, null, 'dd MMMM Y hh:mm') }}</td>
-                                </tr>
-                            {% endif %}
-                            <tr>
-                                <td>Intervenant</td>
-                                <td>{{ taskEvent.utilisateur }}</td>
-                            </tr>
-                            <tr>
-                                <td>Activite</td>
-                                <td>{{ taskEvent.activite.libelle }}</td>
-                            </tr>
-                            <tr>
-                                <td>Statut</td>
-                                <td>{{ taskEvent.statut }}</td>
-                            </tr>
-                            <tr>
-                                <td>Etiquette</td>
-                                <td>{{ taskEvent.etiquette }}</td>
-                            </tr>
-                            <tr>
-                                <td>Progression</td>
-                                <td>{{ taskEvent.progression }}</td>
-                            </tr>
-                        </table>
+                <div class="card card-outline card-primary bg-gradient-light">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <table width="100%" class="table">
+                                    {% if taskEvent.allDay %}
+                                        <tr>
+                                            <th>Début</th>
+                                            <td>{{ taskEvent.start|localizeddate('none', 'none', null, null, 'dd MMMM Y') }}</td>
+                                        </tr>
+                                    {% else %}
+                                        <tr>
+                                            <th>Début</th>
+                                            <td>{{ taskEvent.start|localizeddate('none', 'none', null, null, 'dd MMMM Y hh:mm') }}</td>
+                                        </tr>
+                                    {% endif %}
+                                    <tr>
+                                        <th>Intervenant</th>
+                                        <td>{{ taskEvent.utilisateur }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Activite</th>
+                                        <td>{{ taskEvent.activite.libelle }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Statut</th>
+                                        <td>{{ taskEvent.statut }}</td>
+                                      
+                                    </tr>
+                                    <tr>
+                                        <th>Etiquette</th>
+                                        <td>
+                                            {% if taskEvent.etiquette == 'Urgent' %}
+                                                <span class="badge badge-danger">{{ taskEvent.etiquette }}</span>
+                                            {% elseif taskEvent.etiquette == 'Peu' %}
+                                                <span class="badge badge-default">{{ taskEvent.etiquette }}</span>
+                                            {% elseif taskEvent.etiquette == 'Moyen' %}
+                                                <span class="badge badge-primary">{{ taskEvent.etiquette }}</span>
+                                            {% elseif taskEvent.etiquette == 'Important' %}
+                                                <span class="badge badge-warning">{{ taskEvent.etiquette }}</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Progression</th>
+                                        <td class="project_progress">
+                                            <div class="progress">
+                                                <div class="progress-bar bg-green" role="progressbar"
+                                                     aria-volumenow="{{ taskEvent.progression }}" aria-volumemin="0"
+                                                     aria-volumemax="100" style="width: {{ taskEvent.progression }}%">
+                                                </div>
+                                            </div>
+                                            <small> {{ taskEvent.progression }}%</small>
+                                        </td>
+                                    </tr>
+                                </table>
 
-                    </div>
-                    <div class="col-md-6">
-                        <table width="100%">
-                            {% if taskEvent.allDay %}
-                                <tr>
-                                    <td>Fin</td>
-                                    <td>{{ taskEvent.end|localizeddate('none', 'none', null, null, 'dd MMMM Y') }}</td>
-                                </tr>
-                            {% else %}
-                                <tr>
-                                    <td>Fin</td>
-                                    <td>{{ taskEvent.end|localizeddate('none', 'none', null, null, 'dd MMMM Y hh:mm') }}</td>
-                                </tr>
-                            {% endif %}
-                            <tr>
-                                <td>Client</td>
-                                <td>{{ taskEvent.client }}</td>
-                            </tr>
-                            <tr>
-                                <td>Task</td>
-                                <td>{{ taskEvent.task.libelle }}</td>
-                            </tr>
-                            <tr>
-                                <td>Site</td>
-                                <td>{{ taskEvent.site }}</td>
-                            </tr>
-                            <tr>
-                                <td>Motif</td>
-                                <td>{{ taskEvent.motif }}</td>
-                            </tr>
-                            <tr>
-                                <td>Rapport</td>
-                                <td>{{ taskEvent.rapport }}</td>
-                            </tr>
-                        </table>
+                            </div>
+                            <div class="col-md-6">
+                                <table width="100%" class="table">
+                                    {% if taskEvent.allDay %}
+                                        <tr>
+                                            <th>Fin</th>
+                                            <td>{{ taskEvent.end|localizeddate('none', 'none', null, null, 'dd MMMM Y') }}</td>
+                                        </tr>
+                                    {% else %}
+                                        <tr>
+                                            <th>Fin</th>
+                                            <td>{{ taskEvent.end|localizeddate('none', 'none', null, null, 'dd MMMM Y hh:mm') }}</td>
+                                        </tr>
+                                    {% endif %}
+                                    <tr>
+                                        <th>Client</th>
+                                        <td>{{ taskEvent.client }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Task</th>
+                                        <td>{{ taskEvent.task.libelle }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Site</th>
+                                        <td>{{ taskEvent.site }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Motif</th>
+                                        <td>{{ taskEvent.motif }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Rapport</th>
+                                        <td>{{ taskEvent.rapport }}</td>
+                                    </tr>
+                                </table>
 
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <input type="button" value="Fermer"/>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i
+                            class="fas fa-window-close fa-lg"></i></button>
             </div>
 
         </div>
