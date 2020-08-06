@@ -27,10 +27,6 @@ class Client
 
     /**
      * @var int
-     * @Assert\NotBlank(message="Il faut introduire le code client")
-     * @Assert\Length(min=3, minMessage="Le code doit au moins contenir 3 chiffres !")
-     * @Assert\Length(max=9, maxMessage="Le code doit au plus contenir 9 chiffres !")
-     * @Assert\GreaterThan(0)
      * @ORM\Column(name="CodeClient", type="integer", unique=true, nullable=true)
      */
     private $codeClient;
@@ -68,47 +64,40 @@ class Client
 
     /**
      * @var string
-     * @Assert\NotBlank(message="Il faut introduire l'adresse")
-     * @Assert\Length(min=4, minMessage="L'adresse du client doit au moins contenir 4 chiffres !")
      * @ORM\Column(name="AdresseClient", type="string", length=255, nullable=true)
      */
     private $adresseClient;
 
     /**
      * @var string
-     * @Assert\NotBlank(message="Il faut introduire la ville")
-     * @Assert\Length(min=3, minMessage="Le nom de la ville doit au moins contenir 3 caractères !")
+
      * @ORM\Column(name="VilleClient", type="string", length=255 , nullable=true)
      */
     private $villeClient;
 
     /**
      * @var int
-     * @Assert\NotBlank(message="Il faut introduire le code postal")
-     * @Assert\Length(min=4, minMessage="Le code postal doit au moins contenir 4 chiffres !")
+
      * @ORM\Column(name="CodePostalClient", type="integer", nullable=true)
      */
     private $codePostalClient;
 
     /**
      * @var string
-     * @Assert\NotBlank(message="Il faut introduire le numéro de téléphone")
+
      * @ORM\Column(name="Telephone", type="string", length=30, nullable=true)
      */
     private $telephone;
 
     /**
      * @var string
-     * @Assert\Length(min=8, minMessage="Le numéro de fax doit au moins contenir 8 Chiffres !")
-     * @ORM\Column(name="FaxClient", type="string", length=30, nullable=true)
+
      */
     private $faxClient;
 
     /**
      * @var string
-     * @Assert\Email()
-     * @Assert\NotBlank(message="Il faut introduire une adresse e-mail valide")
-     * @Assert\Length(min=4 ,minMessage="L'asresse E-Mail est très courte !!" )
+
      * @ORM\Column(name="AdresseMailClient", type="string", length=100 ,nullable=true)
      */
     private $adresseMailClient;

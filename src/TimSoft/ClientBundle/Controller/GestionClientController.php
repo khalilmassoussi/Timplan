@@ -178,15 +178,15 @@ class GestionClientController extends Controller
             $ClientAvecMemeRaisonSociale = $em->getRepository('TimSoftGeneralBundle:Client')->findOneBy(array('raisonSociale' => $Client->getRaisonSociale()));
             $ClientAvecMemeEmail = $em->getRepository('TimSoftGeneralBundle:Client')->findOneBy(array('adresseMailClient' => $Client->getAdresseMailClient()));
 
-            if (!empty($ClientAvecMemeCodeClient) && ($ClientAvecMemeCodeClient != $Client)) {
-                $form->get('codeClient')->addError(new FormError('Le code client est déjà utilisé'));
-            }
-            if (!empty($ClientAvecMemeRaisonSociale) && ($ClientAvecMemeRaisonSociale != $Client)) {
-                $form->get('raisonSociale')->addError(new FormError('La raison sociale est déjà utilisée'));
-            }
-            if (!empty($ClientAvecMemeEmail) && ($ClientAvecMemeEmail != $Client)) {
-                $form->get('adresseMailClient')->addError(new FormError('L\'adresse Mail est déjà utilisée'));
-            }
+//            if (!empty($ClientAvecMemeCodeClient) && ($ClientAvecMemeCodeClient != $Client)) {
+//                $form->get('codeClient')->addError(new FormError('Le code client est déjà utilisé'));
+//            }
+//            if (!empty($ClientAvecMemeRaisonSociale) && ($ClientAvecMemeRaisonSociale != $Client)) {
+//                $form->get('raisonSociale')->addError(new FormError('La raison sociale est déjà utilisée'));
+//            }
+//            if (!empty($ClientAvecMemeEmail) && ($ClientAvecMemeEmail != $Client)) {
+//                $form->get('adresseMailClient')->addError(new FormError('L\'adresse Mail est déjà utilisée'));
+//            }
 
             $Condition1 = (empty($ClientAvecMemeCodeClient) || ($ClientAvecMemeCodeClient == $Client));
             $Condition2 = (empty($ClientAvecMemeRaisonSociale) || ($ClientAvecMemeRaisonSociale == $Client));
@@ -202,11 +202,12 @@ class GestionClientController extends Controller
                     $f->setSocieteMere($Client);
                     $em->persist($f);
                 }
-                $em->persist($Client); //L'enregistrement se fait uniquement dans Doctrine
-                $em->flush(); // pour sauvegarder les données dans la BD
-                $this->addFlash('OK-Modification-Client', 'Le client ' . $Client->getRaisonSociale() . ' est mis à jour avec succès !');
-                return $this->redirectToRoute('ConsulterUnClient', array('id' => $Client->getId()));
+
             }
+            $em->persist($Client); //L'enregistrement se fait uniquement dans Doctrine
+            $em->flush(); // pour sauvegarder les données dans la BD
+            $this->addFlash('OK-Modification-Client', 'Le client ' . $Client->getRaisonSociale() . ' est mis à jour avec succès !');
+            return $this->redirectToRoute('ConsulterUnClient', array('id' => $Client->getId()));
         }
         return $this->render('@TimSoftClient/GestionClient/ModifierClient.html.twig', array('form' => $form->createView(), 'client' => $Client));
     }
