@@ -289,7 +289,7 @@
                     resourceRender: function (info) {
                     },
                     eventClick: function (event) {
-                        var autorise = {{ (AutorisationAcces('modifTaskEvent' , app.user)) }};
+                        var autorise = {{ (AutorisationAcces('modifTaskEvent' , app.user))|json_encode()|raw }};
                         if (event.event.extendedProps.type !== 'TaskEvent') {
                             console.log(event);
                             editPlanningModal(event, calendar);
@@ -341,37 +341,44 @@
 
                                 $(event.el).find('.fc-title').prepend('<b>Client: </b>');
                                 $(event.el).append('<br><span><b>Task: </b>' + event.event.extendedProps.task + '</span>');
-                                $(event.el).append('<p>Heure: ' + moment(event.event.start).format("HH:mm") + '</p>');
+                                $(event.el).append('<div><b>Heure: </b>' + moment(event.event.start).format("HH:mm") + '</div>');
                             } else {
                                 $(event.el).height('auto');
                                 $(event.el).find('.fc-title').prepend('<b>Client: </b>');
                                 $(event.el).append('<br><span><b>Task: </b>' + event.event.extendedProps.task + '</span>');
 
                             }
-                            $(event.el).append('<br><b>Lieu: </b>' + event.event.extendedProps.Lieu);
-                            $(event.el).append('<div class="ribbon-wrapper"><div class="ribbon">' + event.event.extendedProps.etiquette + '</div></div>');
-                            if (event.event.extendedProps.etiquette === 'Important') {
+                            if (event.event.extendedProps.etiquette == 'Urgent') {
+                                $(event.el).append('<div><b>Etuiquette: </b> <span class="badge bg-danger">' + event.event.extendedProps.etiquette + '</span></div>');
+                            } else if (event.event.extendedProps.etiquette == 'Peu') {
+                                $(event.el).append('<div><b>Etuiquette: </b> <span class="badge bg-light">' + event.event.extendedProps.etiquette + '</span></div>');
+                            } else if (event.event.extendedProps.etiquette == 'Moyen') {
+                                $(event.el).append('<div><b>Etuiquette: </b> <span class="badge bg-indigo">' + event.event.extendedProps.etiquette + '</span></div>');
+                            } else if (event.event.extendedProps.etiquette == 'Important') {
+                                $(event.el).append('<div><b>Etuiquette: </b> <span class="badge bg-warning">' + event.event.extendedProps.etiquette + '</span></div>');
+                            }
+                            $(event.el).append('<div class="ribbon-wrapper"><div class="ribbon">' + event.event.extendedProps.Statut + '</div></div>');
+                            if (event.event.extendedProps.Statut === 'To DO') {
                                 $(event.el).find('div.ribbon').each(function (index) {
-                                    // $(this).addClass('badge-warning');
                                     $(this).addClass('bg-warning');
                                     $(this).css('font-size', '80%');
 
                                 });
-                            } else if (event.event.extendedProps.etiquette === 'Urgent') {
+                            } else if (event.event.extendedProps.Statut === 'Bloqué') {
                                 $(event.el).find('div.ribbon').each(function (index) {
                                     $(this).addClass('bg-danger');
                                     // $(this).css('font-size', '0.6vw');
 
                                 });
-                            } else if (event.event.extendedProps.etiquette === 'Moyen') {
+                            } else if (event.event.extendedProps.Statut === 'In Progress') {
                                 $(event.el).find('div.ribbon').each(function (index) {
-                                    $(this).addClass('bg-info');
-                                    // $(this).css('font-size', '0.6vw');
+                                    $(this).addClass('bg-navy');
+                                    $(this).css('font-size', '0.6vw');
 
                                 });
-                            } else if (event.event.extendedProps.etiquette === 'Peu') {
+                            } else if (event.event.extendedProps.Statut === 'Done') {
                                 $(event.el).find('div.ribbon').each(function (index) {
-                                    $(this).addClass('bg-light');
+                                    $(this).addClass('bg-success');
                                     // $(this).css('font-size', '0.6vw');
 
                                 });
@@ -501,43 +508,12 @@
                     byUser = $("#usersBu").val();
                     calendar.refetchResources();
                 });
-                $('input:radio[name=Facturation]').change(function () {
-                    if (this.value === 'Gratuit') {
-                        requestAjax('facturation', $('.planning').attr('id'))
-                    } else if (this.value === 'Facturé') {
-                        requestAjax('facturation', $('.planning').attr('id'))
 
-                    }
-                });
-                $('input:radio[name=accompagnements]').change(function () {
-                    if (this.value === 'Oui') {
-                        $('#users').val(null).trigger("change");
-                        $("#container").show()
-
-                    } else if (this.value === 'Non') {
-                        requestAjax('accompagnements', $('.planning').attr('id'));
-                        $("#container").hide()
-                    }
-                });
-                $("#Statut").change(function () {
-                    requestAjax('Statut', $('.planning').attr('id'), this.value);
-                });
-                $('input:radio[name=Lieu]').change(function () {
-                    if (this.value === 'SurSite') {
-                        requestAjax('Lieu', $('.planning').attr('id'), 'Sur Site')
-                    } else if (this.value === 'aDistance') {
-                        requestAjax('Lieu', $('.planning').attr('id'), 'à distance')
-
-                    }
-                });
                 $('#users').select2({
                     placeholder: "Selectionner",
                     tags: true,
                 });
 
-                function requestAjax(type, id, value) {
-
-                }
 
                 $("#Sauvegarder").click(function () {
                     // console.log($("#datepicker").datepicker('getDate'));
@@ -610,9 +586,6 @@
                     });
 
                 });
-                $("#commentaire").click(function () {
-                    $('#textArea').show()
-                });
                 $("#export").click(function (e) {
                     e.preventDefault();
                     if ($('#bus').val()) {
@@ -622,7 +595,7 @@
                         $.each(events, function (key, event) {
                             var resourceIds = event._def.resourceIds;
                             $.each(resources, function (key, resource) {
-                                if (resource.id === resourceIds[0]) {
+                                if (resource.id === resourceIds[0] && event.extendedProps.type !== 'TaskEvent') {
                                     if ((calendar.view.currentStart <= event.start) && (calendar.view.currentEnd > event.start)) {
                                         exportation.push(event.id);
                                     }

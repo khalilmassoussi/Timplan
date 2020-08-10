@@ -2,13 +2,13 @@
 
 namespace TimSoft\TasksBundle\Controller;
 
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
-use TimSoft\TasksBundle\Entity\TaskEvent;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use TimSoft\TasksBundle\Entity\TaskEvent;
 
 /**
  * Taskevent controller.
@@ -46,37 +46,24 @@ class TaskEventController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $plannings = $em->getRepository('TimSoftGeneralBundle:Planning')->findByUser($taskEvent->getUtilisateur());
-            $PlanningExist = null;
-            foreach ($plannings as $planning) {
-                if (($planning->isAllDay() && $taskEvent->isAllDay()) || ($planning->isAllDay() && !$taskEvent->isAllDay()) || (!$planning->isAllDay() && $taskEvent->isAllDay())) {
-                    if ($planning->getStart()->format('Y-m-d') <= $taskEvent->getStart()->format('Y-m-d') && $planning->getEnd()->format('Y-m-d') >= $taskEvent->getEnd()->format('Y-m-d')) {
-                        $PlanningExist = true;
+            $taskExist = false;
+            $date = [];
+            $taskEvents = $em->getRepository('TimSoftTasksBundle:TaskEvent')->findByUtilisateur($taskEvent->getUtilisateur());
+            foreach ($taskEvents as $task) {
+                if (($task->isAllDay() && $taskEvent->isAllDay()) || (!$task->isAllDay() && !$taskEvent->isAllDay())) {
+                    if ($this->getIntersection($task->getStart(), $task->getEnd(), $taskEvent->getStart(), $taskEvent->getEnd())) {
+                        return new Response(json_encode(array('taskExist' => true, $taskEvents)));
                     }
                 } else {
-                    if ($planning->getStart()->format('Y-m-d H:i') <= $taskEvent->getStart()->format('Y-m-d H:i') && $planning->getEnd()->format('Y-m-d H:i') >= $taskEvent->getEnd()->format('Y-m-d H:i')) {
-                        $PlanningExist = true;
+                    if ($this->getIntersection($task->getStart()->format('d-m-Y'), $task->getEnd()->format('d-m-Y'), $taskEvent->getStart()->format('d-m-Y'), $taskEvent->getEnd()->format('d-m-Y'))) {
+                        return new Response(json_encode(array('taskExist' => true, $taskEvents)));
                     }
                 }
-//                print_r(json_encode($taskEvent->getStart()->format('Y-m-d')));
-//                echo '<pre>';
-//                print_r(json_encode($planning->getStart()->format('Y-m-d')));
             }
-//            print_r(json_encode($plannings));
-//            die();
             $em->persist($taskEvent);
             $em->flush();
-            if ($PlanningExist) {
-                return new Response(json_encode(array('PlanningExist' => $PlanningExist)));
-            }
-            return new Response(json_encode(array('status' => 'success')));
-//            $referer = $request->headers->get('referer');
-//            return $this->redirect($referer);
-//            return $this->redirectToRoute('taskevent_show', array('id' => $taskEvent->getId()));
+            return new Response(json_encode(array('status' => 'success', $taskEvent->getStart()->format('d-m-Y'), $date)));
         }
-//        if ($form->isSubmitted() && !$form->isValid()) {
-//            return new Response(json_encode(array('status' => 'errrrrrrrr')));
-//        }
 
         return $this->render('@TimSoftTasks/taskevent/newForm.html.twig', array(
             'taskEvent' => $taskEvent,
@@ -113,6 +100,19 @@ class TaskEventController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $taskEvents = $em->getRepository('TimSoftTasksBundle:TaskEvent')->findByUtilisateur($taskEvent->getUtilisateur());
+            foreach ($taskEvents as $task) {
+                if (($task->isAllDay() && $taskEvent->isAllDay()) || (!$task->isAllDay() && !$taskEvent->isAllDay())) {
+                    if ($this->getIntersection($task->getStart(), $task->getEnd(), $taskEvent->getStart(), $taskEvent->getEnd())) {
+                        return new Response(json_encode(array('taskExist' => true, $taskEvents)));
+                    }
+                } else {
+                    if ($this->getIntersection($task->getStart()->format('d-m-Y'), $task->getEnd()->format('d-m-Y'), $taskEvent->getStart()->format('d-m-Y'), $taskEvent->getEnd()->format('d-m-Y'))) {
+                        return new Response(json_encode(array('taskExist' => true, $taskEvents)));
+                    }
+                }
+            }
             $this->getDoctrine()->getManager()->flush();
             return new Response(json_encode(array('status' => 'success')));
         }
@@ -127,21 +127,20 @@ class TaskEventController extends Controller
     /**
      * Deletes a taskEvent entity.
      *
-     * @Route("/{id}", name="taskevent_delete")
-     * @Method("DELETE")
+     * @Route("/{id}/delete", name="taskevent_delete")
+     * @param $id
+     * @return Response
      */
-    public function deleteAction(Request $request, TaskEvent $taskEvent)
+    public function deleteAction($id)
     {
-        $form = $this->createDeleteForm($taskEvent);
-        $form->handleRequest($request);
+        $em = $this->getDoctrine()->getManager();
+        $taskEvent = $em->getRepository('TimSoftTasksBundle:TaskEvent')->find($id);
+        $em->remove($taskEvent);
+        $em->flush();
+//        }
+        return new Response(json_encode(array('status' => 'success')));
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($taskEvent);
-            $em->flush();
-        }
-
-        return $this->redirectToRoute('taskevent_index');
+//        return $this->redirectToRoute('taskevent_index');
     }
 
     /**
@@ -215,4 +214,20 @@ class TaskEventController extends Controller
 
         return new JsonResponse($taskEvents);
     }
+
+    function getIntersection($startTime, $endTime, $chkStartTime, $chkEndTime)
+    {
+        if ($chkStartTime > $startTime && $chkEndTime < $endTime) {    #-> Check time is in between start and end time
+            return true;
+        } elseif (($chkStartTime > $startTime && $chkStartTime < $endTime) || ($chkEndTime > $startTime && $chkEndTime < $endTime)) {    #-> Check start or end time is in between start and end time
+            return true;
+        } elseif ($chkStartTime == $startTime || $chkEndTime == $endTime) {    #-> Check start or end time is at the border of start and end time
+            return true;
+        } elseif ($startTime > $chkStartTime && $endTime < $chkEndTime) {    #-> start and end time is in between  the check start and end time.
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 }

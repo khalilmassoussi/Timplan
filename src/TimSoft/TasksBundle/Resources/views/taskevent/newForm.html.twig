@@ -36,7 +36,9 @@
                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
-                                        </div>{{ form_widget(form.start, {'attr': {'class': 'date form-control' , 'autocomplete': 'off'}}) }}
+                                        </div>
+                                        {{ form_errors(form) }}
+                                        {{ form_widget(form.start, {'attr': {'class': 'date form-control' , 'autocomplete': 'off'}}) }}
                                     </div>
                                 </td>
                                 <td>
@@ -65,13 +67,21 @@
                             <tr>
                                 <th>Étiquette/Site</th>
                                 <td> {{ form_widget(form.etiquette, {'attr': {'class': 'form-control'}}) }}</td>
-
                                 <td>{{ form_widget(form.site, {'attr': {'class': 'form-control'}}) }}</td>
-
                             </tr>
                             <tr>
-                                <th></th>
-                                <td> {{ form_row(form.progression, {'attr': {'class': 'custom-range'}}) }}</td>
+                                <th>Progression/Rapport</th>
+                                <td>
+                                    <div class="form-group">
+                                        {% for key, allDayItem in form.progression %}
+                                            <span>
+                                                {{ form_widget(allDayItem) }}
+                                               <span class="badge"
+                                                     style="font-size: 15px"> {{ form_label(allDayItem) }}</span>
+                                            </span>
+                                        {% endfor %}
+                                    </div>
+                                </td>
                                 <td>{{ form_widget(form.rapport, {'attr': {'class': 'form-control'}}) }}</td>
                             </tr>
                         </table>
@@ -135,18 +145,22 @@
                 type: 'POST',
                 dataType: "json",
             }).done(function (response) {
-                $('#addTask').modal('hide');
-                if (response.PlanningExist) {
-                    // alert('Message');
+                if (response.taskExist) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Il existe déjà une autre Task ayant un même créneau!',
+                    })
+                } else {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Task ajoutée avec succès !',
+                        // text: 'Il existe déjà une autre Task ayant un même créneau!',
+                    });
+                    $('#addTask').modal('hide');
                 }
             });
         }
-        // $.post(url, formSerialize, function (response) {
-        //     $('#addTask').modal('hide');
-        //     // alert(response.status);
-        //     $(this).find('input');
-        //     // $('#calendar').refetchEvents();
-        // }, 'JSON');
 
     });
     var slider = $('form[name="new"] #timsoft_tasksbundle_taskevent_progression');
@@ -177,7 +191,6 @@
                             // alert('Date non valable, veuillez la vérifier et réessayer');
                             $('form[name="new"] #timsoft_tasksbundle_taskevent_start').addClass('is-invalid');
                             $('form[name="new"] #timsoft_tasksbundle_taskevent_end').addClass('is-invalid');
-                            console.log($input.val());
                         } else {
                             $('form[name="new"] #timsoft_tasksbundle_taskevent_start').removeClass('is-invalid');
                             $('form[name="new"] #timsoft_tasksbundle_taskevent_end').removeClass('is-invalid');
@@ -198,7 +211,6 @@
                             // alert('Date non valable, veuillez la vérifier et réessayer');
                             $('form[name="new"] #timsoft_tasksbundle_taskevent_start').addClass('is-invalid');
                             $('form[name="new"] #timsoft_tasksbundle_taskevent_end').addClass('is-invalid');
-                            console.log($input.val());
                         } else {
                             $('form[name="new"] #timsoft_tasksbundle_taskevent_start').removeClass('is-invalid');
                             $('form[name="new"] #timsoft_tasksbundle_taskevent_end').removeClass('is-invalid');
@@ -220,7 +232,6 @@
                             // alert('Date non valable, veuillez la vérifier et réessayer');
                             $('form[name="new"] #timsoft_tasksbundle_taskevent_start').addClass('is-invalid');
                             $('form[name="new"] #timsoft_tasksbundle_taskevent_end').addClass('is-invalid');
-                            console.log($input.val());
                         } else {
                             $('form[name="new"] #timsoft_tasksbundle_taskevent_start').removeClass('is-invalid');
                             $('form[name="new"] #timsoft_tasksbundle_taskevent_end').removeClass('is-invalid');
@@ -242,7 +253,6 @@
                             // alert('Date non valable, veuillez la vérifier et réessayer');
                             $('form[name="new"] #timsoft_tasksbundle_taskevent_start').addClass('is-invalid');
                             $('form[name="new"] #timsoft_tasksbundle_taskevent_end').addClass('is-invalid');
-                            console.log($input.val());
                         } else {
                             $('form[name="new"] #timsoft_tasksbundle_taskevent_start').removeClass('is-invalid');
                             $('form[name="new"] #timsoft_tasksbundle_taskevent_end').removeClass('is-invalid');
@@ -254,44 +264,47 @@
         });
         $('form[name="new"] #timsoft_tasksbundle_taskevent_motif').parent().hide();
         $('form[name="new"] #timsoft_tasksbundle_taskevent_statut').on('change', function (e) {
+            $('form[name="new"] input[name="timsoft_tasksbundle_taskevent[progression]"]').each(function (e) {
+                $(this).removeAttr("disabled");
+                $(this).removeAttr("checked");
+                $(this).find('label').css('color', 'red');
+            });
             if (this.value !== 'Bloqué') {
                 $('form[name="new"] #timsoft_tasksbundle_taskevent_motif').parent().hide();
                 if (this.value === 'Done') {
-                    slider.val(100);
-                    sliderVal();
+                    $('form[name="new"] input[name="timsoft_tasksbundle_taskevent[progression]"][value="100"]').attr('checked', 'checked');
                 }
                 if (this.value === 'To DO') {
-                    slider.val(0);
-                    sliderVal();
-                }
-                if (this.value === 'In Progress') {
-                    slider.val(1);
-                    sliderVal();
+                    $('form[name="new"] input[name="timsoft_tasksbundle_taskevent[progression]"][value="0"]').attr('checked', 'checked');
                 }
             } else {
                 $('form[name="new"] #timsoft_tasksbundle_taskevent_motif').parent().show();
-                slider.val(0);
-                sliderVal();
             }
-            sliderVal();
+            progress(this.value);
         });
-        slider.val(0);
-        sliderVal();
-
+        $('form[name="new"] input[name="timsoft_tasksbundle_taskevent[progression]"]').each(function (e) {
+            $(this).next().css('background-color', perc2color(this.value));
+        });
     });
-    var label = $("label[for='" + 'timsoft_tasksbundle_taskevent_progression' + "']");
-    label.append(': <div id="prog" style="display: inline-block"></div>');
 
-    function sliderVal() {
+    function progress(value) {
+        if (value === 'In Progress') {
+            $('form[name="new"] input[name="timsoft_tasksbundle_taskevent[progression]"][value="0"]').attr('disabled', 'disabled');
+            $('form[name="new"] input[name="timsoft_tasksbundle_taskevent[progression]"][value="100"]').attr('disabled', 'disabled');
+        } else if (value === 'Done') {
+            $('form[name="new"] input[name="timsoft_tasksbundle_taskevent[progression]"][value="0"]').attr('disabled', 'disabled');
+            $('form[name="new"] input[name="timsoft_tasksbundle_taskevent[progression]"][value="25"]').attr('disabled', 'disabled');
+            $('form[name="new"] input[name="timsoft_tasksbundle_taskevent[progression]"][value="50"]').attr('disabled', 'disabled');
+            $('form[name="new"] input[name="timsoft_tasksbundle_taskevent[progression]"][value="75"]').attr('disabled', 'disabled');
+            $('form[name="new"] input[name="timsoft_tasksbundle_taskevent[progression]"][value="90"]').attr('disabled', 'disabled');
+        } else if (value === 'To DO') {
+            $('form[name="new"] input[name="timsoft_tasksbundle_taskevent[progression]"][value="100"]').attr('disabled', 'disabled');
+            $('form[name="new"] input[name="timsoft_tasksbundle_taskevent[progression]"][value="25"]').attr('disabled', 'disabled');
+            $('form[name="new"] input[name="timsoft_tasksbundle_taskevent[progression]"][value="50"]').attr('disabled', 'disabled');
+            $('form[name="new"] input[name="timsoft_tasksbundle_taskevent[progression]"][value="75"]').attr('disabled', 'disabled');
+            $('form[name="new"] input[name="timsoft_tasksbundle_taskevent[progression]"][value="90"]').attr('disabled', 'disabled');
+        }
 
-        var val = slider.parent();
-        var newV = $('#prog');
-        newV.html('&nbsp;' + slider.val() + '%');
-        newV.css('background-color', perc2color(slider.val()));
-        slider.on('change', function () {
-            newV.css('background-color', perc2color(this.value));
-            newV.html('&nbsp;' + this.value + '%');
-        });
     }
 
     function perc2color(perc) {
@@ -308,9 +321,4 @@
     }
 </script>
 {% form_theme form _self %}
-{#{% block choice_widget %}#}
-{#    <div>#}
-{#        <input type="radio" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />#}
 
-{#    </div>#}
-{#{% endblock choice_widget %}#}

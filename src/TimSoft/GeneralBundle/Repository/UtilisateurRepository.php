@@ -113,11 +113,10 @@ class UtilisateurRepository extends \Doctrine\ORM\EntityRepository
     {
         return $this->createQueryBuilder('u')
             ->select('u')
-//            ->leftJoin('u.client', 'client')
-            ->where('u.client = :client')
-            ->setParameter('client', $societe)
-            ->getQuery()
-            ->getResult();
+            ->leftJoin('u.client', 'c')
+            ->where('c = ?1')
+            ->andWhere('u.statutProfil = 1')
+            ->setParameter('1', $societe);
     }
 
 }

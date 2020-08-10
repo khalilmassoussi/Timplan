@@ -250,10 +250,12 @@
                         editable: (app_user === "ROLE_ADMIN"),
                         // eventDurationEditable: false,
                         eventLimit: true, // when too many events in a day, show the popover
-                        events: {
-                            url:
-                                '{{ path('list', {'user' : cc.id } ) }}',
-                        },
+                        eventSources: [
+
+                            '{{ path('list', {'user' : cc.id } ) }}',
+                            '{{ path('taskevent_by_user',{'id': cc.id}) }}'
+
+                        ],
                         minTime: '08:30:00',
                         maxTime: '18:30:00',
                         displayEventTime: false,
@@ -289,23 +291,12 @@
                         },
                         //   defaultDate: '2020-04-04',
                         eventClick: function (event) {
-                            console.log(moment.locale('fr'));
-                            var xhr = $.ajax({
-                                url: '{{ path('plans') }}',
-                                data: 'action=update&id=' + event.event.id,
-                                type: "POST",
-                                async: false,
-                                success: function (data) {
-                                    // console.log(data);
-                                    ChefProjet(data);
-                                    CalendarModalData(data);
-                                },
-                                error: function () {
-                                    alert("erreur lors de l'appel de l'url dans POST event/drop : contactez l'administrateur du site");
-                                }
-
-                                ,
-                            });
+                            if (event.event.extendedProps.type != 'TaskEvent') {
+                                console.log(event);
+                                editPlanningModal(event, calendar);
+                            } else {
+                                editTaskEvent(event, calendar);
+                            }
                         },
                         eventResize: function (event) {
                             console.log(event.event.end);
@@ -339,17 +330,62 @@
                             if (event.view.type === 'dayGridWeek') {
                                 calendar.height = 450;
                                 $(event.el).height('auto');
-                                $(event.el).find('.fc-title').prepend('<b>Client: </b>');
-                                // $('<b>Client: </b>').prependTo(event.el);
-                                $(event.el).append('<b>Libellé:</b> ' + event.event.extendedProps.libelle);
-                                if (event.event.allDay === false) {
-                                    if (moment(event.event.start).hours() > 13) {
-                                        $(event.el).append('<br><b>Après-midi</b>');
-                                    } else {
-                                        $(event.el).append('<br><b>Matin</b>');
+                                if (event.event.extendedProps.type == 'TaskEvent') {
+                                    $(event.el).find('.fc-title').prepend('<b>Client: </b>');
+                                    $(event.el).append('<b>Task: </b> ' + event.event.extendedProps.task +
+                                        '<br><b>Intervenant: </b>' + event.event.extendedProps.Intervenant);
+                                    if (event.event.allDay === false) {
+                                        $(event.el).append('<div><b>Heure: </b>' + moment(event.event.start).format("HH:mm") + '</div>');
+                                    }
+                                    if (event.event.extendedProps.etiquette == 'Urgent') {
+                                        $(event.el).append('<div><b>Etuiquette: </b> <span class="badge bg-danger">' + event.event.extendedProps.etiquette + '</span></div>');
+                                    } else if (event.event.extendedProps.etiquette == 'Peu') {
+                                        $(event.el).append('<div><b>Etuiquette: </b> <span class="badge bg-light">' + event.event.extendedProps.etiquette + '</span></div>');
+                                    } else if (event.event.extendedProps.etiquette == 'Moyen') {
+                                        $(event.el).append('<div><b>Etuiquette: </b> <span class="badge bg-indigo">' + event.event.extendedProps.etiquette + '</span></div>');
+                                    } else if (event.event.extendedProps.etiquette == 'Important') {
+                                        $(event.el).append('<div><b>Etuiquette: </b> <span class="badge bg-warning">' + event.event.extendedProps.etiquette + '</span></div>');
+                                    }
+                                    $(event.el).append('<div class="ribbon-wrapper"><div class="ribbon">' + event.event.extendedProps.Statut + '</div></div>');
+                                    if (event.event.extendedProps.Statut === 'To DO') {
+                                        $(event.el).find('div.ribbon').each(function (index) {
+                                            $(this).addClass('bg-warning');
+                                            $(this).css('font-size', '80%');
+
+                                        });
+                                    } else if (event.event.extendedProps.Statut === 'Bloqué') {
+                                        $(event.el).find('div.ribbon').each(function (index) {
+                                            $(this).addClass('bg-danger');
+                                            // $(this).css('font-size', '0.6vw');
+
+                                        });
+                                    } else if (event.event.extendedProps.Statut === 'In Progress') {
+                                        $(event.el).find('div.ribbon').each(function (index) {
+                                            $(this).addClass('bg-navy');
+                                            $(this).css('font-size', '0.6vw');
+
+                                        });
+                                    } else if (event.event.extendedProps.Statut === 'Done') {
+                                        $(event.el).find('div.ribbon').each(function (index) {
+                                            $(this).addClass('bg-success');
+                                            // $(this).css('font-size', '0.6vw');
+
+                                        });
+                                    }
+
+
+                                } else {
+                                    $(event.el).find('.fc-title').prepend('<b>Client: </b>');
+                                    // $('<b>Client: </b>').prependTo(event.el);
+                                    $(event.el).append('<b>Libellé:</b> ' + event.event.extendedProps.libelle);
+                                    if (event.event.allDay === false) {
+                                        if (moment(event.event.start).hours() > 13) {
+                                            $(event.el).append('<br><b>Après-midi</b>');
+                                        } else {
+                                            $(event.el).append('<br><b>Matin</b>');
+                                        }
                                     }
                                 }
-
                             } else if (event.view.type === 'dayGridMonth' && event.event.allDay) {
                                 $(event.el).height('50');
                                 $(event.el).append(event.event.extendedProps.libelle);

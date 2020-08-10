@@ -321,17 +321,18 @@ class Planning extends Event implements \JsonSerializable
         $class = new \ReflectionClass($this->lc->getCommande());
         if ($this->statut == 'Confirmé') {
             $this->eventTextColor = '#FFFFFF';
+            $this->eventColor = '#007bff';
         } elseif ($this->statut == 'En attente') {
-            $this->eventColor = '#FFA500';
+            $this->eventColor = '#ff851b';
             $this->eventTextColor = '#FFFFFF';
         } elseif ($this->statut == 'Proposé') {
-            $this->eventColor = '#FFF380';
+            $this->eventColor = '#ffc107';
             $this->eventTextColor = '#000000';
         } elseif ($this->statut == 'Terminé') {
-            $this->eventColor = '#008000';
+            $this->eventColor = '#28a745';
             $this->eventTextColor = '#FFFFFF';
         } elseif ($this->statut == 'Rejeté') {
-            $this->eventColor = '#FF0000';
+            $this->eventColor = '#dc3545';
             $this->eventTextColor = '#FFFFFF';
         }
         if ($this->end) {

@@ -287,45 +287,55 @@
                             $(event.el).height('auto');
                             $(event.el).find('.fc-title').prepend('<b>Client: </b>');
                             if (event.event.extendedProps.type === 'TaskEvent') {
-                                $(event.el).append('<b>Task:</b> ' + event.event.extendedProps.libelle +
-                                    '<br><b>Lieu: </b>' + event.event.extendedProps.Lieu + '<div class="ribbon-wrapper"><div class="ribbon">' + event.event.extendedProps.etiquette + '</div></div>');
-                                if (event.event.extendedProps.etiquette === 'Important') {
+                                $(event.el).append('<b>Task:</b> ' + event.event.extendedProps.libelle);
+
+                                if (!event.event.allDay) {
+                                    $(event.el).append('<div><b>Heure: </b>' + moment(event.event.start).format("HH:mm") + '</div>');
+                                }
+                                if (event.event.extendedProps.etiquette == 'Urgent') {
+                                    $(event.el).append('<div><b>Etuiquette: </b> <span class="badge bg-danger">' + event.event.extendedProps.etiquette + '</span></div>');
+                                } else if (event.event.extendedProps.etiquette == 'Peu') {
+                                    $(event.el).append('<div><b>Etuiquette: </b> <span class="badge bg-light">' + event.event.extendedProps.etiquette + '</span></div>');
+                                } else if (event.event.extendedProps.etiquette == 'Moyen') {
+                                    $(event.el).append('<div><b>Etuiquette: </b> <span class="badge bg-indigo">' + event.event.extendedProps.etiquette + '</span></div>');
+                                } else if (event.event.extendedProps.etiquette == 'Important') {
+                                    $(event.el).append('<div><b>Etuiquette: </b> <span class="badge bg-warning">' + event.event.extendedProps.etiquette + '</span></div>');
+                                }
+                                $(event.el).append('<div class="ribbon-wrapper"><div class="ribbon">' + event.event.extendedProps.Statut + '</div></div>');
+                                if (event.event.extendedProps.Statut === 'To DO') {
                                     $(event.el).find('div.ribbon').each(function (index) {
-                                        // $(this).addClass('badge-warning');
                                         $(this).addClass('bg-warning');
                                         $(this).css('font-size', '80%');
 
                                     });
-                                } else if (event.event.extendedProps.etiquette === 'Urgent') {
+                                } else if (event.event.extendedProps.Statut === 'Bloqué') {
                                     $(event.el).find('div.ribbon').each(function (index) {
                                         $(this).addClass('bg-danger');
                                         // $(this).css('font-size', '0.6vw');
 
                                     });
-                                } else if (event.event.extendedProps.etiquette === 'Moyen') {
+                                } else if (event.event.extendedProps.Statut === 'In Progress') {
                                     $(event.el).find('div.ribbon').each(function (index) {
-                                        $(this).addClass('bg-info');
-                                        // $(this).css('font-size', '0.6vw');
+                                        $(this).addClass('bg-navy');
+                                        $(this).css('font-size', '0.6vw');
 
                                     });
-                                } else if (event.event.extendedProps.etiquette === 'Peu') {
+                                } else if (event.event.extendedProps.Statut === 'Done') {
                                     $(event.el).find('div.ribbon').each(function (index) {
-                                        $(this).addClass('bg-light');
+                                        $(this).addClass('bg-success');
                                         // $(this).css('font-size', '0.6vw');
-
                                     });
                                 }
-                                $(event.el).each(function (index) {
-                                });
                             } else {
                                 $(event.el).append('<b>Libellé:</b> ' + event.event.extendedProps.libelle +
                                     '<br><b>Lieu: </b>' + event.event.extendedProps.Lieu);
-                            }
-                            if (event.event.allDay === false) {
-                                if (moment(event.event.start).hours() > 13) {
-                                    $(event.el).append('<br><b>Après-midi</b>');
-                                } else {
-                                    $(event.el).append('<br><b>Matin</b>');
+
+                                if (event.event.allDay === false) {
+                                    if (moment(event.event.start).hours() > 13) {
+                                        $(event.el).append('<br><b>Après-midi</b>');
+                                    } else {
+                                        $(event.el).append('<br><b>Matin</b>');
+                                    }
                                 }
                             }
                         } else if (event.view.type === 'dayGridMonth' && event.event.allDay) {
@@ -336,7 +346,7 @@
                                 $(event.el).append('<div class="ribbon-wrapper"><div class="ribbon">' + event.event.extendedProps.etiquette + '</div></div>');
                                 if (event.event.extendedProps.etiquette === 'Important') {
                                     $(event.el).find('div.ribbon').each(function (index) {
-                                        // $(this).addClass('badge-warning');
+
                                         $(this).addClass('bg-warning');
                                         $(this).css('font-size', '70%');
 
@@ -344,19 +354,16 @@
                                 } else if (event.event.extendedProps.etiquette === 'Urgent') {
                                     $(event.el).find('div.ribbon').each(function (index) {
                                         $(this).addClass('bg-danger');
-                                        // $(this).css('font-size', '0.6vw');
 
                                     });
                                 } else if (event.event.extendedProps.etiquette === 'Moyen') {
                                     $(event.el).find('div.ribbon').each(function (index) {
                                         $(this).addClass('bg-info');
-                                        // $(this).css('font-size', '0.6vw');
 
                                     });
                                 } else if (event.event.extendedProps.etiquette === 'Peu') {
                                     $(event.el).find('div.ribbon').each(function (index) {
                                         $(this).addClass('bg-light');
-                                        // $(this).css('font-size', '0.6vw');
 
                                     });
                                 }
@@ -463,15 +470,18 @@
                 });
 
                 $("#export").click(function (e) {
+
                     e.preventDefault();
                     var exportation = [];
                     var events = calendar.getEvents();
                     var userId = {{ app.user.id }};
                     $.each(events, function (key, event) {
-                        var resourceIds = event._def.resourceIds;
-                        if (userId == resourceIds[0]) {
+
+                        var resourceIds = event.extendedProps.resourceIds;
+                        if (userId === resourceIds[0] && event.extendedProps.type !== 'TaskEvent') {
                             if ((calendar.view.currentStart <= event.start) && (calendar.view.currentEnd > event.start)) {
                                 exportation.push(event.id);
+                                console.log(event);
                             }
                         }
                     });

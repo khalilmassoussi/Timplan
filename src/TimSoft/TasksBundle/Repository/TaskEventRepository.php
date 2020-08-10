@@ -10,4 +10,5 @@ namespace TimSoft\TasksBundle\Repository;
  */
 class TaskEventRepository extends \Doctrine\ORM\EntityRepository
 {
+
 }

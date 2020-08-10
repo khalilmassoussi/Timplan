@@ -224,10 +224,11 @@
             $('#Date').append(dateInput);
             var data = {};
             {% if parClient is defined %}
-            var x = '{{ parClient }}';
-            if (x === 'parClient') {
+            if ('{{ parClient }}' === 'parClient') {
                 data.parClient = 'parClient';
             }
+            {% elseif ParConsultant is defined %}
+            data.ParConsultant = 'ParConsultant';
             {% endif %}
             var table = $('#TableRIFP').DataTable({
                 language: {

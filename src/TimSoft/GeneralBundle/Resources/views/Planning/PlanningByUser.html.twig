@@ -140,65 +140,7 @@
         <script>
             document.addEventListener('DOMContentLoaded', function () {
                 var client;
-                var app_user = {{ app.user.roleUtilisateur|json_encode()|raw }}
-                    $('#container1').append('<br><select id="users1" class="form-control" style="width: 100%"></select>');
-                $('#fullCalModal').on('hidden.bs.modal', function () {
-                    $('input[name="allday"]').each(function () {
-                        this.checked = false;
-                    });
-                    $(':input').each(function () {
-                        $(this).attr("disabled", false);
-                    });
-                });
-                $("#container").delegate("#users", "select2:select", function (e) {
-                    console.log(this.value);
-                    var planningid = $(".planning").attr('id');
-                    $.ajax({
-                        url: '{{ path('AccompagnementPlanning') }}',
-                        data: 'action=update&idu=' + e.params.data.id + '&id=' + planningid + '&type=selecting',
-                        type: "POST",
-                        // async: false,
-                        success: function (data) {
-                        },
-                        error: function () {
-                            alert("Vous ne pouvez pas faire cette action");
-                        },
-                    });
-                });
-                $("#container").delegate("#users", "select2:unselect", function (e) {
-                    console.log(e.params.data.id);
-                    var planningid = $(".planning").attr('id');
-                    $.ajax({
-                        url: '{{ path('AccompagnementPlanning') }}',
-                        data: 'action=update&idu=' + e.params.data.id + '&id=' + planningid + '&type=unselect',
-                        type: "POST",
-                        //  async: false,
-                        success: function (data) {
-                        },
-                        error: function () {
-                            alert("Vous ne pouvez pas faire cette action");
-                        },
-                    });
-                });
-                $('#container').append('<select id="users" class="form-control js-example-basic-multiple" multiple="multiple" style="width: 100%"></select>');
-                $.ajax({
-                    url: '{{ path('getAllUsers') }}',
-                    //data: 'action=update&id=' + this.id,
-                    type: "POST",
-                    //  async: false,
-                    success: function (data) {
-                        $.each(data, function (i, item) {
-                            $('#users').append($('<option>', {
-                                value: item.id,
-                                text: item.nomUtilisateur + ' ' + item.prenomUtilisateur
-                            }));
-                        });
-                        // console.log(data);
-                    },
-                    error: function () {
-                        alert("Vous ne pouvez pas faire cette action");
-                    },
-                });
+                var app_user = '{{ app.user.roleUtilisateur|json_encode()|raw }}';
                 var initialLocaleCode = 'fr';
                 var Calendar = FullCalendar.Calendar;
                 var calendarEl = document.getElementById('calendar');
@@ -219,9 +161,6 @@
                     editable: (app_user === "ROLE_ADMIN"),
                     eventDurationEditable: false,
                     eventLimit: true, // when too many events in a day, show the popover
-                    {#events: {#}
-                    {#    url: "{{ path('list', {'user' : app.user.id }) }}",#}
-                    {#},#}
                     minTime: '08:30:00',
                     maxTime: '18:30:00',
                     allDay: true,
@@ -303,37 +242,46 @@
                             if (event.event.extendedProps.type == 'TaskEvent') {
                                 $(event.el).find('.fc-title').prepend('<b>Client: </b>');
                                 $(event.el).append('<b>Task: </b> ' + event.event.extendedProps.task +
-                                    '<br><b>Lieu: </b>' + event.event.extendedProps.Lieu + '<br><b>Intervenant: </b>' + event.event.extendedProps.Intervenant);
+                                    '<br><b>Intervenant: </b>' + event.event.extendedProps.Intervenant);
                                 if (event.event.allDay === false) {
-                                    $(event.el).append('<p>Heure: ' + moment(event.event.start).format("HH:mm") + '</p>');
+                                    $(event.el).append('<div><b>Heure: </b>' + moment(event.event.start).format("HH:mm") + '</div>');
                                 }
-                                $(event.el).append('<div class="ribbon-wrapper"><div class="ribbon">' + event.event.extendedProps.etiquette + '</div></div>');
-                                if (event.event.extendedProps.etiquette === 'Important') {
+                                if (event.event.extendedProps.etiquette == 'Urgent') {
+                                    $(event.el).append('<div><b>Etuiquette: </b> <span class="badge bg-danger">' + event.event.extendedProps.etiquette + '</span></div>');
+                                } else if (event.event.extendedProps.etiquette == 'Peu') {
+                                    $(event.el).append('<div><b>Etuiquette: </b> <span class="badge bg-light">' + event.event.extendedProps.etiquette + '</span></div>');
+                                } else if (event.event.extendedProps.etiquette == 'Moyen') {
+                                    $(event.el).append('<div><b>Etuiquette: </b> <span class="badge bg-indigo">' + event.event.extendedProps.etiquette + '</span></div>');
+                                } else if (event.event.extendedProps.etiquette == 'Important') {
+                                    $(event.el).append('<div><b>Etuiquette: </b> <span class="badge bg-warning">' + event.event.extendedProps.etiquette + '</span></div>');
+                                }
+                                $(event.el).append('<div class="ribbon-wrapper"><div class="ribbon">' + event.event.extendedProps.Statut + '</div></div>');
+                                if (event.event.extendedProps.Statut === 'To DO') {
                                     $(event.el).find('div.ribbon').each(function (index) {
-                                        // $(this).addClass('badge-warning');
                                         $(this).addClass('bg-warning');
                                         $(this).css('font-size', '80%');
 
                                     });
-                                } else if (event.event.extendedProps.etiquette === 'Urgent') {
+                                } else if (event.event.extendedProps.Statut === 'Bloqué') {
                                     $(event.el).find('div.ribbon').each(function (index) {
                                         $(this).addClass('bg-danger');
                                         // $(this).css('font-size', '0.6vw');
 
                                     });
-                                } else if (event.event.extendedProps.etiquette === 'Moyen') {
+                                } else if (event.event.extendedProps.Statut === 'In Progress') {
                                     $(event.el).find('div.ribbon').each(function (index) {
-                                        $(this).addClass('bg-info');
-                                        // $(this).css('font-size', '0.6vw');
+                                        $(this).addClass('bg-navy');
+                                        $(this).css('font-size', '0.6vw');
 
                                     });
-                                } else if (event.event.extendedProps.etiquette === 'Peu') {
+                                } else if (event.event.extendedProps.Statut === 'Done') {
                                     $(event.el).find('div.ribbon').each(function (index) {
-                                        $(this).addClass('bg-light');
+                                        $(this).addClass('bg-success');
                                         // $(this).css('font-size', '0.6vw');
 
                                     });
                                 }
+
 
                             } else {
                                 $(event.el).find('.fc-title').prepend('<b>Client: </b>');
@@ -351,36 +299,42 @@
                             $(event.el).height('auto');
                             $(event.el).append(event.event.extendedProps.libelle);
                         }
-                        if (event.event.extendedProps.type === 'TaskEvent') {
-                            $(event.el).find('.fc-content').css('width', '90%');
-                            $(event.el).append('<div class="ribbon-wrapper"><div class="ribbon">' + event.event.extendedProps.etiquette + '</div></div>');
-                            if (event.event.extendedProps.etiquette === 'Important') {
-                                $(event.el).find('div.ribbon').each(function (index) {
-                                    // $(this).addClass('badge-warning');
-                                    $(this).addClass('bg-warning');
-                                    $(this).css('font-size', '70%');
-
-                                });
-                            } else if (event.event.extendedProps.etiquette === 'Urgent') {
-                                $(event.el).find('div.ribbon').each(function (index) {
-                                    $(this).addClass('bg-danger');
-                                    // $(this).css('font-size', '0.6vw');
-
-                                });
-                            } else if (event.event.extendedProps.etiquette === 'Moyen') {
-                                $(event.el).find('div.ribbon').each(function (index) {
-                                    $(this).addClass('bg-info');
-                                    // $(this).css('font-size', '0.6vw');
-
-                                });
-                            } else if (event.event.extendedProps.etiquette === 'Peu') {
-                                $(event.el).find('div.ribbon').each(function (index) {
-                                    $(this).addClass('bg-light');
-                                    // $(this).css('font-size', '0.6vw');
-
-                                });
-                            }
-                        }
+                        // if (event.event.extendedProps.type == 'TaskEvent') {
+                        //     $(event.el).find('.fc-title').prepend('<b>Client: </b>');
+                        //     $(event.el).append('<b>Task: </b> ' + event.event.extendedProps.task +
+                        //         '<br><b>Intervenant: </b>' + event.event.extendedProps.Intervenant);
+                        //     if (event.event.allDay === false) {
+                        //         $(event.el).append('<p>Heure: ' + moment(event.event.start).format("HH:mm") + '</p>');
+                        //     }
+                        //     $(event.el).append('<div class="ribbon-wrapper"><div class="ribbon">' + event.event.extendedProps.Statut + '</div></div>');
+                        //     if (event.event.extendedProps.Statut === 'To DO') {
+                        //         $(event.el).find('div.ribbon').each(function (index) {
+                        //             $(this).addClass('bg-warning');
+                        //             $(this).css('font-size', '80%');
+                        //
+                        //         });
+                        //     } else if (event.event.extendedProps.Statut === 'Bloqué') {
+                        //         $(event.el).find('div.ribbon').each(function (index) {
+                        //             $(this).addClass('bg-danger');
+                        //             // $(this).css('font-size', '0.6vw');
+                        //
+                        //         });
+                        //     } else if (event.event.extendedProps.Statut === 'In Progress') {
+                        //         $(event.el).find('div.ribbon').each(function (index) {
+                        //             $(this).addClass('bg-navy');
+                        //             $(this).css('font-size', '0.6vw');
+                        //
+                        //         });
+                        //     } else if (event.event.extendedProps.Statut === 'Done') {
+                        //         $(event.el).find('div.ribbon').each(function (index) {
+                        //             $(this).addClass('bg-success');
+                        //             // $(this).css('font-size', '0.6vw');
+                        //
+                        //         });
+                        //     }
+                        //
+                        //
+                        // }
                     },
                     lazyFetching: false,
 
@@ -405,116 +359,13 @@
 
 
                 });
-                $('input:radio[name=Facturation]').change(function () {
-                    if (this.value === 'Gratuit') {
-                        requestAjax('facturation', $('.planning').attr('id'))
-                    } else if (this.value === 'Facturé') {
-                        requestAjax('facturation', $('.planning').attr('id'))
 
-                    }
-                });
-                $('input:radio[name=accompagnements]').change(function () {
-                    if (this.value === 'Oui') {
-                        $('#users').val(null).trigger("change");
-                        $("#container").show()
-                    } else if (this.value === 'Non') {
-                        requestAjax('accompagnements', $('.planning').attr('id'));
-                        $("#container").hide()
-                    }
-                });
-                $("#Statut").change(function () {
-                    requestAjax('Statut', $('.planning').attr('id'), this.value);
-                });
-                $('input:radio[name=Lieu]').change(function () {
-                    if (this.value === 'SurSite') {
-                        requestAjax('Lieu', $('.planning').attr('id'), 'Sur Site')
-                    } else if (this.value === 'aDistance') {
-                        requestAjax('Lieu', $('.planning').attr('id'), 'à distance')
-
-                    }
-                });
-                // f();
-                $('.js-example-basic-multiple').select2({
-                    tags: true,
-                });
                 $("#users1").select2({
                     placeholder: "Choisir un utilisateur",
                     allowClear: true,
                     tags: true,
                 });
 
-                function requestAjax(type, id, value) {
-
-                }
-
-                $("#Sauvegarder").click(function () {
-                    // console.log($("#datepicker").datepicker('getDate'));
-                    statut = $('#Statut').val();
-                    lieu = $('input:radio[name=Lieu]:checked').val();
-                    facturation = $('input:radio[name=Facturation]:checked').val();
-                    userClient = $("#users1").val();
-                    accompagnements = $('input:radio[name=accompagnements]:checked').val();
-                    commentaire = $('#textArea').val();
-                    end = $('#endTime').val();
-                    start = $('#datepicker').val();
-                    var dateStart = moment(start).format('DD-MM-YYYY');
-                    var dateEnd = moment(end).format('DD-MM-YYYY');
-                    console.log('----------');
-                    console.log(start);
-                    console.log("-----------");
-
-                    var matin = $("#Matin:checked").val();
-                    var midi = $("#Midi:checked").val();
-                    var allday = false;
-                    if (midi && matin) {
-                        allday = true
-                    } else if (matin) {
-                        allday = matin;
-                    } else {
-                        allday = midi;
-                    }
-                    $.ajax({
-                        url: '{{ path('ModificationPlanning') }}',
-                        data: 'action=update&id=' + $('.planning').attr('id') + '&statut=' + statut + '&facturation=' + facturation + '&userClient=' + userClient + '&accompagnements=' + accompagnements
-                            + '&lieu=' + lieu + '&commentaire=' + commentaire + '&start=' + start + '&end=' + end + '&allday=' + allday,
-                        type: "POST",
-                        success: function (data) {
-                            calendar.refetchEvents();
-                            // console.log(data);
-                        },
-                        error: function () {
-                            alert("Vous ne pouvez pas faire cette action");
-                        },
-                    });
-                });
-                $("#Supprimer").click(function (e) {
-                    if (confirm('Souhaitez-vous réellement supprimer cet événement?')) {
-                        e.preventDefault();
-                        $.ajax({
-                            url: '{{ path('deletePlanning') }}',
-                            data: 'action=update&id=' + $('.planning').attr('id'),
-                            type: "POST",
-                            //   async: false,
-                            statusCode: {
-                                302: function () {
-                                    window.alert('You have been logged out of the System');
-                                    // goToLogout();
-                                }
-                            },
-                            success: function (data, textStatus) {
-                                // console.log(data);
-                                calendar.refetchEvents();
-                                //  f();
-                            },
-                            error: function () {
-                                alert("Vous ne pouvez pas faire cette action");
-                            },
-                        });
-                    }
-                });
-                $("#commentaire").click(function () {
-                    $('#textArea').show()
-                });
                 $("#export").click(function (e) {
                     e.preventDefault();
                     if ($('#utilisateurs').val()) {
@@ -522,7 +373,7 @@
                         var events = calendar.getEvents();
                         var clientId = $('#utilisateurs').val();
                         $.each(events, function (key, event) {
-                            if (event.extendedProps.Client.id == clientId) {
+                            if (event.extendedProps.Client.id == clientId && event.extendedProps.type !== 'TaskEvent') {
                                 if ((calendar.view.currentStart <= event.start) && (calendar.view.currentEnd > event.start)) {
                                     exportation.push(event.id);
                                 }

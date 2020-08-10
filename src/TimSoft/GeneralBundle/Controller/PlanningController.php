@@ -737,7 +737,20 @@ class PlanningController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-//            print_r(json_encode($editForm->get('temps')->getData()));
+            $em = $this->getDoctrine()->getManager();
+            $plannings = $this->getDoctrine()->getRepository('TimSoftGeneralBundle:Planning')->findByUtilisateur($planning->getUtilisateur());
+            $plannings = $this->unsetValue($plannings, $planning, true);
+            foreach ($plannings as $plan) {
+                if (($plan->isAllDay() && $planning->isAllDay()) || (!$plan->isAllDay() && !$planning->isAllDay())) {
+                    if ($this->getIntersection($plan->getStart(), $plan->getEnd(), $planning->getStart(), $planning->getEnd())) {
+                        return new Response(json_encode(array('planExist' => true, $plannings)));
+                    }
+                } else {
+                    if ($this->getIntersection($plan->getStart()->format('d-m-Y'), $plan->getEnd()->format('d-m-Y'), $planning->getStart()->format('d-m-Y'), $planning->getEnd()->format('d-m-Y'))) {
+                        return new Response(json_encode(array('planExist' => true, $plannings)));
+                    }
+                }
+            }
             $temps = $editForm->get('temps')->getData();
             if (in_array('Matin', $temps) && in_array('Après-midi', $temps)) {
                 $planning->setAllDay(true);
@@ -745,10 +758,8 @@ class PlanningController extends Controller
                 $planning->setAllDay(false);
                 $planning->setStart($editForm->get('start')->getData());
                 $planning->getStart()->setTime(8, 30);
-//                var_dump(json_encode($editForm->get('start')->getData()));
                 $planning->setEnd($editForm->get('end')->getData());
                 $planning->getEnd()->setTime(13, 00);
-//                var_dump(json_encode($editForm->get('end')->getData()));
             } elseif (!in_array('Matin', $temps) && in_array('Après-midi', $temps)) {
                 $planning->setAllDay(false);
                 $planning->setStart($editForm->get('start')->getData());
@@ -756,7 +767,106 @@ class PlanningController extends Controller
                 $planning->setEnd($editForm->get('end')->getData());
                 $planning->getEnd()->setTime(18, 00);
             }
-            $this->getDoctrine()->getManager()->persist($planning);
+
+            /* ---------------------------------- */
+            $message = (new \Swift_Message('Planning ' . $request->get('statut') . ': ' . $planning->getLc()->getCommande()->getClient()->getRaisonSociale() . ' du ' . $planning->getStart()->format('d/m/Y')))
+                ->setFrom(['timplan@timsoft.net' => "Administrateur TimSoft"]);
+            $messageG = (new \Swift_Message('Planning ' . $request->get('statut') . ': ' . $planning->getLc()->getCommande()->getClient()->getRaisonSociale() . ' du ' . $planning->getStart()->format('d/m/Y')))
+                ->setFrom(['timplan@timsoft.net' => "Administrateur TimSoft"]);
+            $failedRecipients = [];
+            $numSent = 0;
+            $user = $planning->getUtilisateur();
+            $message->addTo($user->getEmail(), $user->getNomUtilisateur() . ' ' . $user->getPrenomUtilisateur());
+            if ($planning->getAccompagnements()) {
+                foreach ($planning->getAccompagnements() as $bus) {
+                    $message->addTo($bus->getEmail(), $bus->getNomUtilisateur() . ' ' . $bus->getPrenomUtilisateur());
+                }
+            }
+            if ($planning->getStatut() == 'Confirmé') {
+                $from_name = "Administrateur TimSoft";
+                $from_address = "timplan@timsoft.net";
+                $to_name = $user->getPrenomUtilisateur() . ' ' . $user->getNomUtilisateur();
+                $to_address = $user->getEmail();
+                if ($planning->isAllDay()) {
+                    $startTime = $planning->getStart()->format('m/d/Y 07:30');
+                    $endTime = $planning->getStart()->format('m/d/Y 17:00');
+//                    return new Response($startTime);
+                } else {
+                    $startTime = $planning->getStart()->format('m/d/Y H:i');
+                    $endTime = $planning->getEnd()->format('m/d/Y H:i');
+                    // return new JsonResponse($startTime->getTimestamp());
+                }
+//                $startTime = $planning->getStart();
+//                return new JsonResponse($startTime->getTimestamp());
+
+                $subject = $planning->getTitle();
+//                $description = "My Awesome Description";
+                $location = $planning->getLieu();
+                $domain = 'timplan.timsoft.net';
+                $ical = 'BEGIN:VCALENDAR' . "\r\n" .
+                    'PRODID:-//Microsoft Corporation//Outlook 10.0 MIMEDIR//EN' . "\r\n" .
+                    'VERSION:2.0' . "\r\n" .
+                    'METHOD:REQUEST' . "\r\n" .
+//                    'BEGIN:VTIMEZONE' . "\r\n" .
+//                    'TZID:Europe/Paris' . "\r\n" .
+                    'BEGIN:STANDARD' . "\r\n" .
+                    'DTSTART:20091101T020000' . "\r\n" .
+                    'RRULE:FREQ=YEARLY;INTERVAL=1;BYDAY=1SU;BYMONTH=11' . "\r\n" .
+                    'TZOFFSETFROM:-0400' . "\r\n" .
+                    'TZOFFSETTO:-0500' . "\r\n" .
+//                    'TZNAME:EST' . "\r\n" .
+                    'END:STANDARD' . "\r\n" .
+                    'BEGIN:DAYLIGHT' . "\r\n" .
+                    'DTSTART:20090301T020000' . "\r\n" .
+                    'RRULE:FREQ=YEARLY;INTERVAL=1;BYDAY=2SU;BYMONTH=3' . "\r\n" .
+                    'TZOFFSETFROM:-0500' . "\r\n" .
+                    'TZOFFSETTO:-0400' . "\r\n" .
+                    'TZNAME:EDST' . "\r\n" .
+                    'END:DAYLIGHT' . "\r\n" .
+//                    'END:VTIMEZONE' . "\r\n" .
+                    'BEGIN:VEVENT' . "\r\n" .
+                    'ORGANIZER;CN="' . $from_name . '":MAILTO:' . $from_address . "\r\n" .
+                    'ATTENDEE;CN="' . $to_name . '";ROLE=REQ-PARTICIPANT;RSVP=TRUE:MAILTO:' . $to_address . "\r\n" .
+                    'LAST-MODIFIED:' . date("Ymd\TGis") . "\r\n" .
+                    'UID:' . date("Ymd\TGis", strtotime($startTime)) . rand() . "@" . $domain . "\r\n" .
+                    'DTSTAMP:' . date("Ymd\TGis") . "\r\n" .
+                    'DTSTART:' . date("Ymd\THis", strtotime($startTime)) . "\r\n" .
+                    'DTEND:' . date("Ymd\THis", strtotime($endTime)) . "\r\n" .
+                    'TRANSP:OPAQUE' . "\r\n" .
+                    'SEQUENCE:1' . "\r\n" .
+                    'SUMMARY:' . $subject . "\r\n" .
+                    'LOCATION:' . $location . "\r\n" .
+                    'CLASS:PUBLIC' . "\r\n" .
+                    'PRIORITY:5' . "\r\n" .
+                    'BEGIN:VALARM' . "\r\n" .
+                    'TRIGGER:-PT15M' . "\r\n" .
+                    'ACTION:DISPLAY' . "\r\n" .
+                    'DESCRIPTION:Reminder' . "\r\n" .
+                    'END:VALARM' . "\r\n" .
+                    'END:VEVENT' . "\r\n" .
+                    'END:VCALENDAR' . "\r\n";
+
+                $attachment = \Swift_Attachment::newInstance()
+                    ->setFilename("invite.ics")
+                    ->setContentType('text/calendar;charset=UTF-8;name="invite.ics";method=REQUEST')
+                    ->setBody($ical)
+                    ->setDisposition('inline;filename=invite.ics');
+                $message->attach($attachment);
+            }
+            if ($planning->getFeuille()) {
+                $planning->getFeuille()->setDateIntervention($planning->getStart());
+                $em->persist($planning->getFeuille());
+            }
+            $message->setBody(
+                $this->renderView('@TimSoftCommande/Default/email/intervention.txt.twig', array('planning' => $planning)), 'text/html');
+            $messageG->setBody(
+                $this->renderView('@TimSoftCommande/Default/email/intervention.txt.twig', array('planning' => $planning)), 'text/html');
+            $numSent += $this->get('mailer')->send($message, $failedRecipients);
+            $messageG->addTo('w.benmustapha@timsoft.com.tn', 'Wafa Benmustapha');
+            $messageG->addTo('f.cherif@timsoft.com.tn', 'Fatma CHERIF');
+            $numSent += $this->get('mailer')->send($messageG, $failedRecipients);
+
+            /* ----------------------------------------- */
             $this->getDoctrine()->getManager()->flush();
             return new Response(json_encode(array('status' => 'success')));
         }
@@ -771,5 +881,28 @@ class PlanningController extends Controller
         return $this->render('@TimSoftGeneral/Planning/showPlanning.html.twig', array(
             'planning' => $planning,
         ));
+    }
+
+    function getIntersection($startTime, $endTime, $chkStartTime, $chkEndTime)
+    {
+        if ($chkStartTime > $startTime && $chkEndTime < $endTime) {    #-> Check time is in between start and end time
+            return true;
+        } elseif (($chkStartTime > $startTime && $chkStartTime < $endTime) || ($chkEndTime > $startTime && $chkEndTime < $endTime)) {    #-> Check start or end time is in between start and end time
+            return true;
+        } elseif ($chkStartTime == $startTime || $chkEndTime == $endTime) {    #-> Check start or end time is at the border of start and end time
+            return true;
+        } elseif ($startTime > $chkStartTime && $endTime < $chkEndTime) {    #-> start and end time is in between  the check start and end time.
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    function unsetValue(array $array, $value, $strict = TRUE)
+    {
+        if (($key = array_search($value, $array, $strict)) !== FALSE) {
+            unset($array[$key]);
+        }
+        return $array;
     }
 }

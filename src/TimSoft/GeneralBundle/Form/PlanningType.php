@@ -2,6 +2,7 @@
 
 namespace TimSoft\GeneralBundle\Form;
 
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -10,9 +11,11 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use TimSoft\GeneralBundle\Repository\UtilisateurRepository;
 
 class PlanningType extends AbstractType
 {
+
     /**
      * {@inheritdoc}
      */
@@ -84,8 +87,8 @@ class PlanningType extends AbstractType
                 'label_attr' => ['class' => 'checkbox-custom'],])
             ->add('commentaire', TextareaType::class, ['required' => false])
             ->add('utilisateur')
-            ->add('accompagnements')
-            ->add('confirmePar');
+            ->add('accompagnements');
+
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $planning = $event->getData();
@@ -129,18 +132,17 @@ class PlanningType extends AbstractType
                 }
             }
         });
-
-//        $builder->addEventListener(FormEvents::SUBMIT, function (FormEvent $event) {
-//            $planning = $event->getData();
-//            $form = $event->getForm();
-//            $temps = $form->get('temps')->getData();
-//            if (in_array('Matin', $temps) && in_array('Après-midi', $temps)) {
-//                $planning->setAllDay(true);
-//            } elseif (in_array('Matin', $temps) && !in_array('Après-midi', $temps)) {
-//                $planning->setAllDay(false);
-//                $planning->setStart($planning->getStart()->setTime(14, 55));
-//            }
-//        });
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            $planning = $event->getData();
+            $form = $event->getForm();
+            $form->add('confirmePar', EntityType::class, [
+                'class' => 'TimSoft\GeneralBundle\Entity\Utilisateur',
+                'placeholder' => 'Choisir le chef de projet client',
+                'query_builder' => function (UtilisateurRepository $repo) use ($planning) {
+                    return $repo->findBySociete($planning->getLc()->getCommande()->getClient());
+                }
+            ]);
+        });
     }
 
 

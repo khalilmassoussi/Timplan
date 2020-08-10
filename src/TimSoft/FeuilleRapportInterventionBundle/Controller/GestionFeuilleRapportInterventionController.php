@@ -5,8 +5,9 @@ namespace TimSoft\FeuilleRapportInterventionBundle\Controller;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dompdf\Dompdf;
 use Dompdf\Options;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\BrowserKit\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use TimSoft\FeuilleRapportInterventionBundle\Security\FeuilleVoter;
@@ -15,8 +16,6 @@ use TimSoft\GeneralBundle\Entity\FeuilleDePresence;
 use TimSoft\GeneralBundle\Entity\NotificationUtilisateur;
 use TimSoft\GeneralBundle\Entity\RapportIntervention;
 use TimSoft\NotificationBundle\Entity\Notification;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 // On inclue  dompdf et  la classe qui permet de gérer ses options
 
@@ -370,9 +369,9 @@ class GestionFeuilleRapportInterventionController extends Controller
             throw $this->createAccessDeniedException();
         }
         $em = $this->getDoctrine()->getManager(); // initialise la connexion à la BD
-        $Feuilles = $em->getRepository('TimSoftGeneralBundle:FeuilleDePresence')->findByIntervenant($this->getUser());
-        $Rapports = null;
-        return $this->render('@TimSoftFeuilleRapportIntervention/GestionFeuilleRapportIntervention/ConsulterFeuilleRapportIntervention.html.twig', array('Feuilles' => $Feuilles, 'Rapports' => $Rapports));
+//        $Feuilles = $em->getRepository('TimSoftGeneralBundle:FeuilleDePresence')->findByIntervenant($this->getUser());
+//        $Rapports = null;
+        return $this->render('@TimSoftFeuilleRapportIntervention/GestionFeuilleRapportIntervention/ConsulterFeuilleRapportIntervention.html.twig', array('ParConsultant' => 'ParConsultant'));
     }
 
     /**
@@ -1314,6 +1313,8 @@ class GestionFeuilleRapportInterventionController extends Controller
         if ($request->get('parClient') == 'parClient') {
             $Feuilles = $em->getRepository('TimSoftGeneralBundle:FeuilleDePresence')->findBy(array('client' => $this->getUser()->getClient()), array('dateIntervention' => 'DESC'));
 //            $Rapports = $em->getRepository('TimSoftGeneralBundle:RapportIntervention')->getRapportClient($this->getUser()->getClient());
+        } elseif ($request->get('ParConsultant') == 'ParConsultant') {
+            $Feuilles = $em->getRepository('TimSoftGeneralBundle:FeuilleDePresence')->findBy(array('intervenant' => $this->getUser()), array('dateIntervention' => 'DESC'));
         } else {
             $Feuilles = $em->getRepository('TimSoftGeneralBundle:FeuilleDePresence')->findBy(array(), array('dateIntervention' => 'DESC'));
         }

@@ -6,7 +6,6 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\RangeType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -54,12 +53,16 @@ class TaskEventType extends AbstractType
                 'placeholder' => 'Choisir le statut',
 //                'empty_data' => 'Choisir'
             ])
-            ->add('progression', RangeType::class, [
-                'attr' => [
-                    'min' => 0,
-                    'max' => 100,
-//                    'value' => 15
-                ]
+            ->add('progression', ChoiceType::class, [
+                'choices' => [
+                    '0%' => 0,
+                    '25%' => 25,
+                    '50%' => 50,
+                    '75%' => 75,
+                    '90%' => 90,
+                    '100%' => 100,
+                ],
+                'expanded' => true,
             ])
             ->add('start', DateType::class, [
                 'widget' => 'single_text',

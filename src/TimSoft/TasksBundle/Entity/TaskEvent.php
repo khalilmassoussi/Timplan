@@ -321,24 +321,26 @@ class TaskEvent implements \JsonSerializable
     public function jsonSerialize()
     {
         $class = new \ReflectionClass($this);
-        if ($this->statut == 'To DO') {
-            $this->eventTextColor = '#FFFFFF';
-        } elseif ($this->statut == 'En attente') {
-            $this->eventColor = '#FFA500';
-            $this->eventTextColor = '#FFFFFF';
-        } elseif ($this->statut == 'In Progress') {
-            $this->eventColor = '#FFF380';
-            $this->eventTextColor = '#000000';
-        } elseif ($this->statut == 'Done') {
-            $this->eventColor = '#008000';
-            $this->eventTextColor = '#FFFFFF';
-        } elseif ($this->statut == 'Bloqué') {
-            $this->eventColor = '#FF0000';
-            $this->eventTextColor = '#FFFFFF';
-        }
-
+//        if ($this->statut == 'To DO') {
+//            $this->eventTextColor = '#FFFFFF';
+//        } elseif ($this->statut == 'En attente') {
+//            $this->eventColor = '#FFA500';
+//            $this->eventTextColor = '#FFFFFF';
+//        } elseif ($this->statut == 'In Progress') {
+//            $this->eventColor = '#FFF380';
+//            $this->eventTextColor = '#000000';
+//        } elseif ($this->statut == 'Done') {
+//            $this->eventColor = '#008000';
+//            $this->eventTextColor = '#FFFFFF';
+//        } elseif ($this->statut == 'Bloqué') {
+//            $this->eventColor = '#FF0000';
+//            $this->eventTextColor = '#FFFFFF';
+//        }
+        $this->eventColor = '#81B5D4';
+        $this->eventTextColor = '#FFFFFF';
         return array(
             'id' => $this->id,
+
             'title' => $this->client->getRaisonSociale(),
             // 'title' => $this->title,
             'allDay' => $this->allDay,

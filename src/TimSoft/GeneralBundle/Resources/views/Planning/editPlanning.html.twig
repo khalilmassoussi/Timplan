@@ -219,7 +219,20 @@
             type: 'POST',
             dataType: "json",
         }).done(function (response) {
-            $('#editPlanning').modal('hide');
+            if (response.planExist) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Il existe déjà une autre Intervention ayant un même créneau!',
+                })
+            } else {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Intervention modifié avec succès !',
+                    // text: 'Il existe déjà une autre Task ayant un même créneau!',
+                });
+                $('#editPlanning').modal('hide');
+            }
         });
     });
 
