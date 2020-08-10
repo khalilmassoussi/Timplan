@@ -729,9 +729,9 @@
     <script src="{{ asset('Template2/plugins/pace-progress/pace.min.js') }}"></script>
     {#    <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>#}
     <script>
-        function editPlanningModal(event, calendar) {
-            {% if not AutorisationAcces('modifinterv' , app.user) %}
+        function editPlanningModal(event, calendar, idP) {
             var id;
+            {% if not AutorisationAcces('modifinterv' , app.user) %}
             if (typeof event.event._def.extendedProps.resourceIds !== 'undefined') {
                 id = event.event._def.extendedProps.resourceIds[0];
             } else {
@@ -748,21 +748,44 @@
                     },
                 });
             } else {
-                $.ajax({
-                    url: Routing.generate('editPlanning', {id: event.event.id}),
-                    method: 'post',
-                    // dataType: 'json',
-                    success: function (data) {
-                        $("#renderEdit").html(data);
-                        $('#editPlanning').modal();
-                        $('#editPlanning').on('hidden.bs.modal', function () {
-                            calendar.refetchEvents();
-                        });
-                    },
-                });
-            } {% else %}
+                if (event.event.id === 'undefined') {
+                    $.ajax({
+                        url: Routing.generate('editPlanning', {id: idP}),
+                        method: 'post',
+                        // dataType: 'json',
+                        success: function (data) {
+                            $("#renderEdit").html(data);
+                            $('#editPlanning').modal();
+                            $('#editPlanning').on('hidden.bs.modal', function () {
+                                calendar.refetchEvents();
+                            });
+                        },
+                    });
+                } else {
+                    $.ajax({
+                        url: Routing.generate('editPlanning', {id: event.event.id}),
+                        method: 'post',
+                        // dataType: 'json',
+                        success: function (data) {
+                            console.log('aaaa');
+                            $("#renderEdit").html(data);
+                            $('#editPlanning').modal();
+                            $('#editPlanning').on('hidden.bs.modal', function () {
+                                calendar.refetchEvents();
+                            });
+                        },
+                    });
+                }
+            }
+            {% else %}
+            var idPlanning;
+            if (typeof event.event === 'undefined') {
+                idPlanning = idP;
+            } else {
+                idPlanning = event.event.id;
+            }
             $.ajax({
-                url: Routing.generate('editPlanning', {id: event.event.id}),
+                url: Routing.generate('editPlanning', {id: idPlanning}),
                 method: 'post',
                 // dataType: 'json',
                 success: function (data) {
@@ -799,7 +822,6 @@
                     },
                 });
             } else {
-                console.log(event);
                 $.ajax({
                     url: Routing.generate('taskevent_edit', {id: event.event.id}),
                     method: 'post',

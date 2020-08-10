@@ -130,64 +130,6 @@
             document.addEventListener('DOMContentLoaded', function () {
                 var app_user = {{ app.user.roleUtilisateur|json_encode()|raw }};
                 var client;
-                $('#container1').append('<br><select id="users1" class="form-control" style="width: 100%"></select>');
-                $('#fullCalModal').on('hidden.bs.modal', function () {
-                    $('input[name="allday"]').each(function () {
-                        this.checked = false;
-                    });
-                    $(':input').each(function () {
-                        $(this).attr("disabled", false);
-                    });
-                });
-                $("#container").delegate("#users", "select2:select", function (e) {
-                    console.log(this.value);
-                    var planningid = $(".planning").attr('id');
-                    $.ajax({
-                        url: '{{ path('AccompagnementPlanning') }}',
-                        data: 'action=update&idu=' + e.params.data.id + '&id=' + planningid + '&type=selecting',
-                        type: "POST",
-                        // async: false,
-                        success: function (data) {
-                        },
-                        error: function () {
-                            alert("Vous ne pouvez pas faire cette action");
-                        },
-                    });
-                });
-                $("#container").delegate("#users", "select2:unselect", function (e) {
-                    console.log(e.params.data.id);
-                    var planningid = $(".planning").attr('id');
-                    $.ajax({
-                        url: '{{ path('AccompagnementPlanning') }}',
-                        data: 'action=update&idu=' + e.params.data.id + '&id=' + planningid + '&type=unselect',
-                        type: "POST",
-                        //  async: false,
-                        success: function (data) {
-                        },
-                        error: function () {
-                            alert("Vous ne pouvez pas faire cette action");
-                        },
-                    });
-                });
-                $('#container').append('<select id="users" class="form-control js-example-basic-multiple" multiple="multiple" style="width: 100%"></select>');
-                $.ajax({
-                    url: '{{ path('getAllUsers') }}',
-                    //data: 'action=update&id=' + this.id,
-                    type: "POST",
-                    //  async: false,
-                    success: function (data) {
-                        $.each(data, function (i, item) {
-                            $('#users').append($('<option>', {
-                                value: item.id,
-                                text: item.nomUtilisateur + ' ' + item.prenomUtilisateur
-                            }));
-                        });
-                        console.log(data);
-                    },
-                    error: function () {
-                        alert("Vous ne pouvez pas faire cette action");
-                    },
-                });
                 var initialLocaleCode = 'fr';
                 var Calendar = FullCalendar.Calendar;
                 var calendarEl = document.getElementById('calendar');
@@ -220,37 +162,6 @@
                     eventClick: function (event) {
                         if (event.event.extendedProps.type != 'TaskEvent') {
                             editPlanningModal(event, calendar);
-
-                            {#var xhr = $.ajax({#}
-                            {#url: '{{ path('plans') }}',#}
-                            {#data: 'action=update&id=' + event.event.id,#}
-                            {#type: "POST",#}
-                            {#async: false,#}
-                            {#success: function (data) {#}
-                            {#$.ajax({#}
-                            {#url: '{{ path('getUsersBySociete') }}',#}
-                            {#data: 'action=update&id=' + data.Client.id,#}
-                            {#type: "POST",#}
-                            {#async: false,#}
-                            {#success: function (data) {#}
-                            {#console.log(data);#}
-                            {#$('#users1').empty();#}
-                            {#$.each(data, function (i, item) {#}
-                            {#console.log(item);#}
-                            {#console.log("--------------------");#}
-                            {#$('#users1').append('<option value="' + item.id + '">' + item.nomUtilisateur + ' ' + item.prenomUtilisateur + '</option>');#}
-                            {#});#}
-                            {#},#}
-                            {#error: function () {#}
-                            {#alert("Vous ne pouvez pas faire cette action");#}
-                            {#},#}
-                            {#});#}
-                            {#CalendarModalData(data);#}
-                            {#},#}
-                            {#error: function () {#}
-                            {#alert("erreur lors de l'appel de l'url dans POST event/drop : contactez l'administrateur du site");#}
-                            {#},#}
-                            {#});#}
                         } else {
                             editTaskEvent(event, calendar);
                         }
@@ -373,98 +284,8 @@
                 });
                 calendar.setOption('locale', 'fr');
                 calendar.render();
-                $('input:radio[name=Facturation]').change(function () {
-                    if (this.value === 'Gratuit') {
-                        requestAjax('facturation', $('.planning').attr('id'))
-                    } else if (this.value === 'Facturé') {
-                        requestAjax('facturation', $('.planning').attr('id'))
-                    }
-                });
-                $('input:radio[name=accompagnements]').change(function () {
-                    if (this.value === 'Oui') {
-                        $('#users').val(null).trigger("change");
-                        $("#container").show()
-                    } else if (this.value === 'Non') {
-                        requestAjax('accompagnements', $('.planning').attr('id'));
-                        $("#container").hide()
-                    }
-                });
-                $("#Statut").change(function () {
-                    requestAjax('Statut', $('.planning').attr('id'), this.value);
-                });
-                $('input:radio[name=Lieu]').change(function () {
-                    if (this.value === 'SurSite') {
-                        requestAjax('Lieu', $('.planning').attr('id'), 'Sur Site')
-                    } else if (this.value === 'aDistance') {
-                        requestAjax('Lieu', $('.planning').attr('id'), 'à distance')
-                    }
-                });
-                f();
-                $('.js-example-basic-multiple').select2({
-                    tags: true,
-                });
-                $("#users1").select2({
-                    placeholder: "Choisir un utilisateur",
-                    allowClear: true,
-                    tags: true,
-                });
 
-                function requestAjax(type, id, value) {
 
-                }
-
-                $("#Sauvegarder").click(function () {
-                    console.log($("#datepicker").datepicker('getDate'));
-                    statut = $('#Statut').val();
-                    lieu = $('input:radio[name=Lieu]:checked').val();
-                    facturation = $('input:radio[name=Facturation]:checked').val();
-                    userClient = $("#users1").val();
-                    accompagnements = $('input:radio[name=accompagnements]:checked').val();
-                    commentaire = $('#textArea').val();
-                    end = $('#endTime').val();
-                    start = $('#startTime').val();
-                    var dateStart = moment(start).format('DD-MM-YYYY');
-                    var dateEnd = moment(end).format('DD-MM-YYYY');
-
-                    var matin = $("#Matin:checked").val();
-                    var midi = $("#Midi:checked").val();
-                    var allday = false;
-                    if (midi && matin) {
-                        allday = true
-                    } else if (matin) {
-                        allday = matin;
-                    } else {
-                        allday = midi;
-                    }
-                    $.ajax({
-                        url: '{{ path('ModificationPlanning') }}',
-                        data: 'action=update&id=' + $('.planning').attr('id') + '&statut=' + statut + '&facturation=' + facturation + '&userClient=' + userClient + '&accompagnements=' + accompagnements
-                            + '&lieu=' + lieu + '&commentaire=' + commentaire + '&start=' + start + '&end=' + start + '&allday=' + allday,
-                        type: "POST",
-                        success: function (data) {
-                            calendar.refetchEvents();
-                            // console.log(data);
-                        },
-                        error: function () {
-                            alert("Vous ne pouvez pas faire cette action");
-                        },
-                    });
-                });
-                $("#Supprimer").click(function () {
-                    $.ajax({
-                        url: '{{ path('deletePlanning') }}',
-                        data: 'action=update&id=' + $('.planning').attr('id'),
-                        type: "POST",
-                        //   async: false,
-                        success: function (data) {
-                            calendar.refetchEvents();
-                            console.log(data);
-                        },
-                        error: function () {
-                            alert("Vous ne pouvez pas faire cette action");
-                        },
-                    });
-                });
                 $("#commentaire").click(function () {
                     $('#textArea').show()
                 });

@@ -248,7 +248,6 @@
                             right: 'dayGridMonth,dayGridWeek,timeGridDay'
                         },
                         editable: (app_user === "ROLE_ADMIN"),
-                        // eventDurationEditable: false,
                         eventLimit: true, // when too many events in a day, show the popover
                         eventSources: [
 
@@ -259,7 +258,6 @@
                         minTime: '08:30:00',
                         maxTime: '18:30:00',
                         displayEventTime: false,
-                        // nextDayThreshold: '00:00:00',
                         allDay: true,
                         themeSystem: 'themeSystem',
                         eventDrop: function (event) {
@@ -271,9 +269,7 @@
                                 data: 'action=update&title=' + event.event.title + '&start=' + GetNow(event.event.start) + '&end=' + GetNow(event.event.end) + '&id=' + event.event.id + '&all_day=' + event.event.allDay
                                     + '&User=' + null,
                                 type: "POST",
-                                //  async: false,
                                 success: function (data) {
-                                    //calendar.refetchEvents();
                                     f()
                                 },
                                 error: function () {
@@ -292,7 +288,6 @@
                         //   defaultDate: '2020-04-04',
                         eventClick: function (event) {
                             if (event.event.extendedProps.type != 'TaskEvent') {
-                                console.log(event);
                                 editPlanningModal(event, calendar);
                             } else {
                                 editTaskEvent(event, calendar);
@@ -325,8 +320,6 @@
                         },
                         navLinks: true,
                         eventRender: function (event, element) {
-
-                            console.log(event);
                             if (event.view.type === 'dayGridWeek') {
                                 calendar.height = 450;
                                 $(event.el).height('auto');
@@ -402,11 +395,9 @@
                                         data: 'action=update&title=' + event.draggedEl.innerText.toString() + '&start=' + event.dateStr + '&end=' + event.dateStr + '&id=' + event.id + '&all_day=' + event.allDay + '&idUser=' + {{ cc.id }} +'&lc=' + event.draggedEl.id
                                             + '&JSup=' + true,
                                         type: "POST",
-                                        //  async: false,
                                         success: function (data) {
-                                            ChefProjet(data);
-                                            CalendarModalData(data);
                                             calendar.refetchEvents();
+                                            editPlanningModal(event, calendar);
                                             f();
                                         },
                                         error: function () {
@@ -421,8 +412,7 @@
                                     type: "POST",
                                     //  async: false,
                                     success: function (data) {
-                                        ChefProjet(data);
-                                        CalendarModalData(data);
+                                        editPlanningModal(event, calendar, data.id);
                                         calendar.refetchEvents();
                                         f();
                                     },
@@ -479,77 +469,6 @@
                     function requestAjax(type, id, value) {
 
                     }
-
-                    $("#Sauvegarder").click(function () {
-                        statut = $('#Statut').val();
-                        lieu = $('input:radio[name=Lieu]:checked').val();
-                        facturation = $('input:radio[name=Facturation]:checked').val();
-                        userClient = $("#users1").val();
-                        accompagnements = $('input:radio[name=accompagnements]:checked').val();
-                        console.log(userClient);
-                        commentaire = $('#textArea').val();
-                        end = $('#endTime').val();
-                        start = $('#startTime').val();
-                        console.log('-------------');
-                        console.log(start);
-                        console.log('-------------');
-                        var matin = $("#Matin:checked").val();
-                        var midi = $("#Midi:checked").val();
-                        var allday = false;
-                        if (midi && matin) {
-                            allday = true
-                        } else if (matin) {
-                            allday = matin;
-                        } else {
-                            allday = midi;
-                        }
-                        console.log(allday);
-                        $.ajax({
-                            url: '{{ path('ModificationPlanning') }}',
-                            data: 'action=update&id=' + $('.planning').attr('id') + '&statut=' + statut + '&facturation=' + facturation + '&userClient=' + userClient + '&accompagnements=' + accompagnements
-                                + '&lieu=' + lieu + '&commentaire=' + commentaire + '&start=' + start + '&end=' + start + '&allday=' + allday,
-                            type: "POST",
-                            //   async: false,
-                            success: function (data) {
-                                calendar.refetchEvents();
-                                // console.log(data);
-                                f();
-                            },
-                            error: function () {
-                                alert("Vous ne pouvez pas faire cette action");
-                            },
-                        });
-
-                    });
-                    $("#Supprimer").click(function (e) {
-                        if (confirm('Souhaitez-vous réellement supprimer cet événement?')) {
-                            e.preventDefault();
-                            $.ajax({
-                                url: '{{ path('deletePlanning') }}',
-                                data: 'action=update&id=' + $('.planning').attr('id'),
-                                type: "POST",
-                                //   async: false,
-                                statusCode: {
-                                    302: function () {
-                                        window.alert('You have been logged out of the System');
-                                        // goToLogout();
-                                    }
-                                },
-                                success: function (data, textStatus) {
-                                    console.log(data);
-                                    calendar.refetchEvents();
-                                    f();
-                                },
-                                error: function () {
-                                    alert("Vous ne pouvez pas faire cette action");
-                                },
-                            });
-                        }
-                    });
-                    $("#commentaire").click(function () {
-                        $('#textArea').show();
-                        $("#commentaire").css('display', 'none');
-                    })
                 }
             );
 

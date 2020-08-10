@@ -87,7 +87,8 @@ class PlanningType extends AbstractType
                 'label_attr' => ['class' => 'checkbox-custom'],])
             ->add('commentaire', TextareaType::class, ['required' => false])
             ->add('utilisateur')
-            ->add('accompagnements');
+            ->add('accompagnements')
+            ->add('confirmePar');
 
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
@@ -138,6 +139,7 @@ class PlanningType extends AbstractType
             $form->add('confirmePar', EntityType::class, [
                 'class' => 'TimSoft\GeneralBundle\Entity\Utilisateur',
                 'placeholder' => 'Choisir le chef de projet client',
+                'required' => false,
                 'query_builder' => function (UtilisateurRepository $repo) use ($planning) {
                     return $repo->findBySociete($planning->getLc()->getCommande()->getClient());
                 }

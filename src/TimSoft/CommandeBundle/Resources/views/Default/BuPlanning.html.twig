@@ -201,63 +201,6 @@
             document.addEventListener('DOMContentLoaded', function () {
                 var app_user = {{ app.user.roleUtilisateur|json_encode()|raw }};
                 var client;
-                $("#container").delegate("#users", "select2:select", function (e) {
-                    var planningid = $(".planning").attr('id');
-                    $.ajax({
-                        url: '{{ path('AccompagnementPlanning') }}',
-                        data: 'action=update&idu=' + e.params.data.id + '&id=' + planningid + '&type=selecting',
-                        type: "POST",
-                        success: function (data) {
-                        },
-                        error: function () {
-                            alert("Vous ne pouvez pas faire cette action");
-                        },
-                    });
-                });
-                $("#container").delegate("#users", "select2:unselect", function (e) {
-                    // console.log(e.params.data.id);
-                    var planningid = $(".planning").attr('id');
-                    $.ajax({
-                        url: '{{ path('AccompagnementPlanning') }}',
-                        data: 'action=update&idu=' + e.params.data.id + '&id=' + planningid + '&type=unselect',
-                        type: "POST",
-                        success: function (data) {
-                        },
-                        error: function () {
-                            alert("Vous ne pouvez pas faire cette action");
-                        },
-                    });
-                });
-                $('#container').append('<select id="users" class="form-control js-example-basic-multiple" multiple="multiple" style="width: 100%"></select>');
-                $.ajax({
-                    url: '{{ path('getAllUsers') }}',
-                    //data: 'action=update&id=' + this.id,
-                    type: "POST",
-                    success: function (data) {
-                        $.each(data, function (i, item) {
-                            $('#users').append($('<option>', {
-                                value: item.id,
-                                text: item.nomUtilisateur + ' ' + item.prenomUtilisateur
-                            }));
-                        });
-                        // console.log(data);
-                    },
-                    error: function () {
-                        alert("Vous ne pouvez pas faire cette action");
-                    },
-                });
-                $("#dialog1").dialog({
-                    autoOpen: false
-                });
-                $('#container1').append('<select id="users1" class="select2" style="width: 100%"></select>');
-                $('#fullCalModal').on('hidden.bs.modal', function () {
-                    $('input[name="allday"]').each(function () {
-                        this.checked = false;
-                    });
-                    $(':input').each(function () {
-                        $(this).attr("disabled", false);
-                    });
-                });
                 var calendarEl = document.getElementById('calendar');
                 var calendar = new FullCalendar.Calendar(calendarEl, {
                     plugins: ['interaction', 'resourceTimeline', 'bootstrap'],
@@ -294,22 +237,6 @@
                             console.log(event);
                             editPlanningModal(event, calendar);
                         } else {
-                            {#if (event.event.extendedProps.idIntervenant === {{ app.user.id }} #}{# || {{ (AutorisationAcces('modifTaskEvent' , app.user)) }} #}{# || autorise != null) {#}
-                            {#$.ajax({#}
-                            {#url: Routing.generate('taskevent_edit', {id: event.event.id}),#}
-                            {#method: 'post',#}
-                            {#// dataType: 'json',#}
-                            {#success: function (data) {#}
-                            {#$("#renderEdit").html(data);#}
-                            {#$('#editTask').modal();#}
-                            {#$('form[name="edit"]').submit(function () {#}
-                            {#calendar.refetchEvents();#}
-                            {#});#}
-                            {#},#}
-                            {#});#}
-                            {#} else {#}
-
-                            {#}#}
                             editTaskEvent(event, calendar);
                         }
                     },
@@ -515,77 +442,6 @@
                 });
 
 
-                $("#Sauvegarder").click(function () {
-                    // console.log($("#datepicker").datepicker('getDate'));
-                    statut = $('#Statut').val();
-                    lieu = $('input:radio[name=Lieu]:checked').val();
-                    facturation = $('input:radio[name=Facturation]:checked').val();
-                    userClient = $("#users1").val();
-                    accompagnements = $('input:radio[name=accompagnements]:checked').val();
-                    commentaire = $('#textArea').val();
-                    //   console.log($("#datepicker").data("DateTimePicker").date().format('LLL'));
-                    end = $('#endTime').html();
-                    start = $('#datepicker').val();
-                    // console.log(start, end);
-                    var matin = $("#Matin:checked").val();
-                    var midi = $("#Midi:checked").val();
-                    var allday = false;
-                    if (midi && matin) {
-                        allday = true
-                    } else if (matin) {
-                        allday = matin;
-                    } else {
-                        allday = midi;
-                    }
-                    $.ajax({
-                        url: '{{ path('ModificationPlanning') }}',
-                        data: 'action=update&id=' + $('.planning').attr('id') + '&statut=' + statut + '&facturation=' + facturation + '&userClient=' + userClient + '&accompagnements=' + accompagnements
-                            + '&lieu=' + lieu + '&commentaire=' + commentaire + '&start=' + start + '&end=' + end + '&allday=' + allday,
-                        type: "POST",
-                        success: function (data) {
-                            calendar.refetchEvents();
-                            // console.log(data);
-                        },
-                        error: function () {
-                            alert("Vous ne pouvez pas faire cette action");
-                        },
-                    });
-                });
-                $("#Supprimer").click(function () {
-                    Swal.fire({
-                        title: 'Souhaitez-vous réellement supprimer cet événement?',
-                        // text: "You won't be able to revert this!",
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#3085d6',
-                        cancelButtonColor: '#d33',
-                        confirmButtonText: 'Oui, supprimez-le!',
-                        cancelButtonText: 'Annuler',
-                    }).then((result) => {
-                        if (result.value) {
-                            $.ajax({
-                                url: '{{ path('deletePlanning') }}',
-                                data: 'action=update&id=' + $('.planning').attr('id'),
-                                type: "POST",
-                                //   async: false,
-                                success: function (data) {
-                                    calendar.getEventById($('.planning').attr('id')).remove();
-                                    // calendar.refetchEvents();
-                                    Swal.fire(
-                                        'Supprimé!',
-                                        'L\'intervention a été supprimée.',
-                                        'success'
-                                    );
-                                },
-                                error: function () {
-                                    alert("Vous ne pouvez pas faire cette action");
-                                },
-
-                            });
-                        }
-                    });
-
-                });
                 $("#export").click(function (e) {
                     e.preventDefault();
                     if ($('#bus').val()) {
@@ -644,7 +500,6 @@
                     $.ajax({
                         url: '{{ path('taskevent_new') }}',
                         method: 'post',
-                        // dataType: 'json',
                         success: function (data) {
                             $('#renderEdit').html(data);
                             $('#addTask').modal();

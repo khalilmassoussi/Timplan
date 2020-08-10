@@ -102,6 +102,7 @@ class TaskEventController extends Controller
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $taskEvents = $em->getRepository('TimSoftTasksBundle:TaskEvent')->findByUtilisateur($taskEvent->getUtilisateur());
+            $taskEvents = $this->unsetValue($taskEvents, $taskEvent, true);
             foreach ($taskEvents as $task) {
                 if (($task->isAllDay() && $taskEvent->isAllDay()) || (!$task->isAllDay() && !$taskEvent->isAllDay())) {
                     if ($this->getIntersection($task->getStart(), $task->getEnd(), $taskEvent->getStart(), $taskEvent->getEnd())) {
@@ -230,4 +231,11 @@ class TaskEventController extends Controller
         }
     }
 
+    function unsetValue(array $array, $value, $strict = TRUE)
+    {
+        if (($key = array_search($value, $array, $strict)) !== FALSE) {
+            unset($array[$key]);
+        }
+        return $array;
+    }
 }
