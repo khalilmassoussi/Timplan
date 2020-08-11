@@ -213,7 +213,7 @@
                         //   async: false,
                         success: function (data) {
                             $('#editPlanning').modal('hide');
-                            if (typeof f() == 'undefined') {
+                            if (typeof f == 'function') {
                                 f();
                             }
                             Swal.fire(

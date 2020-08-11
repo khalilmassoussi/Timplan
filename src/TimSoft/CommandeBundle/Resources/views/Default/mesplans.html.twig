@@ -13,45 +13,17 @@
 
 
 {% block Navigation %}
-    {#{% if AutorisationAcces('Consultercommandes' , Utilisateur) %}#}
-    {#<li><a href="{{path('Consultercommandes')}}">Consulter la liste des commandes</a></li>#}
-    {#{%endif%}#}
     <li class="breadcrumb-item active">Mon Planning</li>
 {% endblock %}
 {% block SideBar %}
 {% endblock %}
 {% block css %}
     {{ parent() }}
-    {#    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker.css" rel="stylesheet"/>#}
-    {#    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.css"#}
-    {#          rel="stylesheet"/>#}
 {% endblock %}
 {% block Contenu %}
-    {#    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>#}
-    {#    #}{#    <link rel="stylesheet" href="https://unpkg.com/@fullcalendar/core@4.3.1/main.min.css">#}
-    {#    #}{#    <link rel="stylesheet" href="https://unpkg.com/@fullcalendar/bootstrap@4.3.0/main.min.css"/>#}
-    {#    #}{#    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@4.1.0/main.min.css">#}
-    {#    #}{#    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@4.1.0/main.min.css">#}
-    {#    #}{#    <link href='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.css' rel='stylesheet'/>#}
-    {#    #}{#    <link rel="stylesheet" href="https://unpkg.com/@fullcalendar/timeline@4.3.0/main.min.css"/>#}
-    {#    #}{#    <link rel="stylesheet" href="https://unpkg.com/@fullcalendar/resource-timeline@4.3.0/main.min.css"/>#}
-    {#    #}{#    <link rel="stylesheet" href="https://unpkg.com/@fullcalendar/daygrid@4.3.0/main.min.css"/>#}
 
-    {#    <script src="https://unpkg.com/@fullcalendar/core@4.3.1/main.min.js"></script>#}
-    {#    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/interaction@4.1.0/main.min.js"></script>#}
-    {#    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@4.3.0/main.min.js"></script>#}
-    {#    <script src="https://unpkg.com/popper.js/dist/umd/popper.min.js"></script>#}
-    {#    <script src="https://unpkg.com/tooltip.js/dist/umd/tooltip.min.js"></script>#}
-    {#    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@4.1.0/main.min.js"></script>#}
     <script src="https://unpkg.com/@fullcalendar/core@4.3.1/locales-all.js"></script>
-    {#    <script src="https://unpkg.com/@fullcalendar/list@4.3.0/main.min.js"></script>#}
-    {#    <script src='http://fullcalendar.io/js/fullcalendar-2.1.1/lib/moment.min.js'></script>#}
-    {#    <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.js'></script>#}
-    {#    <script src="https://unpkg.com/@fullcalendar/timeline@4.3.0/main.min.js"></script>#}
-    {#    <script src="https://unpkg.com/@fullcalendar/resource-common@4.3.1/main.min.js"></script>#}
-    {#    <script src="https://unpkg.com/@fullcalendar/resource-timeline@4.3.0/main.min.js"></script>#}
 
-    {#    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-modal/2.2.5/js/bootstrap-modal.min.js"></script>#}
     <style>
         .fc-day-grid-event > .fc-content {
             white-space: normal;
@@ -89,43 +61,14 @@
             </div>
         </div>
     </div>
-    {% include '@TimSoftCommande/Default/modal.html.twig' %}
-
-    {#    {{ render(controller('TimSoftTasksBundle:TaskEvent:new')) }}#}
 {% endblock %}
     {% block script %}
         {{ parent() }}
-        {#        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>#}
-        {#        <script src="https://unpkg.com/@fullcalendar/bootstrap@4.3.0/main.min.js"></script>#}
 
-        {#        <script#}
-        {#                src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"#}
-        {#                integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30="#}
-        {#                crossorigin="anonymous"></script>#}
         <script>
             $('.printBtn').on('click', function () {
                 window.print();
             });
-
-            function f() {
-                $.map($(".fc-event"), function (n, i) {
-                    if (n.id) {
-                        $.ajax({
-                            url: '{{ path('calcul') }}',
-                            data: 'action=update&id=' + n.id,
-                            type: "GET",
-                            //  async: false,
-                            success: function (data) {
-                                console.log(data);
-                                $('#' + n.id + '.cc').text(data + " Jours Restants");
-                            },
-                            error: function () {
-                                alert("erreur lors de l'appel de l'url dans POST event/drop : contactez l'administrateur du site");
-                            },
-                        });
-                    }
-                });
-            }
 
             document.addEventListener('DOMContentLoaded', function () {
                 var app_user = {{ app.user.roleUtilisateur|json_encode()|raw }};
@@ -147,7 +90,7 @@
                         center: 'title',
                         right: 'dayGridMonth,dayGridWeek,timeGridDay'
                     },
-                    editable: (app_user === "ROLE_ADMIN"),
+                    editable: false,
                     eventDurationEditable: false,
                     eventLimit: true, // when too many events in a day, show the popover
                     eventSources: [
@@ -204,13 +147,13 @@
                                     $(event.el).append('<div><b>Heure: </b>' + moment(event.event.start).format("HH:mm") + '</div>');
                                 }
                                 if (event.event.extendedProps.etiquette == 'Urgent') {
-                                    $(event.el).append('<div><b>Etuiquette: </b> <span class="badge bg-danger">' + event.event.extendedProps.etiquette + '</span></div>');
+                                    $(event.el).append('<div><b>Etiquette: </b> <span class="badge bg-danger">' + event.event.extendedProps.etiquette + '</span></div>');
                                 } else if (event.event.extendedProps.etiquette == 'Peu') {
-                                    $(event.el).append('<div><b>Etuiquette: </b> <span class="badge bg-light">' + event.event.extendedProps.etiquette + '</span></div>');
+                                    $(event.el).append('<div><b>Etiquette: </b> <span class="badge bg-light">' + event.event.extendedProps.etiquette + '</span></div>');
                                 } else if (event.event.extendedProps.etiquette == 'Moyen') {
-                                    $(event.el).append('<div><b>Etuiquette: </b> <span class="badge bg-indigo">' + event.event.extendedProps.etiquette + '</span></div>');
+                                    $(event.el).append('<div><b>Etiquette: </b> <span class="badge bg-indigo">' + event.event.extendedProps.etiquette + '</span></div>');
                                 } else if (event.event.extendedProps.etiquette == 'Important') {
-                                    $(event.el).append('<div><b>Etuiquette: </b> <span class="badge bg-warning">' + event.event.extendedProps.etiquette + '</span></div>');
+                                    $(event.el).append('<div><b>Etiquette: </b> <span class="badge bg-warning">' + event.event.extendedProps.etiquette + '</span></div>');
                                 }
                                 $(event.el).append('<div class="ribbon-wrapper"><div class="ribbon">' + event.event.extendedProps.Statut + '</div></div>');
                                 if (event.event.extendedProps.Statut === 'To DO') {
@@ -284,11 +227,6 @@
                 });
                 calendar.setOption('locale', 'fr');
                 calendar.render();
-
-
-                $("#commentaire").click(function () {
-                    $('#textArea').show()
-                });
 
                 $("#export").click(function (e) {
 

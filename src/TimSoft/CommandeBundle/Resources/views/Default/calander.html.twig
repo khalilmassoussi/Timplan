@@ -45,6 +45,7 @@
             /* force events to be one-line tall */
             white-space: normal !important;
             overflow: hidden;
+            cursor: pointer;
         }
 
         /*#external-events {*/
@@ -108,10 +109,7 @@
             </div>
         </div>
         <br><br><br>
-        {#            </div>#}
-        {#        </div>#}
     </div>
-    {% include '@TimSoftCommande/Default/modal.html.twig' %}
     <div class="modal fade" id="confirm-modif" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
          aria-hidden="true">
         <div class="modal-dialog">
@@ -133,12 +131,6 @@
     {% block script %}
         {{ parent() }}
 
-        {#        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>#}
-        {#        <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.css"#}
-        {#              rel="stylesheet"/>#}
-        {#        <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.2.0/daygrid/main.js"></script>#}
-        {#        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.2.0/daygrid/main.css"/>#}
-        {#        <script src="https://unpkg.com/@fullcalendar/bootstrap@4.3.0/main.min.js"></script>#}
         <script>
             function f() {
                 $.map($(".fc-event"), function (n, i) {
@@ -163,67 +155,7 @@
             document.addEventListener('DOMContentLoaded', function () {
                     var app_user = {{ app.user.roleUtilisateur|json_encode()|raw }};
                     var client;
-                    $('#container1').append('<br><select id="users1" class="form-control" style="width: 100%"></select>');
-                    $('#fullCalModal').on('show.bs.modal', function () {
-                        // alert('khalil');
-                    });
-                    $('#fullCalModal').on('hidden.bs.modal', function () {
-                        $('input[name="allday"]').each(function () {
-                            this.checked = false;
-                        });
-                        $(':input').each(function () {
-                            $(this).attr("disabled", false);
-                        });
-                    });
-                    $("#container").delegate("#users", "select2:select", function (e) {
-                        console.log(this.value);
-                        var planningid = $(".planning").attr('id');
-                        $.ajax({
-                            url: '{{ path('AccompagnementPlanning') }}',
-                            data: 'action=update&idu=' + e.params.data.id + '&id=' + planningid + '&type=selecting',
-                            type: "POST",
-                            // async: false,
-                            success: function (data) {
-                            },
-                            error: function () {
-                                alert("Vous ne pouvez pas faire cette action");
-                            },
-                        });
-                    });
-                    $("#container").delegate("#users", "select2:unselect", function (e) {
-                        console.log(e.params.data.id);
-                        var planningid = $(".planning").attr('id');
-                        $.ajax({
-                            url: '{{ path('AccompagnementPlanning') }}',
-                            data: 'action=update&idu=' + e.params.data.id + '&id=' + planningid + '&type=unselect',
-                            type: "POST",
-                            //  async: false,
-                            success: function (data) {
-                            },
-                            error: function () {
-                                alert("Vous ne pouvez pas faire cette action");
-                            },
-                        });
-                    });
-                    $('#container').append('<select id="users" class="form-control js-example-basic-multiple" multiple="multiple" style="width: 100%"></select>');
-                    $.ajax({
-                        url: '{{ path('getAllUsers') }}',
-                        //data: 'action=update&id=' + this.id,
-                        type: "POST",
-                        //  async: false,
-                        success: function (data) {
-                            $.each(data, function (i, item) {
-                                $('#users').append($('<option>', {
-                                    value: item.id,
-                                    text: item.nomUtilisateur + ' ' + item.prenomUtilisateur
-                                }));
-                            });
-                            console.log(data);
-                        },
-                        error: function () {
-                            alert("Vous ne pouvez pas faire cette action");
-                        },
-                    });
+
                     var initialLocaleCode = 'fr';
                     var Calendar = FullCalendar.Calendar;
                     var Draggable = FullCalendarInteraction.Draggable;
@@ -247,7 +179,7 @@
                             center: 'title',
                             right: 'dayGridMonth,dayGridWeek,timeGridDay'
                         },
-                        editable: (app_user === "ROLE_ADMIN"),
+                        editable: false,
                         eventLimit: true, // when too many events in a day, show the popover
                         eventSources: [
 
@@ -331,13 +263,13 @@
                                         $(event.el).append('<div><b>Heure: </b>' + moment(event.event.start).format("HH:mm") + '</div>');
                                     }
                                     if (event.event.extendedProps.etiquette == 'Urgent') {
-                                        $(event.el).append('<div><b>Etuiquette: </b> <span class="badge bg-danger">' + event.event.extendedProps.etiquette + '</span></div>');
+                                        $(event.el).append('<div><b>Etiquette: </b> <span class="badge bg-danger">' + event.event.extendedProps.etiquette + '</span></div>');
                                     } else if (event.event.extendedProps.etiquette == 'Peu') {
-                                        $(event.el).append('<div><b>Etuiquette: </b> <span class="badge bg-light">' + event.event.extendedProps.etiquette + '</span></div>');
+                                        $(event.el).append('<div><b>Etiquette: </b> <span class="badge bg-light">' + event.event.extendedProps.etiquette + '</span></div>');
                                     } else if (event.event.extendedProps.etiquette == 'Moyen') {
-                                        $(event.el).append('<div><b>Etuiquette: </b> <span class="badge bg-indigo">' + event.event.extendedProps.etiquette + '</span></div>');
+                                        $(event.el).append('<div><b>Etiquette: </b> <span class="badge bg-indigo">' + event.event.extendedProps.etiquette + '</span></div>');
                                     } else if (event.event.extendedProps.etiquette == 'Important') {
-                                        $(event.el).append('<div><b>Etuiquette: </b> <span class="badge bg-warning">' + event.event.extendedProps.etiquette + '</span></div>');
+                                        $(event.el).append('<div><b>Etiquette: </b> <span class="badge bg-warning">' + event.event.extendedProps.etiquette + '</span></div>');
                                     }
                                     $(event.el).append('<div class="ribbon-wrapper"><div class="ribbon">' + event.event.extendedProps.Statut + '</div></div>');
                                     if (event.event.extendedProps.Statut === 'To DO') {
@@ -426,49 +358,7 @@
 
                     calendar.setOption('locale', 'fr');
                     calendar.render();
-                    $('input:radio[name=Facturation]').change(function () {
-                        if (this.value === 'Gratuit') {
-                            requestAjax('facturation', $('.planning').attr('id'))
-                        } else if (this.value === 'Facturé') {
-                            requestAjax('facturation', $('.planning').attr('id'))
 
-                        }
-                    });
-                    $('input:radio[name=accompagnements]').change(function () {
-                        if (this.value === 'Oui') {
-                            $('#users').val(null).trigger("change");
-                            $("#container").show()
-                        } else if (this.value === 'Non') {
-                            requestAjax('accompagnements', $('.planning').attr('id'));
-                            $("#container").hide()
-                        }
-                    });
-                    $("#Statut").change(function () {
-                        requestAjax('Statut', $('.planning').attr('id'), this.value);
-                    });
-                    $('input:radio[name=Lieu]').change(function () {
-                        if (this.value === 'SurSite') {
-                            requestAjax('Lieu', $('.planning').attr('id'), 'Sur Site')
-                        } else if (this.value === 'aDistance') {
-                            requestAjax('Lieu', $('.planning').attr('id'), 'à distance')
-
-                        }
-                    });
-                    f();
-                    $('.js-example-basic-multiple').select2({
-                        tags: true,
-                    });
-                    $("#users1").select2({
-                        placeholder: "Choisir un utilisateur",
-                        allowClear: true,
-                        tags: true,
-                    });
-
-                    // calendar.css('font-size', '15px');
-
-                    function requestAjax(type, id, value) {
-
-                    }
                 }
             );
 
@@ -494,28 +384,6 @@
                     + currentdate.getMinutes() + ":"
                     + currentdate.getSeconds();
                 return cc;
-            }
-
-            function ChefProjet(data) {
-                $.ajax({
-                    url: '{{ path('getUsersBySociete') }}',
-                    data: 'action=update&id=' + data.Client.id,
-                    type: "POST",
-                    async: false,
-                    success: function (data) {
-                        console.log(data);
-                        $('#users1').empty();
-                        $.each(data, function (i, item) {
-                            console.log(item);
-                            console.log("--------------------");
-                            $('#users1').append('<option value="' + item.id + '">' + item.nomUtilisateur + ' ' + item.prenomUtilisateur + '</option>');
-                        });
-                        // $('#users1').val(null).trigger('change')
-                    },
-                    error: function () {
-                        alert("Vous ne pouvez pas faire cette action");
-                    },
-                });
             }
         </script>
     {% endblock %}
