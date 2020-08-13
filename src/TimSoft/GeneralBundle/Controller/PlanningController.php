@@ -29,6 +29,7 @@ class PlanningController extends Controller
      * Edite un évenement par glissement
      * @param Request $request
      * @return Response
+     * @throws \Exception
      */
     public function dropEventAction(Request $request)
     {

@@ -242,7 +242,15 @@
                         },
                     displayEventTime: false,
                     slotWidth: 150,
+                    eventDataTransform: function (event) {
+                        if (event.allDay) {
+                            event.end = moment(event.end).add(1, 'day').format('YYYY-MM-DD');
+                        }
+                        return event;
+                    },
                     eventRender: function (event, element, view) {
+                        // console.log(event.event.start);
+                        // console.log(event.event.end);
                         if (event.view.type === 'timelineMyWeek' && event.event.allDay) {
                             if (event.event.extendedProps.type != 'TaskEvent') {
                                 $(event.el).height('auto');
