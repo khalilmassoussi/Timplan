@@ -37,9 +37,9 @@ class ClientRepository extends \Doctrine\ORM\EntityRepository
     {
         return $this->createQueryBuilder('c')
             ->select('c')
-            ->where('c.raisonSociale like :name')
+            ->where('c.raisonSociale =  :name ')
             ->setParameter('name', $name)
             ->getQuery()
-            ->getResult();
+            ->getFirstResult();
     }
 }
