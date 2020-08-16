@@ -744,11 +744,11 @@ class PlanningController extends Controller
             foreach ($plannings as $plan) {
                 if (($plan->isAllDay() && $planning->isAllDay()) || (!$plan->isAllDay() && !$planning->isAllDay())) {
                     if ($this->getIntersection($plan->getStart(), $plan->getEnd(), $planning->getStart(), $planning->getEnd())) {
-                        return new Response(json_encode(array('planExist' => true, $plannings)));
+                        return new Response(json_encode(array('planExist' => true, $plan)));
                     }
                 } else {
                     if ($this->getIntersection($plan->getStart()->format('d-m-Y'), $plan->getEnd()->format('d-m-Y'), $planning->getStart()->format('d-m-Y'), $planning->getEnd()->format('d-m-Y'))) {
-                        return new Response(json_encode(array('planExist' => true, $plannings)));
+                        return new Response(json_encode(array('planExist' => true, $plan)));
                     }
                 }
             }
@@ -791,17 +791,12 @@ class PlanningController extends Controller
                 if ($planning->isAllDay()) {
                     $startTime = $planning->getStart()->format('m/d/Y 07:30');
                     $endTime = $planning->getStart()->format('m/d/Y 17:00');
-//                    return new Response($startTime);
                 } else {
                     $startTime = $planning->getStart()->format('m/d/Y H:i');
                     $endTime = $planning->getEnd()->format('m/d/Y H:i');
-                    // return new JsonResponse($startTime->getTimestamp());
                 }
-//                $startTime = $planning->getStart();
-//                return new JsonResponse($startTime->getTimestamp());
 
                 $subject = $planning->getTitle();
-//                $description = "My Awesome Description";
                 $location = $planning->getLieu();
                 $domain = 'timplan.timsoft.net';
                 $ical = 'BEGIN:VCALENDAR' . "\r\n" .

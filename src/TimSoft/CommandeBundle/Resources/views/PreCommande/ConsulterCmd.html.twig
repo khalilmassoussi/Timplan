@@ -17,7 +17,7 @@
     {#<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"> </script> #}
     {#<link rel="stylesheet" hre="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css#}
     {#"></link>#}
-    <div class="col-md-2">
+    <div class="col-md-12">
         <div class="card card-warning card-outline">
             {#<div class="card-header">#}
             {#</div>#}
@@ -27,6 +27,8 @@
                         <div class="mb-1">
                             <button class="btn btn-info" id="plus">Afficher toutes les précommandes</button>
                         </div>
+                    </div>
+                    <div class="row justify-content-center">
                         <div class="btn-group">
                             {% if AutorisationAcces('preCommandeImport' , Utilisateur) %}
                                 <a href="{{ path('preCommandeImport') }}" class="btn btn-success">
@@ -42,7 +44,7 @@
             </div>
         </div>
     </div>
-    <div class="col-md-10">
+    <div class="col-md-12">
         <!--   <div style="border: 2px solid #1E5584; padding: 3px; background-color: #FFFFFF; -moz-border-radius-topleft: 5px; -moz-border-radius-topright: 5px; -moz-border-radius-bottomright: 5px; -moz-border-radius-bottomleft: 5px;">-->
         <div class="card card-primary card-outline">
             <div class="card-header with-border">
@@ -74,8 +76,9 @@
                         </th>
                         <th>Business Manager</th>
                         <th>
-                            N° Commande
+                            N° Commande (Vide <input type="checkbox" id="vide">)
                         </th>
+                        <th hidden></th>
                         <th hidden>
 
                         </th>
@@ -105,17 +108,9 @@
                                     {% endif %}
                                 {% endfor %}
                                 {% for bu in newArray %}
-                                    {#{% if loop.index == newArray|length %}#}
-                                    {#{{ bu }},#}
-                                    {#{% endif %}#}
                                     {{ bu }}
                                 {% endfor %}
-                                {#{% for  lc in unique|unique %}#}
-                                {#{% if loop.index <5 %}#}
-                                {#{{ lc.bu }}#}
-                                {#{% endif %}#}
-                                {#<span >{{ lc.bu }}</span>#}
-                                {#{% endfor %}#}
+
                             </td>
                             <td>
                                 {{ cmd.totalRAP }}
@@ -123,7 +118,20 @@
                             <td>
                                 {% if cmd.buManager %}{{ cmd.buManager }}  {% endif %}
                             </td>
-                            <td></td>
+                            <td>
+                                {% if  cmd.commande %}
+                                    <span class="badge bg-success">{{ cmd.commande.nCommande }}</span>
+                                {% else %}
+                                    <span class="badge bg-danger">Non généré</span>
+                                {% endif %}
+                            </td>
+                            <td hidden>
+                                {% if cmd.commande %}
+                                    {{ cmd.commande.nCommande }}
+                                {% else %}
+                                    null
+                                {% endif %}
+                            </td>
                             <td>
                                 {% if AutorisationAcces('preCommandeAfficher' , Utilisateur) %}
                                     <center>
@@ -146,7 +154,6 @@
 {% endblock %}
 {% block css %}
     {{ parent() }}
-    {#    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.dataTables.min.css"/>#}
 {% endblock %}
 {% block script %}
     {{ parent() }}
@@ -186,6 +193,21 @@
                 return valid;
             });
         $(document).ready(function () {
+
+            $('input[type="checkbox"]').click(function () {
+                if ($(this).prop("checked") == true) {
+                    table
+                        .columns(7)
+                        .search('null')
+                        .draw();
+                } else if ($(this).prop("checked") == false) {
+                    table
+                        .columns(7)
+                        .search('')
+                        .draw();
+                }
+            });
+
             var table = $('#TableClient').DataTable({
                 language: {
                     processing: "Traitement en cours...",
@@ -253,6 +275,9 @@
                         if (index === 4) {
                             $("#rap select").css("display", "none");
 
+
+                        } else if (index === 6) {
+                            $("tr th:nth-child(7) select").css("display", "none");
                         } else if (index === 3) {
                             var NewArrayToAdd = [];
                             column.data().unique().sort().each(function (d, j) {

@@ -52,86 +52,13 @@
                             N°CL (Vide <input type="checkbox" id="ncl">)
                         </th>
                         <th hidden>
-                            N°CL
+
                         </th>
                         <th>
                             Action
                         </th>
                     </tr>
                     </thead>
-                    <tbody>
-                    {% if (Feuilles is defined) %}
-                        {% for Feuille in Feuilles %}
-                            <tr>
-                                <td>
-                                    {{ Feuille.dateIntervention|date('d-m-Y') }}
-                                </td>
-                                <td>
-                                    {{ Feuille.client }}
-                                </td>
-                                <td>
-                                    {{ Feuille.intervenant.nomUtilisateur }} {{ Feuille.intervenant.prenomUtilisateur }}
-                                </td>
-                                <td>
-                                    {% if Feuille.intervention.allDay %}
-                                        1
-                                    {% else %}
-                                        0.5
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    {% if Feuille.numLivraison %}
-                                        <a href="#" class="username"
-                                           data-type="text"
-                                           data-pk="{{ Feuille.id }}"
-                                           data-title="Enter username"
-                                           data-value="{{ Feuille.numLivraison }}"
-                                           data-tpl='
-                                                                           <input name="somename" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                                                           type = "number"
-                                                                           maxlength = "8"
-                                                                            min="10000000" />'>
-                                            {{ Feuille.numLivraison }}</a>
-                                    {% else %}
-                                        <a href="#" class="username" data-type="text" data-pk="{{ Feuille.id }}"
-                                           data-title="Enter username"
-                                           data-value="{{ Feuille.numLivraison }}"
-                                           data-tpl='
-                                                                           <input name="somename" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                                                           type = "number"
-                                                                           maxlength = "8"
-                                                                            min="10000000" />'>
-                                            Faire le rapprochement</a>
-                                    {% endif %}
-                                </td>
-                                <td hidden>
-                                    {% if Feuille.numLivraison %}
-                                        {{ Feuille.numLivraison }}
-                                    {% else %}
-                                        null
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    {% if Feuille.statutValidation %}
-                                        {% if AutorisationAcces('ConsulterFeuillePresence' , Utilisateur) %}
-                                            <a class="btn btn-sm btn-default"
-                                               href="{{ path('ConsulterFeuillePresence', { 'id': Feuille.id }) }}">
-                                                <i class="fas fa-search fa-lg"
-                                                   title="Consulter la feuille de présence"></i>
-                                            </a>
-                                        {% endif %}
-                                    {% endif %}
-                                    {% if AutorisationAcces('TelechargerFeuillePresence' , Utilisateur) %}
-                                        <a class="btn btn-sm btn-info"
-                                           href="{{ path('TelechargerFeuillePresence', { 'id': Feuille.id }) }}">
-                                            <i class="fas fa-download fa-lg" title="Télécharger la feuille"></i>
-                                        </a>
-                                    {% endif %}
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    {% endif %}
-                    </tbody>
                 </table>
             </div>
         </div>
@@ -166,6 +93,10 @@
             display: inline-block;
             margin: 0px;
             width: 15%;
+        }
+
+        .width {
+            width: 130px !important;
         }
     </style>
 {% endblock %}
@@ -228,31 +159,7 @@
                 }
             });
             // $.fn.editable.defaults.mode = 'inline';
-            $('.username').editable({
-                url: '{{ path('rapprochementAjout') }}',
-                success: function (data, newValue) {
-                    if (data === "NumExist") {
-                        Swal.fire({
-                            title: 'Avertissement!',
-                            text: 'N° LC: ' + newValue + ' existe déjà',
-                            icon: 'warning',
-                            confirmButtonText: 'Ok'
-                        });
-                    }
-                    console.log(data);
-                },
-                error: function (response, newValue) {
-                    if (response.status === 400) {
-                        Swal.fire({
-                            title: 'Erreur!',
-                            text: 'N° LC: ' + newValue + ' existe déjà',
-                            icon: 'error',
-                            confirmButtonText: 'Ok'
-                        });
-                        // alert('N° LC ' + newValue + ' existe déjà')
-                    }
-                },
-            });
+
             // $("#select222" ).css('display', null);
             var table = $('#TableRIFP').DataTable({
                 language: {
@@ -281,6 +188,79 @@
                     /*"ajax": "''"*/
                 },
                 // "scrollX": true,
+                ajax: {
+                    url: "{{ path('feuillesJson') }}",
+                    type: "GET",
+                    dataSrc: '',
+                },
+                "columns": [
+                    {"data": "Date"},
+                    {"data": "Client"},
+                    {"data": "Intervenant"},
+                    {"data": "Qte"},
+                    {
+                        "data": "numLivraison",
+                        createdCell: function (td, cellData, rowData, row, col) {
+                            $(td).addClass('rapp');
+                        },
+                        "render": function (data, type, row, meta) {
+                            var html = ' <a href="#" class="username"\n' +
+                                '                    data-type="text"\n' +
+                                '                    data-pk="' + row.id + '"\n' +
+                                '                    data-title="Enter username"\n' +
+                                '                    data-value="' + row.numLivraison + '"\n' +
+                                '                    data-tpl=\'\n' +
+                                '                    <input name="somename" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"\n' +
+                                '                    type = "number"\n' +
+                                '                    maxlength = "8"\n' +
+                                '                    min="10000000" />\'>\n' +
+                                '                    ' + row.numLivraison + '</a>';
+                            if (row.numLivraison) {
+                                return html;
+                            } else {
+                                return ' <a href="#" class="username" data-type="text" data-pk="' + row.id + '"\n' +
+                                    '                               data-title="Enter username"\n' +
+                                    '                               data-value="' + row.numLivraison + '" data-tpl=\'\n' +
+                                    '                    <input name="somename" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"\n' +
+                                    '                    type = "number"\n' +
+                                    '                    maxlength = "8"\n' +
+                                    '                    min="10000000" />\'>\n' +
+                                    ' Faire le rapprochement</a>'
+                            }
+                        }
+                    },
+                    {
+                        "data": null,
+                        "render": function (data, type, row, meta) {
+                            if (row.numLivraison) {
+                                return row.numLivraison;
+                            } else {
+                                return 'null';
+                            }
+                        },
+                        "visible": false,
+                        "searchable": true,
+                    },
+                    {
+                        "data": null,
+                        "render": function (data, type, row, meta) {
+                            var htmltoAdd = '';
+                            {% if AutorisationAcces('ConsulterFeuillePresence' , app.user) %}
+                            htmltoAdd += '<a class="btn btn-sm btn-default" href="' + Routing.generate('ConsulterFeuillePresence', {id: row.id}) + '" >' +
+                                '                    <i class="fas fa-search fa-lg"\n' +
+                                '                    title="Consulter la feuille de présence"></i>\n' +
+                                '                    </a>';
+                            {% endif %}
+                            {% if AutorisationAcces('TelechargerFeuillePresence' , app.user) %}
+                            htmltoAdd += ' <a class="btn btn-sm btn-info"\n' +
+                                '                    href="' + Routing.generate('TelechargerFeuillePresence', {id: row.id}) + '">\n' +
+                                '                    <i class="fas fa-download fa-lg" title="Télécharger la feuille"></i>\n' +
+                                '                    </a>';
+                            {% endif %}
+                            return htmltoAdd;
+                        }
+                    }
+                ],
                 "paging": true,
                 "ordering": false,
                 "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "Tous"]],
@@ -309,7 +289,7 @@
                     },
                 ],
                 "columnDefs": [
-                    {"width": "10%", "targets": 0}
+                    {"width": "10%", "targets": 1}
                 ],
                 drawCallback: function () {
                     var api = this.api();
@@ -522,6 +502,34 @@
                 table.column(dataIdx)
                     .search("")
                     .draw();
+            });
+
+            $('#TableRIFP').editable({
+                selector: 'tr td:nth-child(5) a',
+                url: '{{ path('rapprochementAjout') }}',
+                inputclass: 'form-control-sm width',
+                success: function (data, newValue) {
+                    if (data === "NumExist") {
+                        Swal.fire({
+                            title: 'Avertissement!',
+                            text: 'N° LC: ' + newValue + ' existe déjà',
+                            icon: 'warning',
+                            confirmButtonText: 'Ok'
+                        });
+                    }
+                    console.log(data);
+                },
+                error: function (response, newValue) {
+                    if (response.status === 400) {
+                        Swal.fire({
+                            title: 'Erreur!',
+                            text: 'N° LC: ' + newValue + ' existe déjà',
+                            icon: 'error',
+                            confirmButtonText: 'Ok'
+                        });
+                        // alert('N° LC ' + newValue + ' existe déjà')
+                    }
+                },
             });
         });
     </script>

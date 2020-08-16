@@ -153,6 +153,7 @@
             }
 
             document.addEventListener('DOMContentLoaded', function () {
+                    f();
                     var app_user = {{ app.user.roleUtilisateur|json_encode()|raw }};
                     var client;
 

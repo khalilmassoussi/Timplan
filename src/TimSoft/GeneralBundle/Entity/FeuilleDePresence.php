@@ -3,10 +3,10 @@
 namespace TimSoft\GeneralBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use SBC\NotificationsBundle\Builder\NotificationBuilder;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
-use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * FeuilleDePresence
@@ -603,11 +603,15 @@ class FeuilleDePresence implements \JsonSerializable
 
     function jsonSerialize()
     {
-        $array = array('id' => $this->id,
+        $array = array(
+            'id' => $this->id,
             'Date' => $this->dateIntervention->format('d-m-Y'),
             'Client' => $this->client->getRaisonSociale(),
             'Intervenant' => $this->intervenant->__toString(),
-            'Type' => 'Feuille de présence',);
+            'Type' => 'Feuille de présence',
+            'numLivraison' => $this->numLivraison,
+            'Qte' => $this->intervention->jRestantes()
+        );
         if ($this->statutValidation) {
             $array['Validation'] = 'Validé';
         } else {

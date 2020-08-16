@@ -1278,10 +1278,11 @@ class GestionFeuilleRapportInterventionController extends Controller
         $num = $request->get('value');
         $Feuille->setNumLivraison($num);
         $em->persist($Feuille);
-        $em->flush();
+
         if ($Feuilles) {
             return new JsonResponse('NumExist', 200);
         } else {
+            $em->flush();
             return new JsonResponse($Feuille, 200);
         }
     }
@@ -1304,10 +1305,10 @@ class GestionFeuilleRapportInterventionController extends Controller
 
     /**
      *
-     * @Route("/feuilles/list", name="feuillesJson")
+     * @Route("/feuillesrapports/list", name="feuillesrapportsJson")
      * @Method({"GET", "POST"})
      */
-    public function feuillesJsonAction(Request $request)
+    public function feuillesrapportsJsonAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
         if ($request->get('parClient') == 'parClient') {
@@ -1321,7 +1322,25 @@ class GestionFeuilleRapportInterventionController extends Controller
         $json = [];
         foreach ($Feuilles as $feuille) {
             $json[] = $feuille;
-            $json[] = $feuille->getRapportIntervention();
+            if ($feuille->getRapportIntervention()) {
+                $json[] = $feuille->getRapportIntervention();
+            }
+        }
+        return new JsonResponse($json);
+    }
+
+    /**
+     *
+     * @Route("/feuilles/list", name="feuillesJson")
+     * @Method({"GET", "POST"})
+     */
+    public function feuillesJsonAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $Feuilles = $em->getRepository('TimSoftGeneralBundle:FeuilleDePresence')->findBy(array(), array('dateIntervention' => 'DESC'));
+        $json = [];
+        foreach ($Feuilles as $feuille) {
+            $json[] = $feuille;
         }
         return new JsonResponse($json);
     }

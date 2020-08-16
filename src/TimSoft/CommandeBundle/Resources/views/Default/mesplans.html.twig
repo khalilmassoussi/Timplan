@@ -135,6 +135,12 @@
                     },
                     navLinks: true,
                     displayEventTime: false,
+                    eventDataTransform: function (event) {
+                        if (event.allDay) {
+                            event.end = moment(event.end).add(1, 'day').format('YYYY-MM-DD');
+                        }
+                        return event;
+                    },
                     eventRender: function (event, element, view) {
                         if (event.view.type === 'dayGridWeek') {
                             calendar.height = 450;
