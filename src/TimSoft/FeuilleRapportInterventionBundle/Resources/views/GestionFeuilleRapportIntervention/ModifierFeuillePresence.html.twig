@@ -840,8 +840,9 @@
             $('#formSubmit').on('click', function (e) {
                 e.preventDefault();
                 var errors = 0;
+                console.log("1-qsdsqdqdqs");
                 $(".bloc").each(function (index) {
-                    // console.log("qsdsqdqdqs");
+                    console.log("qsdsqdqdqs");
                     if ($(this).children("td:nth-child(1)").children("input").val().trim() == "") {
                         errors++;
                         $(this).children("td:nth-child(1)").children("input").css("border", "1px solid red");
@@ -861,9 +862,9 @@
                         $(this).children("td:nth-child(3)").children("input").css("border", "1px solid #ced4da");
                     }
                 });
-                alert('Veuillez renseigner toutes les informations du participant!');
                 if (errors !== 0) {
                     $('#confirm-modif').modal('hide');
+                    alert('Veuillez renseigner toutes les informations du participant!');
                     return false;
                 } else {
                     $('form[name=timsoft_generalbundle_feuilledepresence]').submit();

@@ -330,7 +330,7 @@
                                         type: "POST",
                                         success: function (data) {
                                             calendar.refetchEvents();
-                                            editPlanningModal(event, calendar);
+                                            editPlanningModal(event, calendar, data);
                                             f();
                                         },
                                         error: function () {
@@ -345,7 +345,7 @@
                                     type: "POST",
                                     //  async: false,
                                     success: function (data) {
-                                        editPlanningModal(event, calendar, data.id);
+                                        editPlanningModal(event, calendar, data);
                                         calendar.refetchEvents();
                                         f();
                                     },
@@ -356,10 +356,8 @@
                             }
                         },
                     });
-
                     calendar.setOption('locale', 'fr');
                     calendar.render();
-
                 }
             );
 

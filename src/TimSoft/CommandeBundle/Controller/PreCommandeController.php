@@ -7,12 +7,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 use TimSoft\CommandeBundle\Entity\LigneCommande;
 use TimSoft\CommandeBundle\Entity\PreLigneCommande;
 use TimSoft\CommandeBundle\Entity\PreTeteCommande;
 use TimSoft\CommandeBundle\Entity\TeteCommande;
 use TimSoft\CommandeBundle\Form\ImportCommandeType;
-use Symfony\Component\Routing\Annotation\Route;
 use TimSoft\CommandeBundle\Form\PreTeteCommandeType;
 use TimSoft\CommandeBundle\Form\TeteCommandeType;
 
@@ -108,29 +108,25 @@ class PreCommandeController extends Controller
                     if ($fullrow) {
                         if ($fullrow[0] != null) {
                             $bu = $em->getRepository('TimSoftBuBundle:Bu')->findOneByLibelle($fullrow[0]);
-//                            var_dump($fullrow);
-//                    die();
                             if (is_null($bu)) {
                                 $this->addFlash("Erreur", "Le BU " . $fullrow[0] . " invalide");
                                 return $this->render('@TimSoftCommande/Default/ImportCmd.html.twig', array('form' => $form->createView()));
                             }
                         }
                         $users = $this->getDoctrine()->getRepository('TimSoftGeneralBundle:Utilisateur')->findAll();
-                        if ($fullrow[11]) {
+                        if ($fullrow[11] != null) {
                             foreach ($users as $user) {
                                 if ($user->__toString() == $fullrow[11]) {
                                     $buManager = $user;
-//                                    var_dump($buManager);
                                 }
                             }
-                            if ($buManager == null) {
-                                $this->addFlash("Erreur", "Business Manager " . $fullrow[11] . " est invalide");
-                                return $this->render('@TimSoftCommande/Default/ImportCmd.html.twig', array('form' => $form->createView()));
-                            }
+                        }
+                        if ($buManager == null) {
+                            $this->addFlash("Erreur", "Business Manager " . $fullrow[11] . " est invalide");
+                            return $this->render('@TimSoftCommande/Default/ImportCmd.html.twig', array('form' => $form->createView()));
                         }
                     }
                 }
-//                die();
                 $array = new ArrayCollection();
                 foreach ($rows as $key => $row) {
                     if ($key) {
@@ -138,11 +134,8 @@ class PreCommandeController extends Controller
                             $array->add($row);
                     }
                 }
-//                print_r($array);
                 foreach ($array as $value) {
                     if ($value) {
-//                        print_r($value);
-//                        die();
                         if ($value[1] && $value[2] && $value[0] && $value[3]) {
                             $commande = new PreTeteCommande();
                             $commande->setNCommande($value[1]);

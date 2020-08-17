@@ -767,7 +767,11 @@ class GestionFeuilleRapportInterventionController extends Controller
                         $Rapport->setDone(true);
                         $em->persist($Rapport);
                         $em->flush();
-                        return $this->redirectToRoute('ConsulterFeuillesRapportIntervention');
+                        if ($this->getUser()->hasRole('ROLE_CONSULTANT')) {
+                            return $this->redirectToRoute('ConsulterFeuillesRapportInterventionParConsultant');
+                        } else {
+                            return $this->redirectToRoute('ConsulterFeuillesRapportIntervention');
+                        }
                     } else {
                         if ($this->getUser()->hasRole('ROLE_CONSULTANT') || $this->getUser()->hasRole('ROLE_GESTIONNAIRE') || $this->getUser()->hasRole('ROLE_CHEF') || $this->getUser()->hasRole('ROLE_ADMIN')) {
                             $Rapport->setConfirmationDeInterventionParClient(true);
@@ -858,13 +862,20 @@ class GestionFeuilleRapportInterventionController extends Controller
 
                             }
                             $numSent += $this->get('mailer')->send($messageValidation, $failedRecipients);
-                            return $this->redirectToRoute('ConsulterFeuillesRapportIntervention');
+                            if ($this->getUser()->hasRole('ROLE_CONSULTANT')) {
+                                return $this->redirectToRoute('ConsulterFeuillesRapportInterventionParConsultant');
+                            } else {
+                                return $this->redirectToRoute('ConsulterFeuillesRapportIntervention');
+                            }
                         } else {
                             if ($this->getUser()->hasRole('ROLE_CLIENT')) {
                                 $this->addFlash('RapportNV', 'Vous devez validé le rapport !');
                                 return $this->render('@TimSoftFeuilleRapportIntervention/GestionFeuilleRapportIntervention/ModifierRapportIntervention.html.twig', array('form1' => $form->createView(), 'Rapport' => $Rapport));
+                            } elseif ($this->getUser()->hasRole('ROLE_CONSULTANT')) {
+                                return $this->redirectToRoute('ConsulterFeuillesRapportInterventionParConsultant');
                             } else {
                                 return $this->redirectToRoute('ConsulterFeuillesRapportIntervention');
+
                             }
                         }
 
