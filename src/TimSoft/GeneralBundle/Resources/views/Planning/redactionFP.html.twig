@@ -17,30 +17,15 @@
 {% block SideBar %}
 
 {% endblock %}
-{% block Contenu %}
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fullcalendar/core@4.1.0/main.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@4.1.0/main.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@4.1.0/main.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@4.1.0/main.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/interaction@4.1.0/main.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@4.1.0/main.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@4.1.0/main.min.js"></script>
-    <script src="https://unpkg.com/@fullcalendar/core@4.3.1/locales-all.js"></script>
-    {#<script src="https://unpkg.com/@fullcalendar/interaction@4.3.0/main.min.js"></script>#}
-    <script src="https://unpkg.com/@fullcalendar/list@4.3.0/main.min.js"></script>
-    <script src='http://fullcalendar.io/js/fullcalendar-2.1.1/lib/moment.min.js'></script>
-    <script src='http://fullcalendar.io/js/fullcalendar-2.1.1/lib/jquery.min.js'></script>
-    <script src="http://fullcalendar.io/js/fullcalendar-2.1.1/lib/jquery-ui.custom.min.js"></script>
-    <script src='http://fullcalendar.io/js/fullcalendar-2.1.1/fullcalendar.min.js'></script>
 
+{% block css %}
+    {{ parent() }}
+{% endblock %}
+{% block Contenu %}
     <style>
     </style>
     <div class="col-lg-12">
         <div class="card card-outline card-primary">
-            {#<div class="card-header with-border">#}
-            {#<h2 class="card-title" style="color:#1E5584">Mes plannings confirmé</h2>#}
-            {#</div>#}
             <div class="card-tools pull-center">
             </div>
             <div class="card-body">
@@ -105,6 +90,7 @@
     {{ parent() }}
     <script src="{{ asset('bundles/fosjsrouting/js/router.min.js') }}"></script>
     <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
+
     <script>
         $(document).ready(function () {
             var table = $('#myTable').DataTable({
@@ -136,7 +122,8 @@
                 "columnDefs": [{
                     "targets": -1,
                     "data": null,
-                    "defaultContent": "<center><a href='#'><i class=\"fas fa-pen fa-lg\" title='Remplir la feuille de présence'></i></center>"
+                    className: "text-center",
+                    "defaultContent": "<a href='#'><i class=\"fas fa-pen fa-lg \" title='Remplir la feuille de présence'></i>"
                 }],
                 "order": [[0, "desc"]]
             });
@@ -146,16 +133,12 @@
                     type: "POST",
                     url: '{{ path('RemplirFeuillePresence') }}',
                     data: 'action=update&id=' + data[0],
-                    // async: false,
+
                     success: function (data) {
-                        {#alert('{{ path('RemplirFeuillePresence') }}');#}
-                        // window.location.href = Routing.generate('ModifierFeuillePresence', {
-                        //     id: data.id
-                        // }, true);
                         Routing.setPort(null);
-                        location.replace(Routing.generate('ModifierFeuillePresence', {
-                            id: data.id
-                        }, true));
+                        // location.replace(Routing.generate('ModifierFeuillePresence', {
+                        //     id: data.id
+                        // }, true));
                         Swal.fire({
                             position: 'center',
                             icon: 'success',
@@ -163,7 +146,6 @@
                             showConfirmButton: false,
                             timer: 2500
                         });
-                        // alert("Feuille de présence ajoutée avec succès");
                     },
                     error: function () {
                         Swal.fire({

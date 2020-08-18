@@ -557,7 +557,7 @@ class PlanningController extends Controller
         } else {
             $planning = $this->getDoctrine()->getRepository('TimSoftGeneralBundle:Planning')->getConfirméByUser($this->getUser());
         }
-        return $this->render('@TimSoftGeneral/Planning/listByUser.html.twig', array('plannings' => $planning));
+        return $this->render('@TimSoftGeneral/Planning/redactionFP.html.twig', array('plannings' => $planning));
     }
 
     public function getByBuAction()

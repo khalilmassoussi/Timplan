@@ -104,15 +104,21 @@
                 </div>
             </div>
             <div class="card-body">
-                <div class="col-md-12">
-                    <div align="center">
-                        <select id="utilisateurs" class="select2" style="width: 50%;">
-                            <option></option>
-                            {% for client in clients %}
-                                <option value="{{ client.id }}">{{ client.raisonSociale }}</option>
-                            {% endfor %}
-                        </select>
+                <div class="col-md-6 offset-md-3">
+                    <div class="card card-outline card-info bg-gradient-light">
+                        <div class="card-body">
+                            <div align="center">
+                                <select id="utilisateurs" class="select2" style="width: 100%;">
+                                    <option></option>
+                                    {% for client in clients %}
+                                        <option value="{{ client.id }}">{{ client.raisonSociale }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
                     </div>
+                </div>
+                <div class="col-md-12">
                     <div class="row">
                         <div id='calendar'></div>
                     </div>
@@ -216,7 +222,6 @@
                         minute: '2-digit',
                         second: '2-digit',
                         hour12: false
-
                     },
                     navLinks: true,
                     displayEventTime: false,
@@ -227,7 +232,6 @@
                         return event;
                     },
                     eventRender: function (event, element, view) {
-                        // console.log(event);
                         if (event.view.type === 'dayGridWeek') {
                             calendar.height = 450;
                             $(event.el).height('auto');
@@ -252,28 +256,23 @@
                                     $(event.el).find('div.ribbon').each(function (index) {
                                         $(this).addClass('bg-warning');
                                         $(this).css('font-size', '80%');
-
                                     });
                                 } else if (event.event.extendedProps.Statut === 'Bloqué') {
                                     $(event.el).find('div.ribbon').each(function (index) {
                                         $(this).addClass('bg-danger');
                                         // $(this).css('font-size', '0.6vw');
-
                                     });
                                 } else if (event.event.extendedProps.Statut === 'In Progress') {
                                     $(event.el).find('div.ribbon').each(function (index) {
                                         $(this).addClass('bg-navy');
                                         $(this).css('font-size', '0.6vw');
-
                                     });
                                 } else if (event.event.extendedProps.Statut === 'Done') {
                                     $(event.el).find('div.ribbon').each(function (index) {
                                         $(this).addClass('bg-success');
                                         // $(this).css('font-size', '0.6vw');
-
                                     });
                                 }
-
 
                             } else {
                                 $(event.el).find('.fc-title').prepend('<b>Client: </b>');

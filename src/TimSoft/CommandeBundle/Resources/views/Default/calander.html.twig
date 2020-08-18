@@ -16,26 +16,8 @@
 {% block SideBar %}
 
 {% endblock %}
-{% block Contenu %}
-    {#    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@4.3.1/main.min.js"></script>#}
-    {#    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>#}
-    {#    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fullcalendar/core@4.1.0/main.min.css">#}
-    {#    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@4.1.0/main.min.css">#}
-    {#    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@4.1.0/main.min.css">#}
-    {#    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@4.1.0/main.min.js"></script>#}
-    {#    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/interaction@4.1.0/main.min.js"></script>#}
-    {#    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@4.1.0/main.min.js"></script>#}
-    {#    <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@4.1.0/main.min.js"></script>#}
-    <script src="https://unpkg.com/@fullcalendar/core@4.3.1/locales-all.js"></script>
-    {#<script src="https://unpkg.com/@fullcalendar/interaction@4.3.0/main.min.js"></script>#}
-    {#    <script src="https://unpkg.com/@fullcalendar/list@4.3.0/main.min.js"></script>#}
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.js'></script>
-    {#                <script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.2.0/moment/main.js'></script>#}
-    {#    <script src='https://fullcalendar.io/js/fullcalendar-2.1.1/lib/jquery.min.js'></script>#}
-    {#    <script src="https://fullcalendar.io/js/fullcalendar-2.1.1/lib/jquery-ui.custom.min.js"></script>#}
-    {#    <script src='https://fullcalendar.io/js/fullcalendar-2.1.1/fullcalendar.min.js'></script>#}
-    {#    <script src="https://cdnjs.cloudflare.com/ajax/libs/FitText.js/1.2.0/jquery.fittext.js"></script>#}
-
+{% block css %}
+    {{ parent() }}
     <style>
         .fc-day-grid-event > .fc-content {
             white-space: normal;
@@ -77,6 +59,8 @@
         /*    margin: 20px auto;*/
         /*}*/
     </style>
+{% endblock %}
+{% block Contenu %}
     <div class="col-lg-12">
         <div class="row">
             <div class="col-md-3">
@@ -130,7 +114,8 @@
 {% endblock %}
     {% block script %}
         {{ parent() }}
-
+        <script src="https://unpkg.com/@fullcalendar/core@4.3.1/locales-all.js"></script>
+        <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.js'></script>
         <script>
             function f() {
                 $.map($(".fc-event"), function (n, i) {
@@ -218,7 +203,6 @@
                             }
                             return event;
                         },
-                        //   defaultDate: '2020-04-04',
                         eventClick: function (event) {
                             if (event.event.extendedProps.type != 'TaskEvent') {
                                 editPlanningModal(event, calendar);

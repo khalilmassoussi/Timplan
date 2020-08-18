@@ -14,11 +14,8 @@
 {% block SideBar %}
 {% endblock %}
 {% block Contenu %}
-    <div class="col-md-12">
-        <!--   <div style="border: 2px solid #1E5584; padding: 3px; background-color: #FFFFFF; -moz-border-radius-topleft: 5px; -moz-border-radius-topright: 5px; -moz-border-radius-bottomright: 5px; -moz-border-radius-bottomleft: 5px;">-->
-        <div class="card card-outline card-warning">
-            {#<div class="card-header">#}
-            {#</div>#}
+    <div class="col-md-6 offset-md-3 ">
+        <div class="card card-outline card-warning bg-gradient-light">
             <div class="card-body">
                 <div class="container">
                     <div class="row justify-content-center">
@@ -31,10 +28,8 @@
                             {% if AutorisationAcces('ImportCmd' , Utilisateur) %}
                                 <a href="{{ path('ImportCmd') }}" class="btn btn-success">
                                     <i class="fas fa-file-upload fa-2x" title="Importer des commandes"></i>
-                                    {#                                    Importer des commandes#}
                                 </a>
                             {% endif %}
-                            {#                    {% if AutorisationAcces('ImportCmd' , Utilisateur) %}#}
                             <a href="{{ path('export') }}" class="btn btn-secondary">
                                 <i class="fas fa-file-download fa-2x" title="Exporter les commandes"></i>
                             </a>
@@ -136,11 +131,9 @@
         <script src="https://unpkg.com/@fullcalendar/core@4.3.1/locales-all.js"></script>
 
         <script src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
-        {#        <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>#}
         <script type="text/javascript"
                 src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
         <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css"/>
-        {#        <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.js'></script>#}
 
         <script type="text/javascript">
             var startdate;
@@ -292,12 +285,8 @@
                 var startDate;
                 var endDate;
                 var dataIdx = 1;  //current data column to work with
-                // $("#mytable_wrapper thead").on("mousedown", "th", function (event) {
-                //     var visIdx = $(this).parent().children().index($(this));
-                //     dataIdx = table.column.index('fromVisible', visIdx);
-                // });
 
-
+                
                 // Function for converting a dd/mmm/yyyy date value into a numeric string for comparison (example 01-Dec-2010 becomes 20101201
                 function parseDateValue(rawDate) {
 
