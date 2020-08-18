@@ -17,9 +17,6 @@ use TimSoft\GeneralBundle\Entity\NotificationUtilisateur;
 use TimSoft\GeneralBundle\Entity\RapportIntervention;
 use TimSoft\NotificationBundle\Entity\Notification;
 
-// On inclue  dompdf et  la classe qui permet de gérer ses options
-
-//use vendor\swiftmailer\swiftmailer\lib\classes\Swift\Attachment;
 
 class GestionFeuilleRapportInterventionController extends Controller
 {
@@ -58,6 +55,25 @@ class GestionFeuilleRapportInterventionController extends Controller
         }
         $em->persist($planning);
         $em->persist($FeuilleDePresence);
+        //generation PDF
+        $view = $this->renderView('@TimSoftFeuilleRapportIntervention/Telechargement/TelechargerUneFeuillePresence.html.twig', array('Feuille' => $FeuilleDePresence));
+        // On crée une  instance pour définir les options de notre fichier pdf
+        $options = new Options();
+        // Pour simplifier l'affichage des images, on autorise dompdf à utiliser
+        // des  url pour les nom de  fichier
+        $options->set('isRemoteEnabled', true);
+        $d = new Dompdf($options);
+        $contxt = stream_context_create([
+            'ssl' => ['verify_peer' => FALSE, 'verify_peer_name' => FALSE, 'allow_self_signed' => TRUE]]);
+        $d->setHttpContext($contxt);
+        $d->loadHtml($view);
+        // Render the HTML as PDF
+        $d->render();
+        $fileName = 'Feuille de présence du ' . $FeuilleDePresence->getDateIntervention()->format('d-m-Y') . ' par ' . $FeuilleDePresence->getIntervenant() . ' pour ' . $FeuilleDePresence->getClient();
+        $fileName = str_replace('/', '', $fileName);
+        $directory = $this->get('kernel')->getRootDir() . '/../web/PDF/' . $fileName . '.pdf';
+        $pdf_string = $d->output();
+        file_put_contents($directory, $pdf_string);
         $RapportIntervention->setFeuilleDePresence($FeuilleDePresence);
         $em->persist($RapportIntervention);
         $em->flush();
@@ -109,13 +125,6 @@ class GestionFeuilleRapportInterventionController extends Controller
             throw $this->createAccessDeniedException();
         }
 
-//        $Rapports = $em->getRepository('TimSoftGeneralBundle:RapportIntervention')->findAll();
-
-//        foreach ($array as $item){
-//            print_r($item);
-//            die();
-//        }
-
         return $this->render('@TimSoftFeuilleRapportIntervention/GestionFeuilleRapportIntervention/ConsulterFeuilleRapportIntervention.html.twig');
     }
 
@@ -128,8 +137,6 @@ class GestionFeuilleRapportInterventionController extends Controller
             throw $this->createAccessDeniedException();
         }
         $em = $this->getDoctrine()->getManager(); // initialise la connexion à la BD
-//        $Feuilles = $em->getRepository('TimSoftGeneralBundle:FeuilleDePresence')->findBy(array('client' => $this->getUser()->getClient()), array('id' => 'DESC'));
-//        $Rapports = $em->getRepository('TimSoftGeneralBundle:RapportIntervention')->getRapportClient($this->getUser()->getClient());
         return $this->render('@TimSoftFeuilleRapportIntervention/GestionFeuilleRapportIntervention/ConsulterFeuilleRapportIntervention.html.twig', array('parClient' => 'parClient'));
     }
 
@@ -142,8 +149,6 @@ class GestionFeuilleRapportInterventionController extends Controller
             throw $this->createAccessDeniedException();
         }
         $em = $this->getDoctrine()->getManager(); // initialise la connexion à la BD
-//        $Feuilles = $em->getRepository('TimSoftGeneralBundle:FeuilleDePresence')->findByIntervenant($this->getUser());
-//        $Rapports = null;
         return $this->render('@TimSoftFeuilleRapportIntervention/GestionFeuilleRapportIntervention/ConsulterFeuilleRapportIntervention.html.twig', array('ParConsultant' => 'ParConsultant'));
     }
 
@@ -157,13 +162,9 @@ class GestionFeuilleRapportInterventionController extends Controller
         }
         $em = $this->getDoctrine()->getManager(); // initialise la connexion à la BD
         $Feuille = $em->getRepository("TimSoftGeneralBundle:FeuilleDePresence")->findOneBy(array('id' => $id));
-//        if ($this->isGranted(FeuilleVoter::VIEW, $Feuille)) {
         return $this->render('@TimSoftFeuilleRapportIntervention/GestionFeuilleRapportIntervention/ConsulterUneFeuillePresence.html.twig', array('Feuille' => $Feuille));
-//        }
-        //        } else {
         $this->addFlash('KO-ConsulterUtilisateur', 'Vous n\'êtes pas autorisé à accéder a cette ressource, Vous serez redirigé vers la page d\'accueil !');
         return $this->redirectToRoute('tim_soft_client_homepage');
-//        }
     }
 
     /**

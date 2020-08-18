@@ -14,39 +14,39 @@
 {% block SideBar %}
 {% endblock %}
 {% block Contenu %}
-    <div class="col-md-6 offset-md-3 ">
-        <div class="card card-outline card-warning bg-gradient-light">
-            <div class="card-body">
-                <div class="container">
-                    <div class="row justify-content-center">
-                        <div class="mb-1">
-                            <button class="btn btn-info" id="plus">Afficher toutes les commandes</button>
-                        </div>
-                    </div>
-                    <div class="row justify-content-center">
-                        <div class="btn-group">
-                            {% if AutorisationAcces('ImportCmd' , Utilisateur) %}
-                                <a href="{{ path('ImportCmd') }}" class="btn btn-success">
-                                    <i class="fas fa-file-upload fa-2x" title="Importer des commandes"></i>
-                                </a>
-                            {% endif %}
-                            <a href="{{ path('export') }}" class="btn btn-secondary">
-                                <i class="fas fa-file-download fa-2x" title="Exporter les commandes"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
 
-            </div>
-        </div>
-    </div>
     <div class="col-md-12">
         <div class="card card-primary card-outline">
             <div class="card-header with-border">
                 <h2 class="card-title">Liste de toutes les commandes </h2>
             </div>
             <div class="card-body">
+                <div class="col-md-6 offset-md-3 ">
+                    <div class="card card-outline card-warning bg-gradient-light">
+                        <div class="card-body">
+                            <div class="container">
+                                <div class="row justify-content-center">
+                                    <div class="mb-1">
+                                        <button class="btn btn-info" id="plus">Afficher toutes les commandes</button>
+                                    </div>
+                                </div>
+                                <div class="row justify-content-center">
+                                    <div class="btn-group">
+                                        {% if AutorisationAcces('ImportCmd' , Utilisateur) %}
+                                            <a href="{{ path('ImportCmd') }}" class="btn btn-success">
+                                                <i class="fas fa-file-upload fa-2x" title="Importer des commandes"></i>
+                                            </a>
+                                        {% endif %}
+                                        <a href="{{ path('export') }}" class="btn btn-secondary">
+                                            <i class="fas fa-file-download fa-2x" title="Exporter les commandes"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
 
+                        </div>
+                    </div>
+                </div>
                 <table id="TableClient" class="table table-striped dataTable"
                        cellspacing="0" style="width: 100%;">
                     <thead>

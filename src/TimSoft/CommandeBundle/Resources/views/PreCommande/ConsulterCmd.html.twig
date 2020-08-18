@@ -14,36 +14,7 @@
 {% block SideBar %}
 {% endblock %}
 {% block Contenu %}
-    {#<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"> </script> #}
-    {#<link rel="stylesheet" hre="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css#}
-    {#"></link>#}
-    <div class="col-md-12">
-        <div class="card card-warning card-outline">
-            {#<div class="card-header">#}
-            {#</div>#}
-            <div class="card-body">
-                <div class="container">
-                    <div class="row justify-content-center">
-                        <div class="mb-1">
-                            <button class="btn btn-info" id="plus">Afficher toutes les précommandes</button>
-                        </div>
-                    </div>
-                    <div class="row justify-content-center">
-                        <div class="btn-group">
-                            {% if AutorisationAcces('preCommandeImport' , Utilisateur) %}
-                                <a href="{{ path('preCommandeImport') }}" class="btn btn-success">
-                                    <i class="fas fa-file-upload fa-2x" title="Importer des précommandes"></i>
-                                </a>
-                            {% endif %}
-                            <a href="{{ path('export') }}" class="btn btn-secondary">
-                                <i class="fas fa-file-download fa-2x" title="Exporter les précommandes"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+
     <div class="col-md-12">
         <!--   <div style="border: 2px solid #1E5584; padding: 3px; background-color: #FFFFFF; -moz-border-radius-topleft: 5px; -moz-border-radius-topright: 5px; -moz-border-radius-bottomright: 5px; -moz-border-radius-bottomleft: 5px;">-->
         <div class="card card-primary card-outline">
@@ -51,7 +22,33 @@
                 <h2 class="card-title">Liste de toutes les précommandes </h2>
             </div>
             <div class="card-body">
-
+                <div class="col-md-6 offset-md-3">
+                    <div class="card card-warning card-outline  bg-gradient-light">
+                        {#<div class="card-header">#}
+                        {#</div>#}
+                        <div class="card-body">
+                            <div class="container">
+                                <div class="row justify-content-center">
+                                    <div class="mb-1">
+                                        <button class="btn btn-info" id="plus">Afficher toutes les précommandes</button>
+                                    </div>
+                                </div>
+                                <div class="row justify-content-center">
+                                    <div class="btn-group">
+                                        {% if AutorisationAcces('preCommandeImport' , Utilisateur) %}
+                                            <a href="{{ path('preCommandeImport') }}" class="btn btn-success">
+                                                <i class="fas fa-file-upload fa-2x" title="Importer des précommandes"></i>
+                                            </a>
+                                        {% endif %}
+                                        <a href="{{ path('export') }}" class="btn btn-secondary">
+                                            <i class="fas fa-file-download fa-2x" title="Exporter les précommandes"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <table id="TableClient" class="table table-striped dataTable" style="width:100%"
                        cellspacing="0">
                     <thead>
