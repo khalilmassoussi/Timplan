@@ -332,8 +332,6 @@ class GestionFeuilleRapportInterventionController extends Controller
                     return $this->render('@TimSoftFeuilleRapportIntervention/GestionFeuilleRapportIntervention/ModifierFeuillePresence.html.twig', array('form' => $form->createView(), 'Feuille' => $Feuille));
                 } else {
                     if ($form["statutValidation"]->getData() == 1) {
-//                        var_dump($form["statutValidation"]->getData());
-//                        die();
                         $this->valider($Feuille);
                         return $this->redirectToRoute('ModifierRapportIntervention', array('id' => $Feuille->getRapportIntervention()->getId()));
                     } else {
@@ -369,17 +367,14 @@ class GestionFeuilleRapportInterventionController extends Controller
         $Rapport = $em->getRepository("TimSoftGeneralBundle:RapportIntervention")->findOneBy(array('id' => $id));
         if ($Rapport->getFeuilleDePresence()->getStatutValidation() || $Rapport->getFeuilleDePresence()->getValidationClient()) {
             if ($Rapport->getConfirmationDeInterventionParClient() == 0) {
-                // if ($this->isGranted(RapportVoter::EDIT, $Rapport)) {
                 $form = $this->createForm('TimSoft\GeneralBundle\Form\RapportInterventionType', $Rapport);
                 $originalFiles = new ArrayCollection();
                 foreach ($Rapport->getFichiersJoin() as $Fichier) {
                     $originalFiles->add($Fichier);
                 }
-
                 if ($request->isMethod('POST')) {
                     $form->handleRequest($request);
                 }
-
                 if ($form->isValid()) {
                     foreach ($originalFiles as $File) {
                         if (false === $Rapport->getFichiersJoin()->contains($File)) {

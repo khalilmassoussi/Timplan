@@ -90,6 +90,8 @@
                                                 <li>Client</li>
                                             {% elseif ( Groupe.role == 'ROLE_GESTIONNAIRE') %}
                                                 <li>Gestionnaire</li>
+                                            {% elseif ( Groupe.role == 'ROLE_TRACKING') %}
+                                                <li>Tracking User</li>
                                             {% endif %}
                                         {% endfor %}
                                     </ul>
@@ -265,7 +267,7 @@
                         $('form[name=form_modif]').submit();
                         Swal.fire(
                             'Succès!',
-                            "Le droit d\'accès " + '{{ Droit.nomDroit }}' +" est modifié avec succès !",
+                            "Le droit d\'accès " + '{{ Droit.nomDroit }}' + " est modifié avec succès !",
                             'success'
                         )
                     }

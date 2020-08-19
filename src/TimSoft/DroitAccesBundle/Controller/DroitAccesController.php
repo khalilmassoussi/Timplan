@@ -7,9 +7,9 @@ use RecursiveIteratorIterator;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 use TimSoft\GeneralBundle\Entity\DroitAccesGroupe;
 use TimSoft\GeneralBundle\Entity\DroitAccesPersonne;
-use Symfony\Component\Routing\Annotation\Route;
 
 class DroitAccesController extends Controller
 {
@@ -57,6 +57,8 @@ class DroitAccesController extends Controller
                 $categorie[] = ["ROLE_CLIENT", "Client"];
             } elseif ($Role == "ROLE_CHEF") {
                 $categorie[] = ["ROLE_CHEF", "BU Manager"];
+            } elseif ($Role == "ROLE_TRACKING") {
+                $categorie[] = ["ROLE_TRACKING", "Tracking User"];
             }
         }
         return new JsonResponse($categorie);
@@ -90,6 +92,8 @@ class DroitAccesController extends Controller
                 $categorie[] = ["ROLE_CLIENT", "Client"];
             } elseif ($Role == "ROLE_CHEF") {
                 $categorie[] = ["ROLE_CHEF", "BU Manager"];
+            } elseif ($Role == "ROLE_TRACKING") {
+                $categorie[] = ["ROLE_TRACKING", "Tracking User"];
             }
         }
         return new JsonResponse($categorie);

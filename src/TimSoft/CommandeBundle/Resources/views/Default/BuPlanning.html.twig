@@ -91,9 +91,11 @@
         <div class="card card-outline card-primary">
             <div class="card-header">
                 <h3 class="card-title">
-                    <a href="#" id="addTaskButton">
-                        <button class="btn btn-primary">Ajouter une Task</button>
-                    </a>
+                    {% if (AutorisationAcces('taskevent_new' , Utilisateur)) %}
+                        <a href="#" id="addTaskButton">
+                            <button class="btn btn-primary">Ajouter une Task</button>
+                        </a>
+                    {% endif %}
                 </h3>
                 <div class="card-tools">
                     <a href="#" id="export" class="btn btn-info btn-sm"
