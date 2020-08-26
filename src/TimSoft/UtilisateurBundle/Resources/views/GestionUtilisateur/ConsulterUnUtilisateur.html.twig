@@ -219,7 +219,7 @@
                                 </tr>
                                 <tr>
                                     <th scope="row" style="padding: 15px 0px 0px 0px">
-                                        <div align="left">Catégorie:</div>
+                                        <div align="left">BU:</div>
                                     </th>
                                     <td style="padding: 15px 0px 0px 0px">
                                         {% set role = utilisateur.roleUtilisateur %}
@@ -228,6 +228,7 @@
                                         {% elseif ( role == 'ROLE_CLIENT') %}Client
                                         {% elseif ( role == 'ROLE_GESTIONNAIRE') %}Gestionnaire
                                         {% elseif ( role == 'ROLE_CHEF') %}BU Manager
+                                        {% elseif ( role == 'ROLE_TRACKING') %}Tracking User
                                         {% endif %}
                                     </td>
                                 </tr>

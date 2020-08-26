@@ -214,7 +214,7 @@
                                 '                    type = "number"\n' +
                                 '                    maxlength = "8"\n' +
                                 '                    min="10000000" />\'>\n' +
-                                '                    ' + row.numLivraison + '</a>';
+                                '                    <span class="badge bg-success" style="font-size: 85%">' + row.numLivraison + '</span></a>';
                             if (row.numLivraison) {
                                 return html;
                             } else {
@@ -225,7 +225,7 @@
                                     '                    type = "number"\n' +
                                     '                    maxlength = "8"\n' +
                                     '                    min="10000000" />\'>\n' +
-                                    ' Faire le rapprochement</a>'
+                                    '<span class="badge bg-danger" style="font-size: 85%">Faire le rapprochement</span></a>'
                             }
                         }
                     },
@@ -252,7 +252,7 @@
                                 '                    </a>';
                             {% endif %}
                             {% if AutorisationAcces('TelechargerFeuillePresence' , app.user) %}
-                            htmltoAdd += ' <a class="btn btn-sm btn-info"\n' +
+                            htmltoAdd += ' <a class="btn btn-sm btn-primary"\n' +
                                 '                    href="' + Routing.generate('TelechargerFeuillePresence', {id: row.id}) + '">\n' +
                                 '                    <i class="fas fa-download fa-lg" title="Télécharger la feuille"></i>\n' +
                                 '                    </a>';

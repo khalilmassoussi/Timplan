@@ -11,23 +11,31 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Security\Core\Security;
 use TimSoft\GeneralBundle\Repository\UtilisateurRepository;
 
 class PlanningType extends AbstractType
 {
+
+    public $security;
+
+    public function __construct(Security $security)
+    {
+        $this->security = $security;
+    }
 
     /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $user = $options['user'];
         $builder->add('start', DateType::class, [
             'widget' => 'single_text',
             'html5' => false,
             'attr' => ['placeholder' => 'Choisir la date/heure de debut'],
             'format' => 'dd MMMM yyyy',
             'label' => 'Debut'
-//                'placeholder' => 'Choisir la date/heure de debut'
         ])
             ->add('end', DateType::class, [
                 'widget' => 'single_text',
@@ -35,8 +43,6 @@ class PlanningType extends AbstractType
                 'attr' => ['placeholder' => 'Choisir la date/heure de fin', 'readonly' => true,],
                 'format' => 'dd MMMM yyyy',
                 'label' => 'Fin',
-
-//                'disabled' => true
             ])
             ->add('temps', ChoiceType::class, [
                 'choices' => [
@@ -58,7 +64,9 @@ class PlanningType extends AbstractType
                     ],
                     'choice_attr' => function ($key, $val, $index) {
                         $disabled = false;
-                        if ($val == 'Terminé') {
+                        if ($this->security->getUser()->getRoleUtilisateur() == 'ROLE_ADMIN') {
+                            $disabled = false;
+                        } elseif ($val == 'Terminé') {
                             $disabled = true;
                         }
                         // set disabled to true based on the value, key or index of the choice...
@@ -66,7 +74,6 @@ class PlanningType extends AbstractType
                     },
                 ]
             )
-//            ->add('jSupplementaire', RadioType::class)
             ->add('facturation', ChoiceType::class, [
                 'choices' => [
                     'Facturable' => 'Facturé',
@@ -101,7 +108,6 @@ class PlanningType extends AbstractType
                         'Après-midi' => 'Après-midi',
                     ],
                     'data' => ['Matin', 'Après-midi'],
-//                    'data' => 'Matin',
                     'multiple' => true,
                     'mapped' => false,
                     'expanded' => true
@@ -114,7 +120,7 @@ class PlanningType extends AbstractType
                             'Après-midi' => 'Après-midi',
                         ],
                         'data' => ['Matin'],
-//                    'data' => 'Matin',
+//
                         'multiple' => true,
                         'mapped' => false,
                         'expanded' => true
@@ -154,7 +160,8 @@ class PlanningType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'TimSoft\GeneralBundle\Entity\Planning'
+            'data_class' => 'TimSoft\GeneralBundle\Entity\Planning',
+            'user' => null
         ));
     }
 

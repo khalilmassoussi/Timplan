@@ -180,12 +180,9 @@
                                             </tr>
                                         </table>
                                     </div>
-
-
                                     {{ form_widget(form._token) }}
                                     {{ form_end(form) }}
-
-                                    </p></td>
+                                </td>
                             </tr>
                         </table>
                         <br>
@@ -344,8 +341,6 @@
                     $('#Categories').append('<option value="" disabled selected>Sélectionnez la catégorie</option>');
                     $("#DivCategorie")
                         .show();
-                    console.log('---------------');
-                    console.log(response);
                     $.each(response, function (index, value) {
                         console.log('categorie', value);
                         $(".Categories").append('<option value="' + value[0] + '">' + value[1] + '</option>');

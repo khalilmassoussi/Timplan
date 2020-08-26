@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="TimSoft\CommandeBundle\Repository\PreTeteCommandeRepository")
  *
  */
-class PreTeteCommande extends TeteCommande
+class PreTeteCommande extends TeteCommande implements \JsonSerializable
 {
     /**
      * @var
@@ -56,4 +56,28 @@ class PreTeteCommande extends TeteCommande
         $this->commande = $commande;
     }
 
+    public function jsonSerialize()
+    {
+        $return = array(
+            'id' => $this->id,
+            'nCommande' => $this->nCommande,
+            'Client' => $this->client->getRaisonSociale(),
+            'Date' => $this->datePiece->format('c'),
+            'RAP' => $this->totalRAP(),
+            'Bus' => $this->Bus(),
+        );
+        if ($this->buManager) {
+            $return['BusinessManager'] = $this->buManager->__toString();
+        } else {
+            $return['BusinessManager'] = null;
+
+        }
+        if ($this->commande) {
+            $return['commande'] = $this->commande->getNCommande();
+        } else {
+            $return['commande'] = null;
+
+        }
+        return $return;
+    }
 }

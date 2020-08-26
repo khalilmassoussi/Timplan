@@ -21,3 +21,7 @@ services:
             - "@twig"
         tags:
             - { name: kernel.event_listener , event: kernel.request, method: onKernelRequest}
+
+    TimSoft\GeneralBundle\Form\PlanningType:
+        arguments: ['@security.helper']
+        tags: [form.type]

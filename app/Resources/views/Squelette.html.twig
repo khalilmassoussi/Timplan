@@ -107,32 +107,6 @@
         <!-- Theme style -->
         <link rel="stylesheet" href="{{ asset('Template2/dist/css/adminlte.min.css') }}">
 
-
-
-        {#        <style>#}
-        {#            .loaderAjax {#}
-        {#                display: none;#}
-        {#                position: fixed;#}
-        {#                z-index: 1000;#}
-        {#                top: 0;#}
-        {#                left: 0;#}
-        {#                height: 100%;#}
-        {#                width: 100%;#}
-        {#                background: rgba(255, 255, 255, .8) url('http://i.stack.imgur.com/FhHRx.gif') 50% 50% no-repeat;#}
-        {#            }#}
-
-        {#            /* When the body has the loading class, we turn#}
-        {#               the scrollbar off with overflow:hidden */#}
-        {#            body.loading .loaderAjax {#}
-        {#                overflow: hidden;#}
-        {#            }#}
-
-        {#            /* Anytime the body has the loading class, our#}
-        {#               modal element will be visible */#}
-        {#            body.loading .loaderAjax {#}
-        {#                display: block;#}
-        {#            }#}
-        {#        </style>#}
     {% endblock %}
 
 
@@ -149,6 +123,28 @@
     {% elseif ( role == 'ROLE_GESTIONNAIRE') %}{% set RoleUser = 'Gestionnaire' %}
     {% elseif ( role == 'ROLE_CHEF') %}{% set RoleUser = 'BU Manager' %}
     {% endif %}
+    {% for message in app.flashes('notice') %}
+        <div class="flash-notice">
+            <body onLoad="$('#my-modal').modal('show');">
+            <div id="my-modal" class="modal fade">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Notice</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            {{ message }}
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </body>
+        </div>
+    {% endfor %}
     <body class="skin-blue sidebar-mini pace-primary pace-done">
     <div class="wrapper">
         <nav class="main-header navbar navbar-expand navbar-white navbar-light">
@@ -268,7 +264,8 @@
                                 </p>
                             </a>
                         </li>
-                        {% if ('Gestion des clients' in Rubriques) or ('Gestion des utilisateurs' in Rubriques) or ('Gestion des clients' in Rubriques) or AutorisationAcces('bu_index' , Utilisateur) or ('Gestion des activités' in Rubriques) %}
+                        {% if ('Gestion des clients' in Rubriques) or ('Gestion des utilisateurs' in Rubriques) or ('Gestion des clients' in Rubriques) or AutorisationAcces('bu_index' , Utilisateur)
+                            or AutorisationAcces('activite_index' , Utilisateur) %}
                             <li class="nav-header">Administration</li>
                             {% if ('Gestion des clients' in Rubriques) %}
                                 <li class="{% if (app.request.attributes.get('_route') == 'AjouterClient')
@@ -371,15 +368,17 @@
                                 </li>
                             {% endif %}
                             {% if ('Gestion des activités' in Rubriques) %}
-                                <li class="nav-item">
-                                    <a href="{{ path('activite_index') }}"
-                                       class="{% if (app.request.attributes.get('_route') == 'activite_index') %}nav-link active{% else %}nav-link{% endif %}">
-                                        <i class="nav-icon fab fa-stack-overflow"></i>
-                                        <p>
-                                            Gestion des activités
-                                        </p>
-                                    </a>
-                                </li>
+                                {% if AutorisationAcces('activite_index' , Utilisateur) %}
+                                    <li class="nav-item">
+                                        <a href="{{ path('activite_index') }}"
+                                           class="{% if (app.request.attributes.get('_route') == 'activite_index') %}nav-link active{% else %}nav-link{% endif %}">
+                                            <i class="nav-icon fab fa-stack-overflow"></i>
+                                            <p>
+                                                Gestion des activités
+                                            </p>
+                                        </a>
+                                    </li>
+                                {% endif %}
                             {% endif %}
                             {% if AutorisationAcces('logs' , Utilisateur) %}
                                 <li class="nav-item">
@@ -441,8 +440,7 @@
                                 </li>
                             {% endif %}
                         {% endif %}
-                        {% if (AutorisationAcces('listerCmd' , Utilisateur)) or (AutorisationAcces('ImportCmd' , Utilisateur))
-                            or (AutorisationAcces('mesPlans' , Utilisateur)) or (AutorisationAcces('getByBu' , Utilisateur)) or (AutorisationAcces('planningByUser' , Utilisateur)) %}
+                        {% if (AutorisationAcces('listerCmd' , Utilisateur)) or (AutorisationAcces('ImportCmd' , Utilisateur)) or (AutorisationAcces('preCommandeList' , Utilisateur)) %}
                             <li class="nav-header">Commandes & Précommandes</li>
                             {% set routes = ['listerCmd', 'ImportCmd'] %}
                             <li class="{% if app.request.attributes.get('_route') in routes %}nav-item has-treeview menu-open{% else %}nav-item has-treeview{% endif %}">
@@ -514,8 +512,10 @@
                                     {% endif %}
                                 </ul>
                             </li>
+                        {% endif %}
+                        {% if (AutorisationAcces('mesPlans' , Utilisateur)) or (AutorisationAcces('getByBu' , Utilisateur)) or (AutorisationAcces('planningByUser' , Utilisateur)) or (AutorisationAcces('taskevent_new' , Utilisateur)) %}
                             <li class="nav-header">Plannings & Interventions</li>
-                            {% set routes = ['mesPlans', 'getByBu','planningByUser'] %}
+                            {% set routes = ['mesPlans', 'getByBu','planningByUser','taskevent_new'] %}
                             <li class="{% if app.request.attributes.get('_route') in routes %}nav-item has-treeview menu-open{% else %}nav-item has-treeview{% endif %}">
                                 <a href="#"
                                    class="{% if app.request.attributes.get('_route') in routes %}nav-link active{% else %}nav-link {% endif %}">
@@ -572,7 +572,6 @@
                                     </a>
                                 {% endif %}
                             </li>
-
                         {% endif %}
                     </ul>
                 </nav>
@@ -601,7 +600,6 @@
                 </section>
                 <section class="content">
                     <div class="container-fluid">
-                        {#                <div class="container">#}
                         <div class="row">
                             {% block SideBar %}
                             {% endblock %}

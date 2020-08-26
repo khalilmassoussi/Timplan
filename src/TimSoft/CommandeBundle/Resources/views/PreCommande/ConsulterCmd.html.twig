@@ -37,7 +37,8 @@
                                     <div class="btn-group">
                                         {% if AutorisationAcces('preCommandeImport' , Utilisateur) %}
                                             <a href="{{ path('preCommandeImport') }}" class="btn btn-success">
-                                                <i class="fas fa-file-upload fa-2x" title="Importer des précommandes"></i>
+                                                <i class="fas fa-file-upload fa-2x"
+                                                   title="Importer des précommandes"></i>
                                             </a>
                                         {% endif %}
                                         <a href="{{ path('export') }}" class="btn btn-secondary">
@@ -114,9 +115,10 @@
                             </td>
                             <td>
                                 {% if  cmd.commande %}
-                                    <span class="badge bg-success">{{ cmd.commande.nCommande }}</span>
+                                    <span class="badge bg-success"
+                                          style="font-size: 85%">{{ cmd.commande.nCommande }}</span>
                                 {% else %}
-                                    <span class="badge bg-danger">Non généré</span>
+                                    <span class="badge bg-danger" style="font-size: 85%">Non généré</span>
                                 {% endif %}
                             </td>
                             <td hidden>
@@ -129,8 +131,7 @@
                             <td>
                                 {% if AutorisationAcces('preCommandeAfficher' , Utilisateur) %}
                                     <center>
-                                        <a
-                                                href="{{ path('preCommandeAfficher', { 'id': cmd.id }) }}">
+                                        <a href="{{ path('preCommandeAfficher', { 'id': cmd.id }) }}">
                                             <i class="fas fa-search fa-lg" title="Consulter la précommande"></i>
                                         </a>
                                     </center>
@@ -397,23 +398,37 @@
                     .search("")
                     .draw();
             });
-            $('#plus').on('click', function (e) {
+            $('#plus').one('click', function (e) {
+                $(this).attr("disabled", true);
                 $.ajax({
                     url: '{{ path('getPreCommandes') }}',
                     type: "POST",
                     success: function (data) {
-                        // moment.locale('fr');
+                        table
+                            .clear()
+                            .draw();
                         $.each(data, function (key, value) {
                             var d = moment(value.Date).format('DD-MM-YYYY');
+                            if (value.commande) {
+                                var NC = '<span class="badge bg-success" style="font-size: 85%">' + value.commande + '</span>';
+                            } else {
+                                var NC = '<span class="badge bg-danger" style="font-size: 85%">Non généré</span>';
+                            }
                             table.row.add([
                                 value.nCommande,
                                 d,
                                 value.Client,
                                 value.Bus,
                                 value.RAP,
-                                null,
+                                value.BusinessManager,
+                                NC,
+                                {% if AutorisationAcces('preCommandeAfficher' , app.user) %}
                                 '<a href=' + Routing.generate('AfficherCmd', {id: value.id}) + '><i class="fas fa-search fa-lg" title="Consulter la commande"></i></a>',
-
+                                {% else %}
+                                null,
+                                {% endif %}
+                                null,
+                                null
                             ]).draw(false);
                         });
                     },

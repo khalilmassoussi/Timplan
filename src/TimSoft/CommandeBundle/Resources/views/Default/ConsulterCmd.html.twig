@@ -107,7 +107,7 @@
                             <td>
                                 {% if AutorisationAcces('AfficherCmd' , Utilisateur) %}
                                     <center>
-                                        <a href="{{ path('AfficherCmd', { 'id': cmd.id }) }}">
+                                        <a href="{{ path('AfficherCmd', { 'id': cmd.id }) }}" class="btn btn-sm btn-primary">
                                             <i class="fas fa-search fa-lg" title="Consulter la commande"></i>
                                         </a>
                                     </center>

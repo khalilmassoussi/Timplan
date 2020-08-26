@@ -36,7 +36,7 @@ class DroitAccesController extends Controller
             throw $this->createAccessDeniedException();
         }
         $em = $this->getDoctrine()->getManager();
-        $AllCategories = ['ROLE_ADMIN', 'ROLE_GESTIONNAIRE', 'ROLE_CLIENT', 'ROLE_CONSULTANT', 'ROLE_CHEF'];
+        $AllCategories = ['ROLE_ADMIN', 'ROLE_GESTIONNAIRE', 'ROLE_CLIENT', 'ROLE_CONSULTANT', 'ROLE_CHEF', 'ROLE_TRACKING'];
         $categories = $em->getRepository('TimSoftGeneralBundle:DroitAccesGroupe')->getGroupeAutorises($id);
         //pour applatir $Categorie ( car c'est un array a 2 dim)
         $it = new RecursiveIteratorIterator(new RecursiveArrayIterator($categories));

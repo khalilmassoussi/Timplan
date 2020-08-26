@@ -58,7 +58,7 @@ class TeteCommande implements \JsonSerializable
      * @var
      * @ORM\ManyToOne(targetEntity="TimSoft\GeneralBundle\Entity\Utilisateur" )
      */
-    private $buManager;
+    protected $buManager;
 
     /**
      * TeteCommande constructor.

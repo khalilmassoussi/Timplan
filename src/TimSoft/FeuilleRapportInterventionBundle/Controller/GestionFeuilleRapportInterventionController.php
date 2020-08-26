@@ -124,7 +124,6 @@ class GestionFeuilleRapportInterventionController extends Controller
         if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
             throw $this->createAccessDeniedException();
         }
-
         return $this->render('@TimSoftFeuilleRapportIntervention/GestionFeuilleRapportIntervention/ConsulterFeuilleRapportIntervention.html.twig');
     }
 

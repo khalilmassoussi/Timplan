@@ -272,23 +272,22 @@ class PreCommandeController extends Controller
         $cmd = [];
         $user = $this->getUser();
 
-        //$bus = $user->getBus();
         foreach ($user->getBus() as $b) {
             $bus[] = $b->getLibelle();
         }
-//        print_r($bus);
-//        die();
-//
-//
+
         $oui = [];
         $non = [];
         $commandes = $this->getDoctrine()->getRepository('TimSoftCommandeBundle:PreTeteCommande')->findAll();
+//        var_dump(json_encode($commandes));
         foreach ($commandes as $commande) {
+            $exist = false;
             foreach ($commande->getLignCommandes() as $lc) {
-                if (in_array($lc->getBu(), $bus)) {
-                    if (!in_array($commande, $oui)) {
-                        $oui[] = $commande;
-                    }
+                if (in_array($lc->getBu(), $bus) && !$exist) {
+//                    if (!in_array($commande, $oui)) {
+                    $oui[] = $commande;
+                    $exist = true;
+//                }
                 }
             }
         }
@@ -517,26 +516,22 @@ class PreCommandeController extends Controller
         $bus = [];
         $cmds = [];
         $user = $this->getUser();
-        $cc = [];
-        //$bus = $user->getBus();
         if ($user) {
             foreach ($user->getBus() as $b) {
                 $bus[] = $b->getLibelle();
             }
         }
         $commandes = $this->getDoctrine()->getRepository('TimSoftCommandeBundle:PreTeteCommande')->findAll();
-        foreach ($commandes as $commande) {
-            $cmd = $commande->getbyBus($bus);
-            if ($cmd) {
-                $cmds[] = $cmd;
-            }
-        }
-
+//        foreach ($commandes as $commande) {
+//            $cmd = $commande->getbyBus($bus);
+//            if ($cmd) {
+//                $cmds[] = $cmd;
+//            }
+//        }
         if ($user->hasRole('ROLE_ADMIN') || $user->hasRole('ROLE_GESTIONNAIRE') || $user->hasRole('ROLE_CHEF')) {
-//            return $this->render('@TimSoftCommande/Default/ConsulterCmd.html.twig', array('commandes' => $commandes));
             return new JsonResponse(null);
         } else {
-            return new JsonResponse($cmds);
+            return new JsonResponse($commandes);
         }
     }
 }

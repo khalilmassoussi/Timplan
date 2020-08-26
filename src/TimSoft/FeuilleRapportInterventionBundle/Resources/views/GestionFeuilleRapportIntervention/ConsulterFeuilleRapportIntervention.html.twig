@@ -155,9 +155,8 @@
             width: 15%;
         }
 
-        div.dtsp-searchPanes {
-            flex-direction: initial;
-            width: 70%;
+        div.dtsp-columns-3 {
+            min-width: 0px;
         }
 
     </style>
@@ -270,9 +269,9 @@
                         "data": "Validation",
                         "render": function (data, type, row, meta) {
                             if (row.Validation == 'Validé') {
-                                return '<span class="badge badge-success">' + row.Validation + '</span>';
+                                return '<span class="badge badge-success" style="font-size: 85%">' + row.Validation + '</span>';
                             } else {
-                                return '<span class="badge badge-danger">' + row.Validation + '</span>';
+                                return '<span class="badge badge-danger" style="font-size: 85%">' + row.Validation + '</span>';
                             }
                         }
                     },
@@ -292,7 +291,6 @@
                                     '><i class="fas fa-download fa-lg" title="Télécharger la feuille"></i> </a>'
                                 {% endif %}
                                 if (row.Validation === 'Validé') {
-
                                     return htmltoAdd
                                 } else {
                                     {% if AutorisationAcces('ModifierFeuillePresence' , app.user) %}
@@ -312,7 +310,6 @@
                                 htmltoAdd = htmltoAdd + '<a class="btn btn-sm btn-info" href=' + Routing.generate('TelechargerRapportIntervention', {id: row.id}) + '><i class="fas fa-download fa-lg" title="Télécharger le rapport"></i> </a>'
                                 {% endif %}
                                 if (row.Validation === 'Validé') {
-
                                     return htmltoAdd;
                                 } else {
                                     {% if AutorisationAcces('ModifierRapportIntervention' , app.user) %}
@@ -324,7 +321,6 @@
                                         'title="Supprimer le rapport d\'intervention"></i>\n' +
                                         '</a>';
                                     {% endif %}
-
                                     return htmltoAdd;
                                 }
                             }
@@ -401,16 +397,6 @@
                 }
             });
 
-
-            {#if (x === 'parClient') {#}
-            {#    $.ajax({#}
-            {#        url: "{{ path('feuillesJson') }}",#}
-            {#        type: "GET",#}
-            {#        dataSrc: '',#}
-            {#        data: 'parClient'#}
-
-            {#    });#}
-            // }
             $('.daterange').daterangepicker({
                 "locale": {
                     "format": "MM/DD/YYYY",
