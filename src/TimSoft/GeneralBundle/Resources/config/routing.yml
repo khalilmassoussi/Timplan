@@ -140,3 +140,8 @@ showPlanning:
   defaults:  { _controller: TimSoftGeneralBundle:Planning:show }
   options:
     expose: true
+newPlanning:
+  path:    /planning/new
+  defaults:  { _controller: TimSoftGeneralBundle:Planning:new }
+  options:
+    expose: true

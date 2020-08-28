@@ -63,7 +63,7 @@ class Planning extends Event implements \JsonSerializable
      * @ORM\Column(type="string", length=255)
      * @Gedmo\Versioned
      */
-    protected $statut = 'Proposé';
+    protected $statut;
     /**
      * @var
      * @ORM\Column(type="boolean", length=255)
@@ -74,7 +74,7 @@ class Planning extends Event implements \JsonSerializable
      * @var
      * @ORM\Column(type="string", length=255)
      */
-    protected $facturation = 'Facturé';
+    protected $facturation;
     /**
      * @var
      * @ORM\ManyToMany(targetEntity="TimSoft\GeneralBundle\Entity\Utilisateur")

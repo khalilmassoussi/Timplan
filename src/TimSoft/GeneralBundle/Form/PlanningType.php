@@ -30,13 +30,14 @@ class PlanningType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $user = $options['user'];
-        $builder->add('start', DateType::class, [
-            'widget' => 'single_text',
-            'html5' => false,
-            'attr' => ['placeholder' => 'Choisir la date/heure de debut'],
-            'format' => 'dd MMMM yyyy',
-            'label' => 'Debut'
-        ])
+        $builder
+            ->add('start', DateType::class, [
+                'widget' => 'single_text',
+                'html5' => false,
+                'attr' => ['placeholder' => 'Choisir la date/heure de debut'],
+                'format' => 'dd MMMM yyyy',
+                'label' => 'Debut'
+            ])
             ->add('end', DateType::class, [
                 'widget' => 'single_text',
                 'html5' => false,
@@ -55,25 +56,25 @@ class PlanningType extends AbstractType
                 'expanded' => true
             ])
             ->add('statut', ChoiceType::class, [
-                    'choices' => [
-                        'Confirmé' => 'Confirmé',
-                        'Proposé' => 'Proposé',
-                        'Rejeté' => 'Rejeté',
-                        'En attente' => 'En attente',
-                        'Terminé' => 'Terminé'
-                    ],
-                    'choice_attr' => function ($key, $val, $index) {
+                'choices' => [
+                    'Confirmé' => 'Confirmé',
+                    'Proposé' => 'Proposé',
+                    'Rejeté' => 'Rejeté',
+                    'En attente' => 'En attente',
+                    'Terminé' => 'Terminé'
+                ],
+                'data' => 'Proposé',
+                'choice_attr' => function ($key, $val, $index) {
+                    $disabled = false;
+                    if ($this->security->getUser()->getRoleUtilisateur() == 'ROLE_ADMIN') {
                         $disabled = false;
-                        if ($this->security->getUser()->getRoleUtilisateur() == 'ROLE_ADMIN') {
-                            $disabled = false;
-                        } elseif ($val == 'Terminé') {
-                            $disabled = true;
-                        }
-                        // set disabled to true based on the value, key or index of the choice...
-                        return $disabled ? ['disabled' => 'disabled'] : [];
-                    },
-                ]
-            )
+                    } elseif ($val == 'Terminé') {
+                        $disabled = true;
+                    }
+                    // set disabled to true based on the value, key or index of the choice...
+                    return $disabled ? ['disabled' => 'disabled'] : [];
+                },
+            ])
             ->add('facturation', ChoiceType::class, [
                 'choices' => [
                     'Facturable' => 'Facturé',
@@ -113,7 +114,7 @@ class PlanningType extends AbstractType
                     'expanded' => true
                 ]);
             } else {
-                if ($planning->getStart()->format('H') <= 13) {
+                if ($planning->getStart()->format('H') == 8) {
                     $form->add('temps', ChoiceType::class, [
                         'choices' => [
                             'Matin' => 'Matin',
@@ -125,13 +126,24 @@ class PlanningType extends AbstractType
                         'mapped' => false,
                         'expanded' => true
                     ]);
-                } else {
+                } elseif ($planning->getStart()->format('H') == 14) {
                     $form->add('temps', ChoiceType::class, [
                         'choices' => [
                             'Matin' => 'Matin',
                             'Après-midi' => 'Après-midi',
                         ],
                         'data' => ['Après-midi'],
+                        'multiple' => true,
+                        'mapped' => false,
+                        'expanded' => true
+                    ]);
+                } else {
+                    $form->add('temps', ChoiceType::class, [
+                        'choices' => [
+                            'Matin' => 'Matin',
+                            'Après-midi' => 'Après-midi',
+                        ],
+                        'data' => ['Matin', 'Après-midi'],
                         'multiple' => true,
                         'mapped' => false,
                         'expanded' => true
@@ -161,7 +173,6 @@ class PlanningType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'TimSoft\GeneralBundle\Entity\Planning',
-            'user' => null
         ));
     }
 

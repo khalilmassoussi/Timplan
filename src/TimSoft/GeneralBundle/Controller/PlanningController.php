@@ -211,7 +211,6 @@ class PlanningController extends Controller
                         }
                     }
                 }
-                //     $numSent += $this->get('mailer')->send($message, $failedRecipients);
             }
             return new JsonResponse($planning);
         }
@@ -741,14 +740,16 @@ class PlanningController extends Controller
             $em = $this->getDoctrine()->getManager();
             $plannings = $this->getDoctrine()->getRepository('TimSoftGeneralBundle:Planning')->findByUtilisateur($planning->getUtilisateur());
             $plannings = $this->unsetValue($plannings, $planning, true);
-            foreach ($plannings as $plan) {
-                if (($plan->isAllDay() && $planning->isAllDay()) || (!$plan->isAllDay() && !$planning->isAllDay())) {
-                    if ($this->getIntersection($plan->getStart(), $plan->getEnd(), $planning->getStart(), $planning->getEnd())) {
-                        return new Response(json_encode(array('planExist' => true, $plan)));
-                    }
-                } else {
-                    if ($this->getIntersection($plan->getStart()->format('d-m-Y'), $plan->getEnd()->format('d-m-Y'), $planning->getStart()->format('d-m-Y'), $planning->getEnd()->format('d-m-Y'))) {
-                        return new Response(json_encode(array('planExist' => true, $plan)));
+            if (!$this->getUser()->hasRole('ROLE_ADMIN') && !$this->getUser()->hasRole('ROLE_GESTIONNAIRE') && !$this->getUser()->hasRole('ROLE_CHEF')) {
+                foreach ($plannings as $plan) {
+                    if (($plan->isAllDay() && $planning->isAllDay()) || (!$plan->isAllDay() && !$planning->isAllDay())) {
+                        if ($this->getIntersection($plan->getStart(), $plan->getEnd(), $planning->getStart(), $planning->getEnd())) {
+                            return new Response(json_encode(array('planExist' => true, $plan)));
+                        }
+                    } else {
+                        if ($this->getIntersection($plan->getStart()->format('d-m-Y'), $plan->getEnd()->format('d-m-Y'), $planning->getStart()->format('d-m-Y'), $planning->getEnd()->format('d-m-Y'))) {
+                            return new Response(json_encode(array('planExist' => true, $plan)));
+                        }
                     }
                 }
             }
@@ -894,11 +895,61 @@ class PlanningController extends Controller
         }
     }
 
-    function unsetValue(array $array, $value, $strict = TRUE)
+    public function unsetValue(array $array, $value, $strict = TRUE)
     {
         if (($key = array_search($value, $array, $strict)) !== FALSE) {
             unset($array[$key]);
         }
         return $array;
     }
+
+    public function newAction(Request $request)
+    {
+        $planning = new Planning($request->get('title'), new \DateTime($request->get('start')), new \DateTime($request->get('end')));
+        $form = $this->createForm('TimSoft\GeneralBundle\Form\PlanningType', $planning, array('user' => 'ccc'));
+//        $ligneC = $this->getDoctrine()->getRepository('TimSoftCommandeBundle:LigneCommande')->find($request->get('lcId'));
+//        $planning->setLc($ligneC);
+//        $user = $this->getDoctrine()->getRepository('TimSoftGeneralBundle:Utilisateur')->find($request->get('idUser'));
+//        $planning->setUtilisateur($user);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $plannings = $this->getDoctrine()->getRepository('TimSoftGeneralBundle:Planning')->findByUtilisateur($planning->getUtilisateur());
+            $plannings = $this->unsetValue($plannings, $planning, true);
+            foreach ($plannings as $plan) {
+                if (($plan->isAllDay() && $planning->isAllDay()) || (!$plan->isAllDay() && !$planning->isAllDay())) {
+                    if ($this->getIntersection($plan->getStart(), $plan->getEnd(), $planning->getStart(), $planning->getEnd())) {
+                        return new Response(json_encode(array('planExist' => true, $plan)));
+                    }
+                } else {
+                    if ($this->getIntersection($plan->getStart()->format('d-m-Y'), $plan->getEnd()->format('d-m-Y'), $planning->getStart()->format('d-m-Y'), $planning->getEnd()->format('d-m-Y'))) {
+                        return new Response(json_encode(array('planExist' => true, $plan)));
+                    }
+                }
+            }
+            $temps = $form->get('temps')->getData();
+            if (in_array('Matin', $temps) && in_array('Après-midi', $temps)) {
+                $planning->setAllDay(true);
+            } elseif (in_array('Matin', $temps) && !in_array('Après-midi', $temps)) {
+                $planning->setAllDay(false);
+                $planning->setStart($form->get('start')->getData());
+                $planning->getStart()->setTime(8, 30);
+                $planning->setEnd($form->get('end')->getData());
+                $planning->getEnd()->setTime(13, 00);
+            } elseif (!in_array('Matin', $temps) && in_array('Après-midi', $temps)) {
+                $planning->setAllDay(false);
+                $planning->setStart($form->get('start')->getData());
+                $planning->getStart()->setTime(14, 00);
+                $planning->setEnd($form->get('end')->getData());
+                $planning->getEnd()->setTime(18, 00);
+            }
+            $em->persist($planning);
+            $em->flush();
+            return new Response(json_encode(array('status' => 'success')));
+        }
+        return $this->render('@TimSoftGeneral/Planning/newPlanning.html.twig', array(
+            'planning' => $planning,
+            'form' => $form->createView(),
+        ));
+    }
+
 }
