@@ -52,11 +52,11 @@ class TaskEventController extends Controller
             foreach ($taskEvents as $task) {
                 if (($task->isAllDay() && $taskEvent->isAllDay()) || (!$task->isAllDay() && !$taskEvent->isAllDay())) {
                     if ($this->getIntersection($task->getStart(), $task->getEnd(), $taskEvent->getStart(), $taskEvent->getEnd())) {
-                        return new Response(json_encode(array('taskExist' => true, $taskEvents)));
+                        return new Response(json_encode(array('taskExist' => true, $taskEvents, 'a55')));
                     }
                 } else {
-                    if ($this->getIntersection($task->getStart()->format('d-m-Y'), $task->getEnd()->format('d-m-Y'), $taskEvent->getStart()->format('d-m-Y'), $taskEvent->getEnd()->format('d-m-Y'))) {
-                        return new Response(json_encode(array('taskExist' => true, $taskEvents)));
+                    if ($this->getIntersection(strtotime($task->getStart()->format('d-m-Y')), strtotime($task->getEnd()->format('d-m-Y')), strtotime($taskEvent->getStart()->format('d-m-Y')), strtotime($taskEvent->getEnd()->format('d-m-Y')))) {
+                        return new Response(json_encode(array('taskExist' => true, $taskEvent->getStart()->format('d-m-Y'), $task->getStart()->format('d-m-Y'))));
                     }
                 }
             }
@@ -109,7 +109,7 @@ class TaskEventController extends Controller
                         return new Response(json_encode(array('taskExist' => true, $taskEvents)));
                     }
                 } else {
-                    if ($this->getIntersection($task->getStart()->format('d-m-Y'), $task->getEnd()->format('d-m-Y'), $taskEvent->getStart()->format('d-m-Y'), $taskEvent->getEnd()->format('d-m-Y'))) {
+                    if ($this->getIntersection(strtotime($task->getStart()->format('d-m-Y')), strtotime($task->getEnd()->format('d-m-Y')), strtotime($taskEvent->getStart()->format('d-m-Y')), strtotime($taskEvent->getEnd()->format('d-m-Y')))) {
                         return new Response(json_encode(array('taskExist' => true, $taskEvents)));
                     }
                 }

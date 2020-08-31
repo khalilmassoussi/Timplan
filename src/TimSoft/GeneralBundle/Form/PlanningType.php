@@ -29,12 +29,12 @@ class PlanningType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $user = $options['user'];
+//        $user = $options['user'];
         $builder
             ->add('start', DateType::class, [
                 'widget' => 'single_text',
                 'html5' => false,
-                'attr' => ['placeholder' => 'Choisir la date/heure de debut'],
+                'attr' => ['placeholder' => 'Choisir la date/heure de debut', 'readonly' => 'readonly', 'style' => 'background:white;cursor:pointer'],
                 'format' => 'dd MMMM yyyy',
                 'label' => 'Debut'
             ])

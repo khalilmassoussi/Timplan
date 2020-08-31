@@ -67,7 +67,7 @@ class TaskEventType extends AbstractType
             ->add('start', DateType::class, [
                 'widget' => 'single_text',
                 'html5' => false,
-                'attr' => ['placeholder' => 'Choisir la date/heure de debut'],
+                'attr' => ['placeholder' => 'Choisir la date/heure de debut', 'readonly' => 'readonly', 'style' => 'background:white;cursor:pointer'],
                 'format' => 'dd MMMM yyyy HH:mm',
                 'label' => 'Debut'
 //                'placeholder' => 'Choisir la date/heure de debut'
@@ -75,7 +75,7 @@ class TaskEventType extends AbstractType
             ->add('end', DateType::class, [
                 'widget' => 'single_text',
                 'html5' => false,
-                'attr' => ['placeholder' => 'Choisir la date/heure de fin'],
+                'attr' => ['placeholder' => 'Choisir la date/heure de fin', 'readonly' => 'readonly', 'style' => 'background:white;cursor:pointer'],
                 'format' => 'dd MMMM yyyy HH:mm',
                 'label' => 'Fin'
             ])
