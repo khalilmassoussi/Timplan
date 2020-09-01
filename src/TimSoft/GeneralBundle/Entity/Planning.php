@@ -410,15 +410,11 @@ class Planning extends Event implements \JsonSerializable
 
     public function jRestantes()
     {
-        $int = $this->start->diff($this->end)->format('%d');
-        if ($int == 0) {
-            if (!$this->allDay) {
-                return 0.5;
-            } else {
-                return $int + 1;
-            }
+        if (!$this->allDay) {
+            return 0.5;
+        } else {
+            return 1;
         }
-        return $int;
     }
 
     /**

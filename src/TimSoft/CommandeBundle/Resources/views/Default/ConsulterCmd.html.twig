@@ -107,7 +107,8 @@
                             <td>
                                 {% if AutorisationAcces('AfficherCmd' , Utilisateur) %}
                                     <center>
-                                        <a href="{{ path('AfficherCmd', { 'id': cmd.id }) }}" class="btn btn-sm btn-primary">
+                                        <a href="{{ path('AfficherCmd', { 'id': cmd.id }) }}"
+                                           class="btn btn-sm btn-primary">
                                             <i class="fas fa-search fa-lg" title="Consulter la commande"></i>
                                         </a>
                                     </center>
@@ -286,7 +287,7 @@
                 var endDate;
                 var dataIdx = 1;  //current data column to work with
 
-                
+
                 // Function for converting a dd/mmm/yyyy date value into a numeric string for comparison (example 01-Dec-2010 becomes 20101201
                 function parseDateValue(rawDate) {
 
@@ -358,12 +359,13 @@
                         .draw();
                 });
 
-                $('#plus').on('click', function (e) {
+                $('#plus').one('click', function (e) {
                     $.ajax({
                         url: '{{ path('getCommandes') }}',
                         type: "POST",
                         success: function (data) {
-                            // moment.locale('fr');
+                            $('#plus').prop('disabled', true);
+                            table.clear().draw();
                             $.each(data, function (key, value) {
                                 var d = moment(value.Date).format('DD-MM-YYYY');
                                 table.row.add([
@@ -373,7 +375,7 @@
                                     value.Bus,
                                     value.RAP,
                                     value.BusinessManager,
-                                    '<a href=' + Routing.generate('AfficherCmd', {id: value.id}) + '><i class="fas fa-search fa-lg" title="Consulter la commande"></i></a>'
+                                    '<a class="btn btn-sm btn-primary" href=' + Routing.generate('AfficherCmd', {id: value.id}) + '><i class="fas fa-search fa-lg" title="Consulter la commande"></i></a>'
                                 ]).draw(false);
                             });
                         },

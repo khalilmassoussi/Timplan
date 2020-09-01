@@ -520,7 +520,7 @@ class DefaultController extends Controller
 //            return $this->render('@TimSoftCommande/Default/ConsulterCmd.html.twig', array('commandes' => $commandes));
             return new JsonResponse(null);
         } else {
-            return new JsonResponse($cmds);
+            return new JsonResponse($commandes);
         }
     }
 

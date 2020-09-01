@@ -251,7 +251,7 @@ class PlanningController extends Controller
 
             }
             $rest = $quantite - $somme;
-            return new JsonResponse($rest);
+            return new JsonResponse(floatval($rest));
         }
         return new JsonResponse(floatval($lc->getQteRestante()));
     }
