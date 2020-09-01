@@ -252,6 +252,10 @@
                     text: 'Il existe déjà une autre Intervention ayant un même créneau!',
                 })
             } else {
+                if ($.isFunction(window.f)) {
+                    //execute it
+                    f();
+                }
                 Swal.fire({
                     icon: 'success',
                     title: 'Intervention modifié avec succès !',
