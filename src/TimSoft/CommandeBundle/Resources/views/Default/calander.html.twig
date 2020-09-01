@@ -307,6 +307,7 @@
                             if (updatedString <= 0) {
                                 $("#confirm-modif").modal();
                                 $(".btn-ok").one("click", function () {
+                                    alert(event.allDay);
                                     $.ajax({
                                         url: '{{ path('appBundle_add') }}',
                                         data: 'action=update&title=' + event.draggedEl.innerText.toString() + '&start=' + event.dateStr + '&end=' + event.dateStr + '&id=' + event.id + '&all_day=' + event.allDay + '&idUser=' + {{ cc.id }} +'&lc=' + event.draggedEl.id

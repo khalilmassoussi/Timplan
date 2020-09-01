@@ -133,7 +133,7 @@ class PlanningController extends Controller
                 $planning->setStatut('Proposé');
                 $planning->setUtilisateur($user);
                 if ($setAllDay) {
-                    $planning->setAllDay($request->get('all_day'));
+                    $planning->setAllDay($setAllDay);
                 } else {
                     $planning->setAllDay(false);
                     // return new Response(json_encode($Existant->getStart()->format('H')), 419);
@@ -157,8 +157,9 @@ class PlanningController extends Controller
                 if ($request->get('JSup')) {
                     $planning->setJSupplementaire(true);
                 }
+//                return new JsonResponse($setAllDay);
                 $em->persist($planning);
-                $em->flush();
+//                $em->flush();
                 $notification = new Notification();
                 $notification
                     ->setTitle('Intervention Planifiée')
