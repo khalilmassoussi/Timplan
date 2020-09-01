@@ -719,7 +719,6 @@
     <script src="https://unpkg.com/@fullcalendar/resource-timeline@4.4.0/main.min.js"></script>
     <script src="{{ asset('Template2/plugins/fullcalendar-bootstrap/main.min.js') }}"></script>
 
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/locale/fr.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
     <link rel="stylesheet" type="text/css"
@@ -763,7 +762,7 @@
                     // dataType: 'json',
                     success: function (data) {
                         $("#renderEdit").html(data);
-                        $('#editPlanning').modal();
+                        $('#editPlanning').modal({});
                         $('#editPlanning').on('hidden.bs.modal', function () {
                             calendar.refetchEvents();
                         });
@@ -782,7 +781,7 @@
                 method: 'post',
                 success: function (data) {
                     $("#renderEdit").html(data);
-                    $('#editPlanning').modal();
+                    $('#editPlanning').modal({});
                     $('#editPlanning').on('hidden.bs.modal', function () {
                         calendar.refetchEvents();
                     });
@@ -808,6 +807,7 @@
                     success: function (data) {
                         $("#renderEdit").html(data);
                         $('#showTask').modal();
+
                         $('#showTask').on('hidden.bs.modal', function () {
                             calendar.refetchEvents();
                         });

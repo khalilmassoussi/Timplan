@@ -72,7 +72,7 @@ class Planning extends Event implements \JsonSerializable
     protected $rap;
     /**
      * @var
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     protected $facturation;
     /**
@@ -110,20 +110,18 @@ class Planning extends Event implements \JsonSerializable
 
     /**
      * Planning constructor.
-     * @param int $id
+     * @param $title
      * @param $start
      * @param null $end
-     * @param $title
-     * @param $allDay
-     * @param $accompagnements
+     * @param null $lc
      */
-    public function __construct($title, $start, $end)
+    public function __construct($title, $start, $end, $lc = null)
     {
         $this->start = $start;
         $this->end = $end;
         $this->title = $title;
         $this->accompagnements = new ArrayCollection();
-
+        $this->lc = $lc;
     }
 
     /**

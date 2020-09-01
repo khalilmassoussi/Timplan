@@ -11,7 +11,7 @@
     }
 </style>
 <div id="editPlanning" class="modal fade">
-    <div class="modal-dialog  modal-xl">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header bg-gradient-light">
                 <h5 id="eventInfo" class="modal-title">
@@ -189,7 +189,6 @@
         src="https://cdn.jsdelivr.net/npm/jquery-validation@1.17.0/dist/localization/messages_fr.js"></script>
 
 <script>
-    // $('select').select2();
     $('#timsoft_generalbundle_planning_accompagnements').select2();
     $('#timsoft_generalbundle_planning_utilisateur').select2();
 
@@ -232,6 +231,7 @@
             });
 
         });
+
     });
     $('form[name="editP"]').submit(function (event) {
         event.preventDefault();
@@ -267,7 +267,6 @@
         language: 'fr'
     }).on('changeDate', function (e) {
         $("#timsoft_generalbundle_planning_end").val(moment(e.date).format('LL'));
-
     });
 
 </script>

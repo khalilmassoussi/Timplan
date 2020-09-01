@@ -102,7 +102,6 @@ class PlanningController extends Controller
     public function addEventAction(Request $request)
     {
         if ($request->isXmlHttpRequest()) {
-
             $startDate = $request->get('start');
             $endDate = $request->get('end');
             $idUser = $request->get('idUser');
@@ -126,19 +125,12 @@ class PlanningController extends Controller
                         $Existant = $value;
                     }
                 }
-//                if ($value->getStart() <= $date && $value->getEnd() > $end) {
-//                    $setAllDay = false;
-//                    $exist = true;
-//                    //   $aa[] = $date;
-//                    // return new Response(json_encode($exist), 419);
-//                }
-
             }
-            // return new Response(json_encode($exist), 419);
             if (($exist || $count == 2) && (!$this->getUser()->hasRole('ROLE_ADMIN') && !$this->getUser()->hasRole('ROLE_GESTIONNAIRE') && !$this->getUser()->hasRole('ROLE_CHEF'))) {
                 return new Response(json_encode($ev), 419);
             } else {
                 $planning = new Planning($request->get('title'), $date, $end);
+                $planning->setStatut('Proposé');
                 $planning->setUtilisateur($user);
                 if ($setAllDay) {
                     $planning->setAllDay($request->get('all_day'));
@@ -157,9 +149,6 @@ class PlanningController extends Controller
                 }
                 $planning->setLc($ligneC);
                 $em = $this->getDoctrine()->getManager();
-                //  $em->persist($planning);
-                // return new JsonResponse($date);
-                //  $em->flush();
                 $plannings = $this->getDoctrine()->getRepository('TimSoftGeneralBundle:Planning')->findByLc($ligneC->getId());
                 $qte = 0;
                 foreach ($plannings as $plan) {
@@ -167,9 +156,7 @@ class PlanningController extends Controller
                 }
                 if ($request->get('JSup')) {
                     $planning->setJSupplementaire(true);
-//                       $em->persist($planning);
                 }
-                $planning->setLieu('à distance');
                 $em->persist($planning);
                 $em->flush();
                 $notification = new Notification();
@@ -190,27 +177,6 @@ class PlanningController extends Controller
                 $em->flush();
                 $pusher = $this->get('mrad.pusher.notificaitons'); // Appel le service
                 $pusher->trigger($notificationUser);
-                $planning->setLieu('à distance');
-                $message = (new \Swift_Message('Planning ' . $planning->getStatut() . ': ' . $planning->getLc()->getCommande()->getClient()->getRaisonSociale() . ' du ' . $planning->getStart()->format('d/m/Y')))
-                    ->setFrom(['timplan@timsoft.net' => "Administrateur TimSoft"])
-                    ->setBody(
-                        $this->renderView('@TimSoftCommande/Default/email/intervention.txt.twig', array('planning' => $planning)), 'text/html');
-                $failedRecipients = [];
-                $numSent = 0;
-                $message->setTo([$user->getEmail() => $user->getNomUtilisateur() . ' ' . $user->getPrenomUtilisateur()]);
-                $gestionnaires = $this->getDoctrine()->getRepository('TimSoftGeneralBundle:Utilisateur')->findByRoleUtilisateur('ROLE_GESTIONNAIRE');
-                foreach ($gestionnaires as $gestionnaire) {
-                    $message->addTo($gestionnaire->getEmail(), $gestionnaire->getNomUtilisateur() . ' ' . $gestionnaire->getPrenomUtilisateur());
-                }
-                $buManagers = $this->getDoctrine()->getRepository('TimSoftGeneralBundle:Utilisateur')->findByRoleUtilisateur('ROLE_CHEF');
-                foreach ($buManagers as $buManager) {
-                    $bu = $this->getDoctrine()->getRepository('TimSoftBuBundle:Bu')->findOneBy(array('libelle' => $planning->getLc()->getBu()));
-                    foreach ($buManager->getBus() as $bus) {
-                        if ($bu == $bus) {
-                            $message->addTo($buManager->getEmail(), $buManager->getNomUtilisateur() . ' ' . $buManager->getPrenomUtilisateur());
-                        }
-                    }
-                }
             }
             return new JsonResponse($planning);
         }
@@ -906,11 +872,17 @@ class PlanningController extends Controller
     public function newAction(Request $request)
     {
         $planning = new Planning($request->get('title'), new \DateTime($request->get('start')), new \DateTime($request->get('end')));
-        $form = $this->createForm('TimSoft\GeneralBundle\Form\PlanningType', $planning, array('user' => 'ccc'));
-//        $ligneC = $this->getDoctrine()->getRepository('TimSoftCommandeBundle:LigneCommande')->find($request->get('lcId'));
-//        $planning->setLc($ligneC);
+        if ($request->get('lc') && $request->get('utilisateur')) {
+            $ligneC = $this->getDoctrine()->getRepository('TimSoftCommandeBundle:LigneCommande')->find($request->get('lc'));
+            $planning->setLc($ligneC);
+            $planning->setUtilisateur($this->getDoctrine()->getRepository('TimSoftGeneralBundle:Utilisateur')->find($request->get('utilisateur')));
+        }
+        $form = $this->createForm('TimSoft\GeneralBundle\Form\PlanningType', $planning, array());
+        $form->handleRequest($request);
 //        $user = $this->getDoctrine()->getRepository('TimSoftGeneralBundle:Utilisateur')->find($request->get('idUser'));
 //        $planning->setUtilisateur($user);
+//        var_dump($form);
+//        die();
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $plannings = $this->getDoctrine()->getRepository('TimSoftGeneralBundle:Planning')->findByUtilisateur($planning->getUtilisateur());

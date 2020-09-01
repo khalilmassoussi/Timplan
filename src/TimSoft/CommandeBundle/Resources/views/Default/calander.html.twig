@@ -323,37 +323,37 @@
                                     });
                                 });
                             } else {
-                                {#var xhr = $.ajax({#}
-                                {#url: '{{ path('appBundle_add') }}',#}
-                                {#data: 'action=update&title=' + event.draggedEl.innerText.toString() + '&start=' + event.dateStr + '&end=' + event.dateStr + '&id=' + event.id + '&all_day=' + event.allDay + '&idUser=' + {{ cc.id }} +'&lc=' + event.draggedEl.id,#}
-                                {#type: "POST",#}
-                                {#//  async: false,#}
-                                {#success: function (data) {#}
-                                {#editPlanningModal(event, calendar, data);#}
-                                {#calendar.refetchEvents();#}
-                                {#f();#}
-                                {#},#}
-                                {#error: function () {#}
-                                {#alert("Vous ne pouvez pas faire cette action");#}
-                                {#},#}
-                                {#});#}
-                                $.ajax({
-                                    url: '{{ path('newPlanning') }}',
-                                    method: 'post',
-                                    data: {
-                                        'title': event.draggedEl.innerText.toString(),
-                                        'start': event.dateStr,
-                                        'end': event.dateStr,
-                                        'lcId': event.draggedEl.id,
-                                        'idUser': '{{ cc.id }}'
-                                    },
-                                    // dataType: 'json',
+                                var xhr = $.ajax({
+                                    url: '{{ path('appBundle_add') }}',
+                                    data: 'action=update&title=' + event.draggedEl.innerText.toString() + '&start=' + event.dateStr + '&end=' + event.dateStr + '&id=' + event.id + '&all_day=' + event.allDay + '&idUser=' + {{ cc.id }} +'&lc=' + event.draggedEl.id,
+                                    type: "POST",
+                                    //  async: false,
                                     success: function (data) {
-                                        $('#renderEdit').html(data);
-                                        console.log(data);
-                                        $('#newPlanning').modal();
+                                        editPlanningModal(event, calendar, data);
+                                        calendar.refetchEvents();
+                                        f();
+                                    },
+                                    error: function () {
+                                        alert("Vous ne pouvez pas faire cette action");
                                     },
                                 });
+                                {#$.ajax({#}
+                                {#url: '{{ path('newPlanning') }}',#}
+                                {#method: 'post',#}
+                                {#data: {#}
+                                {#'title': event.draggedEl.innerText.toString(),#}
+                                {#'start': event.dateStr,#}
+                                {#'end': event.dateStr,#}
+                                {#'lc': event.draggedEl.id,#}
+                                {#'utilisateur': '{{ cc.id }}'#}
+                                {#},#}
+                                {#// dataType: 'json',#}
+                                {#success: function (data) {#}
+                                {#$('#renderEdit').html(data);#}
+                                {#console.log(data);#}
+                                {#$('#newPlanning').modal();#}
+                                {#},#}
+                                {#});#}
                             }
                         },
                     });

@@ -29,7 +29,8 @@ class PlanningType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-//        $user = $options['user'];
+
+//        $er = $options['foo_repository'];
         $builder
             ->add('start', DateType::class, [
                 'widget' => 'single_text',
@@ -150,10 +151,12 @@ class PlanningType extends AbstractType
                     ]);
                 }
             }
+
         });
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-            $planning = $event->getData();
             $form = $event->getForm();
+//            $form->add('lc');
+            $planning = $event->getData();
             $form->add('confirmePar', EntityType::class, [
                 'class' => 'TimSoft\GeneralBundle\Entity\Utilisateur',
                 'placeholder' => 'Choisir le chef de projet client',
@@ -173,6 +176,7 @@ class PlanningType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'TimSoft\GeneralBundle\Entity\Planning',
+//            'er' => null
         ));
     }
 

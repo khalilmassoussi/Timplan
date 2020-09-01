@@ -15,6 +15,7 @@
         <div class="modal-content">
             <div class="modal-header bg-gradient-light">
                 <h5 id="eventInfo" class="modal-title">
+
                     {% if planning.lc.commande is PreTeteCommande %}
                         Pré {{ planning.lc.commande.nCommande }} - {{ planning.lc.commande.client }} - {{ planning.lc.libelle }}
                     {% else %}
@@ -54,6 +55,7 @@
                                     <tr>
                                         <th>Temps</th>
                                         <td>
+                                            {#{{ form_widget(form.lc) }}#}
                                             <div class="form-group temps">
                                                 {% for key, allDayItem in form.temps %}
                                                     <div class="form-check">
