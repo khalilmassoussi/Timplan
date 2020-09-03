@@ -64,7 +64,6 @@ class PlanningType extends AbstractType
                     'En attente' => 'En attente',
                     'Terminé' => 'Terminé'
                 ],
-                'data' => 'Proposé',
                 'choice_attr' => function ($key, $val, $index) {
                     $disabled = false;
                     if ($this->security->getUser()->getRoleUtilisateur() == 'ROLE_ADMIN') {
@@ -175,7 +174,7 @@ class PlanningType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'TimSoft\GeneralBundle\Entity\Planning',
+            'data_class' => 'TimSoft\GeneralBundle\Entity\Planning'
 //            'er' => null
         ));
     }

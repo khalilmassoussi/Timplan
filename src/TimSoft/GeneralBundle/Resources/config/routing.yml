@@ -84,7 +84,7 @@ getByBu:
 allPlans:
   path:    /allPlannings
   defaults:  { _controller: TimSoftGeneralBundle:Planning:allPlans }
-  methods:  [GET, POST]
+  methods:  [GET]
 deletePlanning:
   path:    /planning/delete
   defaults:  { _controller: TimSoftGeneralBundle:Planning:delete }

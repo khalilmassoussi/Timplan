@@ -10,5 +10,43 @@ namespace TimSoft\TasksBundle\Repository;
  */
 class TaskEventRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function betweenDates($start, $end)
+    {
+        return $this->createQueryBuilder('p')
+            ->select('p')
+            ->where('p.start BETWEEN :start AND :end')
+            ->andWhere('p.end BETWEEN :start AND :end')
+            ->setParameter('start', $start)
+            ->setParameter('end', $end)
+            ->getQuery()
+            ->getResult();
+    }
 
+    public function findByUser($user, $start, $end)
+    {
+        return $this->createQueryBuilder('p')
+            ->select('p')
+            ->where('p.start BETWEEN :start AND :end')
+            ->andWhere('p.end BETWEEN :start AND :end')
+            ->andWhere('p.utilisateur = :user')
+            ->setParameter('user', $user)
+            ->setParameter('start', $start)
+            ->setParameter('end', $end)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findByClient($client, $start, $end)
+    {
+        return $this->createQueryBuilder('p')
+            ->select('p')
+            ->where('p.start BETWEEN :start AND :end')
+            ->andWhere('p.end BETWEEN :start AND :end')
+            ->andWhere('p.client = :client')
+            ->setParameter('client', $client)
+            ->setParameter('start', $start)
+            ->setParameter('end', $end)
+            ->getQuery()
+            ->getResult();
+    }
 }

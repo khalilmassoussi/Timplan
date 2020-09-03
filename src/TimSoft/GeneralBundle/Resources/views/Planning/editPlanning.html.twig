@@ -234,6 +234,14 @@
 
     });
     $('form[name="editP"]').submit(function (event) {
+        Swal.fire({
+            title: 'Veuillez Patienter !',
+            html: 'Enregistrement de données..',// add html attribute if you want or remove
+            allowOutsideClick: false,
+            onBeforeOpen: () => {
+                Swal.showLoading()
+            },
+        });
         event.preventDefault();
         var cc = new FormData(this);
         var url = "{{ path('editPlanning',{ id: planning.id }) }}";
@@ -245,6 +253,7 @@
             type: 'POST',
             dataType: "json",
         }).done(function (response) {
+            Swal.close();
             if (response.planExist) {
                 Swal.fire({
                     icon: 'error',

@@ -16,12 +16,12 @@ class PlanningController extends Controller
 {
     /**
      * @param $user
+     * @param Request $request
      * @return JsonResponse
-     * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function listAction($user)
+    public function listAction($user, Request $request)
     {
-        $plannings = $this->getDoctrine()->getRepository('TimSoftGeneralBundle:Planning')->findByUser($user);
+        $plannings = $this->getDoctrine()->getRepository('TimSoftGeneralBundle:Planning')->findByUser($user, $request->get('start'), $request->get('end'));
         return new JsonResponse($plannings);
     }
 
@@ -220,8 +220,6 @@ class PlanningController extends Controller
         if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
             throw $this->createAccessDeniedException();
         }
-        $user = $this->getUser();
-        $myplans = $this->getDoctrine()->getRepository('TimSoftGeneralBundle:Planning')->findByUser($user);
         return $this->render('@TimSoftCommande/Default/mesplans.html.twig');
     }
 
@@ -535,9 +533,9 @@ class PlanningController extends Controller
         return $this->render('@TimSoftCommande/Default/BuPlanning.html.twig', array('bus' => $bus));
     }
 
-    public function allPlansAction()
+    public function allPlansAction(Request $request)
     {
-        $plannings = $this->getDoctrine()->getRepository('TimSoftGeneralBundle:Planning')->findAll();
+        $plannings = $this->getDoctrine()->getRepository('TimSoftGeneralBundle:Planning')->betweenDates($request->get('start'), $request->get('end'));
         return new JsonResponse($plannings);
     }
 
@@ -686,9 +684,9 @@ class PlanningController extends Controller
         return $this->render('@TimSoftGeneral/Planning/PlanningByUser.html.twig', array('clients' => $clients));
     }
 
-    public function jsonPlanningByClientAction($id)
+    public function jsonPlanningByClientAction($id, Request $request)
     {
-        $plannings = $this->getDoctrine()->getRepository('TimSoftGeneralBundle:Planning')->getByClient($id);
+        $plannings = $this->getDoctrine()->getRepository('TimSoftGeneralBundle:Planning')->getByClient($id, $request->get('start'), $request->get('end'));
         return new JsonResponse($plannings);
     }
 

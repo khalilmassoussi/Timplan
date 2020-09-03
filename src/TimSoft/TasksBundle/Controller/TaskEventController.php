@@ -23,11 +23,11 @@ class TaskEventController extends Controller
      * @Route("/", name="taskevent_index")
      * @Method("GET")
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $taskEvents = $em->getRepository('TimSoftTasksBundle:TaskEvent')->findAll();
+        $taskEvents = $em->getRepository('TimSoftTasksBundle:TaskEvent')->betweenDates($request->get('start'), $request->get('end'));
 
         return new JsonResponse($taskEvents);
     }
@@ -192,11 +192,11 @@ class TaskEventController extends Controller
      * @Route("/get-tasks-by-client/{id}", name="taskevent_by_client",  options = { "expose" = true })
      * @Method("GET")
      */
-    public function taskByClientAction($id)
+    public function taskByClientAction($id, Request $request)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $taskEvents = $em->getRepository('TimSoftTasksBundle:TaskEvent')->findByClient($id);
+        $taskEvents = $em->getRepository('TimSoftTasksBundle:TaskEvent')->findByClient($id, $request->get('start'), $request->get('end'));
 
         return new JsonResponse($taskEvents);
     }
@@ -207,11 +207,11 @@ class TaskEventController extends Controller
      * @Route("/get-tasks-by-user/{id}", name="taskevent_by_user",  options = { "expose" = true })
      * @Method("GET")
      */
-    public function taskByUserAction($id)
+    public function taskByUserAction($id, Request $request)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $taskEvents = $em->getRepository('TimSoftTasksBundle:TaskEvent')->findByUtilisateur($id);
+        $taskEvents = $em->getRepository('TimSoftTasksBundle:TaskEvent')->findByUser($id, $request->get('start'), $request->get('end'));
 
         return new JsonResponse($taskEvents);
     }

@@ -51,15 +51,21 @@ class PlanningRepository extends \Doctrine\ORM\EntityRepository
 
     /**
      * @param $user
+     * @param $start
+     * @param $end
      * @return mixed
      */
-    public function findByUser($user)
+    public function findByUser($user, $start, $end)
     {
         return $this->createQueryBuilder('p')
             ->select('p')
             ->leftJoin('p.accompagnements', 'u')
             ->where('p.utilisateur = :user')
             ->orWhere('u = :user')
+            ->andwhere('p.start BETWEEN :start AND :end')
+            ->andWhere('p.end BETWEEN :start AND :end')
+            ->setParameter('start', $start)
+            ->setParameter('end', $end)
             ->setParameter('user', $user)
             ->getQuery()
             ->getResult();
@@ -138,13 +144,17 @@ class PlanningRepository extends \Doctrine\ORM\EntityRepository
             ->getResult();
     }
 
-    public function getByClient($id)
+    public function getByClient($id, $start, $end)
     {
         return $this->createQueryBuilder('p')
             ->select('p')
             ->leftJoin('p.lc', 'lc')
             ->leftJoin('lc.commande', 'c')
             ->where('c.client = :id')
+            ->andwhere('p.start BETWEEN :start AND :end')
+            ->andWhere('p.end BETWEEN :start AND :end')
+            ->setParameter('start', $start)
+            ->setParameter('end', $end)
             ->setParameter('id', $id)
             ->getQuery()
             ->getResult();
@@ -207,6 +217,18 @@ class PlanningRepository extends \Doctrine\ORM\EntityRepository
                 ->getQuery()
                 ->getResult();
         }
+    }
+
+    public function betweenDates($start, $end)
+    {
+        return $this->createQueryBuilder('p')
+            ->select('p')
+            ->where('p.start BETWEEN :start AND :end')
+            ->andWhere('p.end BETWEEN :start AND :end')
+            ->setParameter('start', $start)
+            ->setParameter('end', $end)
+            ->getQuery()
+            ->getResult();
     }
 }
 

@@ -136,6 +136,14 @@
 </script>
 <script>
     $('form[name="edit"]').submit(function (event) {
+        Swal.fire({
+            title: 'Veuillez Patienter !',
+            html: 'Enregistrement de données..',// add html attribute if you want or remove
+            allowOutsideClick: false,
+            onBeforeOpen: () => {
+                Swal.showLoading()
+            },
+        });
         event.preventDefault();
         if (new Date($('form[name="edit"] #timsoft_tasksbundle_taskevent_start').datetimepicker('getValue')) > new Date($('form[name="edit"] #timsoft_tasksbundle_taskevent_end').datetimepicker('getValue'))) {
             Swal.fire({
@@ -145,18 +153,16 @@
             });
 
         } else {
-
             var cc = new FormData(this);
-
             var url = "{{ path('taskevent_edit', {id: taskEvent.id}) }}";
             var formSerialize = $(this).serialize();
-
             $.ajax({
                 url: url,
                 data: formSerialize,
                 type: 'POST',
                 dataType: "json",
             }).done(function (response) {
+                Swal.close();
                 if (response.taskExist) {
                     Swal.fire({
                         icon: 'error',
@@ -166,11 +172,12 @@
                 } else {
                     Swal.fire({
                         icon: 'success',
-                        title: 'Task ajoutée avec succès !',
+                        title: 'Task modifié avec succès !',
                         // text: 'Il existe déjà une autre Task ayant un même créneau!',
                     });
                     $('#editTask').modal('hide');
                 }
+
             });
         }
     });
@@ -187,6 +194,7 @@
         });
         $('form[name="edit"] #timsoft_tasksbundle_taskevent_start').datetimepicker({
             format: 'd F Y',
+            step:30,
             // timepicker: false,
             onShow: function (ct) {
                 this.setOptions({
@@ -250,6 +258,7 @@
             $('#timsoft_tasksbundle_taskevent_start').datetimepicker({
                 format: 'd F Y H:i',
                 timepicker: true,
+                step: 30,
                 onShow: function (ct) {
                     this.setOptions({
                         maxDate: $('#timsoft_tasksbundle_taskevent_end').val() ? $('#timsoft_tasksbundle_taskevent_end').val() : false
@@ -271,6 +280,7 @@
             $('#timsoft_tasksbundle_taskevent_end').datetimepicker({
                 format: 'd F Y H:i',
                 timepicker: true,
+                step: 30,
                 onShow: function (ct) {
                     this.setOptions({
                         minDate: $('#timsoft_tasksbundle_taskevent_start').val() ? $('#timsoft_tasksbundle_taskevent_start').val() : false
@@ -335,6 +345,7 @@
                 $('form[name="edit"] #timsoft_tasksbundle_taskevent_start').datetimepicker({
                     format: 'd F Y H:i',
                     timepicker: true,
+                    step: 30,
                     onShow: function (ct) {
                         this.setOptions({
                             maxDate: $('#timsoft_tasksbundle_taskevent_end').val() ? $('#timsoft_tasksbundle_taskevent_end').val() : false
@@ -355,6 +366,7 @@
                 $('form[name="edit"] #timsoft_tasksbundle_taskevent_end').datetimepicker({
                     format: 'd F Y H:i',
                     timepicker: true,
+                    step: 30,
                     onShow: function (ct) {
                         this.setOptions({
                             minDate: $('#timsoft_tasksbundle_taskevent_start').val() ? $('#timsoft_tasksbundle_taskevent_start').val() : false

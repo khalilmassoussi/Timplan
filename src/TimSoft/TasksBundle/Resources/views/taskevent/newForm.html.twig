@@ -128,7 +128,14 @@
 </script>
 <script>
     $('form[name="new"]').submit(function (event) {
-        console.log('xx');
+        Swal.fire({
+            title: 'Veuillez Patienter !',
+            html: 'Enregistrement de données..',// add html attribute if you want or remove
+            allowOutsideClick: false,
+            onBeforeOpen: () => {
+                Swal.showLoading()
+            },
+        });
         event.preventDefault();
         if (new Date($('form[name="new"] #timsoft_tasksbundle_taskevent_start').datetimepicker('getValue')) > new Date($('form[name="new"] #timsoft_tasksbundle_taskevent_end').datetimepicker('getValue'))) {
             alert('Date non valable, veuillez la vérifier et réessayer');
@@ -145,6 +152,7 @@
                 type: 'POST',
                 dataType: "json",
             }).done(function (response) {
+                Swal.close();
                 if (response.taskExist) {
                     Swal.fire({
                         icon: 'error',
@@ -221,6 +229,7 @@
                 $('form[name="new"] #timsoft_tasksbundle_taskevent_start').datetimepicker({
                     format: 'd F Y H:i',
                     timepicker: true,
+                    step: 30,
                     onShow: function (ct) {
                         this.setOptions({
                             maxDate: $('#timsoft_tasksbundle_taskevent_end').val() ? $('#timsoft_tasksbundle_taskevent_end').val() : false
@@ -242,6 +251,7 @@
                 $('form[name="new"] #timsoft_tasksbundle_taskevent_end').datetimepicker({
                     format: 'd F Y H:i',
                     timepicker: true,
+                    step: 30,
                     onShow: function (ct) {
                         this.setOptions({
                             minDate: $('#timsoft_tasksbundle_taskevent_start').val() ? $('#timsoft_tasksbundle_taskevent_start').val() : false

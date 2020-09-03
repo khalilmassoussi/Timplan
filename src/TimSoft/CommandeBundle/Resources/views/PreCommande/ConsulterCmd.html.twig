@@ -114,9 +114,14 @@
                                 {% if cmd.buManager %}{{ cmd.buManager }}  {% endif %}
                             </td>
                             <td>
-                                {% if  cmd.commande %}
-                                    <span class="badge bg-success"
-                                          style="font-size: 85%">{{ cmd.commande.nCommande }}</span>
+                                {% if cmd.archive %}
+                                    {% if cmd.commande %}
+                                        <span class="badge bg-success"
+                                              style="font-size: 85%">Généré</span>
+                                    {% else %}
+                                        <span class="badge bg-success"
+                                              style="font-size: 85%">Généré</span>
+                                    {% endif %}
                                 {% else %}
                                     <span class="badge bg-danger" style="font-size: 85%">Non généré</span>
                                 {% endif %}
@@ -357,9 +362,7 @@
 
                     var dateStart = parseDateValue(startDate);
                     var dateEnd = parseDateValue(endDate);
-                    console.log(dateStart);
-                    console.log(dateEnd);
-                    console.log(dataIdx);
+
                     var filteredData = table
                         .column(dataIdx)
                         .data()
@@ -409,7 +412,7 @@
                             .draw();
                         $.each(data, function (key, value) {
                             var d = moment(value.Date).format('DD-MM-YYYY');
-                            if (value.commande) {
+                            if (value.archive) {
                                 var NC = '<span class="badge bg-success" style="font-size: 85%">' + value.commande + '</span>';
                             } else {
                                 var NC = '<span class="badge bg-danger" style="font-size: 85%">Non généré</span>';

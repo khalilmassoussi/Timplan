@@ -729,6 +729,14 @@
     <script>
         function editPlanningModal(event, calendar, data) {
             var id;
+            Swal.fire({
+                title: 'Veuillez Patienter !',
+                html: 'Chargement de données..',// add html attribute if you want or remove
+                allowOutsideClick: false,
+                onBeforeOpen: () => {
+                    Swal.showLoading()
+                },
+            });
             {% if not AutorisationAcces('modifinterv' , app.user) %}
             if (typeof event.event !== 'undefined') {
                 if (typeof event.event._def.extendedProps.resourceIds !== 'undefined') {
@@ -743,8 +751,6 @@
                 statut = data.Statut;
                 id = data.id;
             }
-            console.log(statut);
-            console.log(id);
             if (idU.toString() !== '{{ app.user.id }}' || statut === 'Terminé') {
                 $.ajax({
                     url: Routing.generate('showPlanning', {id: id}),
@@ -752,6 +758,9 @@
                     // dataType: 'json',
                     success: function (data) {
                         $("#renderEdit").html(data);
+                        $('#showPlanning').on('shown.bs.modal', function () {
+                            Swal.close();
+                        });
                         $('#showPlanning').modal();
                     },
                 });
@@ -763,6 +772,9 @@
                     success: function (data) {
                         $("#renderEdit").html(data);
                         $('#editPlanning').modal({});
+                        $('#editPlanning').on('shown.bs.modal', function () {
+                            Swal.close();
+                        });
                         $('#editPlanning').on('hidden.bs.modal', function () {
                             calendar.refetchEvents();
                         });
@@ -781,7 +793,10 @@
                 method: 'post',
                 success: function (data) {
                     $("#renderEdit").html(data);
-                    $('#editPlanning').modal({});
+                    $('#editPlanning').modal('show');
+                    $('#editPlanning').on('shown.bs.modal', function () {
+                        Swal.close();
+                    });
                     $('#editPlanning').on('hidden.bs.modal', function () {
                         calendar.refetchEvents();
                     });
@@ -792,6 +807,15 @@
         }
 
         function editTaskEvent(event, calendar) {
+            Swal.fire({
+                title: 'Veuillez Patienter !',
+                html: 'Chargement de données..',// add html attribute if you want or remove
+                allowOutsideClick: false,
+                onBeforeOpen: () => {
+                    Swal.showLoading()
+                },
+            });
+
             {% if not AutorisationAcces('modifTaskEvent' , app.user) %}
             var id;
             if (typeof event.event._def.extendedProps.resourceIds !== 'undefined') {
@@ -807,7 +831,9 @@
                     success: function (data) {
                         $("#renderEdit").html(data);
                         $('#showTask').modal();
-
+                        $('#showTask').on('shown.bs.modal', function () {
+                            Swal.close();
+                        });
                         $('#showTask').on('hidden.bs.modal', function () {
                             calendar.refetchEvents();
                         });
@@ -824,6 +850,9 @@
                         $('#editTask').on('hidden.bs.modal', function () {
                             calendar.refetchEvents();
                         });
+                        $('#editTask').on('shown.bs.modal', function () {
+                            Swal.close();
+                        });
                     },
                 });
             }
@@ -838,13 +867,37 @@
                     $('#editTask').on('hidden.bs.modal', function () {
                         calendar.refetchEvents();
                     });
+                    $('#editTask').on('shown.bs.modal', function () {
+                        Swal.close();
+                    });
                 },
             });
             {% endif %}
         }
 
         $(document).ready(function () {
+            // $(document).on('show.bs.modal','.modal', function () {
+            //     Swal.fire({
+            //         title: 'Veuillez Patienter !',
+            //         html: 'Chargement de données..',// add html attribute if you want or remove
+            //         allowOutsideClick: false,
+            //         onBeforeOpen: () => {
+            //             Swal.showLoading()
+            //         },
+            //     });
+            // });
+            // $(document).on('shown.bs.modal','.modal', function () {
+            //     Swal.close();
+            // });
             $('#addTaskEvent').on('click', function (e) {
+                Swal.fire({
+                    title: 'Veuillez Patienter !',
+                    html: 'Chargement de données..',// add html attribute if you want or remove
+                    allowOutsideClick: false,
+                    onBeforeOpen: () => {
+                        Swal.showLoading()
+                    },
+                });
                 e.preventDefault();
                 $.ajax({
                     url: '{{ path('taskevent_new') }}',
@@ -852,7 +905,10 @@
                     // dataType: 'json',
                     success: function (data) {
                         $('#renderEdit').html(data);
-                        $('#addTask').modal();
+                        $('#addTask').modal('show');
+                        $('#addTask').on('shown.bs.modal', function () {
+                            Swal.close();
+                        });
                     },
                 });
             });

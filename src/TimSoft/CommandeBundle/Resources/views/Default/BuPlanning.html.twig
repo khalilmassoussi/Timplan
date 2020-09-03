@@ -136,24 +136,15 @@
 {% endblock %}
     {% block script %}
         {{ parent() }}
-        {#<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>#}
-        {#<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@4.3.1/main.min.js"></script>#}
         <script src="https://unpkg.com/@fullcalendar/core@4.3.1/locales-all.js"></script>
-        {#<script src="https://unpkg.com/@fullcalendar/list@4.3.0/main.min.js"></script>#}
-        {#<script src="https://unpkg.com/@fullcalendar/timeline@4.3.0/main.min.js"></script>#}
-        {#<script src="https://unpkg.com/@fullcalendar/resource-common@4.3.1/main.min.js"></script>#}
-        {#<script src="https://unpkg.com/@fullcalendar/resource-timeline@4.3.0/main.min.js"></script>#}
-        {#<script src="https://unpkg.com/popper.js/dist/umd/popper.min.js"></script>#}
-        {#<script src="https://unpkg.com/tooltip.js/dist/umd/tooltip.min.js"></script>#}
-        {#<script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.2.0/moment/main.js'></script>#}
         <script src="{{ asset('bundles/fosjsrouting/js/router.min.js') }}"></script>
         <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
-        {#<script src="https://unpkg.com/@fullcalendar/bootstrap@4.3.0/main.min.js"></script>#}
         <script>
             var resource;
             var users = [];
             var byUser = [];
             document.addEventListener('DOMContentLoaded', function () {
+
                 var app_user = {{ app.user.roleUtilisateur|json_encode()|raw }};
                 var client;
                 var calendarEl = document.getElementById('calendar');
@@ -187,9 +178,9 @@
                     resourceRender: function (info) {
                     },
                     eventClick: function (event) {
-                        var autorise = {{ (AutorisationAcces('modifTaskEvent' , app.user))|json_encode()|raw }};
+                        // event.jsEvent.preventDefault();
                         if (event.event.extendedProps.type !== 'TaskEvent') {
-                            console.log(event);
+
                             editPlanningModal(event, calendar);
                         } else {
                             editTaskEvent(event, calendar);
@@ -208,6 +199,7 @@
                         },
                     displayEventTime: false,
                     slotWidth: 150,
+                    // lazyFetching: false,
                     eventDataTransform: function (event) {
                         if (event.allDay) {
                             event.end = moment(event.end).add(1, 'day').format('YYYY-MM-DD');
@@ -283,9 +275,7 @@
                                     $(event.el).append('<br><b>Matin</b>');
                                 }
                             }
-                            $(event.el).append('<br><b>Lieu: </b>' + event.event.extendedProps.Lieu);
                         }
-                        // calendar.setOption('height', '450');
                     },
                     eventResize: function (event) {
                         console.log(event.event.end);
@@ -375,7 +365,6 @@
 
                 $("#bus").on('change', function () {
                     byUser = [];
-                    console.log(byUser);
                     $('#usersBu').empty();
                     $.ajax({
                         url: '{{ path('findByBus') }}',
