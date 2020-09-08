@@ -15,7 +15,7 @@ class TaskEventRepository extends \Doctrine\ORM\EntityRepository
         return $this->createQueryBuilder('p')
             ->select('p')
             ->where('p.start BETWEEN :start AND :end')
-            ->andWhere('p.end BETWEEN :start AND :end')
+            ->orWhere('p.end BETWEEN :start AND :end')
             ->setParameter('start', $start)
             ->setParameter('end', $end)
             ->getQuery()
