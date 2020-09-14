@@ -2,6 +2,10 @@
     .table td, .table th {
         padding: .49rem;
     }
+
+    .header {
+        font-weight: bold;
+    }
 </style>
 <div id="addTask" class="modal fade">
     <div class="modal-dialog modal-xl">
@@ -17,8 +21,8 @@
                     <div class="card-body">
                         <table class="table table-borderless table-sm">
                             <tr>
-                                <th>Type</th>
-                                <td colspan="2">
+                                <td>Type</td>
+                                <td>
                                     <div class="form-group">
                                         {% for key, allDayItem in form.allDay %}
                                             <div class="form-check">
@@ -26,12 +30,12 @@
                                                 {{ form_label(allDayItem) }}
                                             </div>
                                         {% endfor %}
-
                                     </div>
                                 </td>
+                                <td></td>
                             </tr>
                             <tr>
-                                <th>Date</th>
+                                <td>Date</td>
                                 <td>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
@@ -50,27 +54,27 @@
                                 </td>
                             </tr>
                             <tr>
-                                <th>Assigner à</th>
+                                <td>Assigner à</td>
                                 <td>{{ form_widget(form.utilisateur, {'attr': {'class': 'form-control'}}) }}</td>
                                 <td>{{ form_widget(form.client, {'attr': {'class': 'form-control'}}) }}</td>
                             </tr>
                             <tr>
-                                <th>Task</th>
+                                <td>Task</td>
                                 <td>{{ form_widget(form.activite, {'attr': {'class': 'form-control'}}) }}</td>
                                 <td>{{ form_widget(form.task, {'attr': {'class': 'form-control'}}) }}</td>
                             </tr>
                             <tr>
-                                <th>Statut</th>
+                                <td>Statut</td>
                                 <td>{{ form_widget(form.statut, {'attr': {'class': 'form-control'}}) }}</td>
                                 <td>{{ form_widget(form.motif, {'attr': {'class': 'form-control'}}) }}</td>
                             </tr>
                             <tr>
-                                <th>Étiquette/Site</th>
+                                <td>Étiquette/Site</td>
                                 <td> {{ form_widget(form.etiquette, {'attr': {'class': 'form-control'}}) }}</td>
                                 <td>{{ form_widget(form.site, {'attr': {'class': 'form-control'}}) }}</td>
                             </tr>
                             <tr>
-                                <th>Progression/Rapport</th>
+                                <td>Progression/Rapport</td>
                                 <td>
                                     <div class="form-group">
                                         {% for key, allDayItem in form.progression %}
@@ -95,12 +99,6 @@
         </div>
     </div>
 </div>
-<style>
-    .table {
-        font-size: 14px;
-    }
-
-</style>
 <script>
     var $activive = $('#timsoft_tasksbundle_taskevent_activite');
     // When sport gets selected ...
@@ -295,6 +293,23 @@
         $('form[name="new"] input[name="timsoft_tasksbundle_taskevent[progression]"]').each(function (e) {
             $(this).next().css('background-color', perc2color(this.value));
         });
+
+
+        /*-------------DataTable----------*/
+        $('.table').dataTable({
+            "columns": [
+                {"width": "20%", className: "header highlight"},
+                {"width": "40%"},
+                {"width": "40%"},
+
+            ],
+            "autoWidth": false,
+            "paging": false,
+            "ordering": false,
+            "info": false,
+            "searching": false
+        });
+
     });
 
     function progress(value) {

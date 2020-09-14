@@ -83,7 +83,8 @@ class PlanningType extends AbstractType
                 'expanded' => true,
                 'label' => 'Facturation',
                 'block_name' => 'lieuForm',
-                'label_attr' => ['class' => 'checkbox-custom'],])
+                'label_attr' => ['class' => 'checkbox-custom'],
+                'disabled' => true])
             ->add('lieu', ChoiceType::class, [
                 'choices' => [
                     'Sur site' => 'Sur site',
@@ -92,7 +93,8 @@ class PlanningType extends AbstractType
                 'expanded' => true,
                 'label' => 'Lieu',
                 'block_name' => 'lieuForm',
-                'label_attr' => ['class' => 'checkbox-custom'],])
+                'label_attr' => ['class' => 'checkbox-custom',],
+            ])
             ->add('commentaire', TextareaType::class, ['required' => false])
             ->add('utilisateur')
             ->add('accompagnements')

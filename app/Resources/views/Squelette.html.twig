@@ -157,9 +157,7 @@
 
                     <a href="{{ path('tim_soft_client_homepage') }}" class="nav-link">Accueil</a>
                 </li>
-                {#<li class="nav-item d-none d-sm-inline-block">#}
-                {#<a href="#" class="nav-link">Contact</a>#}
-                {#</li>#}
+
             </ul>
 
             <!-- Right navbar links -->
@@ -216,11 +214,11 @@
                         <a href="{{ path('AllNotifications') }}" class="dropdown-item dropdown-footer">Voir Toutes</a>
                     </div>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-widget="control-sidebar" data-slide="true" href="#">
-                        <i class="fas fa-th-large"></i>
-                    </a>
-                </li>
+                {#<li class="nav-item">#}
+                    {#<a class="nav-link" data-widget="control-sidebar" data-slide="true" href="#">#}
+                        {#<i class="fas fa-th-large"></i>#}
+                    {#</a>#}
+                {#</li>#}
                 <li class="nav-item"><a class="nav-link" title="Se déconnecter"
                                         href="{{ path('fos_user_security_logout') }}"><i
                                 class="fas fa-power-off"></i></a></li>
@@ -229,9 +227,9 @@
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
             <a href="{{ path('tim_soft_client_homepage') }}" class="brand-link" style="text-align: center">
-                <img src="{{ asset('Template/Logo-Timplan-new.png') }}" alt="Timplan"
+                <img src="{{ asset('Template/Logo-Timplan-blanc (2).png') }}" alt="Timplan"
 
-                     style="opacity: .8">
+                     style="opacity: .8; max-width: 100%">
                 {#            <span class="brand-text font-weight-light">AdminLTE 3</span>#}
             </a>
 

@@ -136,12 +136,16 @@ class PlanningController extends Controller
                     $planning->setAllDay($setAllDay);
                 } else {
                     $planning->setAllDay(false);
-                    // return new Response(json_encode($Existant->getStart()->format('H')), 419);
                     if ($Existant->getStart()->format('H') > 12) {
                         $planning->setStart($date->add(new \DateInterval('PT08H30M')));
                     } elseif ($Existant->getStart()->format('H') < 12) {
                         $planning->setStart($date->add(new \DateInterval('PT14H00M')));
                     }
+                }
+                if ($ligneC->getMontantHT() == 0) {
+                    $planning->setFacturation('Gratuit');
+                } else {
+                    $planning->setFacturation('Facturé');
                 }
                 if ($ligneC->JRestant() == 0.5) {
                     $planning->setStart($date->add(new \DateInterval('PT08H30M')));
@@ -157,9 +161,7 @@ class PlanningController extends Controller
                 if ($request->get('JSup')) {
                     $planning->setJSupplementaire(true);
                 }
-//                return new JsonResponse($setAllDay);
                 $em->persist($planning);
-//                $em->flush();
                 $notification = new Notification();
                 $notification
                     ->setTitle('Intervention Planifiée')
@@ -595,8 +597,8 @@ class PlanningController extends Controller
         $sheet->setCellValue('G1', 'Ressource D\'accompagnement');
         $sheet->setCellValue('H1', 'Facturation');
         $sheet->setCellValue('I1', 'Statut');
+        $sheet->setCellValue('J1', 'Durée');
 
-        //  $sheet->setCellValue('E1', '');
 
         $counter = 2;
         foreach ($plannings as $planning) {
@@ -618,7 +620,7 @@ class PlanningController extends Controller
             $sheet->setCellValue('G' . $counter, $string);
             $sheet->setCellValue('H' . $counter, $planning->getFacturation());
             $sheet->setCellValue('I' . $counter, $planning->getStatut());
-//            $sheet->setCellValue('E' . $counter, $phoneNumber->getOffice());
+            $sheet->setCellValue('J' . $counter, $planning->jRestantes());
             $counter++;
         }
 

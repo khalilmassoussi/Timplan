@@ -77,10 +77,10 @@ class DefaultController extends Controller
                         $cells = [];
                         if ($row->getRowIndex() == 1) {
                             foreach ($cellIterator as $key => $cell) {
-                                if (($key == 'A' && $cell->getValue() != 'Marché') || ($key == 'B' && $cell->getValue() != 'Tiers') || ($key == 'C' && $cell->getValue() != 'Numéro')
-                                    || ($key == 'D' && $cell->getValue() != 'Num. Ligne') || ($key == 'E' && $cell->getValue() != 'Date') || ($key == 'F' && $cell->getValue() != 'Type article')
-                                    || ($key == 'G' && $cell->getValue() != 'Libellé Intervention') || ($key == 'H' && $cell->getValue() != 'Quantité') || ($key == 'I' && $cell->getValue() != 'Montant HT')
-                                    || ($key == 'J' && $cell->getValue() != 'Qté restante') || ($key == 'K' && $cell->getValue() != 'Valeur Restante') || ($key == 'L' && $cell->getValue() != 'Business Manager')) {
+                                if (($key == 'A' && $cell->getValue() != 'Marché') || ($key == 'C' && $cell->getValue() != 'Tiers') || ($key == 'D' && $cell->getValue() != 'Numéro')
+                                    || ($key == 'E' && $cell->getValue() != 'Num. Ligne') || ($key == 'F' && $cell->getValue() != 'Date') || ($key == 'G' && $cell->getValue() != 'Type article')
+                                    || ($key == 'H' && $cell->getValue() != 'Libellé Intervention') || ($key == 'I' && $cell->getValue() != 'Quantité') || ($key == 'J' && $cell->getValue() != 'Montant HT')
+                                    || ($key == 'K' && $cell->getValue() != 'Qté restante') || ($key == 'L' && $cell->getValue() != 'Valeur Restante') || ($key == 'M' && $cell->getValue() != 'Business Manager') || ($key == 'B' && $cell->getValue() != 'Tiers facturé')) {
                                     $this->addFlash("Erreur", "Le format de ce fichier excel est invalide");
                                     return $this->render('@TimSoftCommande/Default/ImportCmd.html.twig', array('form' => $form->createView()));
                                 }
@@ -89,7 +89,7 @@ class DefaultController extends Controller
                         if ($row->getRowIndex() > 1 && $row->getRowIndex() <= $highestRow) {
                             foreach ($cellIterator as $cell) {
                                 $fullcells[] = $cell->getValue();
-                                if ('E' == $cell->getColumn()) {
+                                if ('F' == $cell->getColumn()) {
 //                                    print_r($cell->getValue());
                                     if (is_numeric($cell->getValue())) {
                                         $val = date('Y-m-d', \PHPExcel_Shared_Date::ExcelToPHP($cell->getValue()));
@@ -97,12 +97,13 @@ class DefaultController extends Controller
 //                                        print_r('ccccccccccc');
                                     }
                                 }
-                                if ('C' == $cell->getColumn() || 'B' == $cell->getColumn() || 'L' == $cell->getColumn()) {
+                                if ('D' == $cell->getColumn() || 'C' == $cell->getColumn() || 'M' == $cell->getColumn() || 'B' == $cell->getColumn()) {
                                     $cells[] = $cell->getValue();
                                 }
 
                             }
                         }
+
                         $rows[] = $cells;
                         $fullrows[] = $fullcells;
 
@@ -113,29 +114,32 @@ class DefaultController extends Controller
                     if ($fullrow) {
                         if ($fullrow[0] != null) {
                             $bu = $em->getRepository('TimSoftBuBundle:Bu')->findOneByLibelle($fullrow[0]);
-//                            var_dump($fullrow);
-//                    die();
                             if (is_null($bu)) {
                                 $this->addFlash("Erreur", "Le BU " . $fullrow[0] . " invalide");
                                 return $this->render('@TimSoftCommande/Default/ImportCmd.html.twig', array('form' => $form->createView()));
                             }
                         }
                         $users = $this->getDoctrine()->getRepository('TimSoftGeneralBundle:Utilisateur')->findAll();
-                        if ($fullrow[11]) {
+                        if ($fullrow[12]) {
                             foreach ($users as $user) {
-                                if ($user->__toString() == $fullrow[11]) {
+                                if ($user->__toString() == $fullrow[12]) {
                                     $buManager = $user;
-//                                    var_dump($buManager);
                                 }
                             }
                             if ($buManager == null) {
-                                $this->addFlash("Erreur", "Business Manager " . $fullrow[11] . " est invalide");
+                                $this->addFlash("Erreur", "Business Manager " . $fullrow[12] . " est invalide");
+                                return $this->render('@TimSoftCommande/Default/ImportCmd.html.twig', array('form' => $form->createView()));
+                            }
+                        }
+                        if ($fullrow[1]) {
+                            $clinet = $this->getDoctrine()->getRepository('TimSoftGeneralBundle:Client')->findOneByCodeClient($fullrow[1]);
+                            if (!$clinet) {
+                                $this->addFlash("Erreur", "Le Client " . $fullrow[2] . " est invalide");
                                 return $this->render('@TimSoftCommande/Default/ImportCmd.html.twig', array('form' => $form->createView()));
                             }
                         }
                     }
                 }
-//                die();
                 $array = new ArrayCollection();
                 foreach ($rows as $key => $row) {
                     if ($key) {
@@ -146,29 +150,21 @@ class DefaultController extends Controller
 //                print_r($array);
                 foreach ($array as $value) {
                     if ($value) {
-
-                        if ($value[1] && $value[2] && $value[0] && $value[3]) {
+                        if ($value[1] && $value[2] && $value[0] && $value[3] && $value[4]) {
                             $commande = new TeteCommande();
-                            $commande->setNCommande($value[1]);
-                            $date = new \DateTime($value[2]);
+                            $commande->setNCommande($value[2]);
+                            $date = new \DateTime($value[3]);
                             $commande->setDatePiece($date);
                             $users = $this->getDoctrine()->getRepository('TimSoftGeneralBundle:Utilisateur')->findAll();
                             foreach ($users as $user) {
-                                if ($user->__toString() == $value[3]) {
+                                if ($user->__toString() == $value[4]) {
                                     $buManager = $user;
-//
                                 }
                             }
                             $commande->setBuManager($buManager);
-                            $clinet = $this->getDoctrine()->getRepository('TimSoftGeneralBundle:Client')->getByName($value[0]);
+                            $clinet = $this->getDoctrine()->getRepository('TimSoftGeneralBundle:Client')->findOneByCodeClient($value[0]);
                             if ($clinet) {
-                                $commande->setClient(array_values($clinet)[0]);
-                            } else {
-                                $client = new \TimSoft\GeneralBundle\Entity\Client();
-                                $client->setRaisonSociale($value[0]);
-                                $em->persist($client);
-                                $em->flush();
-                                $commande->setClient($client);
+                                $commande->setClient($clinet);
                             }
                             $existe = $em->getRepository('TimSoftCommandeBundle:TeteCommande')->findBy(array('nCommande' => $commande->getNCommande()));
                             if (!$existe) {
@@ -182,18 +178,18 @@ class DefaultController extends Controller
                 foreach ($fullrows as $fullrow) {
                     $ligneCommande = new LigneCommande();
                     if ($fullrow) {
-                        $c = $this->getDoctrine()->getRepository('TimSoftCommandeBundle:TeteCommande')->getByNumber($fullrow[2]);
-                        $lc = $this->getDoctrine()->getRepository('TimSoftCommandeBundle:LigneCommande')->findCmd($c, $fullrow[3]);
+                        $c = $this->getDoctrine()->getRepository('TimSoftCommandeBundle:TeteCommande')->getByNumber($fullrow[3]);
+                        $lc = $this->getDoctrine()->getRepository('TimSoftCommandeBundle:LigneCommande')->findCmd($c, $fullrow[4]);
                         if ($c && !$lc) {
-                            if ($fullrow[3] && $fullrow[7]) {
-                                $ligneCommande->setNLigne($fullrow[3]);
-                                $ligneCommande->setType($fullrow[5]);
+                            if ($fullrow[4] && $fullrow[8]) {
+                                $ligneCommande->setNLigne($fullrow[4]);
+                                $ligneCommande->setType($fullrow[6]);
                                 $ligneCommande->setBu($fullrow[0]);
                                 $ligneCommande->setCommande($c);
-                                $ligneCommande->setQuantite($fullrow[7]);
-                                $ligneCommande->setLibelle($fullrow[6]);
-                                $ligneCommande->setMontantHT($fullrow[8]);
-                                $ligneCommande->setQteRestante($fullrow[9]);
+                                $ligneCommande->setQuantite($fullrow[8]);
+                                $ligneCommande->setLibelle($fullrow[7]);
+                                $ligneCommande->setMontantHT($fullrow[9]);
+                                $ligneCommande->setQteRestante($fullrow[10]);
                                 $em->persist($ligneCommande);
                                 $em->flush();
                                 $lignes[] = $ligneCommande;
@@ -201,26 +197,21 @@ class DefaultController extends Controller
                             }
                         } else {
                             if ($lc) {
-                                if (!$c->getClient() || (trim($c->getClient()->getRaisonSociale()) != trim($fullrow[1]))) {
+                                if (!$c->getClient() || (trim($c->getClient()->getCodeClient()) != trim($fullrow[1]))) {
                                     $newEntete = new TeteCommande();
                                     $newEntete->setNCommande($c->getNCommande());
                                     $newEntete->setBuManager($buManager);
-                                    $clinet = $this->getDoctrine()->getRepository('TimSoftGeneralBundle:Client')->getByName(trim($fullrow[1]));
+                                    $clinet = $this->getDoctrine()->getRepository('TimSoftGeneralBundle:Client')->findOneByCodeClient(trim($fullrow[1]));
                                     if ($clinet) {
-                                        // print_r($fullrow[1] . ' ' . $c->getClient()->getRaisonSociale() . ' ' . array_values($clinet)[0]->getRaisonSociale());
-                                        $newEntete->setClient(array_values($clinet)[0]);
-                                    } else {
-                                        $client = new \TimSoft\GeneralBundle\Entity\Client();
-                                        $client->setRaisonSociale($fullrow[1]);
-                                        $em->persist($client);
-                                        $newEntete->setClient($client);
+                                        $newEntete->setClient($clinet);
                                     }
                                     $duplicateEC[] = array($c, $newEntete);
                                 }
 //
-                                if ($lc->getType() != $fullrow[5] || $lc->getBu() != $fullrow[0] || $lc->getQuantite() != $fullrow[7]
-                                    || trim($lc->getLibelle()) != trim($fullrow[6]) || $lc->getmontantHT() != $fullrow[8] || $lc->getQteRestante() != $fullrow[9]) {
+                                if ($lc->getType() != $fullrow[6] || $lc->getBu() != $fullrow[0] || $lc->getQuantite() != $fullrow[8]
+                                    || trim($lc->getLibelle()) != trim($fullrow[7]) || $lc->getmontantHT() != $fullrow[9] || $lc->getQteRestante() != $fullrow[10]) {
                                     $ligne = new LigneCommande();
+//                                    var_dump(trim($lc->getLibelle()) . '--' . $fullrow[7]);
                                     $ligne->setNLigne($fullrow[3]);
                                     $ligne->setType($fullrow[5]);
                                     $ligne->setBu($fullrow[0]);
@@ -236,14 +227,13 @@ class DefaultController extends Controller
                         }
                     }
                 }
+//                die();
                 if ($duplicate || $duplicateEC) {
                     $details = Test($duplicateEC, '0');
                     return $this->render('@TimSoftCommande/Default/duplicate.html.twig', array('duplicate' => $duplicate, 'duplicateEC' => $details));
                 }
                 if ($lignes) {
-//                    $new = array_filter($lignes, function ($var) {
-//                        return ($var['name'] == 'CarEnquiry');
-//                    });
+//
                     $cc = array_column($lignes, 'id', 0);
 //                    print_r($lignes);
 //                    die();

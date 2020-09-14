@@ -86,6 +86,22 @@
             /*margin: 20px auto;*/
         }
 
+        .panel-fullscreen {
+            display: block;
+            z-index: 9999;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            right: 0;
+            left: 0;
+            bottom: 0;
+            overflow: auto;
+        }
+
+        /*.panel-fullscreen #calendar {*/
+        /*height: 100%;*/
+        /*}*/
     </style>
     <div class="col-md-12">
         <div class="card card-outline card-primary">
@@ -124,362 +140,386 @@
                                     <option></option>
                                 </select>
                             </div>
+
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-12" align="center">
-                    <div id='calendar'></div>
+                <div class="card card-outline card-primary bg-gradient-light" id="toExpend">
+                    <div class="card-header">
+                        <div class="card-tools"><a href="#" id="panel-fullscreen" role="button"
+                                                   title="Toggle fullscreen"><i class="fas fa-expand-alt"></i></a></div>
+                    </div>
+                    <div class="col-lg-12" align="center">
+                        <div id='calendar'></div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 {% endblock %}
-    {% block script %}
-        {{ parent() }}
-        <script src="https://unpkg.com/@fullcalendar/core@4.3.1/locales-all.js"></script>
-        <script src="{{ asset('bundles/fosjsrouting/js/router.min.js') }}"></script>
-        <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
-        <script>
-            var resource;
-            var users = [];
-            var byUser = [];
-            document.addEventListener('DOMContentLoaded', function () {
+{% block script %}
+    {{ parent() }}
+    <script src="https://unpkg.com/@fullcalendar/core@4.3.1/locales-all.js"></script>
+    <script src="{{ asset('bundles/fosjsrouting/js/router.min.js') }}"></script>
+    <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
+    <script>
+        var resource;
+        var users = [];
+        var byUser = [];
+        document.addEventListener('DOMContentLoaded', function () {
 
-                var app_user = {{ app.user.roleUtilisateur|json_encode()|raw }};
-                var client;
-                var calendarEl = document.getElementById('calendar');
-                var calendar = new FullCalendar.Calendar(calendarEl, {
-                    plugins: ['interaction', 'resourceTimeline', 'bootstrap'],
-                    schedulerLicenseKey: '0809399630-fcs-1571406797',
-                    locale: 'fr',
-                    height: 500,
-                    header: {
-                        left: 'today prev,next',
-                        center: 'title',
-                        right: 'timelineMyWeek,resourceTimelineDay'
-                    },
-                    themeSystem: 'themeSystem',
-                    eventSources: [
-                        '{{ path('allPlans') }}',
-                        '{{ path('taskevent_index') }}'
-                    ],
-                    editable: false,
-                    eventDurationEditable: false,
-                    resourceLabelText: 'Les Consultants',
-                    resourceText: function (resource) {
-                        return resource.title;
-                    },
-                    resourceAreaWidth: '20%',
-                    resources: function (fetchInfo, successCallback, failureCallback) {
-                        getResources(function (resources) {
-                            successCallback(resources);
-                        });
-                    },
-                    resourceRender: function (info) {
-                    },
-                    eventClick: function (event) {
-                        // event.jsEvent.preventDefault();
-                        if (event.event.extendedProps.type !== 'TaskEvent') {
+            var app_user = {{ app.user.roleUtilisateur|json_encode()|raw }};
+            var client;
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                plugins: ['interaction', 'resourceTimeline', 'bootstrap'],
+                schedulerLicenseKey: '0809399630-fcs-1571406797',
+                locale: 'fr',
+                height: 500,
+                header: {
+                    left: 'today prev,next',
+                    center: 'title',
+                    right: 'timelineMyWeek,resourceTimelineDay'
+                },
+                themeSystem: 'themeSystem',
+                eventSources: [
+                    '{{ path('allPlans') }}',
+                    '{{ path('taskevent_index') }}'
+                ],
+                editable: false,
+                eventDurationEditable: false,
+                resourceLabelText: 'Les Consultants',
+                resourceText: function (resource) {
+                    return resource.title;
+                },
+                resourceAreaWidth: '20%',
+                resources: function (fetchInfo, successCallback, failureCallback) {
+                    getResources(function (resources) {
+                        successCallback(resources);
+                    });
+                },
+                resourceRender: function (info) {
+                },
+                eventClick: function (event) {
+                    // event.jsEvent.preventDefault();
+                    if (event.event.extendedProps.type !== 'TaskEvent') {
 
-                            editPlanningModal(event, calendar);
-                        } else {
-                            editTaskEvent(event, calendar);
-                        }
-                    },
-                    defaultView: 'timelineMyWeek',
-                    views:
-                        {
-                            timelineMyWeek: {
-                                type: 'resourceTimelineMonth',
-                                slotDuration:
-                                    {
-                                        days: 1
-                                    },
-                            },
+                        editPlanningModal(event, calendar);
+                    } else {
+                        editTaskEvent(event, calendar);
+                    }
+                },
+                defaultView: 'timelineMyWeek',
+                views:
+                    {
+                        timelineMyWeek: {
+                            type: 'resourceTimelineMonth',
+                            slotDuration:
+                                {
+                                    days: 1
+                                },
                         },
-                    displayEventTime: false,
-                    slotWidth: 150,
-                    // lazyFetching: false,
-                    eventDataTransform: function (event) {
-                        if (event.allDay) {
-                            event.end = moment(event.end).add(1, 'day').format('YYYY-MM-DD');
-                        }
-                        return event;
                     },
-                    eventRender: function (event, element, view) {
-                        // console.log(event.event.start);
-                        // console.log(event.event.end);
-                        if (event.view.type === 'timelineMyWeek' && event.event.allDay) {
-                            if (event.event.extendedProps.type != 'TaskEvent') {
-                                $(event.el).height('auto');
-                                $(event.el).find('.fc-title').prepend('<b>Client: </b>');
-                                $(event.el).append('<br><span><b>Libellé: </b>' + event.event.extendedProps.libelle + '</span>');
-                            }
+                displayEventTime: false,
+                slotWidth: 150,
+                // lazyFetching: false,
+                eventDataTransform: function (event) {
+                    if (event.allDay) {
+                        event.end = moment(event.end).add(1, 'day').format('YYYY-MM-DD');
+                    }
+                    return event;
+                },
+                eventRender: function (event, element, view) {
+                    if (event.view.type === 'timelineMyWeek' && event.event.allDay) {
+                        if (event.event.extendedProps.type != 'TaskEvent') {
+                            $(event.el).height('auto');
+                            $(event.el).find('.fc-title').prepend('<b>Client: </b>');
+                            $(event.el).append('<br><span><b>Libellé: </b>' + event.event.extendedProps.libelle + '</span>');
                         }
-                        if (event.event.extendedProps.type == 'TaskEvent') {
-                            $(event.el).find('.fc-title').css('width', '75%');
-                            if (event.event.allDay === false) {
-                                $(event.el).height('auto');
+                    }
+                    if (event.event.extendedProps.type == 'TaskEvent') {
+                        $(event.el).find('.fc-title').css('width', '75%');
+                        if (event.event.allDay === false) {
+                            $(event.el).height('auto');
 
-                                $(event.el).find('.fc-title').prepend('<b>Client: </b>');
-                                $(event.el).append('<br><span><b>Task: </b>' + event.event.extendedProps.task + '</span>');
-                                $(event.el).append('<div><b>Heure: </b>' + moment(event.event.start).format("HH:mm") + '</div>');
-                            } else {
-                                $(event.el).height('auto');
-                                $(event.el).find('.fc-title').prepend('<b>Client: </b>');
-                                $(event.el).append('<br><span><b>Task: </b>' + event.event.extendedProps.task + '</span>');
-
-                            }
-                            if (event.event.extendedProps.etiquette == 'Urgent') {
-                                $(event.el).append('<div><b>Etiquette: </b> <span class="badge bg-danger">' + event.event.extendedProps.etiquette + '</span></div>');
-                            } else if (event.event.extendedProps.etiquette == 'Peu') {
-                                $(event.el).append('<div><b>Etiquette: </b> <span class="badge bg-light">' + event.event.extendedProps.etiquette + '</span></div>');
-                            } else if (event.event.extendedProps.etiquette == 'Moyen') {
-                                $(event.el).append('<div><b>Etiquette: </b> <span class="badge bg-indigo">' + event.event.extendedProps.etiquette + '</span></div>');
-                            } else if (event.event.extendedProps.etiquette == 'Important') {
-                                $(event.el).append('<div><b>Etiquette: </b> <span class="badge bg-warning">' + event.event.extendedProps.etiquette + '</span></div>');
-                            }
-                            $(event.el).append('<div class="ribbon-wrapper"><div class="ribbon">' + event.event.extendedProps.Statut + '</div></div>');
-                            if (event.event.extendedProps.Statut === 'To DO') {
-                                $(event.el).find('div.ribbon').each(function (index) {
-                                    $(this).addClass('bg-warning');
-                                    $(this).css('font-size', '80%');
-
-                                });
-                            } else if (event.event.extendedProps.Statut === 'Bloqué') {
-                                $(event.el).find('div.ribbon').each(function (index) {
-                                    $(this).addClass('bg-danger');
-                                    // $(this).css('font-size', '0.6vw');
-
-                                });
-                            } else if (event.event.extendedProps.Statut === 'In Progress') {
-                                $(event.el).find('div.ribbon').each(function (index) {
-                                    $(this).addClass('bg-navy');
-                                    $(this).css('font-size', '0.6vw');
-
-                                });
-                            } else if (event.event.extendedProps.Statut === 'Done') {
-                                $(event.el).find('div.ribbon').each(function (index) {
-                                    $(this).addClass('bg-success');
-                                    // $(this).css('font-size', '0.6vw');
-
-                                });
-                            }
+                            $(event.el).find('.fc-title').prepend('<b>Client: </b>');
+                            $(event.el).append('<br><span><b>Task: </b>' + event.event.extendedProps.task + '</span>');
+                            $(event.el).append('<div><b>Heure: </b>' + moment(event.event.start).format("HH:mm") + '</div>');
                         } else {
-                            if (event.event.allDay === false) {
-                                $(event.el).find('.fc-title').prepend('<b>Client: </b>');
-                                $(event.el).append('<br><span><b>Libellé: </b>' + event.event.extendedProps.libelle + '</span>');
-                                if (moment(event.event.start).hours() > 13) {
-                                    $(event.el).append('<br><b>Après-midi</b>');
-                                } else {
-                                    $(event.el).append('<br><b>Matin</b>');
-                                }
+                            $(event.el).height('auto');
+                            $(event.el).find('.fc-title').prepend('<b>Client: </b>');
+                            $(event.el).append('<br><span><b>Task: </b>' + event.event.extendedProps.task + '</span>');
+
+                        }
+                        if (event.event.extendedProps.etiquette == 'Urgent') {
+                            $(event.el).append('<div><b>Etiquette: </b> <span class="badge bg-danger">' + event.event.extendedProps.etiquette + '</span></div>');
+                        } else if (event.event.extendedProps.etiquette == 'Peu') {
+                            $(event.el).append('<div><b>Etiquette: </b> <span class="badge bg-light">' + event.event.extendedProps.etiquette + '</span></div>');
+                        } else if (event.event.extendedProps.etiquette == 'Moyen') {
+                            $(event.el).append('<div><b>Etiquette: </b> <span class="badge bg-indigo">' + event.event.extendedProps.etiquette + '</span></div>');
+                        } else if (event.event.extendedProps.etiquette == 'Important') {
+                            $(event.el).append('<div><b>Etiquette: </b> <span class="badge bg-warning">' + event.event.extendedProps.etiquette + '</span></div>');
+                        }
+                        $(event.el).append('<div class="ribbon-wrapper"><div class="ribbon">' + event.event.extendedProps.Statut + '</div></div>');
+                        if (event.event.extendedProps.Statut === 'To DO') {
+                            $(event.el).find('div.ribbon').each(function (index) {
+                                $(this).addClass('bg-warning');
+                                $(this).css('font-size', '80%');
+
+                            });
+                        } else if (event.event.extendedProps.Statut === 'Bloqué') {
+                            $(event.el).find('div.ribbon').each(function (index) {
+                                $(this).addClass('bg-danger');
+                                // $(this).css('font-size', '0.6vw');
+
+                            });
+                        } else if (event.event.extendedProps.Statut === 'In Progress') {
+                            $(event.el).find('div.ribbon').each(function (index) {
+                                $(this).addClass('bg-navy');
+                                $(this).css('font-size', '0.6vw');
+
+                            });
+                        } else if (event.event.extendedProps.Statut === 'Done') {
+                            $(event.el).find('div.ribbon').each(function (index) {
+                                $(this).addClass('bg-success');
+                                // $(this).css('font-size', '0.6vw');
+
+                            });
+                        }
+                    } else {
+                        if (event.event.allDay === false) {
+                            $(event.el).find('.fc-title').prepend('<b>Client: </b>');
+                            $(event.el).append('<br><span><b>Libellé: </b>' + event.event.extendedProps.libelle + '</span>');
+                            if (moment(event.event.start).hours() > 13) {
+                                $(event.el).append('<br><b>Après-midi</b>');
+                            } else {
+                                $(event.el).append('<br><b>Matin</b>');
                             }
                         }
-                    },
-                    eventResize: function (event) {
-                        console.log(event.event.end);
+                    }
+                },
+                eventResize: function (event) {
+                    var xhr = $.ajax({
+                        url: '{{ path('appBundle_resize') }}',
+                        data: 'action=update&title=' + event.event.title + '&start=' + GetNow(event.event.start) + '&end=' + GetNow(event.event.end) + '&id=' + event.event.id + '&all_day=' + event.event.allDay,
+                        type: "POST",
+                        // async: false,
+                        success: function (data) {
+                            calendar.refetchEvents();
+                            f();
+                        },
+                        error: function () {
+                            calendar.refetchEvents();
+                            alert("Vous ne pouvez pas faire cette action");
+                        },
+                    });
+                },
+                eventDrop: function (event) {
+                    var start = new Date(event.event.start);
+                    var end = new Date(event.event.end);
+                    if (event.newResource) {
                         var xhr = $.ajax({
-                            url: '{{ path('appBundle_resize') }}',
-                            data: 'action=update&title=' + event.event.title + '&start=' + GetNow(event.event.start) + '&end=' + GetNow(event.event.end) + '&id=' + event.event.id + '&all_day=' + event.event.allDay,
+                            url: '{{ path('appBundle_drop') }}',
+                            data: 'action=update&title=' + event.event.title + '&start=' + GetNow(event.event.start) + '&end=' + GetNow(event.event.start) + '&id=' + event.event.id + '&all_day=' + event.event.allDay
+                                + '&User=' + event.newResource.id,
                             type: "POST",
-                            // async: false,
+                            //  async: false,
                             success: function (data) {
                                 calendar.refetchEvents();
-                                f();
+                            },
+                            error: function () {
+                                alert("Vous ne pouvez pas faire cette action");
+                                calendar.refetchEvents();
+                            },
+                        });
+                    } else {
+                        var xhr = $.ajax({
+                            url: '{{ path('appBundle_drop') }}',
+                            data: 'action=update&title=' + event.event.title + '&start=' + GetNow(event.event.start) + '&end=' + GetNow(event.event.start) + '&id=' + event.event.id + '&all_day=' + event.event.allDay
+                                + '&User=' + null,
+                            type: "POST",
+                            success: function (data) {
+                                calendar.refetchEvents();
                             },
                             error: function () {
                                 calendar.refetchEvents();
                                 alert("Vous ne pouvez pas faire cette action");
                             },
                         });
-                    },
-                    eventDrop: function (event) {
-                        var start = new Date(event.event.start);
-                        var end = new Date(event.event.end);
-                        console.log(GetNow(event.event.start));
-                        console.log(event);
-                        if (event.newResource) {
-                            var xhr = $.ajax({
-                                url: '{{ path('appBundle_drop') }}',
-                                data: 'action=update&title=' + event.event.title + '&start=' + GetNow(event.event.start) + '&end=' + GetNow(event.event.start) + '&id=' + event.event.id + '&all_day=' + event.event.allDay
-                                    + '&User=' + event.newResource.id,
-                                type: "POST",
-                                //  async: false,
-                                success: function (data) {
-                                    calendar.refetchEvents();
-                                },
-                                error: function () {
-                                    alert("Vous ne pouvez pas faire cette action");
-                                    calendar.refetchEvents();
-                                },
-                            });
-                        } else {
-                            var xhr = $.ajax({
-                                url: '{{ path('appBundle_drop') }}',
-                                data: 'action=update&title=' + event.event.title + '&start=' + GetNow(event.event.start) + '&end=' + GetNow(event.event.start) + '&id=' + event.event.id + '&all_day=' + event.event.allDay
-                                    + '&User=' + null,
-                                type: "POST",
-                                success: function (data) {
-                                    calendar.refetchEvents();
-                                },
-                                error: function () {
-                                    calendar.refetchEvents();
-                                    alert("Vous ne pouvez pas faire cette action");
-                                },
-                            });
-                        }
-                    },
-                });
-
-                calendar.render();
-
-                function getResources(handleData) {
-                    if (byUser.length == 0) {
-                        $.ajax({
-                            url: '{{ path('findByBus') }}',
-                            data: {
-                                id: resource //dynamically get the current selected option from the dropdown
-                            },
-                            dataType: "json",
-                            success: function (data) {
-                                $.each(data, function (key, value) {
-                                    users.push(value);
-                                });
-                                handleData(data);
-                            }
-                        });
                     }
-                    if (byUser.length > 0) {
-                        var x = [];
-                        $.each(users, function (key, value) {
-                            $.each(byUser, function (key, id) {
-                                if (value.id == id) {
-                                    x.push(value);
-                                }
-                            });
-                            handleData(x);
-                        });
-                    }
-                }
+                },
+            });
 
-                $("#bus").on('change', function () {
-                    byUser = [];
-                    $('#usersBu').empty();
+            calendar.render();
+
+            function getResources(handleData) {
+                if (byUser.length == 0) {
                     $.ajax({
                         url: '{{ path('findByBus') }}',
                         data: {
-                            id: this.value //dynamically get the current selected option from the dropdown
+                            id: resource //dynamically get the current selected option from the dropdown
                         },
                         dataType: "json",
                         success: function (data) {
-                            $('#usersBu').append($("<option />").val(null).text(null));
                             $.each(data, function (key, value) {
-                                // console.log(value.prenomUtilisateur);
-                                $('#usersBu').append($("<option />").val(value.id).text(value.prenomUtilisateur + ' ' + value.nomUtilisateur));
+                                users.push(value);
                             });
+                            handleData(data);
                         }
                     });
-                    resource = this.value;
-                    calendar.refetchResources();
-                });
-                $("#usersBu").change(function () {
-                    byUser = $("#usersBu").val();
-                    calendar.refetchResources();
-                });
-
-                $('#users').select2({
-                    placeholder: "Selectionner",
-                    tags: true,
-                });
-
-                $("#export").click(function (e) {
-                    e.preventDefault();
-                    if ($('#bus').val()) {
-                        var exportation = [];
-                        resources = calendar.getResources();
-                        var events = calendar.getEvents();
-                        $.each(events, function (key, event) {
-                            var resourceIds = event._def.resourceIds;
-                            $.each(resources, function (key, resource) {
-                                if (resource.id === resourceIds[0] && event.extendedProps.type !== 'TaskEvent') {
-                                    if ((calendar.view.currentStart <= event.start) && (calendar.view.currentEnd > event.start)) {
-                                        exportation.push(event.id);
-                                    }
-                                }
-                            });
-
-                        });
-                        $.ajax({
-                            type: "GET",
-                            url: '{{ path('telechargementPlanning') }}',
-                            data: {
-                                ids: exportation,
-                                start: moment(calendar.view.currentStart).format('MM/DD/YYYY'),
-                                end: moment(calendar.view.currentEnd).subtract(1, 'days').format('MM/DD/YYYY'),
-                            },
-                            success: function (data) {
-                                window.location = this.url;
-                                Swal.fire({
-                                    position: 'center',
-                                    icon: 'success',
-                                    title: 'Votre fichier est en cours de téléchargement!',
-                                    showConfirmButton: false,
-                                    timer: 2500
-                                })
-                            },
-                            error: function () {
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Oops...',
-                                    text: 'Quelque chose c\'est mal passé. Merci d\'essayer plus tard',
-                                })
+                }
+                if (byUser.length > 0) {
+                    var x = [];
+                    $.each(users, function (key, value) {
+                        $.each(byUser, function (key, id) {
+                            if (value.id == id) {
+                                x.push(value);
                             }
                         });
-                    } else {
-                        Swal.fire({
-                            icon: 'warning',
-                            title: 'Attention...',
-                            text: 'Veuillez choisir le BU!',
-                            showCloseButton: true,
-                        })
+                        handleData(x);
+                    });
+                }
+            }
+
+            $("#bus").on('change', function () {
+                byUser = [];
+                $('#usersBu').empty();
+                $.ajax({
+                    url: '{{ path('findByBus') }}',
+                    data: {
+                        id: this.value //dynamically get the current selected option from the dropdown
+                    },
+                    dataType: "json",
+                    success: function (data) {
+                        $('#usersBu').append($("<option />").val(null).text(null));
+                        $.each(data, function (key, value) {
+                            $('#usersBu').append($("<option />").val(value.id).text(value.prenomUtilisateur + ' ' + value.nomUtilisateur));
+                        });
                     }
                 });
-
-                $('#addTaskButton').on('click', function (e) {
-                    e.preventDefault();
-                    $.ajax({
-                        url: '{{ path('taskevent_new') }}',
-                        method: 'post',
-                        success: function (data) {
-                            $('#renderEdit').html(data);
-                            $('#addTask').modal();
-                            $('form[name="new"]').submit(function () {
-                                calendar.refetchEvents();
-                            });
-                        },
-                    });
-                });
+                resource = this.value;
+                calendar.refetchResources();
+            });
+            $("#usersBu").change(function () {
+                byUser = $("#usersBu").val();
+                calendar.refetchResources();
             });
 
-            $('#calendar').css('font-size', '17px');
-            $('#bus').select2({
-                placeholder: 'Choisir un BU',
-                allowClear: true
-            });
-            $('#usersBu').select2({
+            $('#users').select2({
+                placeholder: "Selectionner",
                 tags: true,
             });
 
-            function GetNow(currentdate) {
-                var cc = currentdate.getFullYear() + "-"
-                    + (currentdate.getMonth() + 1) + "-"
-                    + currentdate.getDate() + " "
-                    + currentdate.getHours() + ":"
-                    + currentdate.getMinutes() + ":"
-                    + currentdate.getSeconds();
-                return cc;
-            }
-        </script>
+            $("#export").click(function (e) {
+                e.preventDefault();
+                if ($('#bus').val()) {
+                    var exportation = [];
+                    resources = calendar.getResources();
+                    var events = calendar.getEvents();
+                    $.each(events, function (key, event) {
+                        var resourceIds = event._def.resourceIds;
+                        $.each(resources, function (key, resource) {
+                            if (resource.id === resourceIds[0] && event.extendedProps.type !== 'TaskEvent') {
+                                if ((calendar.view.currentStart <= event.start) && (calendar.view.currentEnd > event.start)) {
+                                    exportation.push(event.id);
+                                }
+                            }
+                        });
 
-    {% endblock %}
+                    });
+                    $.ajax({
+                        type: "GET",
+                        url: '{{ path('telechargementPlanning') }}',
+                        data: {
+                            ids: exportation,
+                            start: moment(calendar.view.currentStart).format('MM/DD/YYYY'),
+                            end: moment(calendar.view.currentEnd).subtract(1, 'days').format('MM/DD/YYYY'),
+                        },
+                        success: function (data) {
+                            window.location = this.url;
+                            Swal.fire({
+                                position: 'center',
+                                icon: 'success',
+                                title: 'Votre fichier est en cours de téléchargement!',
+                                showConfirmButton: false,
+                                timer: 2500
+                            })
+                        },
+                        error: function () {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'Quelque chose c\'est mal passé. Merci d\'essayer plus tard',
+                            })
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Attention...',
+                        text: 'Veuillez choisir le BU!',
+                        showCloseButton: true,
+                    })
+                }
+            });
+
+            $('#addTaskButton').on('click', function (e) {
+                e.preventDefault();
+                $.ajax({
+                    url: '{{ path('taskevent_new') }}',
+                    method: 'post',
+                    success: function (data) {
+                        $('#renderEdit').html(data);
+                        $('#addTask').modal();
+                        $('form[name="new"]').submit(function () {
+                            calendar.refetchEvents();
+                        });
+                    },
+                });
+            });
+
+            $("#panel-fullscreen").click(function (e) {
+                e.preventDefault();
+                var $this = $(this);
+                console.log($('#toExpend').find('.card-header').height());
+                var $height = $(window).height();
+
+                if ($this.children('i').hasClass('fas fa-expand-alt')) {
+                    $this.children('i').removeClass('fas fa-expand-alt');
+                    $this.children('i').addClass('fas fa-compress-alt');
+                    $('body').css('overflow', 'hidden');
+                    calendar.setOption('height', $height - 65);
+                } else if ($this.children('i').hasClass('fas fa-compress-alt')) {
+                    $this.children('i').removeClass('fas fa-compress-alt');
+                    $this.children('i').addClass('fas fa-expand-alt');
+                    $('body').css('overflow', 'scroll');
+                    calendar.setOption('height', 500);
+                }
+
+                $('#toExpend').toggleClass('panel-fullscreen');
+
+            });
+        });
+
+        $('#calendar').css('font-size', '17px');
+        $('#bus').select2({
+            placeholder: 'Choisir un BU',
+            allowClear: true
+        });
+        $('#usersBu').select2({
+            tags: true,
+        });
+
+
+        function GetNow(currentdate) {
+            var cc = currentdate.getFullYear() + "-"
+                + (currentdate.getMonth() + 1) + "-"
+                + currentdate.getDate() + " "
+                + currentdate.getHours() + ":"
+                + currentdate.getMinutes() + ":"
+                + currentdate.getSeconds();
+            return cc;
+        }
+    </script>
+
+{% endblock %}
