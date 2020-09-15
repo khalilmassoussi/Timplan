@@ -35,10 +35,21 @@ class GestionFeuilleRapportInterventionController extends Controller
         $em = $this->getDoctrine()->getManager();
         $planning = $em->getRepository('TimSoftGeneralBundle:Planning')->find($request->get('id'));
 
-        $FeuilleDePresence->setHeureDebutInterventionMatin((new \DateTime())->setTime('09', '00'));
-        $FeuilleDePresence->setHeureFinInterventionMatin((new \DateTime())->setTime('12', '00'));
-        $FeuilleDePresence->setHeureDebutInterventionAM((new \DateTime())->setTime('14', '00'));
-        $FeuilleDePresence->setHeureFinInterventionAM((new \DateTime())->setTime('17', '00'));
+        if ($planning->isAllDay()) {
+            $FeuilleDePresence->setHeureDebutInterventionMatin((new \DateTime())->setTime('09', '00'));
+            $FeuilleDePresence->setHeureFinInterventionMatin((new \DateTime())->setTime('12', '00'));
+            $FeuilleDePresence->setHeureDebutInterventionAM((new \DateTime())->setTime('14', '00'));
+            $FeuilleDePresence->setHeureFinInterventionAM((new \DateTime())->setTime('17', '00'));
+        } else {
+//            return new JsonResponse($planning->getStart()->format('h'));
+            if ($planning->getStart()->format('H') < '09') {
+                $FeuilleDePresence->setHeureDebutInterventionMatin((new \DateTime())->setTimestamp($planning->getStart()->getTimestamp()));
+                $FeuilleDePresence->setHeureFinInterventionMatin((new \DateTime())->setTimestamp($planning->getEnd()->getTimestamp()));
+            } else {
+                $FeuilleDePresence->setHeureDebutInterventionAM((new \DateTime())->setTimestamp($planning->getStart()->getTimestamp()));
+                $FeuilleDePresence->setHeureFinInterventionAM((new \DateTime())->setTimestamp($planning->getEnd()->getTimestamp()));
+            }
+        }
         $FeuilleDePresence->setIntervenant($planning->getUtilisateur());
         $FeuilleDePresence->setNumeroCommande($planning->getLc()->getCommande()->getnCommande());
         $FeuilleDePresence->setClient($planning->getLc()->getCommande()->getClient());
