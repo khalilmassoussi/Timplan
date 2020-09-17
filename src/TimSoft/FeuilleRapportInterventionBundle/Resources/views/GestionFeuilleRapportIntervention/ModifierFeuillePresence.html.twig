@@ -651,7 +651,7 @@
                                         <th scope="row" style="padding: 15px 0px 0px 0px">
                                             <div align="left">Lieu de l'intervention:</div>
                                         </th>
-                                        <td style="padding: 15px 0px 0px 0px">{{ Feuille.lieuIntervention }}</td>
+                                        <td style="padding: 15px 0px 0px 0px">{{ Feuille.intervention.lieu }}</td>
                                     </tr>
                                     <tr>
                                         <th scope="row" style="padding: 15px 0px 0px 0px">
@@ -667,19 +667,13 @@
                                     </tr>
                                 </table>
                                 <table width="700">
-                                    <tr>
+                                    <tr id="matin">
                                         <th width="200" scope="col" style="padding: 15px 0px 0px 0px">Matin de
                                         </th>
                                         <th scope="col" style="padding: 15px 0px 0px 0px">
                                             <div class="bootstrap-timepicker">
                                                 <div class="input-group">
                                                     {{ form_widget(form.heureDebutInterventionMatin) }}
-
-                                                    <div class="input-group-prepend">
-                                                        <span class="input-group-text">
-                                                        <i class="fa fa-clock-o"></i>
-                                                        </span>
-                                                    </div>
                                                 </div>
                                             </div>
                                         </th>
@@ -688,26 +682,15 @@
                                             <div class="bootstrap-timepicker">
                                                 <div class="input-group">
                                                     {{ form_widget(form.heureFinInterventionMatin) }}
-
-                                                    <div class="input-group-prepend">
-                                                        <span class="input-group-text">
-                                                        <i class="fa fa-clock-o"></i>
-                                                        </span>
-                                                    </div>
                                                 </div>
                                             </div>
                                     </tr>
-                                    <tr>
+                                    <tr id="am">
                                         <th scope="col" style="padding: 15px 0px 0px 0px">Après-Midi de</th>
                                         <th scope="col" style="padding: 15px 0px 0px 0px">
                                             <div class="bootstrap-timepicker">
                                                 <div class="input-group">
                                                     {{ form_widget(form.heureDebutInterventionAM) }}
-                                                    <div class="input-group-prepend">
-                                                        <span class="input-group-text">
-                                                        <i class="fa fa-clock-o"></i>
-                                                        </span>
-                                                    </div>
                                                 </div>
                                             </div>
                                         </th>
@@ -717,11 +700,6 @@
                                                 <div class="input-group">
                                                     {{ form_widget(form.heureFinInterventionAM) }}
                                                     {{ form_widget(form.statutValidation  , { 'attr' : { 'style':'display:none'} }) }}
-                                                    <div class="input-group-prepend">
-                                                        <span class="input-group-text">
-                                                        <i class="fa fa-clock-o"></i>
-                                                        </span>
-                                                    </div>
                                                 </div>
                                             </div>
                                         </th>
@@ -869,8 +847,16 @@
                 } else {
                     $('form[name=timsoft_generalbundle_feuilledepresence]').submit();
                 }
-                //$('form[name=timsoft_generalbundle_feuilledepresence]').submit();
             });
+            var heureDMatin = $('#timsoft_generalbundle_feuilledepresence_heureDebutInterventionMatin');
+            var heureFMatin = $('#timsoft_generalbundle_feuilledepresence_heureFinInterventionMatin');
+            var heureDAM = $('#timsoft_generalbundle_feuilledepresence_heureDebutInterventionAM');
+            var heureFAM = $('#timsoft_generalbundle_feuilledepresence_heureFinInterventionAM');
+            if (heureDMatin.val() == '' || heureFMatin.val() == '') {
+                $('#matin').hide();
+            } else if (heureDAM.val() == '' || heureFAM.val() == '') {
+                $('#am').hide();
+            }
         });
 
 

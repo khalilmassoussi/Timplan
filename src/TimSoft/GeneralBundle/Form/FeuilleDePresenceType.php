@@ -54,6 +54,7 @@ class FeuilleDePresenceType extends AbstractType
 //                ),
                 'widget' => 'single_text',
                 'attr' => array('class' => 'form-control '),
+
             ))
             ->add('heureDebutInterventionAM', TimeType::class, array(
                 'required' => false,

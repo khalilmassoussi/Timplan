@@ -721,20 +721,39 @@ class PlanningController extends Controller
                 }
             }
             $temps = $editForm->get('temps')->getData();
+            $feuille = $planning->getFeuille();
             if (in_array('Matin', $temps) && in_array('Après-midi', $temps)) {
                 $planning->setAllDay(true);
+                if ($feuille) {
+                    $feuille->setHeureDebutInterventionMatin((new \DateTime())->setTime(8, 30));
+                    $feuille->setHeureFinInterventionMatin((new \DateTime())->setTime(13, 00));
+                    $feuille->setHeureDebutInterventionAM((new \DateTime())->setTime(14, 00));
+                    $feuille->setHeureFinInterventionAM((new \DateTime())->setTime(18, 00));
+                }
             } elseif (in_array('Matin', $temps) && !in_array('Après-midi', $temps)) {
                 $planning->setAllDay(false);
                 $planning->setStart($editForm->get('start')->getData());
                 $planning->getStart()->setTime(8, 30);
                 $planning->setEnd($editForm->get('end')->getData());
                 $planning->getEnd()->setTime(13, 00);
+                if ($feuille) {
+                    $feuille->setHeureDebutInterventionMatin((new \DateTime())->setTime(8, 30));
+                    $feuille->setHeureFinInterventionMatin((new \DateTime())->setTime(13, 00));
+                    $feuille->setHeureDebutInterventionAM(null);
+                    $feuille->setHeureFinInterventionAM(null);
+                }
             } elseif (!in_array('Matin', $temps) && in_array('Après-midi', $temps)) {
                 $planning->setAllDay(false);
                 $planning->setStart($editForm->get('start')->getData());
                 $planning->getStart()->setTime(14, 00);
                 $planning->setEnd($editForm->get('end')->getData());
                 $planning->getEnd()->setTime(18, 00);
+                if ($feuille) {
+                    $feuille->setHeureDebutInterventionMatin(null);
+                    $feuille->setHeureFinInterventionMatin(null);
+                    $feuille->setHeureDebutInterventionAM((new \DateTime())->setTime(14, 00));
+                    $feuille->setHeureFinInterventionAM((new \DateTime())->setTime(18, 00));
+                }
             }
 
             /* ---------------------------------- */
