@@ -125,25 +125,31 @@
     });
 </script>
 <script>
-    $('form[name="new"]').submit(function (event) {
-        Swal.fire({
-            title: 'Veuillez Patienter !',
-            html: 'Enregistrement de données..',// add html attribute if you want or remove
-            allowOutsideClick: false,
-            onBeforeOpen: () => {
-                Swal.showLoading()
-            },
-        });
+    $('form[name="new"]').on('submit', function (event) {
         event.preventDefault();
-        if (new Date($('form[name="new"] #timsoft_tasksbundle_taskevent_start').datetimepicker('getValue')) > new Date($('form[name="new"] #timsoft_tasksbundle_taskevent_end').datetimepicker('getValue'))) {
-            alert('Date non valable, veuillez la vérifier et réessayer');
+        console.log($('form[name="new"] #timsoft_tasksbundle_taskevent_start').val());
+        if (new Date($('form[name="new"] #timsoft_tasksbundle_taskevent_start').datetimepicker('getValue')) > new Date($('form[name="new"] #timsoft_tasksbundle_taskevent_end').datetimepicker('getValue')) || ($('form[name="new"] #timsoft_tasksbundle_taskevent_start').val() == '' && $('form[name="new"] #timsoft_tasksbundle_taskevent_end').val() == '')) {
+            // alert('Date non valable, veuillez la vérifier et réessayer');
+            Swal.fire({
+                icon: 'warning',
+                title: 'Oops...',
+                text: 'Date non valable, veuillez la vérifier et réessayer',
+            });
             $('form[name="new"] #timsoft_tasksbundle_taskevent_start').addClass('is-invalid');
             $('form[name="new"] #timsoft_tasksbundle_taskevent_end').addClass('is-invalid');
         } else {
+            Swal.fire({
+                title: 'Veuillez Patienter !',
+                html: 'Enregistrement de données..',// add html attribute if you want or remove
+                allowOutsideClick: false,
+                onBeforeOpen: () => {
+                    Swal.showLoading()
+                },
+            });
+            // event.preventDefault();
             var cc = new FormData(this);
             var url = "{{ path('taskevent_new') }}";
             var formSerialize = $(this).serialize();
-
             $.ajax({
                 url: url,
                 data: formSerialize,

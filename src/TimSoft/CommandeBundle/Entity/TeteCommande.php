@@ -41,7 +41,7 @@ class TeteCommande implements \JsonSerializable
     /**
      * @ORM\Column(type="string", nullable=true)
      */
-    protected $devise;
+    protected $affaire;
     /**
      * @var
      * @ORM\ManyToOne(targetEntity="TimSoft\GeneralBundle\Entity\Client", inversedBy="commandes")
@@ -114,18 +114,20 @@ class TeteCommande implements \JsonSerializable
     /**
      * @return mixed
      */
-    public function getDevise()
+    public function getAffaire()
     {
-        return $this->devise;
+        return $this->affaire;
     }
 
     /**
-     * @param mixed $devise
+     * @param mixed $affaire
      */
-    public function setDevise($devise)
+    public function setAffaire($affaire): void
     {
-        $this->devise = $devise;
+        $this->affaire = $affaire;
     }
+
+
 
     /**
      * @return mixed

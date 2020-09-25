@@ -74,7 +74,7 @@ class TaskEvent implements \JsonSerializable
     protected $client;
     /**
      * @var
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="text")
      */
     protected $rapport;
     /**

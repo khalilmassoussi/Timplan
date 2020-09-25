@@ -71,10 +71,16 @@
                             Client
                         </td>
                         <td class="cell1">
+                            Affaire
+                        </td>
+                        <td class="cell1">
                             N°Commande
                         </td>
                         <td class="cell1">
                             Client
+                        </td>
+                        <td class="cell1">
+                            Affaire
                         </td>
                     </tr>
                     </thead>
@@ -101,16 +107,16 @@
                             <td class="cell1" style="display:none;"></td>
                             <td class="cell1">{{ val.0.nCommande }}
                             </td>
-
                             <td class="cell1">
                                 {% if val.0.client %}
                                     {{ val.0.client.raisonSociale }}
                                 {% endif %}
                             </td>
+                            <td>{{ val.0.affaire }}</td>
                             <td class="cell1">{{ val.1.nCommande }}
                             </td>
-                            <td class="cell1">{{ val.1.client.raisonSociale }}
-                            </td>
+                            <td class="cell1">{{ val.1.client.raisonSociale }}</td>
+                            <td>{{ val.1.affaire }}</td>
                         </tr>
                     {% endfor %}
                     </tbody>
@@ -227,7 +233,7 @@
                                     <td class="cell1">
                                         {{ value.QteRestante }}
                                     </td>
-                                    <td class="cell1" style="border-right: solid 1px">
+                                    <td class="cell1" style="border-right: solid 2px">
                                         {{ value.MRestant }}
                                     </td>
                                 {% endfor %}
@@ -278,25 +284,6 @@
         {{ parent() }}
         <script>
             $(document).ready(function () {
-                // var table1 =  $('#diplicateEC').DataTable({
-
-                //       dom: 'Bfrtip',
-                //       scrollX: true,
-                //       // select: true,
-                //       columnDefs: [{
-                //
-                //           orderable: false,
-                //           className: 'select-check  text-center',
-                //           targets: 0
-                //
-                //       }],
-                //       select: {
-                //           style: 'multi',
-                //           selector: 'td:first-child'
-                //       },
-                //       buttons: []
-                //
-                //   });
 
                 var table1 = $('#example').DataTable({
                     "language": {
@@ -381,7 +368,7 @@
                                 url: '{{ path('remplacer') }}',
                                 type: "POST",
                                 async: true,
-                                data: 'action=update&id=' + oData1[j][1] + '&client=' + oData1[j][6] + '&lc=false',
+                                data: 'action=update&id=' + oData1[j][1] + '&client=' + oData1[j][7] + '&lc=false &affaire=' + oData1[j][8],
                                 success: function (data) {
                                     alert('Ligne ajouté avec success');
                                     window.location.href = '{{ path('listerCmd') }}';

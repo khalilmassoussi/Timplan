@@ -132,10 +132,17 @@
                                 </th>
                                 <td style="padding: 15px 0px 0px 0px">{{ commande.prixTotal|number_format(3, ',', ' ') }}</td>
                             </tr>
-                            <tr>
-                                <th></th>
-                                <td></td>
-                            </tr>
+                            {% if not commande.affaire %}
+                                <tr>
+                                    <th></th>
+                                    <td></td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <th scope="row" style="padding: 15px 0px 0px 0px">Affaire</th>
+                                    <td style="padding: 15px 0px 0px 0px">{{ commande.affaire }}</td>
+                                </tr>
+                            {% endif %}
                         </table>
                     </div>
                 </div>

@@ -610,7 +610,8 @@ class FeuilleDePresence implements \JsonSerializable
             'Intervenant' => $this->intervenant->__toString(),
             'Type' => 'Feuille de présence',
             'numLivraison' => $this->numLivraison,
-            'Qte' => $this->intervention->jRestantes()
+            'Qte' => $this->intervention->jRestantes(),
+            'Commande' => $this->intervention->getLc()->getCommande()->getNCommande()
         );
         if ($this->statutValidation) {
             $array['Validation'] = 'Validé';

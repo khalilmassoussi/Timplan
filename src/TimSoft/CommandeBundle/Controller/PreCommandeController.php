@@ -76,7 +76,7 @@ class PreCommandeController extends Controller
                                 if (($key == 'A' && $cell->getValue() != 'Marché') || ($key == 'C' && $cell->getValue() != 'Tiers') || ($key == 'D' && $cell->getValue() != 'Numéro')
                                     || ($key == 'E' && $cell->getValue() != 'Num. Ligne') || ($key == 'F' && $cell->getValue() != 'Date') || ($key == 'G' && $cell->getValue() != 'Type article')
                                     || ($key == 'H' && $cell->getValue() != 'Libellé Intervention') || ($key == 'I' && $cell->getValue() != 'Quantité') || ($key == 'J' && $cell->getValue() != 'Montant HT')
-                                    || ($key == 'K' && $cell->getValue() != 'Qté restante') || ($key == 'L' && $cell->getValue() != 'Valeur Restante') || ($key == 'M' && $cell->getValue() != 'Business Manager') || ($key == 'B' && $cell->getValue() != 'Tiers facturé')) {
+                                    || ($key == 'K' && $cell->getValue() != 'Qté restante') || ($key == 'L' && $cell->getValue() != 'Valeur Restante') || ($key == 'M' && $cell->getValue() != 'Business Manager') || ($key == 'B' && $cell->getValue() != 'Tiers facturé') || ($key == 'N' && $cell->getValue() != 'Affaire')) {
                                     $this->addFlash("Erreur", "Le format de ce fichier excel est invalide");
                                     return $this->render('@TimSoftCommande/PreCommande/ImportCmd.html.twig', array('form' => $form->createView()));
                                 }
@@ -93,7 +93,7 @@ class PreCommandeController extends Controller
 //                                        print_r('ccccccccccc');
                                     }
                                 }
-                                if ('D' == $cell->getColumn() || 'C' == $cell->getColumn() || 'M' == $cell->getColumn() || 'B' == $cell->getColumn()) {
+                                if ('D' == $cell->getColumn() || 'C' == $cell->getColumn() || 'M' == $cell->getColumn() || 'B' == $cell->getColumn() || 'N' == $cell->getColumn()) {
                                     $cells[] = $cell->getValue();
                                 }
 
@@ -146,11 +146,12 @@ class PreCommandeController extends Controller
 //                print_r($array);
                 foreach ($array as $value) {
                     if ($value) {
-                        if ($value[1] && $value[2] && $value[0] && $value[3] && $value[4]) {
+                        if ($value[1] && $value[2] && $value[0] && $value[3] && $value[4] && $value[5]) {
                             $commande = new PreTeteCommande();
                             $commande->setNCommande($value[2]);
                             $date = new \DateTime($value[3]);
                             $commande->setDatePiece($date);
+                            $commande->setAffaire($value[5]);
                             $users = $this->getDoctrine()->getRepository('TimSoftGeneralBundle:Utilisateur')->findAll();
                             foreach ($users as $user) {
                                 if ($user->__toString() == $value[4]) {
@@ -193,10 +194,11 @@ class PreCommandeController extends Controller
                             }
                         } else {
                             if ($lc) {
-                                if (!$c->getClient() || (trim($c->getClient()->getCodeClient()) != trim($fullrow[1]))) {
+                                if (!$c->getClient() || (trim($c->getClient()->getCodeClient()) != trim($fullrow[1])) || $c->getAffaire() != $fullrow[13]) {
                                     $newEntete = new TeteCommande();
                                     $newEntete->setNCommande($c->getNCommande());
                                     $newEntete->setBuManager($buManager);
+                                    $newEntete->setAffaire($fullrow[13]);
                                     $clinet = $this->getDoctrine()->getRepository('TimSoftGeneralBundle:Client')->findOneByCodeClient(trim($fullrow[1]));
                                     if ($clinet) {
                                         $newEntete->setClient($clinet);

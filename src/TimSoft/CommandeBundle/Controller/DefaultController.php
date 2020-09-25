@@ -80,7 +80,7 @@ class DefaultController extends Controller
                                 if (($key == 'A' && $cell->getValue() != 'Marché') || ($key == 'C' && $cell->getValue() != 'Tiers') || ($key == 'D' && $cell->getValue() != 'Numéro')
                                     || ($key == 'E' && $cell->getValue() != 'Num. Ligne') || ($key == 'F' && $cell->getValue() != 'Date') || ($key == 'G' && $cell->getValue() != 'Type article')
                                     || ($key == 'H' && $cell->getValue() != 'Libellé Intervention') || ($key == 'I' && $cell->getValue() != 'Quantité') || ($key == 'J' && $cell->getValue() != 'Montant HT')
-                                    || ($key == 'K' && $cell->getValue() != 'Qté restante') || ($key == 'L' && $cell->getValue() != 'Valeur Restante') || ($key == 'M' && $cell->getValue() != 'Business Manager') || ($key == 'B' && $cell->getValue() != 'Tiers facturé')) {
+                                    || ($key == 'K' && $cell->getValue() != 'Qté restante') || ($key == 'L' && $cell->getValue() != 'Valeur Restante') || ($key == 'M' && $cell->getValue() != 'Business Manager') || ($key == 'B' && $cell->getValue() != 'Tiers facturé') || ($key == 'N' && $cell->getValue() != 'Affaire')) {
                                     $this->addFlash("Erreur", "Le format de ce fichier excel est invalide");
                                     return $this->render('@TimSoftCommande/Default/ImportCmd.html.twig', array('form' => $form->createView()));
                                 }
@@ -97,7 +97,7 @@ class DefaultController extends Controller
 //                                        print_r('ccccccccccc');
                                     }
                                 }
-                                if ('D' == $cell->getColumn() || 'C' == $cell->getColumn() || 'M' == $cell->getColumn() || 'B' == $cell->getColumn()) {
+                                if ('D' == $cell->getColumn() || 'C' == $cell->getColumn() || 'M' == $cell->getColumn() || 'B' == $cell->getColumn() || 'N' == $cell->getColumn()) {
                                     $cells[] = $cell->getValue();
                                 }
 
@@ -150,11 +150,12 @@ class DefaultController extends Controller
 //                print_r($array);
                 foreach ($array as $value) {
                     if ($value) {
-                        if ($value[1] && $value[2] && $value[0] && $value[3] && $value[4]) {
+                        if ($value[1] && $value[2] && $value[0] && $value[3] && $value[4] && $value[5]) {
                             $commande = new TeteCommande();
                             $commande->setNCommande($value[2]);
                             $date = new \DateTime($value[3]);
                             $commande->setDatePiece($date);
+                            $commande->setAffaire($value[5]);
                             $users = $this->getDoctrine()->getRepository('TimSoftGeneralBundle:Utilisateur')->findAll();
                             foreach ($users as $user) {
                                 if ($user->__toString() == $value[4]) {
@@ -193,14 +194,14 @@ class DefaultController extends Controller
                                 $em->persist($ligneCommande);
                                 $em->flush();
                                 $lignes[] = $ligneCommande;
-
                             }
                         } else {
                             if ($lc) {
-                                if (!$c->getClient() || (trim($c->getClient()->getCodeClient()) != trim($fullrow[1]))) {
+                                if (!$c->getClient() || (trim($c->getClient()->getCodeClient()) != trim($fullrow[1])) || $c->getAffaire() != $fullrow[13]) {
                                     $newEntete = new TeteCommande();
                                     $newEntete->setNCommande($c->getNCommande());
                                     $newEntete->setBuManager($buManager);
+                                    $newEntete->setAffaire($fullrow[13]);
                                     $clinet = $this->getDoctrine()->getRepository('TimSoftGeneralBundle:Client')->findOneByCodeClient(trim($fullrow[1]));
                                     if ($clinet) {
                                         $newEntete->setClient($clinet);
@@ -211,15 +212,14 @@ class DefaultController extends Controller
                                 if ($lc->getType() != $fullrow[6] || $lc->getBu() != $fullrow[0] || $lc->getQuantite() != $fullrow[8]
                                     || trim($lc->getLibelle()) != trim($fullrow[7]) || $lc->getmontantHT() != $fullrow[9] || $lc->getQteRestante() != $fullrow[10]) {
                                     $ligne = new LigneCommande();
-//                                    var_dump(trim($lc->getLibelle()) . '--' . $fullrow[7]);
-                                    $ligne->setNLigne($fullrow[3]);
-                                    $ligne->setType($fullrow[5]);
+                                    $ligne->setNLigne($fullrow[4]);
+                                    $ligne->setType($fullrow[6]);
                                     $ligne->setBu($fullrow[0]);
                                     $ligne->setCommande($c);
-                                    $ligne->setQuantite($fullrow[7]);
-                                    $ligne->setLibelle($fullrow[6]);
-                                    $ligne->setMontantHT($fullrow[8]);
-                                    $ligne->setQteRestante($fullrow[9]);
+                                    $ligne->setQuantite($fullrow[8]);
+                                    $ligne->setLibelle($fullrow[7]);
+                                    $ligne->setMontantHT($fullrow[9]);
+                                    $ligne->setQteRestante($fullrow[10]);
                                     $dup[] = $ligne;
                                     $duplicate[] = array($lc, $ligne);
                                 }
@@ -352,6 +352,7 @@ class DefaultController extends Controller
             $enteteCommande = $this->getDoctrine()->getRepository('TimSoftCommandeBundle:TeteCommande')->find($request->get('id'));
             $client = $this->getDoctrine()->getRepository('TimSoftGeneralBundle:Client')->findOneByRaisonSociale($request->get('client'));
             $enteteCommande->setClient($client);
+            $enteteCommande->setAffaire($request->get('affaire'));
             $em->merge($enteteCommande);
         }
         $em->flush();

@@ -4,7 +4,7 @@
     {% block css %}
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <link rel="shortcut icon" type="image/x-icon" href="{{ asset('Template/Fav-Timsoft-.png') }}"/>
+        <link rel="shortcut icon" type="image/x-icon" href="{{ asset('Template/cropped-Favicon-timsoft-270x270.png') }}" size="16x16"/>
         <title>{% block Titre %}Portail web de TimSoft - Accueil {% endblock %}</title>
         <!-- Tell the browser to be responsive to screen width -->
         <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
@@ -106,7 +106,8 @@
               href="{{ asset('Template2/plugins/pace-progress/themes/black/pace-theme-flat-top.css') }}">
         <!-- Theme style -->
         <link rel="stylesheet" href="{{ asset('Template2/dist/css/adminlte.min.css') }}">
-
+<style>
+</style>
     {% endblock %}
 
 
@@ -224,13 +225,12 @@
                                 class="fas fa-power-off"></i></a></li>
             </ul>
         </nav>
-        <aside class="main-sidebar sidebar-dark-primary elevation-4">
+        <aside class="main-sidebar sidebar-dark-primary elevation-4" style="background-color: #183152">
             <!-- Brand Logo -->
             <a href="{{ path('tim_soft_client_homepage') }}" class="brand-link" style="text-align: center">
                 <img src="{{ asset('Template/Logo-Timplan-blanc (2).png') }}" alt="Timplan"
 
-                     style="opacity: .8; max-width: 100%">
-                {#            <span class="brand-text font-weight-light">AdminLTE 3</span>#}
+                     style="max-width: 100%">
             </a>
 
             <!-- Sidebar -->
@@ -238,7 +238,7 @@
                 <!-- Sidebar user panel (optional) -->
                 <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                     <div class="image">
-                        <i class="fas fa-user fa-lg"></i>
+                        <img src="{{ asset('Template/user.png') }}" class="img-circle elevation-2" alt="User Image">
                     </div>
                     <div class="info">
                         <a href="#" class="d-block">{{ app.user.prenomUtilisateur }} {{ app.user.nomUtilisateur }}</a>
