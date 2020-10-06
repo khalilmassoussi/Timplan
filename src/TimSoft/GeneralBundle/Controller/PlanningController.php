@@ -848,7 +848,17 @@ class PlanningController extends Controller
             $messageG->addTo('w.benmustapha@timsoft.com.tn', 'Wafa Benmustapha');
             $messageG->addTo('f.cherif@timsoft.com.tn', 'Fatma CHERIF');
             $numSent += $this->get('mailer')->send($messageG, $failedRecipients);
-
+            /*-------------------------------------------*/
+            if ($planning->getStatut() != 'Terminé') {
+                if ($planning->getFeuille()) {
+                    if ($planning->getFeuille()->getStatutValidation()) {
+                        $newQte = $planning->getLc()->getQteRestante() + $planning->jRestantes();
+                        $planning->getLc()->setQteRestante($newQte);
+                        $em->persist($planning->getLc());
+                    }
+                    $em->remove($planning->getFeuille());
+                }
+            }
             /* ----------------------------------------- */
             $this->getDoctrine()->getManager()->flush();
             return new Response(json_encode(array('status' => 'success')));

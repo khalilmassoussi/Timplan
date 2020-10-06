@@ -100,7 +100,10 @@ class Utilisateur extends FosUser implements \JsonSerializable
      * @var \DateTime
      */
     private $updatedAt;
-
+    /**
+     * @var
+     */
+    protected $enabled;
 
     /**
      * @var string
@@ -126,6 +129,7 @@ class Utilisateur extends FosUser implements \JsonSerializable
      * @ORM\OneToMany(targetEntity="TimSoft\GeneralBundle\Entity\Planning", mappedBy="utilisateur")
      */
     private $plannings;
+
 
     /**
      * Utilisateur constructor.
@@ -287,6 +291,15 @@ class Utilisateur extends FosUser implements \JsonSerializable
         return $this->statutProfil;
     }
 
+    /**
+     * @return bool
+     */
+    public function isEnabled(): bool
+    {
+        return $this->enabled;
+    }
+
+
     public function jsonSerialize()
     {
         $call = [
@@ -296,6 +309,8 @@ class Utilisateur extends FosUser implements \JsonSerializable
             'bus' => $this->bus->toArray(),
             'roleUtilisateur' => $this->roleUtilisateur,
             'title' => $this->nomUtilisateur . ' ' . $this->prenomUtilisateur,
+            'enabled' => $this->enabled,
+            'statut' => $this->statutProfil
             // 'plannings' => $this->plannings->toArray()
         ];
         return $call;

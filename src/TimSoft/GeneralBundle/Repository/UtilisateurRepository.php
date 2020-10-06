@@ -40,7 +40,6 @@ class UtilisateurRepository extends \Doctrine\ORM\EntityRepository
             ->orWhere('u IN (:Users)')
             ->setParameter('roles', $Role)
             ->setParameter('Users', $Users)
-            // ->setParameter('UserInterdits', $UserInterdits)
             ->getQuery()
             ->getResult();
     }
@@ -76,7 +75,6 @@ class UtilisateurRepository extends \Doctrine\ORM\EntityRepository
     {
         return $this->createQueryBuilder('u')
             ->select('u')
-            // ->leftJoin('u.bus', 'b')
             ->where(':bu NOT MEMBER OF u.bus')
             ->setParameter('bu', $bu)
             ->getQuery()
@@ -119,4 +117,10 @@ class UtilisateurRepository extends \Doctrine\ORM\EntityRepository
             ->setParameter('1', $societe);
     }
 
+    public function getByEnabled()
+    {
+        return $this->createQueryBuilder('u')
+            ->where('u.enabled = 1')
+            ->andWhere('u.statutProfil = 1');
+    }
 }

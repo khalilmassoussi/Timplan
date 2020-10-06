@@ -1050,8 +1050,8 @@ class GestionFeuilleRapportInterventionController extends Controller
             throw $this->createAccessDeniedException();
         }
         $em = $this->getDoctrine()->getManager(); // initialise la connexion à la BD
-        $Feuilles = $em->getRepository('TimSoftGeneralBundle:FeuilleDePresence')->findAll();
-        return $this->render('@TimSoftFeuilleRapportIntervention/GestionFeuilleRapportIntervention/Rapprochement.html.twig', array('Feuilles' => $Feuilles));
+//        $Feuilles = $em->getRepository('TimSoftGeneralBundle:FeuilleDePresence')->findByStatutValidation('1');
+        return $this->render('@TimSoftFeuilleRapportIntervention/GestionFeuilleRapportIntervention/Rapprochement.html.twig');
     }
 
     /**
@@ -1127,7 +1127,7 @@ class GestionFeuilleRapportInterventionController extends Controller
     public function feuillesJsonAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-        $Feuilles = $em->getRepository('TimSoftGeneralBundle:FeuilleDePresence')->findBy(array(), array('dateIntervention' => 'DESC'));
+        $Feuilles = $em->getRepository('TimSoftGeneralBundle:FeuilleDePresence')->findBy(array('statutValidation' => 1), array('dateIntervention' => 'DESC'));
         $json = [];
         foreach ($Feuilles as $feuille) {
             $json[] = $feuille;

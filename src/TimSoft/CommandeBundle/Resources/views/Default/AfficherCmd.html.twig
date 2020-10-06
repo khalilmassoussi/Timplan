@@ -258,7 +258,7 @@
                                         {% endif %}
                                         {% if AutorisationAcces('supprimerLC' , Utilisateur) %}
                                             <a class="supprimer btn btn-danger btn-sm btn" href="#" title="Supprimer"
-                                               id="">
+                                               id="{{ lc.id }}">
                                                 <i class="fas fa-trash fa-lg"></i>
                                             </a>
                                         {% endif %}
@@ -533,7 +533,6 @@
                 "initComplete": function (settings, json) {
                     this.api().columns('.SumHeader').every(function (index) {
                         var column = this;
-                        console.log(index);
                         var indexx = index;
                         var sum = column
                             .data()
@@ -641,21 +640,18 @@
                     error: 'error'
                 });
             });
-            $('.supprimer').on('click', function (e) {
-                var data = table.row($(this).parents('tr')).data();
-                id = data[0];
+            $('#TableClient').on("click", ".supprimer", function (e) {
                 e.preventDefault();
+                id = $(this).attr('id');
                 $.ajax({
                     type: "POST",
                     url: '{{ path('supprimerLC') }}',
                     data: {
                         'id': id,
-
                     },
                     success: function (result) {
-                        table.row('#tr' + id).remove().draw();
+                        table.row('#tr' + id).remove().draw(false);
                         console.log(id);
-
                     },
                     error: 'error'
                 });
@@ -732,7 +728,7 @@
                     type: "POST",
                     success: function (result) {
                         $.each(result, function (key, value) {
-                            if (value.roleUtilisateur != 'ROLE_CLIENT') {
+                            if (value.roleUtilisateur != 'ROLE_CLIENT' && value.statut && value.enabled) {
                                 var myObj, i, j, x = "";
                                 var y = Object.keys(value.bus).length;
                                 for (i in value.bus) {
@@ -795,25 +791,8 @@
                         );
                     }
                 })
-            })
-            {#$.ajax({#}
-            {#    url: '{{ path('getAllUsers') }}',#}
-            {#    //data: 'action=update&id=' + this.id,#}
-            {#    type: "POST",#}
-            {#    //  async: false,#}
-            {#    success: function (data) {#}
-            {#        $.each(data, function (i, item) {#}
-            {#            $('#buManager').append($('<option>', {#}
-            {#                value: item.id,#}
-            {#                text: item.prenomUtilisateur + ' ' + item.nomUtilisateur#}
-            {#            }));#}
-            {#        });#}
-            {#        console.log(data);#}
-            {#    },#}
-            {#    error: function () {#}
-            {#        alert("Vous ne pouvez pas faire cette action");#}
-            {#    },#}
-            {#});#}
+            });
+
         });
 
         function myGeeks() {

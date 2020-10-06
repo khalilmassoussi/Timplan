@@ -13,6 +13,7 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use TimSoft\GeneralBundle\Repository\UtilisateurRepository;
 use TimSoft\TasksBundle\Entity\Activite;
 
 class TaskEventType extends AbstractType
@@ -79,7 +80,13 @@ class TaskEventType extends AbstractType
                 'format' => 'dd MMMM yyyy HH:mm',
                 'label' => 'Fin'
             ])
-            ->add('utilisateur'
+            ->add('utilisateur', EntityType::class, [
+                    'class' => 'TimSoft\GeneralBundle\Entity\Utilisateur',
+                    'placeholder' => 'Choisir un utilisateur',
+                    'query_builder' => function (UtilisateurRepository $er) {
+                        return $er->getByEnabled();
+                    }
+                ]
             )
             ->add('client', EntityType::class, [
                 'class' => 'TimSoft\GeneralBundle\Entity\Client',

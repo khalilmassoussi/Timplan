@@ -362,7 +362,9 @@
                         dataType: "json",
                         success: function (data) {
                             $.each(data, function (key, value) {
-                                users.push(value);
+                                if (value.enabled === true && value.statut) {
+                                    users.push(value);
+                                }
                             });
                             handleData(data);
                         }

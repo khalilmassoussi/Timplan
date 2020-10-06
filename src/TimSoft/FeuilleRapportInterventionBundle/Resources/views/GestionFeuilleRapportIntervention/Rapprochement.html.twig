@@ -149,12 +149,12 @@
             $('input[type="checkbox"]').click(function () {
                 if ($(this).prop("checked") == true) {
                     table
-                        .columns(5)
+                        .columns(6)
                         .search('null')
                         .draw();
                 } else if ($(this).prop("checked") == false) {
                     table
-                        .columns(5)
+                        .columns(6)
                         .search('')
                         .draw();
                 }
@@ -184,7 +184,6 @@
                         sortAscending: ": activer pour trier la colonne par ordre croissant",
                         sortDescending: ": activer pour trier la colonne par ordre décroissant"
                     },
-                    "processing": true,
                     "serverSide": true,
                     /*"ajax": "''"*/
                 },
@@ -343,7 +342,7 @@
                         //         selectRapprochement.append('<option value="' + d + '">' + d + '</option>')
                         //     });
                         // }
-                        if (index !== 4 && index !== 5 && index !== 6) {
+                        if (index !== 5 && index !== 6 && index !== 7) {
                             if (index === 1) {
                                 $("#Date select").hide();
                                 // $("#Date").append('<span class="input-prepend input-group"><span class="add-on input-group-addon"><i class="glyphicon glyphicon-calendar fa fa-calendar"></i></span><input type="text" style="width: 100%" name="daterange" class="form-control daterange"/></span>');
@@ -507,7 +506,7 @@
             });
 
             $('#TableRIFP').editable({
-                selector: 'tr td:nth-child(5) a',
+                selector: 'tr td:nth-child(6) a',
                 url: '{{ path('rapprochementAjout') }}',
                 inputclass: 'form-control-sm width',
                 success: function (data, newValue) {
