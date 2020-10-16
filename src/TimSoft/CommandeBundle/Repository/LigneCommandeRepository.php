@@ -62,4 +62,14 @@ class LigneCommandeRepository extends \Doctrine\ORM\EntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function getLc()
+    {
+        return $this->createQueryBuilder('l')
+            ->select('l')
+            ->where('l INSTANCE OF :type')
+            ->setParameter('type', "LigneCommande")
+            ->getQuery()
+            ->getResult();
+    }
 }

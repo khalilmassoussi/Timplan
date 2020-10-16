@@ -700,11 +700,15 @@ class PlanningController extends Controller
 
     public function editAction(Request $request, Planning $planning)
     {
+
         $editForm = $this->createForm('TimSoft\GeneralBundle\Form\PlanningType', $planning);
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $em = $this->getDoctrine()->getManager();
+
+            $allday = $planning->isAllDay();
+
             $plannings = $this->getDoctrine()->getRepository('TimSoftGeneralBundle:Planning')->findByUtilisateur($planning->getUtilisateur());
             $plannings = $this->unsetValue($plannings, $planning, true);
             if (!$this->getUser()->hasRole('ROLE_ADMIN') && !$this->getUser()->hasRole('ROLE_GESTIONNAIRE') && !$this->getUser()->hasRole('ROLE_CHEF')) {
@@ -723,6 +727,11 @@ class PlanningController extends Controller
             $temps = $editForm->get('temps')->getData();
             $feuille = $planning->getFeuille();
             if (in_array('Matin', $temps) && in_array('Après-midi', $temps)) {
+                if ($planning->getStatut() == 'Terminé' && !$planning->isAllDay()) {
+                    $qte = $planning->getLc()->getQteRestante();
+                    $planning->getLc()->setQteRestante($qte - 0.5);
+                    $em->persist($planning->getLc());
+                }
                 $planning->setAllDay(true);
                 if ($feuille) {
                     $feuille->setHeureDebutInterventionMatin((new \DateTime())->setTime(8, 30));
@@ -731,6 +740,11 @@ class PlanningController extends Controller
                     $feuille->setHeureFinInterventionAM((new \DateTime())->setTime(18, 00));
                 }
             } elseif (in_array('Matin', $temps) && !in_array('Après-midi', $temps)) {
+                if ($planning->getStatut() == 'Terminé' && $planning->isAllDay()) {
+                    $qte = $planning->getLc()->getQteRestante();
+                    $planning->getLc()->setQteRestante($qte + 0.5);
+                    $em->persist($planning->getLc());
+                }
                 $planning->setAllDay(false);
                 $planning->setStart($editForm->get('start')->getData());
                 $planning->getStart()->setTime(8, 30);
@@ -743,6 +757,11 @@ class PlanningController extends Controller
                     $feuille->setHeureFinInterventionAM(null);
                 }
             } elseif (!in_array('Matin', $temps) && in_array('Après-midi', $temps)) {
+                if ($planning->getStatut() == 'Terminé' && $planning->isAllDay()) {
+                    $qte = $planning->getLc()->getQteRestante();
+                    $planning->getLc()->setQteRestante($qte + 0.5);
+                    $em->persist($planning->getLc());
+                }
                 $planning->setAllDay(false);
                 $planning->setStart($editForm->get('start')->getData());
                 $planning->getStart()->setTime(14, 00);
@@ -852,9 +871,14 @@ class PlanningController extends Controller
             if ($planning->getStatut() != 'Terminé') {
                 if ($planning->getFeuille()) {
                     if ($planning->getFeuille()->getStatutValidation()) {
-                        $newQte = $planning->getLc()->getQteRestante() + $planning->jRestantes();
-                        $planning->getLc()->setQteRestante($newQte);
-                        $em->persist($planning->getLc());
+                        if ($allday) {
+                            $newQte = $planning->getLc()->getQteRestante() + 1;
+                            $planning->getLc()->setQteRestante($newQte);
+                            $em->persist($planning->getLc());
+                        } else {
+                            $newQte = $planning->getLc()->getQteRestante() + 0.5;
+                            $planning->getLc()->setQteRestante($newQte);
+                        }
                     }
                     $em->remove($planning->getFeuille());
                 }

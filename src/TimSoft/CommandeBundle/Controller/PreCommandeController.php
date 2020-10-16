@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Routing\Annotation\Route;
 use TimSoft\CommandeBundle\Entity\LigneCommande;
 use TimSoft\CommandeBundle\Entity\PreLigneCommande;
@@ -535,5 +536,79 @@ class PreCommandeController extends Controller
         } else {
             return new JsonResponse($commandes);
         }
+    }
+
+    /**
+     * @return \Symfony\Component\HttpFoundation\StreamedResponse
+     * @throws \PHPExcel_Exception
+     * @throws \Exception
+     * @Route("/export")
+     */
+    public function exportAction()
+    {
+        if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
+            throw $this->createAccessDeniedException();
+        }
+
+        $ligneCommandes = $this->getDoctrine()->getRepository('TimSoftCommandeBundle:PreLigneCommande')->findAll();
+
+        $phpExcelObject = $this->get('phpexcel')->createPHPExcelObject();
+        $date = new \DateTime();
+        $phpExcelObject->getProperties()->setCreator($this->getUser()->getPrenomUtilisateur() . ' ' . $this->getUser()->getNomUtilisateur())
+            ->setTitle('RAL ' . $date->format('F, Y'))
+            ->setSubject('Objet');
+
+        $sheet = $phpExcelObject->setActiveSheetIndex(0);
+
+        $sheet->setCellValue('A1', 'Marché');
+        $sheet->setCellValue('B1', 'Tiers');
+        $sheet->setCellValue('C1', 'Numéro');
+        $sheet->setCellValue('D1', 'Num. Ligne');
+        $sheet->setCellValue('E1', 'Date');
+        $sheet->setCellValue('F1', 'Type article');
+        $sheet->setCellValue('G1', 'Libellé Intervention');
+        $sheet->setCellValue('H1', 'Quantité');
+        $sheet->setCellValue('I1', 'Montant HT');
+        $sheet->setCellValue('J1', 'Qté restante');
+        $sheet->setCellValue('K1', 'Valeur Restante');
+
+        //  $sheet->setCellValue('E1', '');
+
+        $counter = 2;
+        foreach ($ligneCommandes as $ligneCommande) {
+            $sheet->setCellValue('A' . $counter, $ligneCommande->getBu());
+            $sheet->setCellValue('B' . $counter, $ligneCommande->getCommande()->getClient()->getRaisonSociale());
+            $sheet->setCellValue('C' . $counter, $ligneCommande->getCommande()->getNCommande());
+            $sheet->setCellValue('D' . $counter, $ligneCommande->getNLigne());
+            $sheet->setCellValue('E' . $counter, $ligneCommande->getCommande()->getDatePiece());
+            $sheet->setCellValue('F' . $counter, $ligneCommande->getType());
+            $sheet->setCellValue('G' . $counter, $ligneCommande->getLibelle());
+            $sheet->setCellValue('H' . $counter, $ligneCommande->getQuantite());
+            $sheet->setCellValue('I' . $counter, $ligneCommande->getMontantHT());
+            $sheet->setCellValue('J' . $counter, $ligneCommande->getQteRestante());
+            $sheet->setCellValue('K' . $counter, '');
+//            $sheet->setCellValue('E' . $counter, $phoneNumber->getOffice());
+            $counter++;
+        }
+
+        $phpExcelObject->getActiveSheet()->setTitle('RAL');
+
+        // Set active sheet index to the first sheet, so Excel opens this as the first sheet
+        $phpExcelObject->setActiveSheetIndex(0);
+
+        // create the writer
+        $writer = $this->get('phpexcel')->createWriter($phpExcelObject, 'Excel5');
+        // create the response
+        $response = $this->get('phpexcel')->createStreamedResponse($writer);
+        // adding headers
+        $dispositionHeader = $response->headers->makeDisposition(
+            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+            'RAL.xls'
+        );
+        $response->headers->set('Content-Type', 'text/vnd.ms-excel; charset=utf-8');
+        $response->headers->set('Pragma', 'public');
+        $response->headers->set('Cache-Control', 'maxage=1');
+        $response->headers->set('Content-Disposition', $dispositionHeader);
+        return $response;
     }
 }

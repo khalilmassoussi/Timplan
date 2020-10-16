@@ -372,13 +372,18 @@ class DefaultController extends Controller
         return $this->redirectToRoute('listerCmd');
     }
 
+    /**
+     * @return \Symfony\Component\HttpFoundation\StreamedResponse
+     * @throws \PHPExcel_Exception
+     * @throws \Exception
+     */
     public function exportAction()
     {
         if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
             throw $this->createAccessDeniedException();
         }
 
-        $ligneCommandes = $this->getDoctrine()->getRepository('TimSoftCommandeBundle:LigneCommande')->findAll();
+        $ligneCommandes = $this->getDoctrine()->getRepository('TimSoftCommandeBundle:LigneCommande')->getLc();
         $phpExcelObject = $this->get('phpexcel')->createPHPExcelObject();
         $date = new \DateTime();
         $phpExcelObject->getProperties()->setCreator($this->getUser()->getPrenomUtilisateur() . ' ' . $this->getUser()->getNomUtilisateur())
