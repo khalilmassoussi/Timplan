@@ -195,11 +195,13 @@
                         <th class="cell1">
                             <center>BU</center>
                         </th>
-                        {% if not commande.archive %}
+
                             <th class="cell1">
+                                {% if not commande.archive %}
                                 <center>Action</center>
+                                {% endif %}
                             </th>
-                        {% endif %}
+
                     </tr>
                     </thead>
                     <tfoot>
@@ -257,8 +259,8 @@
                             <td class="cell1 text-center prix">
                                 <center>{{ lc.bu }}</center>
                             </td>
-                            {% if not commande.archive %}
-                                <td class="cell1 text-center action">
+                            <td class="cell1 text-center action">
+                                {% if not commande.archive %}
                                     <center>
                                         {% if AutorisationAcces('preCommandeModifierLigne' , Utilisateur) %}
                                             <a class="modifier" href="#" title="Modifier"><i
@@ -269,8 +271,8 @@
                                                         class="fas fa-trash fa-lg"></i></a>
                                         {% endif %}
                                     </center>
-                                </td>
-                            {% endif %}
+                                {% endif %}
+                            </td>
                         </tr>
                     {% endfor %}
                     </tbody>
@@ -480,6 +482,14 @@
         }
 
         $(document).ready(function () {
+
+            // $(".save").click(function (e) {
+            //     console.log($('#timsoft_commandebundle_tetecommande'));
+            //     // if (!$('#timsoft_commandebundle_tetecommande').valid()) {
+            //     //     alert('cc');
+            //     //     e.preventDefault()
+            //     // }
+            // });
 
             $.fn.dataTable.moment('LL');
             var table1 = $('#TableClient1').DataTable({

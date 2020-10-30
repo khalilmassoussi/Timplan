@@ -5,6 +5,9 @@ namespace TimSoft\CommandeBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * TeteCommande
@@ -126,7 +129,6 @@ class TeteCommande implements \JsonSerializable
     {
         $this->affaire = $affaire;
     }
-
 
 
     /**
@@ -273,6 +275,7 @@ class TeteCommande implements \JsonSerializable
             'Date' => $this->datePiece->format('c'),
             'RAP' => $this->totalRAP(),
             'Bus' => $this->Bus(),
+            'Lc' => $this->lignCommandes->toArray()
         );
         if ($this->buManager) {
             $return['BusinessManager'] = $this->buManager->__toString();

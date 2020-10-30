@@ -281,7 +281,7 @@ class PreCommandeController extends Controller
 
         $oui = [];
         $non = [];
-        $commandes = $this->getDoctrine()->getRepository('TimSoftCommandeBundle:PreTeteCommande')->findAll();
+        $commandes = $this->getDoctrine()->getRepository('TimSoftCommandeBundle:PreTeteCommande')->findBy(array(), array("datePiece" => 'DESC'));
 //        var_dump(json_encode($commandes));
         foreach ($commandes as $commande) {
             $exist = false;
@@ -431,58 +431,70 @@ class PreCommandeController extends Controller
      */
     public function genererAction(Request $request)
     {
-        $teteCommande = $this->getDoctrine()->getRepository('TimSoftCommandeBundle:PreTeteCommande')->find($request->get('id'));
-        $old = clone $teteCommande;
-        $form = $this->createForm(TeteCommandeType::class, $teteCommande);
+        $PreteteCommande = $this->getDoctrine()->getRepository('TimSoftCommandeBundle:PreTeteCommande')->find($request->get('id'));
+        $newT = new TeteCommande();
+        $form = $this->createForm(TeteCommandeType::class, $newT);
+        $form->get('nCommande')->setData($PreteteCommande->getNCommande());
+        $form->get('client')->setData($PreteteCommande->getClient());
+        $form->get('buManager')->setData($PreteteCommande->getBuManager());
+        $form->get('datePiece')->setData($PreteteCommande->getDatePiece());
         $form->handleRequest($request);
         $em = $this->getDoctrine()->getManager();
         if ($form->isSubmitted() && $form->isValid()) {
-            $newT = new TeteCommande();
-            $new = $form->getData();
-            $newT->convert($new);
-            foreach ($new->getLignCommandes() as $lignCommande) {
+            $PreteteCommande->setCommande($newT);
+            $PreteteCommande->setArchive(true);
+            $newT->setAffaire($PreteteCommande->getAffaire());
+            $em->persist($newT);
+//
+            foreach ($PreteteCommande->getLignCommandes() as $lignCommande) {
                 $newL = new LigneCommande();
-                $newL->convert($lignCommande);
                 $newL->setCommande($newT);
-                $em->persist($newL);
+                $newL->setQuantite($lignCommande->getQuantite());
+                $newL->setNLigne($lignCommande->getNLigne());
+                $newL->setQteRestante($lignCommande->getQteRestante());
+                $newL->setLibelle($lignCommande->getLibelle());
+                $newL->setMontantHT($lignCommande->getMontantHT());
+                $newL->setBu($lignCommande->getBu());
+                $newL->setType($lignCommande->getType());
                 if ($lignCommande->getPlannings()) {
                     foreach ($lignCommande->getPlannings() as $planning) {
                         $planning->setLc($newL);
                         $feuille = $planning->getFeuille();
                         if ($feuille) {
-                            $feuille->setNumeroCommande($new->getNCommande());
+                            $feuille->setNumeroCommande($newT->getNCommande());
                             $em->persist($feuille);
                         }
                         $em->persist($planning);
                     }
                 }
                 $newT->addLigne($newL);
-                $em->detach($lignCommande);
-
             }
-            $em->detach($teteCommande);
-            $em->persist($newT);
             $em->flush();
-            $this->forward('TimSoftCommandeBundle:PreCommande:archive', ['id' => $teteCommande->getId(), 'old' => $newT->getId()]);
+            print_r(json_encode($newT));
+            die();
+
+//            $this->forward('TimSoftCommandeBundle:PreCommande:archive', ['new' => $newT, 'old' => $old]);
             return $this->redirectToRoute('AfficherCmd', ['id' => $newT->getId()]);
         }
         return $this->render('@TimSoftCommande/PreCommande/modelGenerer.html.twig', [
             'form' => $form->createView(),
-            'commande' => $teteCommande
+            'commande' => $PreteteCommande
         ]);
     }
 
     /**
-     * @param PreTeteCommande $preTeteCommande
-     * @param TeteCommande $teteCommande
-     * @Route("/archive/{id}", name="preCommandeArhiver")
+     * @param $new
+     * @param $old
+     * @Route("/archive/{id}/{old}", name="preCommandeArhiver")
      */
-    public function archiveAction(PreTeteCommande $preTeteCommande, TeteCommande $teteCommande)
+    public function archiveAction($new, $old)
     {
         $em = $this->getDoctrine()->getManager();
-        $preTeteCommande->setCommande($teteCommande);
-        $preTeteCommande->setArchive(true);
-        $em->persist($preTeteCommande);
+        var_dump($new->getId() . ' ' . $old->getId());
+//        die();
+        $old->setCommande($new);
+        $old->setArchive(true);
+        $em->persist($old);
         $em->flush();
 
     }
@@ -610,5 +622,51 @@ class PreCommandeController extends Controller
         $response->headers->set('Cache-Control', 'maxage=1');
         $response->headers->set('Content-Disposition', $dispositionHeader);
         return $response;
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @Route("/exists")
+     */
+    public function existsAction(Request $request)
+    {
+        // This is optional.
+        // Only include it if the function is reserved for ajax calls only.
+        if (!$request->isXmlHttpRequest()) {
+            return new JsonResponse(array(
+                'status' => 'Error',
+                'message' => 'Error'),
+                400);
+        }
+
+        if (isset($request)) {
+            // Get data from ajax
+            $nCommande = $request->get('nCommande');
+
+            // Check if a Folder with the given name already exists
+            $commande = $this->getDoctrine()->getRepository('TimSoftCommandeBundle:TeteCommande')->findByNumero($nCommande);
+
+
+            if ($commande == null) {
+                // Folder does not exist
+                return new JsonResponse(array(
+                    'status' => 'OK',
+                    'message' => 0),
+                    200);
+            } else {
+                // Folder exists
+                return new JsonResponse(array(
+                    'status' => 'OK',
+                    'message' => 1),
+                    200);
+            }
+        }
+
+        // If we reach this point, it means that something went wrong
+        return new JsonResponse(array(
+            'status' => 'Error',
+            'message' => 'Error'),
+            400);
     }
 }

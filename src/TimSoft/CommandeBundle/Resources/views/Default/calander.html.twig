@@ -306,6 +306,7 @@
                             var x = $('#' + event.draggedEl.id + '.cc').text();
                             var updatedString = x.replace("Jours Restants", "");
                             if (updatedString <= 0) {
+                                {% if AutorisationAcces('JourneSupplementaire' , app.user) %}
                                 $("#confirm-modif").modal();
                                 $(".btn-ok").one("click", function () {
                                     $.ajax({
@@ -323,6 +324,9 @@
                                         },
                                     });
                                 });
+                                {% else %}
+                                alert("RAL épuisé, Vous ne pouvez pas faire cette action");
+                                {% endif %}
                             } else {
                                 var xhr = $.ajax({
                                     url: '{{ path('appBundle_add') }}',
@@ -338,23 +342,7 @@
                                         alert("Vous ne pouvez pas faire cette action");
                                     },
                                 });
-                                {#$.ajax({#}
-                                {#url: '{{ path('newPlanning') }}',#}
-                                {#method: 'post',#}
-                                {#data: {#}
-                                {#'title': event.draggedEl.innerText.toString(),#}
-                                {#'start': event.dateStr,#}
-                                {#'end': event.dateStr,#}
-                                {#'lc': event.draggedEl.id,#}
-                                {#'utilisateur': '{{ cc.id }}'#}
-                                {#},#}
-                                {#// dataType: 'json',#}
-                                {#success: function (data) {#}
-                                {#$('#renderEdit').html(data);#}
-                                {#console.log(data);#}
-                                {#$('#newPlanning').modal();#}
-                                {#},#}
-                                {#});#}
+
                             }
                         },
                     });

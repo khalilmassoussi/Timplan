@@ -31,9 +31,8 @@ class TeteCommandeRepository extends \Doctrine\ORM\EntityRepository
     }
 
     /**
-     * @param $Mois
-     * @param $Annee
      * @return int
+     * @throws \Doctrine\ORM\NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function chiffreBu()
@@ -67,10 +66,25 @@ class TeteCommandeRepository extends \Doctrine\ORM\EntityRepository
             ->getResult();
     }
 
+
     public function findAll()
     {
         return $this->createQueryBuilder('c')
             ->where('c NOT INSTANCE OF TimSoft\CommandeBundle\Entity\PreTeteCommande')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @param $id
+     * @return mixed
+     */
+    public function findByNumero($id)
+    {
+        return $this->createQueryBuilder('c')
+            ->where('c NOT INSTANCE OF TimSoft\CommandeBundle\Entity\PreTeteCommande')
+            ->andWhere('c.nCommande = :id')
+            ->setParameter('id', $id)
             ->getQuery()
             ->getResult();
     }

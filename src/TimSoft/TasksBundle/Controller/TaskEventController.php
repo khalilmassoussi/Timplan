@@ -22,12 +22,14 @@ class TaskEventController extends Controller
      *
      * @Route("/", name="taskevent_index")
      * @Method("GET")
+     * @param Request $request
+     * @return JsonResponse
      */
     public function indexAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $taskEvents = $em->getRepository('TimSoftTasksBundle:TaskEvent')->betweenDates($request->get('start'), $request->get('end'));
+        $taskEvents = $em->getRepository('TimSoftTasksBundle:TaskEvent')->betweenDates($request->get('start'), $request->get('end'), $this->getUser());
 
         return new JsonResponse($taskEvents);
     }
@@ -196,7 +198,7 @@ class TaskEventController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $taskEvents = $em->getRepository('TimSoftTasksBundle:TaskEvent')->findByClient($id, $request->get('start'), $request->get('end'));
+        $taskEvents = $em->getRepository('TimSoftTasksBundle:TaskEvent')->findByClient($id, $request->get('start'), $request->get('end'), $this->getUser());
 
         return new JsonResponse($taskEvents);
     }

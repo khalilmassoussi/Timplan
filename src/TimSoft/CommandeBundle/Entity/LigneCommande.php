@@ -362,7 +362,7 @@ class LigneCommande implements \JsonSerializable
             'quantite' => $this->quantite,
             'montant' => $this->montantHT,
             'qrestante' => $this->QteRestante,
-//            'buManager' => $this->buManager
+            'bu' => $this->bu,
         );
 
 

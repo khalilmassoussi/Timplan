@@ -7,26 +7,86 @@
             </div>
             <div class="modal-body" id="modifierCModalBody">
                 {{ form_start(form, { 'method' : 'post', 'action': path('preCommandeGenerer', { 'id' : commande.id }) }) }}
-                {{ form_row(form.nCommande, {'attr': {'class': 'form-control'}}) }}
+                <div class="form-group">
+                    {{ form_label(form.nCommande) }}
+                    <div id="folder_exists_error" style="display: none;">
+                        <h5><span class="badge badge-danger">Le numéro de cette commande existe déjà</span></h5>
+                    </div>
+                    {{ form_widget(form.nCommande, {'attr': {'class': 'form-control', 'autocomplete' : 'off'}}) }}
+
+                </div>
+
                 {{ form_row(form.client, {'attr': {'class': 'form-control'}}) }}
                 {{ form_row(form.datePiece, {'attr': {'class': 'form-control js-datepicker'}}) }}
                 {{ form_row(form.buManager, {'attr': {'class': 'form-control'}}) }}
 
             </div>
             <div class="modal-footer">
-                <button type="submit" class="btn btn-primary">Sauvegarder</button>
+                <button type="submit" class="btn btn-primary save">Sauvegarder</button>
             </div>
         </div>
     </div>
     {{ form_end(form) }}
 </div>
 <script>
-    // jQuery(document).ready(function () {
-    //     $('#timsoft_commandebundle_tetecommande_datePiece').datepicker({
-    //             format: 'yyyy-mm-dd'
-    //         }
-    //     );
-    // });
+    var inUse = false;
+
+    function checkExists() {
+        // Get the input value
+        var nCommande = $("#timsoft_commandebundle_tetecommande_nCommande").val();
+
+        // Send an ajax request with the user input data
+        $.ajax({
+            type: "POST",
+            url: "{{ path('timsoft_commande_precommande_exists') }}",
+            data: {nCommande: nCommande}
+        })
+            .done(function (data) {
+                if (typeof data.status != "undefined" && data.status != "undefined" && data.status == "OK") {
+                    if (typeof data.message != "undefined" && data.message != "undefined") {
+                        if (parseInt(data.message) == 1) {
+                            // Folder name already exists
+                            // => raise flag
+                            inUse = true;
+                            // => display error message
+                            $("#folder_exists_error").show();
+                            $('.save').attr('disabled', 'disabled');
+                            return;
+                        }
+                    }
+                }
+
+            });
+
+        // We suppose all went well.
+        // If not, the Ajax call will update the flag and display the error message
+        inUse = false;
+        $('.save').removeAttr('disabled');
+
+        $("#folder_exists_error").hide();
+    }
+
+    $(document).ready(function () {
+
+        // Each time we modify the folder name, do an ajax check
+        $('#timsoft_commandebundle_tetecommande_nCommande').on('input', function (e) {
+            checkExists()
+        });
+
+        // On form submission, check data
+        $("form[name=timsoft_commandebundle_tetecommande]").on('submit', function (e) {
+            // e.preventDefault();
+            // Hide errors
+            $("#folder_exists_error").hide();
+
+            if (inUse === true) {
+                $("#folder_exists_error").show();
+                return false;
+            }
+
+        });
+    });
+
 
 
 </script>

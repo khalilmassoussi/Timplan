@@ -87,7 +87,7 @@ class PlanningType extends AbstractType
                 'disabled' => true])
             ->add('lieu', ChoiceType::class, [
                 'choices' => [
-                    'Sur site' => 'Sur site',
+                    'Sur site' => 'Sur Site',
                     'A distance' => 'à distance',
                 ],
                 'expanded' => true,

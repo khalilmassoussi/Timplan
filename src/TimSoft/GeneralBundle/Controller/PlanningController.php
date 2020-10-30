@@ -21,7 +21,7 @@ class PlanningController extends Controller
      */
     public function listAction($user, Request $request)
     {
-        $plannings = $this->getDoctrine()->getRepository('TimSoftGeneralBundle:Planning')->findByUser($user, $request->get('start'), $request->get('end'));
+        $plannings = $this->getDoctrine()->getRepository('TimSoftGeneralBundle:Planning')->findByUser($user, $request->get('start'), $request->get('end'), $this->getUser());
         return new JsonResponse($plannings);
     }
 
@@ -537,7 +537,7 @@ class PlanningController extends Controller
 
     public function allPlansAction(Request $request)
     {
-        $plannings = $this->getDoctrine()->getRepository('TimSoftGeneralBundle:Planning')->betweenDates($request->get('start'), $request->get('end'));
+        $plannings = $this->getDoctrine()->getRepository('TimSoftGeneralBundle:Planning')->betweenDates($request->get('start'), $request->get('end'), $this->getUser());
         return new JsonResponse($plannings);
     }
 
@@ -683,12 +683,12 @@ class PlanningController extends Controller
             throw $this->createAccessDeniedException();
         }
         $clients = $this->getDoctrine()->getRepository('TimSoftGeneralBundle:Client')->findAll();
-        return $this->render('@TimSoftGeneral/Planning/PlanningByUser.html.twig', array('clients' => $clients));
+        return $this->render('TimSoftGeneralBundle:Planning:PlanningParClient.html.twig', array('clients' => $clients));
     }
 
     public function jsonPlanningByClientAction($id, Request $request)
     {
-        $plannings = $this->getDoctrine()->getRepository('TimSoftGeneralBundle:Planning')->getByClient($id, $request->get('start'), $request->get('end'));
+        $plannings = $this->getDoctrine()->getRepository('TimSoftGeneralBundle:Planning')->getByClient($id, $request->get('start'), $request->get('end'), $this->getUser());
         return new JsonResponse($plannings);
     }
 

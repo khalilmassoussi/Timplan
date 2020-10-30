@@ -10,16 +10,29 @@ namespace TimSoft\TasksBundle\Repository;
  */
 class TaskEventRepository extends \Doctrine\ORM\EntityRepository
 {
-    public function betweenDates($start, $end)
+    public function betweenDates($start, $end, $user)
     {
-        return $this->createQueryBuilder('p')
-            ->select('p')
-            ->where('p.start BETWEEN :start AND :end')
-            ->orWhere('p.end BETWEEN :start AND :end')
-            ->setParameter('start', $start)
-            ->setParameter('end', $end)
-            ->getQuery()
-            ->getResult();
+        if ($user->getEmail() != 'f.dridi@timsoft.com.tn') {
+            return $this->createQueryBuilder('p')
+                ->select('p')
+                ->where('p.start BETWEEN :start AND :end')
+                ->orWhere('p.end BETWEEN :start AND :end')
+                ->andWhere('DATE_DIFF(CURRENT_TIMESTAMP(), p.end) <= 2 OR p.statut = :done')
+                ->setParameter('done', "Done")
+                ->setParameter('start', $start)
+                ->setParameter('end', $end)
+                ->getQuery()
+                ->getResult();
+        } else {
+            return $this->createQueryBuilder('p')
+                ->select('p')
+                ->where('p.start BETWEEN :start AND :end')
+                ->orWhere('p.end BETWEEN :start AND :end')
+                ->setParameter('start', $start)
+                ->setParameter('end', $end)
+                ->getQuery()
+                ->getResult();
+        }
     }
 
     public function findByUser($user, $start, $end)
@@ -36,17 +49,32 @@ class TaskEventRepository extends \Doctrine\ORM\EntityRepository
             ->getResult();
     }
 
-    public function findByClient($client, $start, $end)
+    public function findByClient($client, $start, $end, $user)
     {
-        return $this->createQueryBuilder('p')
-            ->select('p')
-            ->where('p.start BETWEEN :start AND :end')
-            ->orWhere('p.end BETWEEN :start AND :end')
-            ->andWhere('p.client = :client')
-            ->setParameter('client', $client)
-            ->setParameter('start', $start)
-            ->setParameter('end', $end)
-            ->getQuery()
-            ->getResult();
+        if ($user->getEmail() != 'f.dridi@timsoft.com.tn') {
+            return $this->createQueryBuilder('p')
+                ->select('p')
+                ->where('p.start BETWEEN :start AND :end')
+                ->orWhere('p.end BETWEEN :start AND :end')
+                ->andWhere('p.client = :client')
+                ->andWhere('DATE_DIFF(CURRENT_TIMESTAMP(), p.end) <= 2 OR p.statut = :done')
+                ->setParameter('done', "Done")
+                ->setParameter('client', $client)
+                ->setParameter('start', $start)
+                ->setParameter('end', $end)
+                ->getQuery()
+                ->getResult();
+        } else {
+            return $this->createQueryBuilder('p')
+                ->select('p')
+                ->where('p.start BETWEEN :start AND :end')
+                ->orWhere('p.end BETWEEN :start AND :end')
+                ->andWhere('p.client = :client')
+                ->setParameter('client', $client)
+                ->setParameter('start', $start)
+                ->setParameter('end', $end)
+                ->getQuery()
+                ->getResult();
+        }
     }
 }
