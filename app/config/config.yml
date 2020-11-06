@@ -137,7 +137,11 @@ fos_user:
     registration:
         confirmation: 
             enabled: true
-       
+        form:
+            type: TimSoft\GeneralBundle\Form\RegistrationType
+    profile:
+        form:
+            type: TimSoft\GeneralBundle\Form\ProfileFormType
 # Configuration vich_uploader pour la gestion des fichiers
 vich_uploader:
     db_driver: orm
