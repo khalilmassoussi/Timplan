@@ -25,12 +25,49 @@
                                 <td>
                                     <div class="form-group">
                                         {% for key, allDayItem in form.allDay %}
-                                            <div class="form-check">
+                                            <div class="form-check form-check-inline">
                                                 {{ form_widget(allDayItem, {'attr': {'class': 'form-check-input'}}) }}
                                                 {{ form_label(allDayItem) }}
                                             </div>
                                         {% endfor %}
                                     </div>
+                                </td>
+                                <td>
+                                    <div class="form-group">
+                                        {% for key, allDayItem in form.periodique %}
+                                            <div class="form-check form-check-inline">
+                                                {{ form_widget(allDayItem, {'attr': {'class': 'form-check-input'}}) }}
+                                                {{ form_label(allDayItem) }}
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>{{ form_label(form.freq) }}</td>
+                                <td>
+                                    <div class="form-group">
+                                        {{ form_widget(form.freq) }}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-group row">
+                                        {{ form_label(form.intervale) }}
+                                        <div class="col-sm-9">
+                                            {{ form_widget(form.intervale) }}
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>{{ form_label(form.byweekday) }}</td>
+                                <td>
+                                    {% for key, allDayItem in form.byweekday %}
+                                        <div class="form-check form-check-inline">
+                                            {{ form_widget(allDayItem, {'attr': {'class': 'form-check-input'}}) }}
+                                            {{ form_label(allDayItem) }}
+                                        </div>
+                                    {% endfor %}
                                 </td>
                                 <td></td>
                             </tr>
@@ -179,6 +216,7 @@
     $(document).ready(function () {
         // you may need to change this code if you are not using Bootstrap Datepicker
         $.datetimepicker.setLocale('fr');
+
         $('form[name="new"] #timsoft_tasksbundle_taskevent_start').attr('autocomplete', 'off');
         $('form[name="new"] #timsoft_tasksbundle_taskevent_utilisateur').select2({
             placeholder: 'Assigner à'
@@ -194,7 +232,7 @@
                     onShow: function (ct) {
                         this.setOptions({
                             maxDate: $('#timsoft_tasksbundle_taskevent_end').val() ? $('#timsoft_tasksbundle_taskevent_end').val() : false,
-                            formatDate: 'd F Y H:i'
+                            formatDate: 'd F Y'
                         })
                     },
                     onChangeDateTime: function (dp, $input) {
@@ -215,7 +253,7 @@
                     onShow: function (ct) {
                         this.setOptions({
                             minDate: $('#timsoft_tasksbundle_taskevent_start').val() ? $('#timsoft_tasksbundle_taskevent_start').val() : false,
-                            formatDate: 'd F Y H:i'
+                            formatDate: 'd F Y'
                         })
                     },
                     onChangeDateTime: function (dp, $input) {
@@ -237,7 +275,7 @@
                     onShow: function (ct) {
                         this.setOptions({
                             maxDate: $('#timsoft_tasksbundle_taskevent_end').val() ? $('#timsoft_tasksbundle_taskevent_end').val() : false
-                            , formatDate: 'd F Y H:i'
+                            , formatDate: 'd F Y'
                         })
                     },
                     onChangeDateTime: function (dp, $input) {
@@ -259,7 +297,7 @@
                     onShow: function (ct) {
                         this.setOptions({
                             minDate: $('#timsoft_tasksbundle_taskevent_start').val() ? $('#timsoft_tasksbundle_taskevent_start').val() : false
-                            , formatDate: 'd F Y H:i'
+                            , formatDate: 'd F Y'
                         })
                     },
                     onChangeDateTime: function (dp, $input) {
@@ -300,6 +338,15 @@
             $(this).next().css('background-color', perc2color(this.value));
         });
 
+        hidePeriod();
+
+        $('form[name="new"] input[name="timsoft_tasksbundle_taskevent[periodique]"]').change(function () {
+            if ($(this).val() == 0) {
+                hidePeriod();
+            } else {
+                showPeriod();
+            }
+        });
 
         /*-------------DataTable----------*/
         $('.table').dataTable({
@@ -350,6 +397,30 @@
         var h = r * 0x10000 + g * 0x100 + b * 0x1;
         return '#' + ('000000' + h.toString(16)).slice(-6);
     }
+
+    function hidePeriod() {
+        $('form[name="new"] #timsoft_tasksbundle_taskevent_freq').hide();
+        $("form[name=\"new\"] label[for='timsoft_tasksbundle_taskevent_freq']").hide();
+        $('form[name="new"] #timsoft_tasksbundle_taskevent_intervale').hide();
+        $("form[name=\"new\"] label[for='timsoft_tasksbundle_taskevent_intervale']").hide();
+        $("form[name=\"new\"] input[name=\"timsoft_tasksbundle_taskevent[byweekday][]\"]").each(function (index) {
+            $(this).hide();
+            $(this).next('label').hide();
+        });
+        $("form[name=\"new\"] input[name=\"timsoft_tasksbundle_taskevent[byweekday][]\"]").parent().parent().parent().first().hide();
+    }
+
+    function showPeriod() {
+        $('form[name="new"] #timsoft_tasksbundle_taskevent_freq').show();
+        $("form[name=\"new\"] label[for='timsoft_tasksbundle_taskevent_freq']").show();
+        $('form[name="new"] #timsoft_tasksbundle_taskevent_intervale').show();
+        $("form[name=\"new\"] label[for='timsoft_tasksbundle_taskevent_intervale']").show();
+        $("form[name=\"new\"] input[name=\"timsoft_tasksbundle_taskevent[byweekday][]\"]").each(function (index) {
+            $(this).show();
+            $(this).next('label').show();
+        });
+        $("form[name=\"new\"] input[name=\"timsoft_tasksbundle_taskevent[byweekday][]\"]").parent().parent().parent().first().show();
+    }
 </script>
-{% form_theme form _self %}
+
 

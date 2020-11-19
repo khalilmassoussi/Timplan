@@ -62,6 +62,9 @@ class TaskEventController extends Controller
                     }
                 }
             }
+            if (!$taskEvent->getByweekday()) {
+                $taskEvent->setByweekday(null);
+            }
             $em->persist($taskEvent);
             $em->flush();
             return new Response(json_encode(array('status' => 'success', $taskEvent->getStart()->format('d-m-Y'), $date)));

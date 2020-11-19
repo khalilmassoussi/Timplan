@@ -6,6 +6,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -107,6 +108,7 @@ class TaskEventType extends AbstractType
                 'choices' => [
                     'Toute la journée' => true,
                     'Temps partiel' => false,
+//                    'Periodique' => 'Periodique',
                 ],
                 'expanded' => true,
                 'label' => 'Type',
@@ -116,7 +118,51 @@ class TaskEventType extends AbstractType
             ->add('motif', TextType::class, array(
                 'attr' => ['placeholder' => 'Motif de blocage'],
                 'required' => false,
-            ));
+            ))
+            ->add('periodique', ChoiceType::class, [
+                'choices' => [
+                    'Periodique' => true,
+                    'Non Periodique' => false,
+//                    'Periodique' => 'Periodique',
+                ],
+                'empty_data' => false,
+                'expanded' => true,
+                'label' => 'Periodique',
+                'block_name' => 'PeriodiqueForm',
+                'label_attr' => ['class' => 'checkbox-custom'],
+            ])
+            ->add('freq', ChoiceType::class, [
+                'choices' => [
+                    'Hebdomadaire' => 'weekly',
+                    'Mensuel' => 'monthly',
+                ],
+                'expanded' => false,
+                'label' => 'Périodicité',
+                'block_name' => 'PeriodiqueForm',
+                'attr' => ['class' => 'form-control']
+//                'label_attr' => ['class' => 'checkbox-custom'],
+            ])
+            ->add('intervale', IntegerType::class, [
+                'attr' => ['class' => 'form-control'],
+                'label_attr' => ['class' => 'col-sm-3 col-form-label'],
+            ])
+            ->add('byweekday', ChoiceType::class, [
+                'choices' => [
+                    'Lu' => 'mo',
+                    'Ma' => 'tu',
+                    'Me' => 'we',
+                    'Je' => 'th',
+                    'Ve' => 'fr',
+                    'Sa' => 'sa',
+                    'Di' => 'su',
+                ],
+                'expanded' => true,
+                'multiple' => true,
+                'label' => 'Jours de la semaine',
+                'block_name' => 'PeriodiqueForm',
+                'attr' => ['class' => 'form-control']
+//                'label_attr' => ['class' => 'checkbox-custom'],
+            ]);
         $formModifier = function (FormInterface $form, Activite $activite = null) {
             $tasks = null === $activite ? [] : $activite->getTasks();
 

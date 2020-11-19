@@ -85,7 +85,7 @@
                     locale: initialLocaleCode,
                     firstDay: 1,
                     timeZone: 'local',
-                    plugins: ['interaction', 'dayGrid', 'timeGrid', 'dayGrid', 'bootstrap'],
+                    plugins: ['interaction', 'dayGrid', 'timeGrid', 'dayGrid', 'bootstrap', 'rrule'],
                     header: {
                         left: 'prev,next today',
                         center: 'title',
@@ -96,8 +96,26 @@
                     eventLimit: true, // when too many events in a day, show the popover
                     eventSources: [
                         '{{ path('list', {'user' : app.user.id }) }}',
-                        '{{ path('taskevent_by_user',{'id': app.user.id}) }}'
+                        '{{ path('taskevent_by_user',{'id': app.user.id}) }}',
+                        {
+                            events: [ // put the array in the `events` property
+                                {
+                                    title: 'TEST #2 my recurring event',
+                                    rrule: {
+                                        freq: 'monthly',
+                                        interval: 1,
+                                        // byweekday: [  'fr' ],
+                                        dtstart: '2019-11-11T00:00:00',
+                                        until: '2029-06-01'
+                                    },
+                                    allDay: true
+                                }
+                            ],
+                            color: 'black',     // an option!
+                            textColor: 'yellow' // an option!
+                        }
                     ],
+
                     themeSystem: 'themeSystem',
                     minTime: '08:30:00',
                     maxTime: '18:30:00',

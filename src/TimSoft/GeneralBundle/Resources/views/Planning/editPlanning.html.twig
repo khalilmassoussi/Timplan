@@ -272,6 +272,11 @@
                 });
                 $('#editPlanning').modal('hide');
             }
+        }).fail(function (response) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Le RAL est épuisé vous pouvez cochez une seule demi-journée !',
+            });
         });
     });
 

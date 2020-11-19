@@ -40,9 +40,10 @@ class TaskEventRepository extends \Doctrine\ORM\EntityRepository
         return $this->createQueryBuilder('p')
             ->select('p')
             ->where('p.start BETWEEN :start AND :end')
-            ->orWhere('p.end BETWEEN :start AND :end')
+            ->orWhere('p.end BETWEEN :start AND :end OR p.periodique = :periodique')
             ->andWhere('p.utilisateur = :user')
             ->setParameter('user', $user)
+            ->setParameter('periodique', true)
             ->setParameter('start', $start)
             ->setParameter('end', $end)
             ->getQuery()
@@ -76,5 +77,18 @@ class TaskEventRepository extends \Doctrine\ORM\EntityRepository
                 ->getQuery()
                 ->getResult();
         }
+    }
+
+    public function findByUtilisateur($user)
+    {
+        return $this->createQueryBuilder('p')
+            ->select('p')
+//            ->where('p.start BETWEEN :start AND :end')
+            ->andWhere('p.periodique = :periodique')
+            ->andWhere('p.utilisateur = :user')
+            ->setParameter('user', $user)
+            ->setParameter('periodique', false)
+            ->getQuery()
+            ->getResult();
     }
 }

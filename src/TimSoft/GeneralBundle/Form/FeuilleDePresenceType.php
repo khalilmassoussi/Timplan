@@ -44,6 +44,7 @@ class FeuilleDePresenceType extends AbstractType
 //                    'hour' => 'Heure', 'minute' => 'Minute',
 //                ),
                 'widget' => 'single_text',
+                'html5' => false,
                 'attr' => array('class' => 'form-control '),
             ))
             ->add('heureFinInterventionMatin', TimeType::class, array(
@@ -53,6 +54,7 @@ class FeuilleDePresenceType extends AbstractType
 //                    'hour' => 'Heure', 'minute' => 'Minute',
 //                ),
                 'widget' => 'single_text',
+                'html5' => false,
                 'attr' => array('class' => 'form-control '),
 
             ))
@@ -63,6 +65,7 @@ class FeuilleDePresenceType extends AbstractType
 //                    'hour' => 'Heure', 'minute' => 'Minute',
 //                ),
                 'widget' => 'single_text',
+                'html5' => false,
                 'attr' => array('class' => 'form-control '),
             ))
             ->add('heureFinInterventionAM', TimeType::class, array(
@@ -70,6 +73,7 @@ class FeuilleDePresenceType extends AbstractType
 //                "hours" => ["15", "16", "17", "18", "19", "20"],
 //                'placeholder' => array('hour' => 'Heure', 'minute' => 'Minute'),
                 'widget' => 'single_text',
+                'html5' => false,
                 'attr' => array('class' => 'form-control '),
             ))
             ->add('statutValidation', CheckboxType::class, array(

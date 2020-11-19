@@ -54,12 +54,12 @@ class TaskEvent implements \JsonSerializable
     protected $task;
     /**
      * @var
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", nullable=true)
      */
     protected $start;
     /**
      * @var
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", nullable=true)
      */
     protected $end;
     /**
@@ -89,6 +89,28 @@ class TaskEvent implements \JsonSerializable
      * @ORM\ManyToOne(targetEntity="TimSoft\TasksBundle\Entity\Activite")
      */
     protected $activite;
+
+    /**
+     * @var
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $freq;
+
+
+    /**
+     * @ORM\Column(type="array", nullable=true, options={"default" : null})
+     */
+    private $byweekday;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $intervale;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $periodique;
 
     /**
      * TaskEvent constructor.
@@ -318,50 +340,196 @@ class TaskEvent implements \JsonSerializable
         $this->allDay = $allDay;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getFreq()
+    {
+        return $this->freq;
+    }
+
+    /**
+     * @param mixed $freq
+     */
+    public function setFreq($freq): void
+    {
+        $this->freq = $freq;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDtstart()
+    {
+        return $this->dtstart;
+    }
+
+    /**
+     * @param mixed $dtstart
+     */
+    public function setDtstart($dtstart): void
+    {
+        $this->dtstart = $dtstart;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUntil()
+    {
+        return $this->until;
+    }
+
+    /**
+     * @param mixed $until
+     */
+    public function setUntil($until): void
+    {
+        $this->until = $until;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getByweekday()
+    {
+        return $this->byweekday;
+    }
+
+    /**
+     * @param mixed $byweekday
+     */
+    public function setByweekday($byweekday): void
+    {
+        $this->byweekday = $byweekday;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIntervale()
+    {
+        return $this->intervale;
+    }
+
+    /**
+     * @param mixed $intervale
+     */
+    public function setIntervale($intervale): void
+    {
+        $this->intervale = $intervale;
+    }
+
+
+    /**
+     * @return mixed
+     */
+    public function getPeriodique()
+    {
+        return $this->periodique;
+    }
+
+    /**
+     * @param mixed $periodique
+     */
+    public function setPeriodique($periodique): void
+    {
+        $this->periodique = $periodique;
+    }
+
+
     public function jsonSerialize()
     {
         $class = new \ReflectionClass($this);
-//        if ($this->statut == 'To DO') {
-//            $this->eventTextColor = '#FFFFFF';
-//        } elseif ($this->statut == 'En attente') {
-//            $this->eventColor = '#FFA500';
-//            $this->eventTextColor = '#FFFFFF';
-//        } elseif ($this->statut == 'In Progress') {
-//            $this->eventColor = '#FFF380';
-//            $this->eventTextColor = '#000000';
-//        } elseif ($this->statut == 'Done') {
-//            $this->eventColor = '#008000';
-//            $this->eventTextColor = '#FFFFFF';
-//        } elseif ($this->statut == 'Bloqué') {
-//            $this->eventColor = '#FF0000';
-//            $this->eventTextColor = '#FFFFFF';
-//        }
         $this->eventColor = '#81B5D4';
         $this->eventTextColor = '#FFFFFF';
-        return array(
-            'id' => $this->id,
+        if ($this->periodique == true) {
+            $array = array(
+                'id' => $this->id,
+                'title' => $this->client->getRaisonSociale(),
+                'allDay' => $this->allDay,
+                'Client' => array('raisonSociale' => $this->client->getRaisonSociale(),
+                    'id' => $this->client->getId()
+                ),
+                'backgroundColor' => $this->eventColor,
+                'Statut' => $this->statut,
+                'Intervenant' => $this->utilisateur->getPrenomUtilisateur() . ' ' . $this->utilisateur->getNomUtilisateur(),
+                'idIntervenant' => $this->utilisateur->getId(),
+                'textColor' => $this->eventTextColor,
+                'Lieu' => $this->site,
+                'resourceIds' => [$this->utilisateur->getId()],
+                'rapport' => $this->rapport,
+                'type' => $class->getShortName(),
+                'activite' => $this->activite,
+                'task' => $this->task,
+                'libelle' => $this->task,
+                'etiquette' => $this->etiquette,
+                'rrule' => [
+                    'dtstart' => $this->start->format("Y-m-d H:i:s"),
+                    'until' => $this->end->format("Y-m-d"),
+                    'freq' => $this->freq,
+                    'interval' => $this->intervale,
+                    'byweekday' =>$this->byweekday
+                ]
+            );
+//            $array = array(
+////                'id' => $this->id,
+//
+//                'title' => $this->client->getRaisonSociale(),
+//                // 'title' => $this->title,
+//                'allDay' => $this->allDay,
+////                'start' => $this->start->format("Y-m-d H:i:s"),
+////                'end' => $this->end->format("Y-m-d H:i:s"),
+////                'Client' => array('raisonSociale' => $this->client->getRaisonSociale(),
+////                    'id' => $this->client->getId()
+////                ),
+////                'backgroundColor' => $this->eventColor,
+////                'Statut' => $this->statut,
+////                'Intervenant' => $this->utilisateur->getPrenomUtilisateur() . ' ' . $this->utilisateur->getNomUtilisateur(),
+////                'idIntervenant' => $this->utilisateur->getId(),
+////                'textColor' => $this->eventTextColor,
+////                'Lieu' => $this->site,
+////                'resourceIds' => [$this->utilisateur->getId()],
+////                'rapport' => $this->rapport,
+////                'type' => $class->getShortName(),
+////                'activite' => $this->activite,
+////                'task' => $this->task,
+////                'libelle' => $this->task,
+////                'etiquette' => $this->etiquette,
+//                'rrule' => [
+//                    'dtstart' => $this->start->format("Y-m-d H:i:s"),
+//                    'until' => $this->end->format("Y-m-d"),
+//                    'freq' => $this->freq,
+//                    'interval' => $this->intervale
+//                ]
+//            );
+        } else {
+            $array = array(
+                'id' => $this->id,
 
-            'title' => $this->client->getRaisonSociale(),
-            // 'title' => $this->title,
-            'allDay' => $this->allDay,
-            'start' => $this->start->format("Y-m-d H:i:s"),
-            'end' => $this->end->format("Y-m-d H:i:s"),
-            'Client' => array('raisonSociale' => $this->client->getRaisonSociale(),
-                'id' => $this->client->getId()
-            ),
-            'backgroundColor' => $this->eventColor,
-            'Statut' => $this->statut,
-            'Intervenant' => $this->utilisateur->getPrenomUtilisateur() . ' ' . $this->utilisateur->getNomUtilisateur(),
-            'idIntervenant' => $this->utilisateur->getId(),
-            'textColor' => $this->eventTextColor,
-            'Lieu' => $this->site,
-            'resourceIds' => [$this->utilisateur->getId()],
-            'rapport' => $this->rapport,
-            'type' => $class->getShortName(),
-            'activite' => $this->activite,
-            'task' => $this->task,
-            'libelle' => $this->task,
-            'etiquette' => $this->etiquette
-        );
+                'title' => $this->client->getRaisonSociale(),
+                // 'title' => $this->title,
+                'allDay' => $this->allDay,
+                'start' => $this->start->format("Y-m-d H:i:s"),
+                'end' => $this->end->format("Y-m-d H:i:s"),
+                'Client' => array('raisonSociale' => $this->client->getRaisonSociale(),
+                    'id' => $this->client->getId()
+                ),
+                'backgroundColor' => $this->eventColor,
+                'Statut' => $this->statut,
+                'Intervenant' => $this->utilisateur->getPrenomUtilisateur() . ' ' . $this->utilisateur->getNomUtilisateur(),
+                'idIntervenant' => $this->utilisateur->getId(),
+                'textColor' => $this->eventTextColor,
+                'Lieu' => $this->site,
+                'resourceIds' => [$this->utilisateur->getId()],
+                'rapport' => $this->rapport,
+                'type' => $class->getShortName(),
+                'activite' => $this->activite,
+                'task' => $this->task,
+                'libelle' => $this->task,
+                'etiquette' => $this->etiquette
+            );
+        }
+        return $array;
     }
 }

@@ -41,8 +41,10 @@
                                                    title="Importer des précommandes"></i>
                                             </a>
                                         {% endif %}
-                                        <a href="{{ path('timsoft_commande_precommande_export') }}" class="btn btn-secondary">
-                                            <i class="fas fa-file-download fa-2x" title="Exporter les précommandess"></i>
+                                        <a href="{{ path('timsoft_commande_precommande_export') }}"
+                                           class="btn btn-secondary">
+                                            <i class="fas fa-file-download fa-2x"
+                                               title="Exporter les précommandess"></i>
                                         </a>
                                     </div>
                                 </div>
@@ -127,8 +129,8 @@
                                 {% endif %}
                             </td>
                             <td hidden>
-                                {% if cmd.commande %}
-                                    {{ cmd.commande.nCommande }}
+                                {% if cmd.archive %}
+                                    {{ cmd.archive }}
                                 {% else %}
                                     null
                                 {% endif %}

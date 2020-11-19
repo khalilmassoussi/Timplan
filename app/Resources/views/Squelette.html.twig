@@ -4,7 +4,8 @@
     {% block css %}
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <link rel="shortcut icon" type="image/x-icon" href="{{ asset('Template/cropped-Favicon-timsoft-270x270.png') }}" size="16x16"/>
+        <link rel="shortcut icon" type="image/x-icon" href="{{ asset('Template/cropped-Favicon-timsoft-270x270.png') }}"
+              size="16x16"/>
         <title>{% block Titre %}Portail web de TimSoft - Accueil {% endblock %}</title>
         <!-- Tell the browser to be responsive to screen width -->
         <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
@@ -106,8 +107,8 @@
               href="{{ asset('Template2/plugins/pace-progress/themes/black/pace-theme-flat-top.css') }}">
         <!-- Theme style -->
         <link rel="stylesheet" href="{{ asset('Template2/dist/css/adminlte.min.css') }}">
-<style>
-</style>
+        <style>
+        </style>
     {% endblock %}
 
 
@@ -216,9 +217,9 @@
                     </div>
                 </li>
                 {#<li class="nav-item">#}
-                    {#<a class="nav-link" data-widget="control-sidebar" data-slide="true" href="#">#}
-                        {#<i class="fas fa-th-large"></i>#}
-                    {#</a>#}
+                {#<a class="nav-link" data-widget="control-sidebar" data-slide="true" href="#">#}
+                {#<i class="fas fa-th-large"></i>#}
+                {#</a>#}
                 {#</li>#}
                 <li class="nav-item"><a class="nav-link" title="Se déconnecter"
                                         href="{{ path('fos_user_security_logout') }}"><i
@@ -668,6 +669,8 @@
     {#    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/locale/fr.js"></script>#}
     <!-- jQuery UI 1.11.4 -->
     <script src="{{ asset('Template2/plugins/jquery-ui/jquery-ui.min.js') }}"></script>
+    <script src='https://cdn.jsdelivr.net/npm/rrule@2.6.4/dist/es5/rrule.min.js'></script>
+
     <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
     <script>
         $.widget.bridge('uibutton', $.ui.button)
@@ -708,6 +711,7 @@
     <!-- fullCalendar 2.2.5 -->
     <script src="{{ asset('Template2/plugins/moment/moment.min.js') }}"></script>
 
+
     <script src="https://unpkg.com/@fullcalendar/core@4.4.0/main.min.js"></script>
     <script src="https://unpkg.com/@fullcalendar/daygrid@4.4.0/main.min.js"></script>
     <script src="https://unpkg.com/@fullcalendar/timegrid@4.4.0/main.min.js"></script>
@@ -716,6 +720,7 @@
     <script src="https://unpkg.com/@fullcalendar/resource-common@4.4.0/main.min.js"></script>
     <script src="https://unpkg.com/@fullcalendar/resource-timeline@4.4.0/main.min.js"></script>
     <script src="{{ asset('Template2/plugins/fullcalendar-bootstrap/main.min.js') }}"></script>
+    <script src="https://unpkg.com/@fullcalendar/rrule@4.4.0/main.min.js"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/locale/fr.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>

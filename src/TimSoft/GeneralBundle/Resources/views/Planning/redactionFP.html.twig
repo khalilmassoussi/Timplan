@@ -129,33 +129,40 @@
             $('#myTable tbody').on('click', 'a', function (e) {
                 e.preventDefault();
                 var data = table.row($(this).parents('tr')).data();
-                $.ajax({
-                    type: "POST",
-                    url: '{{ path('RemplirFeuillePresence') }}',
-                    data: 'action=update&id=' + data[0],
-                    success: function (data) {
-                        Routing.setPort(null);
-                        // console.log();
-                        location.replace(Routing.generate('ModifierFeuillePresence', {
-                            id: data[0].id
-                        }, true));
-                        Swal.fire({
-                            position: 'center',
-                            icon: 'success',
-                            title: 'Feuille de présence ajoutée avec succès',
-                            showConfirmButton: false,
-                            timer: 2500
-                        });
-                    },
-                    error: function () {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: 'Quelque chose c\'est mal passé. Merci d\'essayer plus tard',
-                        })
-                    }
-
-                });
+                var today = new Date();
+                if (moment(today) < moment(data[1], 'DD/MM/YYYY')) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'La date sélectionnée est supérieure à la date d\'aujourd\'hui, impossible de valider la feuille de présence!',
+                    })
+                } else {
+                    $.ajax({
+                        type: "POST",
+                        url: '{{ path('RemplirFeuillePresence') }}',
+                        data: 'action=update&id=' + data[0],
+                        success: function (data) {
+                            Routing.setPort(null);
+                            location.replace(Routing.generate('ModifierFeuillePresence', {
+                                id: data[0].id
+                            }, true));
+                            Swal.fire({
+                                position: 'center',
+                                icon: 'success',
+                                title: 'Feuille de présence ajoutée avec succès',
+                                showConfirmButton: false,
+                                timer: 2500
+                            });
+                        },
+                        error: function () {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'Quelque chose c\'est mal passé. Merci d\'essayer plus tard',
+                            })
+                        }
+                    });
+                }
             });
         });
     </script>

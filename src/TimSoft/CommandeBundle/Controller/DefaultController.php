@@ -90,23 +90,18 @@ class DefaultController extends Controller
                             foreach ($cellIterator as $cell) {
                                 $fullcells[] = $cell->getValue();
                                 if ('F' == $cell->getColumn()) {
-//                                    print_r($cell->getValue());
                                     if (is_numeric($cell->getValue())) {
                                         $val = date('Y-m-d', \PHPExcel_Shared_Date::ExcelToPHP($cell->getValue()));
                                         $cells[] = $val;
-//                                        print_r('ccccccccccc');
                                     }
                                 }
                                 if ('D' == $cell->getColumn() || 'C' == $cell->getColumn() || 'M' == $cell->getColumn() || 'B' == $cell->getColumn() || 'N' == $cell->getColumn()) {
                                     $cells[] = $cell->getValue();
                                 }
-
                             }
                         }
-
                         $rows[] = $cells;
                         $fullrows[] = $fullcells;
-
                     }
                 }
                 $buManager = null;

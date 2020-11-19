@@ -32,6 +32,43 @@
                                         {% endfor %}
                                     </div>
                                 </td>
+                                <td>
+                                    <div class="form-group">
+                                        {% for key, allDayItem in edit_form.periodique %}
+                                            <div class="form-check form-check-inline">
+                                                {{ form_widget(allDayItem, {'attr': {'class': 'form-check-input'}}) }}
+                                                {{ form_label(allDayItem) }}
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>{{ form_label(edit_form.freq) }}</td>
+                                <td>
+                                    <div class="form-group">
+                                        {{ form_widget(edit_form.freq) }}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-group row">
+                                        {{ form_label(edit_form.intervale) }}
+                                        <div class="col-sm-9">
+                                            {{ form_widget(edit_form.intervale) }}
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>{{ form_label(edit_form.byweekday) }}</td>
+                                <td>
+                                    {% for key, allDayItem in edit_form.byweekday %}
+                                        <div class="form-check form-check-inline">
+                                            {{ form_widget(allDayItem, {'attr': {'class': 'form-check-input'}}) }}
+                                            {{ form_label(allDayItem) }}
+                                        </div>
+                                    {% endfor %}
+                                </td>
                                 <td></td>
                             </tr>
                             <tr>
@@ -470,6 +507,19 @@
             "searching": false
         });
 
+        /*------------Periodique-----------*/
+        $('form[name="edit"] input[name="timsoft_tasksbundle_taskevent[periodique]"]').change(function () {
+            if ($(this).val() == 0) {
+                hidePeriod();
+            } else {
+                showPeriod();
+            }
+        });
+        if ($('form[name="edit"] input[name="timsoft_tasksbundle_taskevent[periodique]"]:checked').val() == 1) {
+            showPeriod();
+        } else {
+            hidePeriod();
+        }
     });
     var label = $("label[for='" + 'timsoft_tasksbundle_taskevent_progression' + "']");
     label.append(': <div id="prog" style="display: inline-block"></div>');
@@ -505,5 +555,30 @@
         }
         var h = r * 0x10000 + g * 0x100 + b * 0x1;
         return '#' + ('000000' + h.toString(16)).slice(-6);
+    }
+
+
+    function hidePeriod() {
+        $('form[name="edit"] #timsoft_tasksbundle_taskevent_freq').hide();
+        $("form[name=\"edit\"] label[for='timsoft_tasksbundle_taskevent_freq']").hide();
+        $('form[name="edit"] #timsoft_tasksbundle_taskevent_intervale').hide();
+        $("form[name=\"edit\"] label[for='timsoft_tasksbundle_taskevent_intervale']").hide();
+        $("form[name=\"edit\"] input[name=\"timsoft_tasksbundle_taskevent[byweekday][]\"]").each(function (index) {
+            $(this).hide();
+            $(this).next('label').hide();
+        });
+        $("form[name=\"edit\"] input[name=\"timsoft_tasksbundle_taskevent[byweekday][]\"]").parent().parent().parent().first().hide();
+    }
+
+    function showPeriod() {
+        $('form[name="edit"] #timsoft_tasksbundle_taskevent_freq').show();
+        $("form[name=\"edit\"] label[for='timsoft_tasksbundle_taskevent_freq']").show();
+        $('form[name="edit"] #timsoft_tasksbundle_taskevent_intervale').show();
+        $("form[name=\"edit\"] label[for='timsoft_tasksbundle_taskevent_intervale']").show();
+        $("form[name=\"edit\"] input[name=\"timsoft_tasksbundle_taskevent[byweekday][]\"]").each(function (index) {
+            $(this).show();
+            $(this).next('label').show();
+        });
+        $("form[name=\"edit\"] input[name=\"timsoft_tasksbundle_taskevent[byweekday][]\"]").parent().parent().parent().first().show();
     }
 </script>

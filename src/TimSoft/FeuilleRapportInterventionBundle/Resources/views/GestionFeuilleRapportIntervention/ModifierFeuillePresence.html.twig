@@ -857,8 +857,32 @@
             } else if (heureDAM.val() == '' || heureFAM.val() == '') {
                 $('#am').hide();
             }
-        });
 
+            heureDMatin.datetimepicker({
+                datepicker: false,
+                step: 30,
+                format: 'H:i'
+
+            });
+            heureFMatin.datetimepicker({
+                datepicker: false,
+                step: 30,
+                format: 'H:i'
+
+            });
+            heureDAM.datetimepicker({
+                datepicker: false,
+                step: 30,
+                format: 'H:i'
+
+            });
+            heureFAM.datetimepicker({
+                datepicker: false,
+                step: 30,
+                format: 'H:i'
+
+            });
+        });
 
         function deleteParticipant(btn) {
             //alert('delete');
@@ -902,39 +926,6 @@
     <!-- bootstrap time picker -->
     <script src="{{ asset('Template/plugins/timepicker/bootstrap-timepicker.min.js') }}"></script>
 
-    <script>
-        $(function () {
-            //Timepicker
-            $('.timepickerDM').timepicker({
-                showInputs: false,
-
-            })
-        })
-    </script>
-    <script>
-        $(function () {
-            //Timepicker
-            $('.timepickerFM').timepicker({
-                showInputs: false,
-            })
-        })
-    </script>
-    <script>
-        $(function () {
-            //Timepicker
-            $('.timepickerDAM').timepicker({
-                showInputs: false,
-            })
-        })
-    </script>
-    <script>
-        $(function () {
-            //Timepicker
-            $('.timepickerFAM').timepicker({
-                showInputs: false,
-            })
-        })
-    </script>
     <script src="{{ asset('Template/chosen/chosen.jquery.js') }}" type="text/javascript"></script>
     <script src="{{ asset('Template/chosen/prism.js') }}" type="text/javascript" charset="utf-8"></script>
     <script src="{{ asset('Template/chosen/init.js') }}" type="text/javascript" charset="utf-8"></script>
