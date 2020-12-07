@@ -6,6 +6,23 @@
     .header {
         font-weight: bold;
     }
+    a.myErrorClass, ul.myErrorClass, input.myErrorClass, textarea.myErrorClass, select.myErrorClass, span.myErrorClass {
+        border-width: 1px !important;
+        border-style: solid !important;
+        border-color: #cc0000 !important;
+        /*border: #cc0000 !important;*/
+        background-color: #f3d8d8 !important;
+        background-image: url(http://goo.gl/GXVcmC) !important;
+        background-position: 50% 50% !important;
+        background-repeat: repeat !important;
+    }
+
+    label.myErrorClass, div.myErrorClass {
+        color: red;
+        font-size: 11px;
+        /*    font-style: italic;*/
+        display: block;
+    }
 </style>
 <div id="editTask" class="modal fade">
     <div class="modal-dialog  modal-xl">
@@ -16,120 +33,206 @@
                             aria-hidden="true">×</span> <span
                             class="sr-only">close</span></button>
             </div>{{ form_start(edit_form, { 'name':'edit','method' : 'post', 'action': path('taskevent_edit', {id: taskEvent.id}) }) }}
-            <div id="modalBody" class="modal-body ">
-                <div class="card bg-gradient-light card-outline card-primary">
+            <div id="modalBody" class="modal-body">
+                <div class="card bg-gradient-light card-outline card-primary card-outline-tabs">
+                    <div class="card-header p-0 border-bottom-0">
+                        <ul class="nav nav-tabs" id="custom-tabs-three-tab" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="custom-tabs-three-home-tab" data-toggle="pill"
+                                   href="#custom-tabs-three-home" role="tab" aria-controls="custom-tabs-three-home"
+                                   aria-selected="true">Task</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="custom-tabs-three-profile-tab" data-toggle="pill"
+                                   href="#periodicite" role="tab"
+                                   aria-controls="custom-tabs-three-profile" aria-selected="false">Périodicité</a>
+                            </li>
+                        </ul>
+                    </div>
                     <div class="card-body">
-                        <table class="table table-borderless" style="width: 100%;">
-                            <tr>
-                                <td>Type</td>
-                                <td>
-                                    <div class="form-group">
-                                        {% for key, allDayItem in edit_form.allDay %}
-                                            <div class="form-check">
-                                                {{ form_widget(allDayItem, {'attr': {'class': 'form-check-input'}}) }}
-                                                {{ form_label(allDayItem) }}
+                        <div class="tab-content tab-validate" id="custom-tabs-three-tabContent">
+                            <div class="tab-pane fade active show" id="custom-tabs-three-home" role="tabpanel"
+                                 aria-labelledby="custom-tabs-three-home-tab">
+                                <table class="table table-borderless detail" style="width: 100%;">
+                                    <tr>
+                                        <td>Type</td>
+                                        <td>
+                                            <div class="form-group" id="type">
+                                                {% for key, allDayItem in edit_form.allDay %}
+                                                    <div class="icheck-primary d-inline">
+                                                        {{ form_widget(allDayItem, {'attr': {'class': 'form-check-input'}}) }}
+                                                        {{ form_label(allDayItem) }}
+                                                    </div>
+                                                {% endfor %}
                                             </div>
-                                        {% endfor %}
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="form-group">
-                                        {% for key, allDayItem in edit_form.periodique %}
-                                            <div class="form-check form-check-inline">
-                                                {{ form_widget(allDayItem, {'attr': {'class': 'form-check-input'}}) }}
-                                                {{ form_label(allDayItem) }}
+                                        </td>
+                                        <td>
+                                            <div class="form-group clearfix">
+                                                {% for key, allDayItem in edit_form.periodique %}
+                                                    <div class="icheck-primary d-inline">
+                                                        {{ form_widget(allDayItem, {'attr': {'class': 'form-check-input'}}) }}
+                                                        {{ form_label(allDayItem) }}
+                                                    </div>
+                                                {% endfor %}
                                             </div>
-                                        {% endfor %}
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>{{ form_label(edit_form.freq) }}</td>
-                                <td>
-                                    <div class="form-group">
-                                        {{ form_widget(edit_form.freq) }}
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="form-group row">
-                                        {{ form_label(edit_form.intervale) }}
-                                        <div class="col-sm-9">
-                                            {{ form_widget(edit_form.intervale) }}
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>{{ form_label(edit_form.byweekday) }}</td>
-                                <td>
-                                    {% for key, allDayItem in edit_form.byweekday %}
-                                        <div class="form-check form-check-inline">
-                                            {{ form_widget(allDayItem, {'attr': {'class': 'form-check-input'}}) }}
-                                            {{ form_label(allDayItem) }}
-                                        </div>
-                                    {% endfor %}
-                                </td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>Date</td>
-                                <td>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
-                                        </div>
-                                        {{ form_widget(edit_form.start, {'attr': {'class': 'date form-control' , 'autocomplete': 'off'}}) }}
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
-                                        </div>
-                                        {{ form_widget(edit_form.end, {'attr': {'class': 'date form-control' , 'autocomplete': 'off'}}) }}
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Assigner à</td>
-                                <td>
-                                    {{ form_widget(edit_form.utilisateur, {'attr': {'class': 'form-control'}}) }}
-                                </td>
-                                <td>
-                                    {{ form_widget(edit_form.client, {'attr': {'class': 'form-control'}}) }}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Task</td>
-                                <td>{{ form_widget(edit_form.activite, {'attr': {'class': 'form-control'}}) }}</td>
-                                <td>{{ form_widget(edit_form.task, {'attr': {'class': 'form-control'}}) }}</td>
-                            </tr>
-                            <tr>
-                                <td>Statut</td>
-                                <td>{{ form_widget(edit_form.statut, {'attr': {'class': 'form-control'}}) }}</td>
-                                <td>{{ form_widget(edit_form.motif, {'attr': {'class': 'form-control'}}) }}</td>
-                            </tr>
-                            <tr>
-                                <td>Étiquette/Site</td>
-                                <td> {{ form_widget(edit_form.etiquette, {'attr': {'class': 'form-control'}}) }}</td>
-                                <td>{{ form_widget(edit_form.site, {'attr': {'class': 'form-control'}}) }}</td>
-                            </tr>
-                            <tr>
-                                <td>Progression/Rapport</td>
-                                <td>
-                                    <div class="form-group">
-                                        {% for key, allDayItem in edit_form.progression %}
-                                            <span>
-                                                {{ form_widget(allDayItem) }}
-                                               <span class="badge"
-                                                     style="font-size: 15px"> {{ form_label(allDayItem) }}</span>
-                                            </span>
-                                        {% endfor %}
-                                    </div>
-                                </td>
-                                <td>{{ form_widget(edit_form.rapport, {'attr': {'class': 'form-control'}}) }}</td>
-                            </tr>
-                        </table>
+                                        </td>
+                                    </tr>
+                                    <tr id="tempsT">
+                                        <td>Date</td>
+                                        <td>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"><i
+                                                                class="far fa-calendar-alt"></i></span>
+                                                </div>
+                                                {{ form_widget(edit_form.start, {'attr': {'class': 'date form-control' , 'autocomplete': 'off'}}) }}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"><i
+                                                                class="far fa-calendar-alt"></i></span>
+                                                </div>
+                                                {{ form_widget(edit_form.end, {'attr': {'class': 'date form-control' , 'autocomplete': 'off'}}) }}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Assigner à</td>
+                                        <td>
+                                            {{ form_widget(edit_form.utilisateur, {'attr': {'class': 'form-control'}}) }}
+                                        </td>
+                                        <td>
+                                            {{ form_widget(edit_form.client, {'attr': {'class': 'form-control'}}) }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Task</td>
+                                        <td>{{ form_widget(edit_form.activite, {'attr': {'class': 'form-control'}}) }}</td>
+                                        <td>{{ form_widget(edit_form.task, {'attr': {'class': 'form-control'}}) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Statut</td>
+                                        <td>{{ form_widget(edit_form.statut, {'attr': {'class': 'form-control'}}) }}</td>
+                                        <td>{{ form_widget(edit_form.motif, {'attr': {'class': 'form-control'}}) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Étiquette/Site</td>
+                                        <td> {{ form_widget(edit_form.etiquette, {'attr': {'class': 'form-control'}}) }}</td>
+                                        <td>{{ form_widget(edit_form.site, {'attr': {'class': 'form-control'}}) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Progression/Rapport</td>
+                                        <td>
+                                            <div class="form-group">
+                                                {% for key, allDayItem in edit_form.progression %}
+                                                    {{ form_widget(allDayItem) }}
+                                                    <span class="badge"
+                                                          style="font-size: 15px">  {{ form_label(allDayItem) }}
+                                                    </span>
+                                                {% endfor %}
+                                            </div>
+                                        </td>
+                                        <td>{{ form_widget(edit_form.rapport, {'attr': {'class': 'form-control'}}) }}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="tab-pane fade" id="periodicite" role="tabpanel"
+                                 aria-labelledby="custom-tabs-three-profile-tab">
+                                <table class="table table-borderless table-sm period">
+                                    <tr>
+                                        <td>
+                                            <div class="form-group row">
+                                                {{ form_label(edit_form.dtstart) }}
+                                                <div class="col-sm-9">
+                                                    <div class="input-group">
+                                                        <div class="input-group-prepend">
+                                                    <span class="input-group-text"><i
+                                                                class="far fa-calendar-alt"></i></span>
+                                                        </div>{{ form_widget(edit_form.dtstart, {'attr': {'class': 'date form-control', 'autocomplete': 'off'}}) }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="form-group row">
+                                                {{ form_label(edit_form.until) }}
+                                                <div class="col-sm-9">
+                                                    <div class="input-group">
+                                                        <div class="input-group-prepend">
+                                                    <span class="input-group-text"><i
+                                                                class="far fa-calendar-alt"></i></span>
+                                                        </div>{{ form_widget(edit_form.until, {'attr': {'class': 'date form-control', 'autocomplete': 'off'}}) }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="form-group row">
+                                                {{ form_label(edit_form.startTime) }}
+                                                <div class="col-sm-9">
+                                                    <div class="input-group">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text"><i class="fas fa-clock"></i></span>
+                                                        </div>{{ form_widget(edit_form.startTime, {'attr': {'class': 'form-control', 'autocomplete': 'off'}}) }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="form-group row">
+                                                {{ form_label(edit_form.endTime) }}
+                                                <div class="col-sm-9">
+                                                    <div class="input-group">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text"><i class="fas fa-clock"></i></span>
+                                                        </div>{{ form_widget(edit_form.endTime, {'attr': {'class': 'form-control', 'autocomplete': 'off'}}) }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="form-group row">
+                                                {{ form_label(edit_form.freq) }}
+                                                <div class="col-sm-9">
+                                                    {{ form_widget(edit_form.freq) }}
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="form-group row">
+                                                {{ form_label(edit_form.intervale) }}
+                                                <div class="col-sm-6">
+                                                    {{ form_widget(edit_form.intervale) }}
+                                                </div>
+                                                <label id="freq" class="col-sm-3">semaine(s)</label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="form-group row clearfix">
+                                                {{ form_label(edit_form.byweekday) }}
+                                                <div class="col-sm-9">
+                                                    {% for key, allDayItem in edit_form.byweekday %}
+                                                        <div class="icheck-primary">
+                                                            {{ form_widget(allDayItem, {'attr': {'class': 'form-check-input'}}) }}
+                                                            {{ form_label(allDayItem) }}
+                                                        </div>
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -177,54 +280,159 @@
     });
 </script>
 <script>
-    $('form[name="edit"]').submit(function (event) {
-        Swal.fire({
-            title: 'Veuillez Patienter !',
-            html: 'Enregistrement de données..',// add html attribute if you want or remove
-            allowOutsideClick: false,
-            onBeforeOpen: () => {
-                Swal.showLoading()
-            },
-        });
-        event.preventDefault();
-        if (new Date($('form[name="edit"] #timsoft_tasksbundle_taskevent_start').datetimepicker('getValue')) > new Date($('form[name="edit"] #timsoft_tasksbundle_taskevent_end').datetimepicker('getValue'))) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Date non valable, veuillez la vérifier et réessayer!',
-            });
+    /*--------------Selectors------------*/
+    var byweekday = $("form[name=\"edit\"] input[name=\"timsoft_tasksbundle_taskevent[byweekday][]\"]");
+    var intervale = $("form[name=\"edit\"] label[for='timsoft_tasksbundle_taskevent_intervale']");
+    /*-----------------------------------*/
+    {#$('form[name="edit"]').submit(function (event) {#}
+    {#Swal.fire({#}
+    {#title: 'Veuillez Patienter !',#}
+    {#html: 'Enregistrement de données..',// add html attribute if you want or remove#}
+    {#allowOutsideClick: false,#}
+    {#onBeforeOpen: () => {#}
+    {#Swal.showLoading()#}
+    {#},#}
+    {#});#}
+    {#event.preventDefault();#}
+    {#if (new Date($('form[name="edit"] #timsoft_tasksbundle_taskevent_start').datetimepicker('getValue')) > new Date($('form[name="edit"] #timsoft_tasksbundle_taskevent_end').datetimepicker('getValue'))) {#}
+    {#Swal.fire({#}
+    {#icon: 'error',#}
+    {#title: 'Oops...',#}
+    {#text: 'Date non valable, veuillez la vérifier et réessayer!',#}
+    {#});#}
+    {#} else {#}
+    {#var cc = new FormData(this);#}
+    {#var url = "{{ path('taskevent_edit', {id: taskEvent.id}) }}";#}
+    {#var formSerialize = $(this).serialize();#}
+    {#$.ajax({#}
+    {#url: url,#}
+    {#data: formSerialize,#}
+    {#type: 'POST',#}
+    {#dataType: "json",#}
+    {#}).done(function (response) {#}
+    {#Swal.close();#}
+    {#if (response.taskExist) {#}
+    {#Swal.fire({#}
+    {#icon: 'error',#}
+    {#title: 'Oops...',#}
+    {#text: 'Il existe déjà une autre Task ayant un même créneau!',#}
+    {#})#}
+    {#} else {#}
+    {#Swal.fire({#}
+    {#icon: 'success',#}
+    {#title: 'Task modifié avec succès !',#}
+    {#});#}
+    {#$('#editTask').modal('hide');#}
+    {#}#}
 
-        } else {
-            var cc = new FormData(this);
-            var url = "{{ path('taskevent_edit', {id: taskEvent.id}) }}";
-            var formSerialize = $(this).serialize();
-            $.ajax({
-                url: url,
-                data: formSerialize,
-                type: 'POST',
-                dataType: "json",
-            }).done(function (response) {
-                Swal.close();
-                if (response.taskExist) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: 'Il existe déjà une autre Task ayant un même créneau!',
-                    })
-                } else {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Task modifié avec succès !',
-                        // text: 'Il existe déjà une autre Task ayant un même créneau!',
-                    });
-                    $('#editTask').modal('hide');
-                }
-
-            });
-        }
-    });
+    {#});#}
+    {#}#}
+    {#});#}
     $(document).ready(function () {
-        var editTask = $('form[name="edit"]');
+
+        /*----------Validator------------*/
+
+        $('form[name="edit"]').on('submit', function (e) {
+            e.preventDefault();
+        }).validate({
+            ignore: '.date',
+            errorPlacement: function (error, element) {
+
+            },
+            submitHandler: function (form) {
+                if ($('form[name="edit"] input[name="timsoft_tasksbundle_taskevent[periodique]"]:checked').val() == '0' && (new Date($('form[name="edit"] #timsoft_tasksbundle_taskevent_start').datetimepicker('getValue')) > new Date($('form[name="edit"] #timsoft_tasksbundle_taskevent_end').datetimepicker('getValue')) || ($('form[name="edit"] #timsoft_tasksbundle_taskevent_start').val() == '' && $('form[name="edit"] #timsoft_tasksbundle_taskevent_end').val() == ''))) {
+                    // alert('Date non valable, veuillez la vérifier et réessayer');
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Oops...',
+                        text: 'Date non valable, veuillez la vérifier et réessayer',
+                    });
+                    $('form[name="edit"] #timsoft_tasksbundle_taskevent_start').addClass('is-invalid');
+                    $('form[name="edit"] #timsoft_tasksbundle_taskevent_end').addClass('is-invalid');
+
+                } else if ($('form[name="edit"] input[name="timsoft_tasksbundle_taskevent[periodique]"]:checked').val() == '1' && (new Date($('form[name="edit"] #timsoft_tasksbundle_taskevent_dtstart').datetimepicker('getValue')) > new Date($('form[name="edit"] #timsoft_tasksbundle_taskevent_until').datetimepicker('getValue')) || ($('form[name="edit"] #timsoft_tasksbundle_taskevent_dtstart').val() == '' && $('form[name="edit"] #timsoft_tasksbundle_taskevent_until').val() == ''))) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Oops...',
+                        text: 'Date non valable, veuillez la vérifier et réessayer',
+                    });
+                    $('form[name="edit"] #timsoft_tasksbundle_taskevent_dtstart').addClass('myErrorClass');
+                    $('form[name="edit"] #timsoft_tasksbundle_taskevent_until').addClass('myErrorClass');
+                } else {
+                    $("form[name=\"edit\"] input[type='hidden']").each(function () {
+                        console.log($(this).val());
+                    });
+                    Swal.fire({
+                        title: 'Veuillez Patienter !',
+                        html: 'Enregistrement de données..',// add html attribute if you want or remove
+                        allowOutsideClick: false,
+                        onBeforeOpen: () => {
+                            Swal.showLoading()
+                        },
+                    });
+                    // event.preventDefault();
+                    // var cc = new FormData($('form[name="new"]'));
+                    var url = "{{ path('taskevent_edit', {id: taskEvent.id}) }}";
+                    // var formSerialize = $('form[name="new"]').serialize();
+                    $.ajax({
+                        url: url,
+                        data: $(form).serialize(),
+                        type: 'POST',
+                        dataType: "json",
+                    }).done(function (response) {
+                        Swal.close();
+                        if (response.taskExist) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'Il existe déjà une autre Task ayant un même créneau!',
+                            })
+                        } else {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Task ajoutée avec succès !',
+                                // text: 'Il existe déjà une autre Task ayant un même créneau!',
+                            });
+                            $('#editTask').modal('hide');
+                        }
+                    });
+                }
+            },
+            invalidHandler: function () {
+                setTimeout(function () {
+                    $('.nav-tabs a small.required').remove();
+                    $('.nav-tabs a.myErrorClass').removeClass('myErrorClass');
+                    var validatePane = $('.tab-content.tab-validate .tab-pane:has(input.myErrorClass)').each(function () {
+                        var id = $(this).attr('id');
+                        $('.nav-tabs').find('a[href^="#' + id + '"]').append(' <small class="required">***</small>');
+                        $('.nav-tabs').find('a[href^="#' + id + '"]').addClass('myErrorClass');
+                    });
+                });
+            },
+            rules: {},
+            errorClass: "myErrorClass",
+            highlight: function (element, errorClass, validClass) {
+                var elem = $(element);
+                if (elem.hasClass("select2-hidden-accessible")) {
+                    $("#select2-" + elem.attr("id") + "-container").parent().addClass(errorClass);
+                } else {
+                    elem.addClass(errorClass);
+                }
+            },
+
+            //When removing make the same adjustments as when adding
+            unhighlight: function (element, errorClass, validClass) {
+                var elem = $(element);
+                if (elem.hasClass("select2-hidden-accessible")) {
+                    $("#select2-" + elem.attr("id") + "-container").parent().removeClass(errorClass);
+                } else {
+                    elem.removeClass(errorClass);
+                }
+            }
+        });
+
+        /*-------------------------------*/
+
         $.datetimepicker.setLocale('fr');
         $('form[name="edit"] #timsoft_tasksbundle_taskevent_start').attr('autocomplete', 'off');
         $('form[name="edit"] #timsoft_tasksbundle_taskevent_utilisateur').select2({
@@ -454,6 +662,8 @@
         progress('{{ taskEvent.statut }}');
         $('form[name="edit"] input[name="timsoft_tasksbundle_taskevent[progression]"]').each(function (e) {
             $(this).next().css('background-color', perc2color(this.value));
+            // $('<span></span>').append($(this).next());
+            // console.log($(this).next());
         });
 
 
@@ -493,7 +703,7 @@
         /*---------------------------*/
 
         /*-------------DataTable----------*/
-        $('.table').dataTable({
+        $('.detail').dataTable({
             "columns": [
                 {"width": "20%", className: "header highlight"},
                 {"width": "40%"},
@@ -506,6 +716,20 @@
             "info": false,
             "searching": false
         });
+        $('.period').dataTable({
+            "columns": [
+                // {"width": "20%", className: "header highlight"},
+                {"width": "50%"},
+                {"width": "50%"},
+
+            ],
+            "autoWidth": false,
+            "paging": false,
+            "ordering": false,
+            "info": false,
+            "searching": false
+        });
+        /*--------------------------------*/
 
         /*------------Periodique-----------*/
         $('form[name="edit"] input[name="timsoft_tasksbundle_taskevent[periodique]"]').change(function () {
@@ -520,9 +744,29 @@
         } else {
             hidePeriod();
         }
+        $('form[name="edit"] #timsoft_tasksbundle_taskevent_freq').on('change', function (e) {
+            if ($(this).val() == 'monthly') {
+                $('#freq').text('moi(s)');
+                byweekday.each(function (index) {
+                    $(this).hide();
+                    $(this).next('label').hide();
+                });
+                byweekday.parent().parent().parent().first().hide();
+                byweekday.each(function () {
+                    this.checked = false;
+                });
+            } else {
+                $('#freq').text('semaine(s)');
+                byweekday.each(function (index) {
+                    $(this).show();
+                    $(this).next('label').show();
+                });
+                byweekday.parent().parent().parent().first().show();
+
+            }
+        });
+        /*--------------------------------*/
     });
-    var label = $("label[for='" + 'timsoft_tasksbundle_taskevent_progression' + "']");
-    label.append(': <div id="prog" style="display: inline-block"></div>');
 
     function progress(value) {
         if (value === 'In Progress') {
@@ -559,26 +803,90 @@
 
 
     function hidePeriod() {
+        $('#custom-tabs-three-profile-tab').hide();
         $('form[name="edit"] #timsoft_tasksbundle_taskevent_freq').hide();
         $("form[name=\"edit\"] label[for='timsoft_tasksbundle_taskevent_freq']").hide();
-        $('form[name="edit"] #timsoft_tasksbundle_taskevent_intervale').hide();
-        $("form[name=\"edit\"] label[for='timsoft_tasksbundle_taskevent_intervale']").hide();
-        $("form[name=\"edit\"] input[name=\"timsoft_tasksbundle_taskevent[byweekday][]\"]").each(function (index) {
+        intervale.hide();
+        intervale.hide();
+        byweekday.each(function (index) {
             $(this).hide();
             $(this).next('label').hide();
         });
-        $("form[name=\"edit\"] input[name=\"timsoft_tasksbundle_taskevent[byweekday][]\"]").parent().parent().parent().first().hide();
+        byweekday.parent().parent().parent().first().hide();
+        intervale.prop('required', false);
+        $('#freq').hide();
+        $('#tempsT').show();
+        $('#type').show();
+        // $('form[name="new"] #timsoft_tasksbundle_taskevent_start').parent().appendTo('#tempsT');
     }
 
     function showPeriod() {
+        $('#custom-tabs-three-profile-tab').show();
         $('form[name="edit"] #timsoft_tasksbundle_taskevent_freq').show();
         $("form[name=\"edit\"] label[for='timsoft_tasksbundle_taskevent_freq']").show();
         $('form[name="edit"] #timsoft_tasksbundle_taskevent_intervale').show();
-        $("form[name=\"edit\"] label[for='timsoft_tasksbundle_taskevent_intervale']").show();
-        $("form[name=\"edit\"] input[name=\"timsoft_tasksbundle_taskevent[byweekday][]\"]").each(function (index) {
+        intervale.show();
+        byweekday.each(function (index) {
             $(this).show();
             $(this).next('label').show();
         });
-        $("form[name=\"edit\"] input[name=\"timsoft_tasksbundle_taskevent[byweekday][]\"]").parent().parent().parent().first().show();
+        byweekday.parent().parent().parent().first().show();
+        $('form[name="edit"] #timsoft_tasksbundle_taskevent_intervale').prop('required', true);
+        // $('form[name="new"] #timsoft_tasksbundle_taskevent_dtstart').rules('add', 'required');
+        $('#freq').show();
+
+        /*-------------Date------------*/
+        $('form[name="edit"] #timsoft_tasksbundle_taskevent_dtstart').datetimepicker({
+            format: 'd F Y',
+            timepicker: false,
+            onShow: function (ct) {
+                this.setOptions({
+                    maxDate: $('#timsoft_tasksbundle_taskevent_until').val() ? $('#timsoft_tasksbundle_taskevent_until').val() : false,
+                    formatDate: 'd F Y'
+                })
+            },
+            onChangeDateTime: function (dp, $input) {
+            }
+        });
+        // $('form[name="new"] #timsoft_tasksbundle_taskevent_dtstart').prop('required', true);
+
+        // $('form[name="new"] #timsoft_tasksbundle_taskevent_dtstart').datetimepicker(validate);
+        $('form[name="edit"] #timsoft_tasksbundle_taskevent_until').datetimepicker({
+            format: 'd F Y',
+            timepicker: false,
+            onShow: function (ct) {
+                this.setOptions({
+                    minDate: $('#timsoft_tasksbundle_taskevent_dtstart').val() ? $('#timsoft_tasksbundle_taskevent_dtstart').val() : false,
+                    formatDate: 'd F Y'
+                })
+            },
+            onChangeDateTime: function (dp, $input) {
+            }
+        });
+        $('form[name="edit"] #timsoft_tasksbundle_taskevent_startTime').datetimepicker({
+            datepicker: false,
+            step: 30,
+            format: 'H:i',
+            onShow: function (ct) {
+                this.setOptions({
+                    maxTime: $('#timsoft_tasksbundle_taskevent_endTime').val() ? $('#timsoft_tasksbundle_taskevent_endTime').val() : false,
+                })
+            },
+        });
+        $('form[name="edit"] #timsoft_tasksbundle_taskevent_endTime').datetimepicker({
+            datepicker: false,
+            step: 30,
+            format: 'H:i',
+            onShow: function (ct) {
+                this.setOptions({
+                    minTime: $('#timsoft_tasksbundle_taskevent_startTime').val() ? $('#timsoft_tasksbundle_taskevent_startTime').val() : false,
+                })
+            },
+        });
+        $('form[name="edit"] input[name="timsoft_tasksbundle_taskevent[allDay]"][value="0"]').attr('checked', 'checked');
+        $('#tempsT').hide();
+        $('#type').hide();
+        $('form[name="edit"] #timsoft_tasksbundle_taskevent_start').val('');
+        $('form[name="edit"] #timsoft_tasksbundle_taskevent_end').val('');
     }
 </script>

@@ -51,14 +51,16 @@ class TaskEventController extends Controller
             $taskExist = false;
             $date = [];
             $taskEvents = $em->getRepository('TimSoftTasksBundle:TaskEvent')->findByUtilisateur($taskEvent->getUtilisateur());
-            foreach ($taskEvents as $task) {
-                if (($task->isAllDay() && $taskEvent->isAllDay()) || (!$task->isAllDay() && !$taskEvent->isAllDay())) {
-                    if ($this->getIntersection($task->getStart(), $task->getEnd(), $taskEvent->getStart(), $taskEvent->getEnd())) {
-                        return new Response(json_encode(array('taskExist' => true, $taskEvents, 'a55')));
-                    }
-                } else {
-                    if ($this->getIntersection(strtotime($task->getStart()->format('d-m-Y')), strtotime($task->getEnd()->format('d-m-Y')), strtotime($taskEvent->getStart()->format('d-m-Y')), strtotime($taskEvent->getEnd()->format('d-m-Y')))) {
-                        return new Response(json_encode(array('taskExist' => true, $taskEvent->getStart()->format('d-m-Y'), $task->getStart()->format('d-m-Y'))));
+            if (!$taskEvent->getPeriodique()) {
+                foreach ($taskEvents as $task) {
+                    if (($task->isAllDay() && $taskEvent->isAllDay()) || (!$task->isAllDay() && !$taskEvent->isAllDay())) {
+                        if ($this->getIntersection($task->getStart(), $task->getEnd(), $taskEvent->getStart(), $taskEvent->getEnd())) {
+                            return new Response(json_encode(array('taskExist' => true, $taskEvents, 'a55')));
+                        }
+                    } else {
+                        if ($this->getIntersection(strtotime($task->getStart()->format('d-m-Y')), strtotime($task->getEnd()->format('d-m-Y')), strtotime($taskEvent->getStart()->format('d-m-Y')), strtotime($taskEvent->getEnd()->format('d-m-Y')))) {
+                            return new Response(json_encode(array('taskExist' => true, $taskEvent->getStart()->format('d-m-Y'), $task->getStart()->format('d-m-Y'))));
+                        }
                     }
                 }
             }
@@ -67,7 +69,7 @@ class TaskEventController extends Controller
             }
             $em->persist($taskEvent);
             $em->flush();
-            return new Response(json_encode(array('status' => 'success', $taskEvent->getStart()->format('d-m-Y'), $date)));
+            return new Response(json_encode(array('status' => 'success', $taskEvent, $date)));
         }
 
         return $this->render('@TimSoftTasks/taskevent/newForm.html.twig', array(
@@ -96,7 +98,9 @@ class TaskEventController extends Controller
      *
      * @Route("/{id}/edit", name="taskevent_edit", options = { "expose" = true })
      * @Method({"GET", "POST"})
-     *
+     * @param Request $request
+     * @param TaskEvent $taskEvent
+     * @return Response
      */
     public function editAction(Request $request, TaskEvent $taskEvent)
     {
@@ -108,14 +112,19 @@ class TaskEventController extends Controller
             $em = $this->getDoctrine()->getManager();
             $taskEvents = $em->getRepository('TimSoftTasksBundle:TaskEvent')->findByUtilisateur($taskEvent->getUtilisateur());
             $taskEvents = $this->unsetValue($taskEvents, $taskEvent, true);
-            foreach ($taskEvents as $task) {
-                if (($task->isAllDay() && $taskEvent->isAllDay()) || (!$task->isAllDay() && !$taskEvent->isAllDay())) {
-                    if ($this->getIntersection($task->getStart(), $task->getEnd(), $taskEvent->getStart(), $taskEvent->getEnd())) {
-                        return new Response(json_encode(array('taskExist' => true, $taskEvents)));
-                    }
-                } else {
-                    if ($this->getIntersection(strtotime($task->getStart()->format('d-m-Y')), strtotime($task->getEnd()->format('d-m-Y')), strtotime($taskEvent->getStart()->format('d-m-Y')), strtotime($taskEvent->getEnd()->format('d-m-Y')))) {
-                        return new Response(json_encode(array('taskExist' => true, $taskEvents)));
+            if (!$taskEvent->getByweekday()) {
+                $taskEvent->setByweekday(null);
+            }
+            if (!$taskEvent->getPeriodique()) {
+                foreach ($taskEvents as $task) {
+                    if (($task->isAllDay() && $taskEvent->isAllDay()) || (!$task->isAllDay() && !$taskEvent->isAllDay())) {
+                        if ($this->getIntersection($task->getStart(), $task->getEnd(), $taskEvent->getStart(), $taskEvent->getEnd())) {
+                            return new Response(json_encode(array('taskExist' => true, $task)));
+                        }
+                    } else {
+                        if ($this->getIntersection(strtotime($task->getStart()->format('d-m-Y')), strtotime($task->getEnd()->format('d-m-Y')), strtotime($taskEvent->getStart()->format('d-m-Y')), strtotime($taskEvent->getEnd()->format('d-m-Y')))) {
+                            return new Response(json_encode(array('taskExist' => true, $task)));
+                        }
                     }
                 }
             }

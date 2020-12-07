@@ -95,7 +95,14 @@ class TaskEvent implements \JsonSerializable
      * @ORM\Column(type="string", nullable=true)
      */
     private $freq;
-
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $dtstart;
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $until;
 
     /**
      * @ORM\Column(type="array", nullable=true, options={"default" : null})
@@ -111,6 +118,16 @@ class TaskEvent implements \JsonSerializable
      * @ORM\Column(type="boolean")
      */
     private $periodique;
+    /**
+     * @var
+     * @ORM\Column(type="time", nullable=true)
+     */
+    private $startTime;
+    /**
+     * @var
+     * @ORM\Column(type="time", nullable=true)
+     */
+    private $endTime;
 
     /**
      * TaskEvent constructor.
@@ -437,6 +454,45 @@ class TaskEvent implements \JsonSerializable
         $this->periodique = $periodique;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getStartTime()
+    {
+        return $this->startTime;
+    }
+
+    /**
+     * @param mixed $startTime
+     */
+    public function setStartTime($startTime): void
+    {
+        $this->startTime = $startTime;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEndTime()
+    {
+        return $this->endTime;
+    }
+
+    /**
+     * @param mixed $endTime
+     */
+    public function setEndTime($endTime): void
+    {
+        $this->endTime = $endTime;
+    }
+
+    function differenceInHours($startdate, $enddate)
+    {
+        $starttimestamp = strtotime($startdate);
+        $endtimestamp = strtotime($enddate);
+        $difference = abs($endtimestamp - $starttimestamp) / 3600;
+        return $difference;
+    }
 
     public function jsonSerialize()
     {
@@ -444,6 +500,15 @@ class TaskEvent implements \JsonSerializable
         $this->eventColor = '#81B5D4';
         $this->eventTextColor = '#FFFFFF';
         if ($this->periodique == true) {
+            if ($this->startTime && $this->endTime) {
+                $combinedDT = date('Y-m-d H:i:s', strtotime($this->dtstart->format('Y-m-d') . ' ' . $this->startTime->format('H:i')));
+                $eventEnd = date('Y-m-d H:i:s', strtotime($this->dtstart->format('Y-m-d') . ' ' . $this->endTime->format('H:i')));
+                $duration = $this->differenceInHours($combinedDT, $eventEnd);
+            } else {
+                $combinedDT = date('Y-m-d H:i:s', strtotime($this->dtstart->format('Y-m-d') . ' ' . '00:00'));
+                $duration = null;
+
+            }
             $array = array(
                 'id' => $this->id,
                 'title' => $this->client->getRaisonSociale(),
@@ -465,12 +530,13 @@ class TaskEvent implements \JsonSerializable
                 'libelle' => $this->task,
                 'etiquette' => $this->etiquette,
                 'rrule' => [
-                    'dtstart' => $this->start->format("Y-m-d H:i:s"),
-                    'until' => $this->end->format("Y-m-d"),
+                    'dtstart' => $combinedDT,
+                    'until' => $this->until->format("Y-m-d"),
                     'freq' => $this->freq,
                     'interval' => $this->intervale,
-                    'byweekday' =>$this->byweekday
-                ]
+                    'byweekday' => $this->byweekday
+                ],
+                'duration' => ['hours' => $duration]
             );
 //            $array = array(
 ////                'id' => $this->id,
