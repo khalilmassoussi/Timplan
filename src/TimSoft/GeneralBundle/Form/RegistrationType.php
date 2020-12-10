@@ -39,7 +39,8 @@ class RegistrationType extends AbstractType
                         'Gestionnaire' => 'ROLE_GESTIONNAIRE',
                         'BU Manager' => 'ROLE_CHEF',
                         'Tracking User' => 'ROLE_TRACKING',
-                        'Support' => 'ROLE_SUPPORT'
+                        'Support' => 'ROLE_SUPPORT',
+                        'Consultant externe' => 'ROLE_EXTERNE'
                     )
                 )
             )

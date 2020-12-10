@@ -36,7 +36,7 @@ class DroitAccesController extends Controller
             throw $this->createAccessDeniedException();
         }
         $em = $this->getDoctrine()->getManager();
-        $AllCategories = ['ROLE_ADMIN', 'ROLE_GESTIONNAIRE', 'ROLE_CLIENT', 'ROLE_CONSULTANT', 'ROLE_CHEF', 'ROLE_TRACKING'];
+        $AllCategories = ['ROLE_ADMIN', 'ROLE_GESTIONNAIRE', 'ROLE_CLIENT', 'ROLE_CONSULTANT', 'ROLE_CHEF', 'ROLE_TRACKING', 'ROLE_SUPPORT', 'ROLE_EXTERNE'];
         $categories = $em->getRepository('TimSoftGeneralBundle:DroitAccesGroupe')->getGroupeAutorises($id);
         //pour applatir $Categorie ( car c'est un array a 2 dim)
         $it = new RecursiveIteratorIterator(new RecursiveArrayIterator($categories));
@@ -59,6 +59,10 @@ class DroitAccesController extends Controller
                 $categorie[] = ["ROLE_CHEF", "BU Manager"];
             } elseif ($Role == "ROLE_TRACKING") {
                 $categorie[] = ["ROLE_TRACKING", "Tracking User"];
+            } elseif ($Role == "ROLE_SUPPORT") {
+                $categorie[] = ["ROLE_SUPPORT", "Support"];
+            } elseif ($Role == "ROLE_EXTERNE") {
+                $categorie[] = ["ROLE_EXTERNE", "Consultant Externe"];
             }
         }
         return new JsonResponse($categorie);
@@ -94,6 +98,10 @@ class DroitAccesController extends Controller
                 $categorie[] = ["ROLE_CHEF", "BU Manager"];
             } elseif ($Role == "ROLE_TRACKING") {
                 $categorie[] = ["ROLE_TRACKING", "Tracking User"];
+            } elseif ($Role == "ROLE_SUPPORT") {
+                $categorie[] = ["ROLE_SUPPORT", "Support"];
+            } elseif ($Role == "ROLE_EXTERNE") {
+                $categorie[] = ["ROLE_EXTERNE", "Consultant Externe"];
             }
         }
         return new JsonResponse($categorie);

@@ -11,9 +11,9 @@
     </h1>
 {% endblock %}
 {% block Navigation %}
-    {#    {% if AutorisationAcces('Consultercommandes' , Utilisateur) %}#}
-    {#        <li class="breadcrumb-item"><a href="{{ path('Consultercommandes') }}">Consulter la liste des commandes</a></li>#}
-    {#    {% endif %}#}
+    {% if AutorisationAcces('listerCmd' , Utilisateur) %}
+        <li class="breadcrumb-item"><a href="{{ path('listerCmd') }}">Consulter la liste des commandes</a></li>
+    {% endif %}
     <li class="breadcrumb-item active">Consultation d'une commande</li>
 {% endblock %}
 {% block SideBar %}
@@ -283,7 +283,9 @@
                 <form method="post" action="{{ path('addUserToCmd') }}">
                     <div class="modal-body">
                         <input type="text" id="input" name="post" hidden>
-                        <button class="btn btn-primary" id="render">Afficher les utilisateur des autres BU</button>
+                        {% if AutorisationAcces('planification pour tous les consultants' , Utilisateur) %}
+                            <button class="btn btn-primary" id="render">Afficher les utilisateur des autres BU</button>
+                        {% endif %}
                         <br>
                         <br>
                         <table id="TableClient1" class="table table-bordered table-striped dataTable"
@@ -316,6 +318,9 @@
                                     {% elseif ( user.roleUtilisateur == 'ROLE_CONSULTANT') %}{% set RoleUser = 'Consultant' %}
                                     {% elseif ( user.roleUtilisateur == 'ROLE_GESTIONNAIRE') %}{% set RoleUser = 'Gestionnaire' %}
                                     {% elseif ( user.roleUtilisateur == 'ROLE_CHEF') %}{% set RoleUser = 'BU Manager' %}
+                                    {% elseif ( user.roleUtilisateur == 'ROLE_TRACKING') %}{% set RoleUser = 'Tracking User' %}
+                                    {% elseif ( user.roleUtilisateur == 'ROLE_SUPPORT') %}{% set RoleUser = 'Support' %}
+                                    {% elseif ( user.roleUtilisateur == 'ROLE_EXTERNE') %}{% set RoleUser = 'Consultant Externe' %}
                                     {% endif %}
                                     <td class="cell1">{{ RoleUser }}</td>
                                     <td class="cell1">
@@ -325,9 +330,7 @@
                                     </td>
                                 </tr>
                             {% endfor %}
-
                             </tbody>
-
                         </table>
                         <br>
                     </div>
@@ -337,7 +340,6 @@
                     </div>
                 </form>
             </div>
-
         </div>
     </div>
     <div class="modal fade" id="interventions" role="dialog">
@@ -369,7 +371,6 @@
                         </tr>
                         </thead>
                         <tbody>
-
                         </tbody>
                     </table>
                 </div>
@@ -758,6 +759,9 @@
                                 }
                                 if (value.roleUtilisateur == 'ROLE_SUPPORT') {
                                     role = 'Support'
+                                }
+                                if (value.roleUtilisateur == 'ROLE_EXTERNE') {
+                                    role = 'Consultant Externe'
                                 }
                                 table1.row.add([
                                     HtmlToAdd,

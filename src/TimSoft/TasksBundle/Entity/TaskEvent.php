@@ -538,41 +538,9 @@ class TaskEvent implements \JsonSerializable
                 ],
                 'duration' => ['hours' => $duration]
             );
-//            $array = array(
-////                'id' => $this->id,
-//
-//                'title' => $this->client->getRaisonSociale(),
-//                // 'title' => $this->title,
-//                'allDay' => $this->allDay,
-////                'start' => $this->start->format("Y-m-d H:i:s"),
-////                'end' => $this->end->format("Y-m-d H:i:s"),
-////                'Client' => array('raisonSociale' => $this->client->getRaisonSociale(),
-////                    'id' => $this->client->getId()
-////                ),
-////                'backgroundColor' => $this->eventColor,
-////                'Statut' => $this->statut,
-////                'Intervenant' => $this->utilisateur->getPrenomUtilisateur() . ' ' . $this->utilisateur->getNomUtilisateur(),
-////                'idIntervenant' => $this->utilisateur->getId(),
-////                'textColor' => $this->eventTextColor,
-////                'Lieu' => $this->site,
-////                'resourceIds' => [$this->utilisateur->getId()],
-////                'rapport' => $this->rapport,
-////                'type' => $class->getShortName(),
-////                'activite' => $this->activite,
-////                'task' => $this->task,
-////                'libelle' => $this->task,
-////                'etiquette' => $this->etiquette,
-//                'rrule' => [
-//                    'dtstart' => $this->start->format("Y-m-d H:i:s"),
-//                    'until' => $this->end->format("Y-m-d"),
-//                    'freq' => $this->freq,
-//                    'interval' => $this->intervale
-//                ]
-//            );
         } else {
             $array = array(
                 'id' => $this->id,
-
                 'title' => $this->client->getRaisonSociale(),
                 // 'title' => $this->title,
                 'allDay' => $this->allDay,

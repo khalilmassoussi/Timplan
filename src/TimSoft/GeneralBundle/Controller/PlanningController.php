@@ -531,7 +531,11 @@ class PlanningController extends Controller
         if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
             throw $this->createAccessDeniedException();
         }
-        $bus = $this->getDoctrine()->getRepository('TimSoftBuBundle:Bu')->findAll();
+        if ($this->getUser()->hasRole('ROLE_EXTERNE')) {
+            $bus = $this->getUser()->getBus();
+        } else {
+            $bus = $this->getDoctrine()->getRepository('TimSoftBuBundle:Bu')->findAll();
+        }
         return $this->render('@TimSoftCommande/Default/BuPlanning.html.twig', array('bus' => $bus));
     }
 

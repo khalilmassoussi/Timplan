@@ -73,6 +73,12 @@
                             Tracking User
                         </th>
                         <th>
+                            Support
+                        </th>
+                        <th>
+                            Consultant Externe
+                        </th>
+                        <th>
                             Modifier
                         </th>
                     </tr>
@@ -160,6 +166,30 @@
                                                title="Accès Inerdit"></i></center>
                                 {% endif %}
                             </td>
+                            <td class="cell1" width="100px">
+                                {% if contient(Droit.id,'ROLE_SUPPORT') > 0 %}
+                                    <center><i class="fas fa-exclamation-circle fa-lg" style="color:#ffc107;"
+                                               title="Accès Exceptionnel"></i></center>
+                                {% elseif autoriserGroupe(Droit.id,'ROLE_SUPPORT') %}
+                                    <center><i class="fas fa-check-circle fa-lg" style="color:#28a745;"
+                                               title="Accès Autorisé"></i></center>
+                                {% else %}
+                                    <center><i class="fas fa-times-circle fa-lg" style="color:#dc3545;"
+                                               title="Accès Inerdit"></i></center>
+                                {% endif %}
+                            </td>
+                            <td class="cell1" width="100px">
+                                {% if contient(Droit.id,'ROLE_EXTERNE') > 0 %}
+                                    <center><i class="fas fa-exclamation-circle fa-lg" style="color:#ffc107;"
+                                               title="Accès Exceptionnel"></i></center>
+                                {% elseif autoriserGroupe(Droit.id,'ROLE_EXTERNE') %}
+                                    <center><i class="fas fa-check-circle fa-lg" style="color:#28a745;"
+                                               title="Accès Autorisé"></i></center>
+                                {% else %}
+                                    <center><i class="fas fa-times-circle fa-lg" style="color:#dc3545;"
+                                               title="Accès Inerdit"></i></center>
+                                {% endif %}
+                            </td>
                             {% if AutorisationAcces('ModifierDroitAcces' , Utilisateur) %}
                                 <td class="cell1 text-center">
                                     <a class="btn btn-primary btn-sm"
@@ -216,11 +246,13 @@
                     {"bSortable": false},
                     {"bSortable": false},
                     {"bSortable": false},
-                    {"bSortable": false}
+                    {"bSortable": false},
+                    {"bSortable": false},
+                    {"bSortable": false},
                 ],
                 order: [[1, 'asc']],
                 "columnDefs": [
-                    {"width": "3%", "targets": 6},
+                    {"width": "2%", "targets": 6},
                     {targets: 1, visible: false},
                 ],
                 rowGroup: {

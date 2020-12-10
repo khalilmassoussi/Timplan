@@ -92,6 +92,10 @@
                                                 <li>Gestionnaire</li>
                                             {% elseif ( Groupe.role == 'ROLE_TRACKING') %}
                                                 <li>Tracking User</li>
+                                            {% elseif ( Groupe.role == 'ROLE_SUPPORT') %}
+                                                <li>Support</li>
+                                            {% elseif ( Groupe.role == 'ROLE_EXTERNE') %}
+                                                <li>Consultant Externe</li>
                                             {% endif %}
                                         {% endfor %}
                                     </ul>

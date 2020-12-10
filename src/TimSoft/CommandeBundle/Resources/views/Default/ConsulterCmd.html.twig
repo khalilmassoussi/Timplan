@@ -27,7 +27,10 @@
                             <div class="container">
                                 <div class="row justify-content-center">
                                     <div class="mb-1">
-                                        <button class="btn btn-info" id="plus">Afficher toutes les commandes</button>
+                                        {% if AutorisationAcces('Afficher toutes les commandes' , Utilisateur) %}
+                                            <button class="btn btn-info" id="plus">Afficher toutes les commandes
+                                            </button>
+                                        {% endif %}
                                     </div>
                                 </div>
                                 <div class="row justify-content-center">

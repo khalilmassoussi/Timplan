@@ -477,40 +477,42 @@
                                 </ul>
                             </li>
                             {% set routes = ['preCommandeList', 'preCommandeImport'] %}
-                            <li class="{% if app.request.attributes.get('_route') in routes %}nav-item has-treeview menu-open{% else %}nav-item has-treeview{% endif %}">
-                                <a href="#"
-                                   class="{% if app.request.attributes.get('_route') in routes %}nav-link active{% else %}nav-link {% endif %}">
-                                    <i class="nav-icon fas fa-hourglass-start"></i>
-                                    <p>
-                                        Précommandes
-                                        <i class="fas fa-angle-left right"></i>
-                                    </p>
-                                </a>
-                                <ul class="nav nav-treeview">
-                                    {% if AutorisationAcces('preCommandeList' , Utilisateur) %}
-                                        <li class="nav-item">
-                                            <a href="{{ path('preCommandeList') }}"
-                                               class="{% if (app.request.attributes.get('_route') == 'preCommandeList') %}nav-link active{% else %}nav-link{% endif %}">
-                                                <i class="nav-icon far fa-eye"></i>
-                                                <p style="font-size: 14px">
-                                                    Consulter les précommandes
-                                                </p>
-                                            </a>
-                                        </li>
-                                    {% endif %}
-                                    {% if AutorisationAcces('preCommandeImport' , Utilisateur) %}
-                                        <li class="nav-item">
-                                            <a href="{{ path('preCommandeImport') }}"
-                                               class="{% if (app.request.attributes.get('_route') == 'preCommandeImport') %}nav-link active{% else %}nav-link{% endif %}">
-                                                <i class="nav-icon fas fa-file-import"></i>
-                                                <p>
-                                                    Importer précommandes
-                                                </p>
-                                            </a>
-                                        </li>
-                                    {% endif %}
-                                </ul>
-                            </li>
+                            {% if (AutorisationAcces('preCommandeList' , Utilisateur)) %}
+                                <li class="{% if app.request.attributes.get('_route') in routes %}nav-item has-treeview menu-open{% else %}nav-item has-treeview{% endif %}">
+                                    <a href="#"
+                                       class="{% if app.request.attributes.get('_route') in routes %}nav-link active{% else %}nav-link {% endif %}">
+                                        <i class="nav-icon fas fa-hourglass-start"></i>
+                                        <p>
+                                            Précommandes
+                                            <i class="fas fa-angle-left right"></i>
+                                        </p>
+                                    </a>
+                                    <ul class="nav nav-treeview">
+                                        {% if AutorisationAcces('preCommandeList' , Utilisateur) %}
+                                            <li class="nav-item">
+                                                <a href="{{ path('preCommandeList') }}"
+                                                   class="{% if (app.request.attributes.get('_route') == 'preCommandeList') %}nav-link active{% else %}nav-link{% endif %}">
+                                                    <i class="nav-icon far fa-eye"></i>
+                                                    <p style="font-size: 14px">
+                                                        Consulter les précommandes
+                                                    </p>
+                                                </a>
+                                            </li>
+                                        {% endif %}
+                                        {% if AutorisationAcces('preCommandeImport' , Utilisateur) %}
+                                            <li class="nav-item">
+                                                <a href="{{ path('preCommandeImport') }}"
+                                                   class="{% if (app.request.attributes.get('_route') == 'preCommandeImport') %}nav-link active{% else %}nav-link{% endif %}">
+                                                    <i class="nav-icon fas fa-file-import"></i>
+                                                    <p>
+                                                        Importer précommandes
+                                                    </p>
+                                                </a>
+                                            </li>
+                                        {% endif %}
+                                    </ul>
+                                </li>
+                            {% endif %}
                         {% endif %}
                         {% if (AutorisationAcces('mesPlans' , Utilisateur)) or (AutorisationAcces('getByBu' , Utilisateur)) or (AutorisationAcces('planningByUser' , Utilisateur)) or (AutorisationAcces('taskevent_new' , Utilisateur)) %}
                             <li class="nav-header">Plannings & Interventions</li>
