@@ -18,18 +18,21 @@ class TaskEventRepository extends \Doctrine\ORM\EntityRepository
                 ->where('p.start BETWEEN :start AND :end')
                 ->orWhere('p.end BETWEEN :start AND :end')
                 ->andWhere('DATE_DIFF(CURRENT_TIMESTAMP(), p.end) <= 2 OR p.statut = :done')
+                ->orWhere('p.periodique = :periodique')
                 ->setParameter('done', "Done")
                 ->setParameter('start', $start)
                 ->setParameter('end', $end)
+                ->setParameter('periodique', true)
                 ->getQuery()
                 ->getResult();
         } else {
             return $this->createQueryBuilder('p')
                 ->select('p')
                 ->where('p.start BETWEEN :start AND :end')
-                ->orWhere('p.end BETWEEN :start AND :end')
+                ->orWhere('p.end BETWEEN :start AND :end OR p.periodique = :periodique')
                 ->setParameter('start', $start)
                 ->setParameter('end', $end)
+                ->setParameter('periodique', true)
                 ->getQuery()
                 ->getResult();
         }
@@ -57,23 +60,26 @@ class TaskEventRepository extends \Doctrine\ORM\EntityRepository
                 ->select('p')
                 ->where('p.start BETWEEN :start AND :end')
                 ->orWhere('p.end BETWEEN :start AND :end')
-                ->andWhere('p.client = :client')
                 ->andWhere('DATE_DIFF(CURRENT_TIMESTAMP(), p.end) <= 2 OR p.statut = :done')
+                ->orWhere('p.periodique = :periodique')
+                ->andWhere('p.client = :client')
                 ->setParameter('done', "Done")
                 ->setParameter('client', $client)
                 ->setParameter('start', $start)
                 ->setParameter('end', $end)
+                ->setParameter('periodique', true)
                 ->getQuery()
                 ->getResult();
         } else {
             return $this->createQueryBuilder('p')
                 ->select('p')
                 ->where('p.start BETWEEN :start AND :end')
-                ->orWhere('p.end BETWEEN :start AND :end')
+                ->orWhere('p.end BETWEEN :start AND :end OR p.periodique = :periodique')
                 ->andWhere('p.client = :client')
                 ->setParameter('client', $client)
                 ->setParameter('start', $start)
                 ->setParameter('end', $end)
+                ->setParameter('periodique', true)
                 ->getQuery()
                 ->getResult();
         }
