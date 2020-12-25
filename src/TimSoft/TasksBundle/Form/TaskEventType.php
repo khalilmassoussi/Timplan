@@ -4,6 +4,7 @@ namespace TimSoft\TasksBundle\Form;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -118,15 +119,18 @@ class TaskEventType extends AbstractType
                 'attr' => ['placeholder' => 'Motif de blocage'],
                 'required' => false,
             ))
-            ->add('periodique', ChoiceType::class, [
-                'choices' => [
-                    'Periodique' => true,
-                    'Non Periodique' => false,
-                ],
-                'expanded' => true,
-                'label' => 'Periodique',
-                'block_name' => 'PeriodiqueForm',
-                'label_attr' => ['class' => 'checkbox-custom'],
+            ->add('periodique', CheckboxType::class, [
+//                'choices' => [
+//                    'Periodique' => true,
+//                    'Non Periodique' => false,
+//                ],
+//                'expanded' => true,
+                'label' => 'Periodicité',
+                'label_attr' => ['class' => 'custom-control-label'],
+                'attr' => ['class' => 'custom-control-input'],
+                'required' => false
+//                'block_name' => 'PeriodiqueForm',
+//                'label_attr' => ['class' => 'checkbox-custom'],
             ])
             ->add('freq', ChoiceType::class, [
                 'choices' => [
@@ -215,23 +219,23 @@ class TaskEventType extends AbstractType
 
                 $formModifier($event->getForm(), $data->getActivite());
 
-//                if ($data->isAllDay()) {
-//                    $form->add('start', DateType::class, [
-//                        'widget' => 'single_text',
-//                        'html5' => false,
-//                        'attr' => ['placeholder' => 'Choisir la date/heure de debut'],
-//                        'format' => 'dd MMMM y',
-//                        'label' => 'Debut'
-////                'placeholder' => 'Choisir la date/heure de debut'
-//                    ]);
-//                    $form->add('end', DateType::class, [
-//                        'widget' => 'single_text',
-//                        'html5' => false,
-//                        'attr' => ['placeholder' => 'Choisir la date/heure de fin'],
-//                        'format' => 'dd MMMM y',
-//                        'label' => 'Fin'
-//                    ]);
-//                }
+                if ($data->isAllDay()) {
+                    $form->add('start', DateType::class, [
+                        'widget' => 'single_text',
+                        'html5' => false,
+                        'attr' => ['placeholder' => 'Choisir la date/heure de debut'],
+                        'format' => 'dd MMMM y',
+                        'label' => 'Debut'
+//                'placeholder' => 'Choisir la date/heure de debut'
+                    ]);
+                    $form->add('end', DateType::class, [
+                        'widget' => 'single_text',
+                        'html5' => false,
+                        'attr' => ['placeholder' => 'Choisir la date/heure de fin'],
+                        'format' => 'dd MMMM y',
+                        'label' => 'Fin'
+                    ]);
+                }
             }
         );
 
@@ -247,46 +251,46 @@ class TaskEventType extends AbstractType
                 $formModifier($event->getForm()->getParent(), $activite);
             }
         );
-//        $builder->addEventListener(
-//            FormEvents::PRE_SUBMIT,
-//            function (FormEvent $event) {
-//                $form = $event->getForm();
-//                $data = $event->getData();
-//
-//                if (array_key_exists('allDay', $data) && $data['allDay'] == 1) {
-//                    $form->add('start', DateType::class, [
-//                        'widget' => 'single_text',
-//                        'html5' => false,
-//                        'attr' => ['placeholder' => 'Choisir la date/heure de debut'],
-//                        'format' => 'dd MMMM y',
-//                        'label' => 'Debut'
-////                'placeholder' => 'Choisir la date/heure de debut'
-//                    ]);
-//                    $form->add('end', DateType::class, [
-//                        'widget' => 'single_text',
-//                        'html5' => false,
-//                        'attr' => ['placeholder' => 'Choisir la date/heure de fin'],
-//                        'format' => 'dd MMMM y',
-//                        'label' => 'Fin'
-//                    ]);
-//                } else {
-//                    $form->add('start', DateType::class, [
-//                        'widget' => 'single_text',
-//                        'html5' => false,
-//                        'attr' => ['placeholder' => 'Choisir la date/heure de debut'],
-//                        'format' => 'dd MMMM y HH:mm',
-//                        'label' => 'Debut'
-////                'placeholder' => 'Choisir la date/heure de debut'
-//                    ]);
-//                    $form->add('end', DateType::class, [
-//                        'widget' => 'single_text',
-//                        'html5' => false,
-//                        'attr' => ['placeholder' => 'Choisir la date/heure de fin'],
-//                        'format' => 'dd MMMM y HH:mm',
-//                        'label' => 'Fin'
-//                    ]);
-//                }
-//            });
+        $builder->addEventListener(
+            FormEvents::PRE_SUBMIT,
+            function (FormEvent $event) {
+                $form = $event->getForm();
+                $data = $event->getData();
+
+                if (array_key_exists('allDay', $data) && $data['allDay'] == 1) {
+                    $form->add('start', DateType::class, [
+                        'widget' => 'single_text',
+                        'html5' => false,
+                        'attr' => ['placeholder' => 'Choisir la date/heure de debut'],
+                        'format' => 'dd MMMM y',
+                        'label' => 'Debut'
+//                'placeholder' => 'Choisir la date/heure de debut'
+                    ]);
+                    $form->add('end', DateType::class, [
+                        'widget' => 'single_text',
+                        'html5' => false,
+                        'attr' => ['placeholder' => 'Choisir la date/heure de fin'],
+                        'format' => 'dd MMMM y',
+                        'label' => 'Fin'
+                    ]);
+                } else {
+                    $form->add('start', DateType::class, [
+                        'widget' => 'single_text',
+                        'html5' => false,
+                        'attr' => ['placeholder' => 'Choisir la date/heure de debut'],
+                        'format' => 'dd MMMM y HH:mm',
+                        'label' => 'Debut'
+//                'placeholder' => 'Choisir la date/heure de debut'
+                    ]);
+                    $form->add('end', DateType::class, [
+                        'widget' => 'single_text',
+                        'html5' => false,
+                        'attr' => ['placeholder' => 'Choisir la date/heure de fin'],
+                        'format' => 'dd MMMM y HH:mm',
+                        'label' => 'Fin'
+                    ]);
+                }
+            });
     }
 
     /**

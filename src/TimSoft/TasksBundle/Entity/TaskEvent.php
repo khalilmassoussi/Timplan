@@ -115,7 +115,7 @@ class TaskEvent implements \JsonSerializable
     private $intervale;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=true)
      */
     private $periodique;
     /**

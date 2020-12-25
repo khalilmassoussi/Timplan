@@ -32,7 +32,12 @@
         /*    font-style: italic;*/
         display: block;
     }
+
+
 </style>
+<link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css"
+      rel="stylesheet">
+
 <div id="addTask" class="modal fade">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
@@ -77,13 +82,18 @@
                                         </td>
                                         <td>
                                             <div class="form-group clearfix">
-                                                {% for key, allDayItem in form.periodique %}
-                                                    <div class="icheck-primary d-inline">
-                                                        {{ form_widget(allDayItem, {'attr': {'class': 'form-check-input'}}) }}
-                                                        {{ form_label(allDayItem) }}
-                                                    </div>
-                                                {% endfor %}
+                                                {#{% for key, allDayItem in form.periodique %}#}
+                                                {#<div class="icheck-primary d-inline">#}
+                                                {#{{ form_widget(allDayItem, {'attr': {'class': 'form-check-input'}}) }}#}
+                                                {#{{ form_label(allDayItem) }}#}
+                                                {#</div>#}
+                                                {#{% endfor %}#}
+
+                                                {{ form_widget(form.periodique) }}
+                                                {{ form_label(form.periodique) }}
+
                                             </div>
+
                                         </td>
                                     </tr>
                                     <tr id="tempsT">
@@ -250,6 +260,7 @@
     </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.2/dist/jquery.validate.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
 
 <script>
     var $activive = $('#timsoft_tasksbundle_taskevent_activite');
@@ -284,6 +295,7 @@
 
     var slider = $('form[name="new"] #timsoft_tasksbundle_taskevent_progression');
     $(document).ready(function () {
+        $('#timsoft_tasksbundle_taskevent_periodique').parent().addClass('custom-control custom-switch');
         $('form[name="new"]').on('submit', function (e) {
             e.preventDefault();
         }).validate({
@@ -292,7 +304,7 @@
 
             },
             submitHandler: function (form) {
-                if ($('form[name="new"] input[name="timsoft_tasksbundle_taskevent[periodique]"]:checked').val() == '0' && (new Date($('form[name="new"] #timsoft_tasksbundle_taskevent_start').datetimepicker('getValue')) > new Date($('form[name="new"] #timsoft_tasksbundle_taskevent_end').datetimepicker('getValue')) || ($('form[name="new"] #timsoft_tasksbundle_taskevent_start').val() == '' && $('form[name="new"] #timsoft_tasksbundle_taskevent_end').val() == ''))) {
+                if (!$('form[name="new"] #timsoft_tasksbundle_taskevent_periodique').is(':checked') && (new Date($('form[name="new"] #timsoft_tasksbundle_taskevent_start').datetimepicker('getValue')) > new Date($('form[name="new"] #timsoft_tasksbundle_taskevent_end').datetimepicker('getValue')) || ($('form[name="new"] #timsoft_tasksbundle_taskevent_start').val() == '' && $('form[name="new"] #timsoft_tasksbundle_taskevent_end').val() == ''))) {
                     // alert('Date non valable, veuillez la vérifier et réessayer');
                     Swal.fire({
                         icon: 'warning',
@@ -302,7 +314,7 @@
                     $('form[name="new"] #timsoft_tasksbundle_taskevent_start').addClass('is-invalid');
                     $('form[name="new"] #timsoft_tasksbundle_taskevent_end').addClass('is-invalid');
 
-                } else if ($('form[name="new"] input[name="timsoft_tasksbundle_taskevent[periodique]"]:checked').val() == '1' && (new Date($('form[name="new"] #timsoft_tasksbundle_taskevent_dtstart').datetimepicker('getValue')) > new Date($('form[name="new"] #timsoft_tasksbundle_taskevent_until').datetimepicker('getValue')) || ($('form[name="new"] #timsoft_tasksbundle_taskevent_dtstart').val() == '' && $('form[name="new"] #timsoft_tasksbundle_taskevent_until').val() == ''))) {
+                } else if ($('form[name="new"] #timsoft_tasksbundle_taskevent_periodique').is(':checked') && (new Date($('form[name="new"] #timsoft_tasksbundle_taskevent_dtstart').datetimepicker('getValue')) > new Date($('form[name="new"] #timsoft_tasksbundle_taskevent_until').datetimepicker('getValue')) || ($('form[name="new"] #timsoft_tasksbundle_taskevent_dtstart').val() == '' && $('form[name="new"] #timsoft_tasksbundle_taskevent_until').val() == ''))) {
                     Swal.fire({
                         icon: 'warning',
                         title: 'Oops...',
@@ -322,7 +334,6 @@
                             Swal.showLoading()
                         },
                     });
-                    // event.preventDefault();
                     // var cc = new FormData($('form[name="new"]'));
                     var url = "{{ path('taskevent_new') }}";
                     // var formSerialize = $('form[name="new"]').serialize();
@@ -350,13 +361,12 @@
                     });
                 }
             },
-            invalidHandler: function () {
+            invalidHandler: function (e) {
                 setTimeout(function () {
                     $('.nav-tabs a small.required').remove();
                     $('.nav-tabs a.myErrorClass').removeClass('myErrorClass');
                     var validatePane = $('.tab-content.tab-validate .tab-pane:has(.myErrorClass)').each(function () {
                         var id = $(this).attr('id');
-                        console.log(id);
                         $('.nav-tabs').find('a[href^="#' + id + '"]').append(' <small class="required">***</small>');
                         $('.nav-tabs').find('a[href^="#' + id + '"]').addClass('myErrorClass');
                     });
@@ -364,14 +374,16 @@
             },
             rules: {},
             errorClass: "myErrorClass",
-            highlight: function (element, errorClass, validClass) {
-                var elem = $(element);
-                if (elem.hasClass("select2-hidden-accessible")) {
-                    $("#select2-" + elem.attr("id") + "-container").parent().addClass(errorClass);
-                } else {
-                    elem.addClass(errorClass);
-                }
-            },
+            highlight:
+
+                function (element, errorClass, validClass) {
+                    var elem = $(element);
+                    if (elem.hasClass("select2-hidden-accessible")) {
+                        $("#select2-" + elem.attr("id") + "-container").parent().addClass(errorClass);
+                    } else {
+                        elem.addClass(errorClass);
+                    }
+                },
 
             //When removing make the same adjustments as when adding
             unhighlight: function (element, errorClass, validClass) {
@@ -510,7 +522,7 @@
         hidePeriod();
 
         $('form[name="new"] input[name="timsoft_tasksbundle_taskevent[periodique]"]').change(function () {
-            if ($(this).val() == 0) {
+            if (this.checked == false) {
                 hidePeriod();
             } else {
                 showPeriod();
@@ -613,12 +625,13 @@
             $(this).hide();
             $(this).next('label').hide();
         });
+        $('form[name="new"] #timsoft_tasksbundle_taskevent_startTime').prop('required', false);
+        $('form[name="new"] #timsoft_tasksbundle_taskevent_endTime').prop('required', false);
         byweekday.parent().parent().parent().first().hide();
         intervale.prop('required', false);
         $('#freq').hide();
         $('#tempsT').show();
         $('#type').show();
-        // $('form[name="new"] #timsoft_tasksbundle_taskevent_start').parent().appendTo('#tempsT');
     }
 
     function showPeriod() {
@@ -635,7 +648,8 @@
         $('form[name="new"] #timsoft_tasksbundle_taskevent_intervale').prop('required', true);
         // $('form[name="new"] #timsoft_tasksbundle_taskevent_dtstart').rules('add', 'required');
         $('#freq').show();
-
+        $('form[name="new"] #timsoft_tasksbundle_taskevent_startTime').prop('required', true);
+        $('form[name="new"] #timsoft_tasksbundle_taskevent_endTime').prop('required', true);
         /*-------------Date------------*/
         $('form[name="new"] #timsoft_tasksbundle_taskevent_dtstart').datetimepicker({
             format: 'd F Y',
