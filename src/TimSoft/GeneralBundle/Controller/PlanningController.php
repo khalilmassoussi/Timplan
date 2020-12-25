@@ -115,6 +115,18 @@ class PlanningController extends Controller
             $setAllDay = true;
             $Existant = null;
             $count = 0;
+            /*----------------------------*/
+            $previous_week = strtotime("-1 week +1 day");
+
+            $start_week = strtotime("last monday midnight", $previous_week);
+            $end_week = strtotime("next sunday", $start_week);
+
+            $start_week = date("Y-m-d", $start_week);
+            $end_week = date("Y-m-d", $end_week);
+            /*--------------------------*/
+            if ($this->getIntersection($date->format('Y-m-d'), $date->format('Y-m-d'), $start_week, $end_week)) {
+                return new Response(json_encode($ev), 419);
+            }
             foreach ($ev as $value) {
                 if ($value->getStart()->format('Y-m-d') == $date->format('Y-m-d')) {
                     $count++;

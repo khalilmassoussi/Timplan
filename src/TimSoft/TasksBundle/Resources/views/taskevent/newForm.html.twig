@@ -354,8 +354,9 @@
                 setTimeout(function () {
                     $('.nav-tabs a small.required').remove();
                     $('.nav-tabs a.myErrorClass').removeClass('myErrorClass');
-                    var validatePane = $('.tab-content.tab-validate .tab-pane:has(input.myErrorClass)').each(function () {
+                    var validatePane = $('.tab-content.tab-validate .tab-pane:has(.myErrorClass)').each(function () {
                         var id = $(this).attr('id');
+                        console.log(id);
                         $('.nav-tabs').find('a[href^="#' + id + '"]').append(' <small class="required">***</small>');
                         $('.nav-tabs').find('a[href^="#' + id + '"]').addClass('myErrorClass');
                     });
@@ -546,6 +547,7 @@
 
         $('#timsoft_tasksbundle_taskevent_freq').on('change', function (e) {
             if ($(this).val() == 'monthly') {
+                $('#timsoft_tasksbundle_taskevent_intervale').parent().parent().children('label.col-sm-3.col-form-label').text('Tous les');
                 $('#freq').text('moi(s)');
                 byweekday.each(function (index) {
                     $(this).hide();
@@ -556,6 +558,7 @@
                     this.checked = false;
                 });
             } else {
+                $('#timsoft_tasksbundle_taskevent_intervale').parent().parent().children('label.col-sm-3.col-form-label').text('Toutes les');
                 $('#freq').text('semaine(s)');
                 byweekday.each(function (index) {
                     $(this).show();
@@ -646,9 +649,7 @@
             onChangeDateTime: function (dp, $input) {
             }
         });
-        // $('form[name="new"] #timsoft_tasksbundle_taskevent_dtstart').prop('required', true);
 
-        // $('form[name="new"] #timsoft_tasksbundle_taskevent_dtstart').datetimepicker(validate);
         $('form[name="new"] #timsoft_tasksbundle_taskevent_until').datetimepicker({
             format: 'd F Y',
             timepicker: false,

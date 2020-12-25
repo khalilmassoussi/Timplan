@@ -275,10 +275,7 @@ class DefaultController extends Controller
                 $bus[] = $b->getLibelle();
             }
         }
-//        print_r($bus);
-//        die();
-//
-//
+
         $oui = [];
         $commandes = $this->getDoctrine()->getRepository('TimSoftCommandeBundle:TeteCommande')->findAll();
         foreach ($commandes as $commande) {
@@ -515,4 +512,9 @@ class DefaultController extends Controller
         }
     }
 
+    public function getByClientAction(Request $request)
+    {
+        $commandes = $this->getDoctrine()->getRepository('TimSoftCommandeBundle:TeteCommande')->findByClient($request->get('id'));
+        return new JsonResponse($commandes);
+    }
 }

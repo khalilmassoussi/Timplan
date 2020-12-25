@@ -219,8 +219,6 @@
                         let that = this;
 
                         that.api().columns().every(function (index) {
-
-
                             let column = this;
                             var select = $('<select class="select2" id="select"><option value=""></option></select>')
                                 .appendTo($(column.header()))
@@ -262,13 +260,19 @@
                                 });
                                 // }
                             }
+                            select.val(column.search().slice(1, -1).replace('\\', ''));
+                            var state = this.state.loaded();
+                            if ( state ) {
+                                var val = state.columns[ this.index() ];
+                                select.val( val.search.search );
+                            }
                         });
                     },
-                    "columnDefs": [
-                        {responsivePriority: 1, targets: 0},
-                        {responsivePriority: 2, targets: 2},
-                    ],
+                    stateSave: true,
+
+
                 });
+                // var myValue = table.state().columns[table.column('s.id:name').index()].search.search;
                 $('.daterange').daterangepicker({
                     // ranges: {
                     //     "Today": [moment(), moment()],
@@ -351,7 +355,6 @@
                             .search(val ? "^" + val + "$" : "^" + "-" + "$", true, false, true)
                             .draw();
                     }
-
                 });
 
                 $(".daterange").on('cancel.daterangepicker', function (ev, picker) {

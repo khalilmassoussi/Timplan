@@ -50,3 +50,6 @@ modifierC:
 getCommandes:
   path:     /all
   defaults: { _controller: TimSoftCommandeBundle:Default:getCommandes }
+getByClient:
+  path:     /client
+  defaults: { _controller: TimSoftCommandeBundle:Default:getByClient }

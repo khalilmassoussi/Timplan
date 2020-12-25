@@ -6,6 +6,7 @@
     .header {
         font-weight: bold;
     }
+
     a.myErrorClass, ul.myErrorClass, input.myErrorClass, textarea.myErrorClass, select.myErrorClass, span.myErrorClass {
         border-width: 1px !important;
         border-style: solid !important;
@@ -281,53 +282,10 @@
 </script>
 <script>
     /*--------------Selectors------------*/
-    var byweekday = $("form[name=\"edit\"] input[name=\"timsoft_tasksbundle_taskevent[byweekday][]\"]");
+    var byweekday = $("form[name='edit'] input[name='timsoft_tasksbundle_taskevent[byweekday][]']");
     var intervale = $("form[name=\"edit\"] label[for='timsoft_tasksbundle_taskevent_intervale']");
     /*-----------------------------------*/
-    {#$('form[name="edit"]').submit(function (event) {#}
-    {#Swal.fire({#}
-    {#title: 'Veuillez Patienter !',#}
-    {#html: 'Enregistrement de données..',// add html attribute if you want or remove#}
-    {#allowOutsideClick: false,#}
-    {#onBeforeOpen: () => {#}
-    {#Swal.showLoading()#}
-    {#},#}
-    {#});#}
-    {#event.preventDefault();#}
-    {#if (new Date($('form[name="edit"] #timsoft_tasksbundle_taskevent_start').datetimepicker('getValue')) > new Date($('form[name="edit"] #timsoft_tasksbundle_taskevent_end').datetimepicker('getValue'))) {#}
-    {#Swal.fire({#}
-    {#icon: 'error',#}
-    {#title: 'Oops...',#}
-    {#text: 'Date non valable, veuillez la vérifier et réessayer!',#}
-    {#});#}
-    {#} else {#}
-    {#var cc = new FormData(this);#}
-    {#var url = "{{ path('taskevent_edit', {id: taskEvent.id}) }}";#}
-    {#var formSerialize = $(this).serialize();#}
-    {#$.ajax({#}
-    {#url: url,#}
-    {#data: formSerialize,#}
-    {#type: 'POST',#}
-    {#dataType: "json",#}
-    {#}).done(function (response) {#}
-    {#Swal.close();#}
-    {#if (response.taskExist) {#}
-    {#Swal.fire({#}
-    {#icon: 'error',#}
-    {#title: 'Oops...',#}
-    {#text: 'Il existe déjà une autre Task ayant un même créneau!',#}
-    {#})#}
-    {#} else {#}
-    {#Swal.fire({#}
-    {#icon: 'success',#}
-    {#title: 'Task modifié avec succès !',#}
-    {#});#}
-    {#$('#editTask').modal('hide');#}
-    {#}#}
 
-    {#});#}
-    {#}#}
-    {#});#}
     $(document).ready(function () {
 
         /*----------Validator------------*/
@@ -402,7 +360,7 @@
                 setTimeout(function () {
                     $('.nav-tabs a small.required').remove();
                     $('.nav-tabs a.myErrorClass').removeClass('myErrorClass');
-                    var validatePane = $('.tab-content.tab-validate .tab-pane:has(input.myErrorClass)').each(function () {
+                    var validatePane = $('.tab-content.tab-validate .tab-pane:has(.myErrorClass)').each(function () {
                         var id = $(this).attr('id');
                         $('.nav-tabs').find('a[href^="#' + id + '"]').append(' <small class="required">***</small>');
                         $('.nav-tabs').find('a[href^="#' + id + '"]').addClass('myErrorClass');
@@ -464,7 +422,7 @@
         });
         var allDay = $('form[name="edit"] input[name="timsoft_tasksbundle_taskevent[allDay]"]:checked');
         if ($('form[name="edit"] input[name="timsoft_tasksbundle_taskevent[allDay]"]:checked').val() == 1) {
-            $('#timsoft_tasksbundle_taskevent_start').datetimepicker({
+            $('form[name="edit"] #timsoft_tasksbundle_taskevent_start').datetimepicker({
                 format: 'd F Y',
                 timepicker: false,
                 onShow: function (ct) {
@@ -484,7 +442,7 @@
                     }
                 }
             });
-            $('#timsoft_tasksbundle_taskevent_end').datetimepicker({
+            $('form[name="edit"] #timsoft_tasksbundle_taskevent_end').datetimepicker({
                 format: 'd F Y',
                 timepicker: false,
                 onShow: function (ct) {
@@ -505,7 +463,7 @@
                 }
             });
         } else {
-            $('#timsoft_tasksbundle_taskevent_start').datetimepicker({
+            $('form[name="edit"] #timsoft_tasksbundle_taskevent_start').datetimepicker({
                 format: 'd F Y H:i',
                 timepicker: true,
                 step: 30,
@@ -527,7 +485,7 @@
                 }
             });
 
-            $('#timsoft_tasksbundle_taskevent_end').datetimepicker({
+            $('form[name="edit"] #timsoft_tasksbundle_taskevent_end').datetimepicker({
                 format: 'd F Y H:i',
                 timepicker: true,
                 step: 30,
@@ -551,7 +509,7 @@
         }
         $('form[name="edit"] input[name="timsoft_tasksbundle_taskevent[allDay]"]').change(function () {
             if (this.value == 1) {
-                $('#timsoft_tasksbundle_taskevent_start').datetimepicker({
+                $('form[name="edit"] #timsoft_tasksbundle_taskevent_start').datetimepicker({
                     format: 'd F Y',
                     timepicker: false,
                     onShow: function (ct) {
@@ -571,7 +529,7 @@
                         }
                     }
                 });
-                $('#timsoft_tasksbundle_taskevent_end').datetimepicker({
+                $('form[name="edit"] #timsoft_tasksbundle_taskevent_end').datetimepicker({
                     format: 'd F Y',
                     timepicker: false,
                     onShow: function (ct) {
@@ -700,7 +658,7 @@
                 }
             });
         });
-        /*---------------------------*/
+        /*-----------------------------------*/
 
         /*-------------DataTable----------*/
         $('.detail').dataTable({
@@ -741,13 +699,11 @@
         });
         if ($('form[name="edit"] input[name="timsoft_tasksbundle_taskevent[periodique]"]:checked').val() == 1) {
             showPeriod();
-        } else {
-            hidePeriod();
-        }
-        $('form[name="edit"] #timsoft_tasksbundle_taskevent_freq').on('change', function (e) {
-            if ($(this).val() == 'monthly') {
+            if ($('form[name="edit"] #timsoft_tasksbundle_taskevent_freq').val() === "monthly") {
                 $('#freq').text('moi(s)');
+                $('#timsoft_tasksbundle_taskevent_intervale').parent().parent().children('label.col-sm-3.col-form-label').text('Tous les');
                 byweekday.each(function (index) {
+                    console.log($(this));
                     $(this).hide();
                     $(this).next('label').hide();
                 });
@@ -757,6 +713,33 @@
                 });
             } else {
                 $('#freq').text('semaine(s)');
+                $('#timsoft_tasksbundle_taskevent_intervale').parent().parent().children('label.col-sm-3.col-form-label').text('Toutes les');
+                byweekday.each(function (index) {
+                    $(this).show();
+                    $(this).next('label').show();
+                });
+                byweekday.parent().parent().parent().first().show();
+            }
+        } else {
+            hidePeriod();
+        }
+        $('form[name="edit"] #timsoft_tasksbundle_taskevent_freq').on('change', function (e) {
+            if ($(this).val() == 'monthly') {
+                $('#freq').text('moi(s)');
+                $('#timsoft_tasksbundle_taskevent_intervale').parent().parent().children('label.col-sm-3.col-form-label').text('Tous les');
+                byweekday.each(function (index) {
+                    console.log($(this));
+
+                    $(this).hide();
+                    $(this).next('label').hide();
+                });
+                byweekday.parent().parent().parent().first().hide();
+                byweekday.each(function () {
+                    this.checked = false;
+                });
+            } else {
+                $('#freq').text('semaine(s)');
+                $('#timsoft_tasksbundle_taskevent_intervale').parent().parent().children('label.col-sm-3.col-form-label').text('Toutes les');
                 byweekday.each(function (index) {
                     $(this).show();
                     $(this).next('label').show();
@@ -765,7 +748,9 @@
 
             }
         });
+
         /*--------------------------------*/
+
     });
 
     function progress(value) {
@@ -800,7 +785,6 @@
         var h = r * 0x10000 + g * 0x100 + b * 0x1;
         return '#' + ('000000' + h.toString(16)).slice(-6);
     }
-
 
     function hidePeriod() {
         $('#custom-tabs-three-profile-tab').hide();
