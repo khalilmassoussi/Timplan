@@ -115,17 +115,19 @@ class PlanningController extends Controller
             $setAllDay = true;
             $Existant = null;
             $count = 0;
+
             /*----------------------------*/
             $previous_week = strtotime("-1 week +1 day");
 
-            $start_week = strtotime("last monday midnight", $previous_week);
-            $end_week = strtotime("next sunday", $start_week);
+            $start_week = strtotime("last sunday midnight", $previous_week);
+            $end_week = strtotime("next saturday", $start_week);
 
             $start_week = date("Y-m-d", $start_week);
             $end_week = date("Y-m-d", $end_week);
             /*--------------------------*/
-            if ($this->getIntersection($date->format('Y-m-d'), $date->format('Y-m-d'), $start_week, $end_week)) {
-                return new Response(json_encode($ev), 419);
+
+            if ($date->format('Y-m-d') < $end_week) {
+                return new Response(json_encode($start_week . ' ' . $end_week), 419);
             }
             foreach ($ev as $value) {
                 if ($value->getStart()->format('Y-m-d') == $date->format('Y-m-d')) {
@@ -741,8 +743,8 @@ class PlanningController extends Controller
                 }
             }
             $temps = $editForm->get('temps')->getData();
-            if ($planning->getLc()->JRestant() < 1 && (in_array('Matin', $temps) && in_array('Après-midi', $temps))) {
-                return new JsonResponse('Error RAL', 404);
+            if ($planning->getLc()->JRestant() < 0.5 && (in_array('Matin', $temps) && in_array('Après-midi', $temps))) {
+                return new JsonResponse('Error RAL '. $planning->getLc()->JRestant(), 404);
             }
             $feuille = $planning->getFeuille();
             if (in_array('Matin', $temps) && in_array('Après-midi', $temps)) {
