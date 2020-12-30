@@ -303,7 +303,7 @@
 
             },
             submitHandler: function (form) {
-                if ($('form[name="edit"] input[name="timsoft_tasksbundle_taskevent[periodique]"]').checked == false && (new Date($('form[name="edit"] #timsoft_tasksbundle_taskevent_start').datetimepicker('getValue')) > new Date($('form[name="edit"] #timsoft_tasksbundle_taskevent_end').datetimepicker('getValue')) || ($('form[name="edit"] #timsoft_tasksbundle_taskevent_start').val() == '' && $('form[name="edit"] #timsoft_tasksbundle_taskevent_end').val() == ''))) {
+                if ($('form[name="edit"] input[name="timsoft_tasksbundle_taskevent[periodique]"]').is(':checked') && (new Date($('form[name="edit"] #timsoft_tasksbundle_taskevent_start').datetimepicker('getValue')) > new Date($('form[name="edit"] #timsoft_tasksbundle_taskevent_end').datetimepicker('getValue')) || ($('form[name="edit"] #timsoft_tasksbundle_taskevent_start').val() == '' && $('form[name="edit"] #timsoft_tasksbundle_taskevent_end').val() == ''))) {
                     // alert('Date non valable, veuillez la vérifier et réessayer');
                     Swal.fire({
                         icon: 'warning',
@@ -313,7 +313,7 @@
                     $('form[name="edit"] #timsoft_tasksbundle_taskevent_start').addClass('is-invalid');
                     $('form[name="edit"] #timsoft_tasksbundle_taskevent_end').addClass('is-invalid');
 
-                } else if ($('form[name="edit"] input[name="timsoft_tasksbundle_taskevent[periodique]"]').checked == true && (new Date($('form[name="edit"] #timsoft_tasksbundle_taskevent_dtstart').datetimepicker('getValue')) > new Date($('form[name="edit"] #timsoft_tasksbundle_taskevent_until').datetimepicker('getValue')) || ($('form[name="edit"] #timsoft_tasksbundle_taskevent_dtstart').val() == '' && $('form[name="edit"] #timsoft_tasksbundle_taskevent_until').val() == ''))) {
+                } else if ($('form[name="edit"] input[name="timsoft_tasksbundle_taskevent[periodique]"]').is(':checked') && (new Date($('form[name="edit"] #timsoft_tasksbundle_taskevent_dtstart').datetimepicker('getValue')) > new Date($('form[name="edit"] #timsoft_tasksbundle_taskevent_until').datetimepicker('getValue')) || ($('form[name="edit"] #timsoft_tasksbundle_taskevent_dtstart').val() == '' && $('form[name="edit"] #timsoft_tasksbundle_taskevent_until').val() == ''))) {
                     Swal.fire({
                         icon: 'warning',
                         title: 'Oops...',
@@ -323,7 +323,7 @@
                     $('form[name="edit"] #timsoft_tasksbundle_taskevent_until').addClass('myErrorClass');
                 } else {
                     $("form[name=\"edit\"] input[type='hidden']").each(function () {
-                        console.log($(this).val());
+
                     });
                     Swal.fire({
                         title: 'Veuillez Patienter !',
@@ -357,6 +357,14 @@
                                 // text: 'Il existe déjà une autre Task ayant un même créneau!',
                             });
                             $('#editTask').modal('hide');
+                        }
+                    }).fail(function (response) {
+                        if (response.responseText.replace(/\"/g, "") == 'ErreurPlanificationEnArriere') {
+                            Swal.fire(
+                                'Attention!',
+                                'Vous ne pouvez pas planifier que les journées de la semaine en cours de dimanche à samedi !',
+                                'error'
+                            )
                         }
                     });
                 }
@@ -801,6 +809,8 @@
             $(this).hide();
             $(this).next('label').hide();
         });
+        $('form[name="edit"] #timsoft_tasksbundle_taskevent_startTime').prop('required', false);
+        $('form[name="edit"] #timsoft_tasksbundle_taskevent_endTime').prop('required', false);
         byweekday.parent().parent().parent().first().hide();
         intervale.prop('required', false);
         $('#freq').hide();

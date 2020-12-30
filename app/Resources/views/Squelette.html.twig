@@ -634,7 +634,6 @@
     <div id="renderEdit">
 
     </div>
-    </body>
     <div class="pace pace-inactive">
         <div class="pace-progress" data-progress-text="100%" data-progress="99"
              style="transform: translate3d(100%, 0px, 0px);">
@@ -912,6 +911,9 @@
                     success: function (data) {
                         $('#renderEdit').html(data);
                         $('#addTask').modal('show');
+                        $('#addTask').on('hidden.bs.modal', function () {
+                            // calendar.refetchEvents();
+                        });
                         $('#addTask').on('shown.bs.modal', function () {
                             Swal.close();
                         });

@@ -296,6 +296,7 @@
                         }
                     });
                 });
+
                 $('#addTaskButton').on('click', function (e) {
                     e.preventDefault();
                     $.ajax({
@@ -305,7 +306,7 @@
                         success: function (data) {
                             $('#renderEdit').html(data);
                             $('#addTask').modal();
-                            $('form[name="new"]').submit(function () {
+                            $('form[name="new"]').on('submit', function () {
                                 calendar.refetchEvents();
                             });
                             $('form[name="new"] #timsoft_tasksbundle_taskevent_utilisateur').val({{ app.user.id }}); // Select the option with a value of '1'

@@ -64,9 +64,24 @@ class TaskEventController extends Controller
                     }
                 }
             }
+
             if (!$taskEvent->getByweekday()) {
                 $taskEvent->setByweekday(null);
             }
+            /*----------------------------*/
+            $previous_week = strtotime("-1 week +1 day");
+
+            $start_week = strtotime("last sunday midnight", $previous_week);
+            $end_week = strtotime("next saturday", $start_week);
+
+            $start_week = date("Y-m-d", $start_week);
+            $end_week = date("Y-m-d", $end_week);
+            /*---------------------------*/
+
+            if ($taskEvent->getStart()->format('Y-m-d') < $end_week) {
+                return new Response(json_encode("ErreurPlanificationEnArriere"), 419);
+            }
+
             $em->persist($taskEvent);
             $em->flush();
             return new Response(json_encode(array('status' => 'success', $taskEvent, $date)));
@@ -127,6 +142,19 @@ class TaskEventController extends Controller
                         }
                     }
                 }
+            }
+            /*----------------------------*/
+            $previous_week = strtotime("-1 week +1 day");
+
+            $start_week = strtotime("last sunday midnight", $previous_week);
+            $end_week = strtotime("next saturday", $start_week);
+
+            $start_week = date("Y-m-d", $start_week);
+            $end_week = date("Y-m-d", $end_week);
+            /*---------------------------*/
+
+            if ($taskEvent->getStart()->format('Y-m-d') < $end_week) {
+                return new Response(json_encode("ErreurPlanificationEnArriere"), 419);
             }
             $this->getDoctrine()->getManager()->flush();
             return new Response(json_encode(array('status' => 'success')));

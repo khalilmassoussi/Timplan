@@ -324,7 +324,7 @@
                     $('form[name="new"] #timsoft_tasksbundle_taskevent_until').addClass('myErrorClass');
                 } else {
                     $("form[name=\"new\"] input[type='hidden']").each(function () {
-                        console.log($(this).val());
+                        // console.log($(this).val());
                     });
                     Swal.fire({
                         title: 'Veuillez Patienter !',
@@ -357,6 +357,14 @@
                                 // text: 'Il existe déjà une autre Task ayant un même créneau!',
                             });
                             $('#addTask').modal('hide');
+                        }
+                    }).fail(function (response) {
+                        if (response.responseText.replace(/\"/g, "") == 'ErreurPlanificationEnArriere') {
+                            Swal.fire(
+                                'Attention!',
+                                'Vous ne pouvez pas planifier que les journées de la semaine en cours de dimanche à samedi !',
+                                'error'
+                            )
                         }
                     });
                 }

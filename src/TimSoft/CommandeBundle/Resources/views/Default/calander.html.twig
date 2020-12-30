@@ -85,7 +85,7 @@
                 <div class="card card-warning">
                     <div class="card-header">
                         <div class="card-title"><strong>Calendrier</strong></div>
-                        <div class="card-tools"><strong>à {{ cc }}</strong></div>
+                        <div class="card-tools"><strong>{{ cc }}</strong></div>
                     </div>
                     <div class="card-body p-0">
                         <div id='calendar'></div>
@@ -319,8 +319,16 @@
                                             editPlanningModal(event, calendar, data);
                                             f();
                                         },
-                                        error: function () {
-                                            alert("Vous ne pouvez pas faire cette action");
+                                        error: function (data) {
+                                            if (data.responseText.replace(/\"/g, "") == 'ErreurPlanificationEnArriere') {
+                                                Swal.fire(
+                                                    'Attention!',
+                                                    'Vous ne pouvez pas planifier que les journées de la semaine en cours de dimanche à samedi !',
+                                                    'error'
+                                                )
+                                            } else {
+                                                alert("Vous ne pouvez pas faire cette action");
+                                            }
                                         },
                                     });
                                 });
@@ -338,8 +346,16 @@
                                         calendar.refetchEvents();
                                         f();
                                     },
-                                    error: function () {
-                                        alert("Vous ne pouvez pas faire cette action");
+                                    error: function (data) {
+                                        if (data.responseText.replace(/\"/g, "") == 'ErreurPlanificationEnArriere') {
+                                            Swal.fire(
+                                                'Attention!',
+                                                'Vous ne pouvez pas planifier que les journées de la semaine en cours de dimanche à samedi !',
+                                                'error'
+                                            )
+                                        } else {
+                                            alert("Vous ne pouvez pas faire cette action ");
+                                        }
                                     },
                                 });
 
