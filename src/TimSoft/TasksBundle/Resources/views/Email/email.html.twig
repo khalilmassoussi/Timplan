@@ -1,0 +1,58 @@
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+      integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+<div class="container-fluid">
+    <h5>Task {{ Task.statut }} : Task {{ Task.client.raisonSociale }} du {{ Task.start|date('d-m-Y') }}
+        effectuée par {{ Task.utilisateur }} !</h5><br>
+    <b>Intervenant:</b> {{ Task.utilisateur }} <br>
+    <b>Client:</b> {{ Task.client.raisonSociale }} <br>
+    <b>Task: </b>{{ Task.task.libelle }}<br>
+    <b>Activité: </b>{{ Task.activite.libelle }}<br>
+    {% if Task.isAllDay %}
+        <b>Date début: </b>{{ Task.start|date('d/m/Y') }}<br>
+        <b>Date fin: </b>{{ Task.end|date('d/m/Y') }}<br>
+    {% else %}
+        <b>Date: </b>{{ Task.start|date('d/m/Y') }}<br>
+        {% if Task.start|date('H') < 13 %}
+            <b>Matin</b><br>
+        {% else %}
+            <b>Après-midi</b><br>
+        {% endif %}
+        <ul>
+            <li><b>Heure début: </b>{{ Task.start|date('H:i') }}<br></li>
+            <li><b>Heure fin: </b>{{ Task.end|date('H:i') }}<br></li>
+        </ul>
+    {% endif %}
+    <b> Lieu: </b>{{ Task.site }}<br>
+    <b> Étiquette: </b>
+    {% if Task.etiquette == 'Urgent' %}
+        <span class="badge bg-danger">{{ Task.etiquette }}</span>
+    {% elseif Task.etiquette == 'Peu' %}
+        <span class="badge bg-light">{{ Task.etiquette }}</span>
+    {% elseif Task.etiquette == 'Moyen' %}
+        <span class="badge bg-indigo">{{ Task.etiquette }}</span>
+    {% elseif Task.etiquette == 'Important' %}
+        <span class="badge bg-warning">{{ Task.etiquette }}</span>
+    {% endif %}
+    <br>
+    <b> Statut: </b>{{ Task.statut }}<br>
+    <b> Progression: </b>
+    <div class="progress">
+        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
+             aria-volumenow="{{ Task.progression }}" aria-volumemin="0"
+             aria-volumemax="100" style="width: {{ Task.progression }}%">
+            {{ Task.progression }}%
+        </div>
+    </div>
+    <br>
+    <b> Rapport: </b>{{ Task.rapport }}<br>
+    <br>
+    <br>
+    <b>
+        Cordialement,<br>
+        Direction des Opérations Timsoft !
+
+    </b>
+   <br>
+        <img src="{{ image_src }}" style="width: 20%">
+</div>
+

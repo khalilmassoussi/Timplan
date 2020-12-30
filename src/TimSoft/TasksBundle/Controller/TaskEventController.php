@@ -81,7 +81,8 @@ class TaskEventController extends Controller
             if ($taskEvent->getStart()->format('Y-m-d') < $end_week) {
                 return new Response(json_encode("ErreurPlanificationEnArriere"), 419);
             }
-
+            $this->email($taskEvent);
+            
             $em->persist($taskEvent);
             $em->flush();
             return new Response(json_encode(array('status' => 'success', $taskEvent, $date)));
@@ -156,6 +157,8 @@ class TaskEventController extends Controller
             if ($taskEvent->getStart()->format('Y-m-d') < $end_week) {
                 return new Response(json_encode("ErreurPlanificationEnArriere"), 419);
             }
+            $this->email($taskEvent);
+
             $this->getDoctrine()->getManager()->flush();
             return new Response(json_encode(array('status' => 'success')));
         }
@@ -279,5 +282,97 @@ class TaskEventController extends Controller
             unset($array[$key]);
         }
         return $array;
+    }
+
+    public function email($taskEvent)
+    {
+        /*-------Email---------*/
+        $message = (new \Swift_Message('Task ' . $taskEvent->getStatut() . ': ' . $taskEvent->getClient()->getRaisonSociale() . ' du ' . $taskEvent->getStart()->format('d/m/Y')))
+            ->setFrom(['timplan@timsoft.net' => "Administrateur TimSoft"]);
+        $messageG = (new \Swift_Message('Task ' . $taskEvent->getStatut() . ': ' . $taskEvent->getClient()->getRaisonSociale() . ' du ' . $taskEvent->getStart()->format('d/m/Y')))
+            ->setFrom(['timplan@timsoft.net' => "Administrateur TimSoft"]);
+        $failedRecipients = [];
+        $numSent = 0;
+        $user = $taskEvent->getUtilisateur();
+        $message->addTo($user->getEmail(), $user->getNomUtilisateur() . ' ' . $user->getPrenomUtilisateur());
+        $image_src = $message->embed(\Swift_Image::fromPath('Template/Logo-Timplan (1).png'));
+
+
+        $from_name = "Administrateur TimSoft";
+        $from_address = "timplan@timsoft.net";
+        $to_name = $user->getPrenomUtilisateur() . ' ' . $user->getNomUtilisateur();
+        $to_address = $user->getEmail();
+
+        if ($taskEvent->isAllDay()) {
+            $startTime = $taskEvent->getStart()->format('m/d/Y 07:30');
+            $endTime = $taskEvent->getStart()->format('m/d/Y 17:00');
+        } else {
+            $startTime = $taskEvent->getStart()->format('m/d/Y H:i');
+            $endTime = $taskEvent->getEnd()->format('m/d/Y H:i');
+        }
+
+        $subject = $taskEvent->getClient()->getRaisonSociale();
+        $location = $taskEvent->getSite();
+        $domain = 'timplan.timsoft.net';
+        $ical = 'BEGIN:VCALENDAR' . "\r\n" .
+            'PRODID:-//Microsoft Corporation//Outlook 10.0 MIMEDIR//EN' . "\r\n" .
+            'VERSION:2.0' . "\r\n" .
+            'METHOD:REQUEST' . "\r\n" .
+//                    'BEGIN:VTIMEZONE' . "\r\n" .
+//                    'TZID:Europe/Paris' . "\r\n" .
+            'BEGIN:STANDARD' . "\r\n" .
+            'DTSTART:20091101T020000' . "\r\n" .
+            'RRULE:FREQ=YEARLY;INTERVAL=1;BYDAY=1SU;BYMONTH=11' . "\r\n" .
+            'TZOFFSETFROM:-0400' . "\r\n" .
+            'TZOFFSETTO:-0500' . "\r\n" .
+//                    'TZNAME:EST' . "\r\n" .
+            'END:STANDARD' . "\r\n" .
+            'BEGIN:DAYLIGHT' . "\r\n" .
+            'DTSTART:20090301T020000' . "\r\n" .
+            'RRULE:FREQ=YEARLY;INTERVAL=1;BYDAY=2SU;BYMONTH=3' . "\r\n" .
+            'TZOFFSETFROM:-0500' . "\r\n" .
+            'TZOFFSETTO:-0400' . "\r\n" .
+            'TZNAME:EDST' . "\r\n" .
+            'END:DAYLIGHT' . "\r\n" .
+//                    'END:VTIMEZONE' . "\r\n" .
+            'BEGIN:VEVENT' . "\r\n" .
+            'ORGANIZER;CN="' . $from_name . '":MAILTO:' . $from_address . "\r\n" .
+            'ATTENDEE;CN="' . $to_name . '";ROLE=REQ-PARTICIPANT;RSVP=TRUE:MAILTO:' . $to_address . "\r\n" .
+            'LAST-MODIFIED:' . date("Ymd\TGis") . "\r\n" .
+            'UID:' . date("Ymd\TGis", strtotime($startTime)) . rand() . "@" . $domain . "\r\n" .
+            'DTSTAMP:' . date("Ymd\TGis") . "\r\n" .
+            'DTSTART:' . date("Ymd\THis", strtotime($startTime)) . "\r\n" .
+            'DTEND:' . date("Ymd\THis", strtotime($endTime)) . "\r\n" .
+            'TRANSP:OPAQUE' . "\r\n" .
+            'SEQUENCE:1' . "\r\n" .
+            'SUMMARY:' . $subject . "\r\n" .
+            'LOCATION:' . $location . "\r\n" .
+            'CLASS:PUBLIC' . "\r\n" .
+            'PRIORITY:5' . "\r\n" .
+            'BEGIN:VALARM' . "\r\n" .
+            'TRIGGER:-PT15M' . "\r\n" .
+            'ACTION:DISPLAY' . "\r\n" .
+            'DESCRIPTION:Reminder' . "\r\n" .
+            'END:VALARM' . "\r\n" .
+            'END:VEVENT' . "\r\n" .
+            'END:VCALENDAR' . "\r\n";
+
+        $attachment = \Swift_Attachment::newInstance()
+            ->setFilename("invite.ics")
+            ->setContentType('text/calendar;charset=UTF-8;name="invite.ics";method=REQUEST')
+            ->setBody($ical)
+            ->setDisposition('inline;filename=invite.ics');
+        $message->attach($attachment);
+
+        $message->setBody(
+            $this->renderView('@TimSoftTasks/Email/email.html.twig', array('Task' => $taskEvent, 'image_src' => $image_src)), 'text/html');
+        $messageG->setBody(
+            $this->renderView('@TimSoftTasks/Email/email.html.twig', array('Task' => $taskEvent, 'image_src' => $image_src)), 'text/html');
+        $numSent += $this->get('mailer')->send($message, $failedRecipients);
+        $messageG->addTo('w.benmustapha@timsoft.com.tn', 'Wafa Benmustapha');
+        $messageG->addTo('f.cherif@timsoft.com.tn', 'Fatma CHERIF');
+        $numSent += $this->get('mailer')->send($messageG, $failedRecipients);
+
+        /*---------------------*/
     }
 }
