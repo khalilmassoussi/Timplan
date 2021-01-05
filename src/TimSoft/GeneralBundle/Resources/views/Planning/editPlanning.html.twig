@@ -10,6 +10,7 @@
         color: red;
     }
 </style>
+
 <div id="editPlanning" class="modal fade">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
@@ -246,7 +247,6 @@
         var cc = new FormData(this);
         var url = "{{ path('editPlanning',{ id: planning.id }) }}";
         var formSerialize = $(this).serialize();
-        console.log('cc');
         $.ajax({
             url: url,
             data: formSerialize,
@@ -284,7 +284,7 @@
         format: 'd MM yyyy',
         language: 'fr'
     }).on('changeDate', function (e) {
-        $("#timsoft_generalbundle_planning_end").val(moment(e.date).format('LL'));
+        $("#timsoft_generalbundle_planning_end").val(moment(e.date).locale('fr').format('LL'));
     });
 
 </script>

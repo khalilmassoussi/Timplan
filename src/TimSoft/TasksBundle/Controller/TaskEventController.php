@@ -82,7 +82,7 @@ class TaskEventController extends Controller
                 return new Response(json_encode("ErreurPlanificationEnArriere"), 419);
             }
             $this->email($taskEvent);
-            
+
             $em->persist($taskEvent);
             $em->flush();
             return new Response(json_encode(array('status' => 'success', $taskEvent, $date)));
