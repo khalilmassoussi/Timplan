@@ -1,7 +1,7 @@
 {% extends 'Squelette.html.twig' %}
 
 {% block Titre %}
-    Portail web de TimSoft - Consultation de la commande N°{{ commande.nCommande }}
+    Timplan - Consultation de la commande N°{{ commande.nCommande }}
 {% endblock %}
 
 {% block Section %}
@@ -683,11 +683,10 @@
                         url: Routing.generate('jsonPlanningByLc', {id: cc}, true),
                         // data: null,
                         success: function (result) {
-                            console.log('-----first------');
                             interventions.clear().draw();
                             $("#interventions").modal();
-                            $("#title").html('Les interventions: ' + result[0].libelle);
-                            $.each(result, function (key, value) {
+                            $("#title").html('Les interventions: ' + result.libelle);
+                            $.each(result.plannings, function (key, value) {
                                 let date;
                                 var Supplementaire;
                                 if (value.allDay) {

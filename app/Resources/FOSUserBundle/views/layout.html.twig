@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>{% block titlefos %}{% endblock titlefos %}</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="{{ asset('Template2/plugins/fontawesome-free/css/all.min.css') }}">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- icheck bootstrap -->
+    <link rel="stylesheet" href="{{ asset('Template2/plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="{{ asset('Template2/dist/css/adminlte.min.css') }}">
+    <!-- Google Font: Source Sans Pro -->
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+
+    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('Template/cropped-Favicon-timsoft-270x270.png') }}"
+          size="16x16"/>
+
+</head>
+<body class="hold-transition skin-blue login-page">
+
+{% trans_default_domain 'FOSUserBundle' %}
+
+
+
+
+{% for message in app.flashes('ReconfirmationMail') %}
+    <div class="flash-notice">
+        <body onLoad="$('#my-modal').modal('show');">
+        <div id="my-modal" class="modal fade">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Demande de reconfirmation de l'adresse e-mail !</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        {{ message }}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </body>
+    </div>
+{% endfor %}
+
+{% for message in app.flashes('Reset-MDP') %}
+    <div class="flash-notice">
+        <body onLoad="$('#my-modal').modal('show');">
+        <div id="my-modal" class="modal fade">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Réinitialisation de votre mot de passe !</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        {{ message }}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </body>
+    </div>
+{% endfor %}
+
+<div class="login-box" style="width: 35%">
+    <div class="login-logo">
+        <img src="{{ asset('Template/Logo-Timplan (1).png') }}" width="80%">
+    </div>
+    <!-- /.login-logo -->
+    <div class="card">
+        <div class="card-body login-card-body">
+            {% block fos_user_content %}
+            {% endblock fos_user_content %}
+        </div>
+        <!-- /.login-card-body -->
+    </div>
+
+</div>
+
+
+<!-- jQuery -->
+<script src="{{ asset('Template2/plugins/jquery/jquery.min.js') }}"></script>
+<!-- Bootstrap 4 -->
+<script src="{{ asset('Template2/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+<!-- AdminLTE App -->
+<script src="{{ asset('Template2/dist/js/adminlte.min.js') }}"></script>
+
+</body>
+</html>
+
+<div>
+
+</div>
+

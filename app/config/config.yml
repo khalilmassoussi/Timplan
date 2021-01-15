@@ -142,6 +142,9 @@ fos_user:
     profile:
         form:
             type: TimSoft\GeneralBundle\Form\ProfileFormType
+    resetting:
+        form:
+            type: TimSoft\GeneralBundle\Form\ResettingType
 # Configuration vich_uploader pour la gestion des fichiers
 vich_uploader:
     db_driver: orm

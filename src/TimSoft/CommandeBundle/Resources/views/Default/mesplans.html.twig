@@ -1,7 +1,7 @@
 {% extends 'Squelette.html.twig' %}
 
 {% block Titre %}
-    Portail web de TimSoft - Mon Planning
+    Timplan - Mon Planning
 {% endblock %}
 
 {% block Section %}
@@ -97,23 +97,6 @@
                     eventSources: [
                         '{{ path('list', {'user' : app.user.id }) }}',
                         '{{ path('taskevent_by_user',{'id': app.user.id}) }}',
-                        {
-                            events: [ // put the array in the `events` property
-                                {
-                                    title: 'TEST #2 my recurring event',
-                                    rrule: {
-                                        freq: 'monthly',
-                                        interval: 1,
-                                        // byweekday: [  'fr' ],
-                                        dtstart: '2019-11-11T00:00:00',
-                                        until: '2029-06-01'
-                                    },
-                                    allDay: true
-                                }
-                            ],
-                            color: 'black',     // an option!
-                            textColor: 'yellow' // an option!
-                        }
                     ],
 
                     themeSystem: 'themeSystem',
@@ -257,15 +240,21 @@
 
                     e.preventDefault();
                     var exportation = [];
+                    var tasks = [];
                     var events = calendar.getEvents();
                     var userId = {{ app.user.id }};
                     $.each(events, function (key, event) {
-
+                        console.log(event);
                         var resourceIds = event.extendedProps.resourceIds;
                         if (userId === resourceIds[0] && event.extendedProps.type !== 'TaskEvent') {
                             if ((calendar.view.currentStart <= event.start) && (calendar.view.currentEnd > event.start)) {
                                 exportation.push(event.id);
                                 console.log(event);
+                            }
+                        } else if (userId === resourceIds[0] && event.extendedProps.type === 'TaskEvent') {
+                            if ((calendar.view.currentStart <= event.start) && (calendar.view.currentEnd > event.start)) {
+                                tasks.push(event.id);
+
                             }
                         }
                     });
@@ -274,6 +263,7 @@
                         url: '{{ path('telechargementPlanning') }}',
                         data: {
                             ids: exportation,
+                            tasks: tasks,
                             start: moment(calendar.view.currentStart).format('MM/DD/YYYY'),
                             end: moment(calendar.view.currentEnd).subtract(1, 'days').format('MM/DD/YYYY'),
                         },

@@ -604,9 +604,14 @@ class PlanningController extends Controller
 // --------------------------------------------------------------------------
         $em = $this->getDoctrine()->getManager(); // initialise la connexion à la BD
         $plannings = [];
+        $tasks = [];
         foreach ($request->get('ids') as $id) {
             $planning = $em->getRepository("TimSoftGeneralBundle:Planning")->find($id);
             $plannings[] = $planning;
+        }
+        foreach ($request->get('tasks') as $id) {
+            $task = $em->getRepository("TimSoftTasksBundle:TaskEvent")->find($id);
+            $tasks[] = $task;
         }
         //  return new JsonResponse($plannings);
 //        $plannings = $em->getRepository("TimSoftGeneralBundle:Planning")->PlanningOfMonth($this->getUser()->getId());
@@ -619,6 +624,7 @@ class PlanningController extends Controller
             ->setTitle('Planning du ' . $start->format('d/m') . ' au ' . $end->format('d/m'))
             ->setSubject('Objet');
 
+        /*---------------Planning--------------*/
         $sheet = $phpExcelObject->setActiveSheetIndex(0);
 
         $sheet->setCellValue('A1', 'Client');
@@ -657,7 +663,50 @@ class PlanningController extends Controller
             $counter++;
         }
 
-        $phpExcelObject->getActiveSheet()->setTitle('PlanningSheet');
+        /*--------------------------------------*/
+
+        /*----------------Tasks-----------------*/
+
+        $sheet2 = $phpExcelObject->createSheet()->setTitle('Tasks');
+        $sheet2->setCellValue('A1', 'Client');
+        $sheet2->setCellValue('B1', 'Date debut');
+        $sheet2->setCellValue('C1', 'Date fin');
+        $sheet2->setCellValue('D1', 'Activité');
+        $sheet2->setCellValue('E1', 'Invtervenant');
+        $sheet2->setCellValue('F1', 'Etiquette');
+        $sheet2->setCellValue('G1', 'Site');
+        $sheet2->setCellValue('H1', 'Progression');
+        $sheet2->setCellValue('I1', 'Statut');
+        $sheet2->setCellValue('J1', 'Rapport');
+        $sheet2->setCellValue('K1', 'Perdioque');
+
+        $counter2 = 2;
+
+        foreach ($tasks as $task) {
+            $sheet2->setCellValue('A' . $counter2, $task->getClient()->getRaisonSociale());
+
+            $sheet2->setCellValue('D' . $counter2, $task->getActivite()->getLibelle());
+            $sheet2->setCellValue('E' . $counter2, $task->getUtilisateur()->getPrenomUtilisateur() . ' ' . $task->getUtilisateur()->getNomUtilisateur());
+            $sheet2->setCellValue('F' . $counter2, $task->getEtiquette());
+            $sheet2->setCellValue('G' . $counter2, $task->getSite());
+            $sheet2->setCellValue('H' . $counter2, $task->getProgression());
+            $sheet2->setCellValue('I' . $counter2, $task->getStatut());
+            $sheet2->setCellValue('J' . $counter2, $task->getRapport());
+            if ($task->getPeriodique()) {
+                $sheet2->setCellValue('K' . $counter2, 'Oui');
+                $sheet2->setCellValue('B' . $counter2, $task->getDtstart());
+                $sheet2->setCellValue('C' . $counter2, $task->getUntil());
+            } else {
+                $sheet2->setCellValue('K' . $counter2, 'Non');
+                $sheet2->setCellValue('B' . $counter2, $task->getStart());
+                $sheet2->setCellValue('C' . $counter2, $task->getEnd());
+            }
+            $counter2++;
+        }
+
+        /*--------------------------------------*/
+
+        $phpExcelObject->getActiveSheet()->setTitle('Planning');
 
         // Set active sheet index to the first sheet, so Excel opens this as the first sheet
         $phpExcelObject->setActiveSheetIndex(0);
@@ -727,7 +776,7 @@ class PlanningController extends Controller
 
     public function getByLcAction($id)
     {
-        $plannings = $this->getDoctrine()->getRepository('TimSoftGeneralBundle:Planning')->findByLc($id);
+        $plannings = $this->getDoctrine()->getRepository('TimSoftCommandeBundle:LigneCommande')->find($id);
         return new JsonResponse($plannings);
     }
 
@@ -772,7 +821,7 @@ class PlanningController extends Controller
                 }
             }
             $temps = $editForm->get('temps')->getData();
-            if ($planning->getLc()->JRestant()  <= 0 && (in_array('Matin', $temps) && in_array('Après-midi', $temps))) {
+            if ($planning->getLc()->JRestant() <= 0 && (in_array('Matin', $temps) && in_array('Après-midi', $temps))) {
                 return new JsonResponse('Error RAL ' . $planning->getLc()->JRestant() . ' ' . $planning->jRestantes(), 404);
             }
             $feuille = $planning->getFeuille();

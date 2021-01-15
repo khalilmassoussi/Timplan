@@ -77,11 +77,19 @@ class TaskEventController extends Controller
             $start_week = date("Y-m-d", $start_week);
             $end_week = date("Y-m-d", $end_week);
             /*---------------------------*/
+            if (!$taskEvent->getPeriodique()) {
+                if ($taskEvent->getStart()->format('Y-m-d') < $end_week) {
+                    return new Response(json_encode("ErreurPlanificationEnArriere"), 419);
+                }
+            } else {
+                if ($taskEvent->getDtstart()->format('Y-m-d') < $end_week) {
+                    return new Response(json_encode("ErreurPlanificationEnArriere"), 419);
 
-            if ($taskEvent->getStart()->format('Y-m-d') < $end_week) {
-                return new Response(json_encode("ErreurPlanificationEnArriere"), 419);
+                }
             }
-            $this->email($taskEvent);
+            if (!$taskEvent->getPeriodique()) {
+                $this->email($taskEvent);
+            }
 
             $em->persist($taskEvent);
             $em->flush();

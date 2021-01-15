@@ -1,7 +1,7 @@
 {% extends 'Squelette.html.twig' %}
 
 {% block Titre %}
-    Portail web de TimSoft - Les Plannings Par BU
+    Timplan - Les Plannings Par BU
 {% endblock %}
 
 {% block Section %}
@@ -172,7 +172,7 @@
             var client;
             var calendarEl = document.getElementById('calendar');
             var calendar = new FullCalendar.Calendar(calendarEl, {
-                plugins: ['interaction', 'resourceTimeline', 'bootstrap','rrule'],
+                plugins: ['interaction', 'resourceTimeline', 'bootstrap', 'rrule'],
                 schedulerLicenseKey: '0809399630-fcs-1571406797',
                 locale: 'fr',
                 height: 500,
@@ -416,6 +416,7 @@
                 e.preventDefault();
                 if ($('#bus').val()) {
                     var exportation = [];
+                    var tasks = [];
                     resources = calendar.getResources();
                     var events = calendar.getEvents();
                     $.each(events, function (key, event) {
@@ -425,15 +426,21 @@
                                 if ((calendar.view.currentStart <= event.start) && (calendar.view.currentEnd > event.start)) {
                                     exportation.push(event.id);
                                 }
+                            } else if (resource.id === resourceIds[0] && event.extendedProps.type === 'TaskEvent') {
+                                if ((calendar.view.currentStart <= event.start) && (calendar.view.currentEnd > event.start)) {
+                                    tasks.push(event.id);
+
+                                }
                             }
                         });
-
                     });
+
                     $.ajax({
                         type: "GET",
                         url: '{{ path('telechargementPlanning') }}',
                         data: {
                             ids: exportation,
+                            tasks: tasks,
                             start: moment(calendar.view.currentStart).format('MM/DD/YYYY'),
                             end: moment(calendar.view.currentEnd).subtract(1, 'days').format('MM/DD/YYYY'),
                         },

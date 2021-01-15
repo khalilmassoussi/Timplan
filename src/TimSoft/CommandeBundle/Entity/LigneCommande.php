@@ -363,6 +363,7 @@ class LigneCommande implements \JsonSerializable
             'montant' => $this->montantHT,
             'qrestante' => $this->QteRestante,
             'bu' => $this->bu,
+            'plannings' => $this->plannings->toArray()
         );
 
 
