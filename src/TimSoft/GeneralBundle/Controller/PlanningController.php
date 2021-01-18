@@ -21,7 +21,7 @@ class PlanningController extends Controller
      */
     public function listAction($user, Request $request)
     {
-        $plannings = $this->getDoctrine()->getRepository('TimSoftGeneralBundle:Planning')->findByUser($user, $request->get('start'), $request->get('end'), $this->getUser());
+        $plannings = $this->getDoctrine()->getRepository('TimSoftGeneralBundle:Planning')->findByUser($user, $request->get('start'), $request->get('end'), $this->getUser(), $this->AutorisationAcces('planningArriere', $this->getUser()));
         return new JsonResponse($plannings);
     }
 
@@ -116,19 +116,19 @@ class PlanningController extends Controller
             $Existant = null;
             $count = 0;
 
-            /*----------------------------*/
-            $previous_week = strtotime("-1 week +1 day");
-
-            $start_week = strtotime("last sunday midnight", $previous_week);
-            $end_week = strtotime("next saturday", $start_week);
-
-            $start_week = date("Y-m-d", $start_week);
-            $end_week = date("Y-m-d", $end_week);
-            /*--------------------------*/
-
-            if ($date->format('Y-m-d') < $end_week) {
-                return new Response(json_encode("ErreurPlanificationEnArriere"), 419);
-            }
+//            /*----------------------------*/
+//            $previous_week = strtotime("-1 week +1 day");
+//
+//            $start_week = strtotime("last sunday midnight", $previous_week);
+//            $end_week = strtotime("next saturday", $start_week);
+//
+//            $start_week = date("Y-m-d", $start_week);
+//            $end_week = date("Y-m-d", $end_week);
+//            /*--------------------------*/
+//
+//            if ($date->format('Y-m-d') < $end_week) {
+//                return new Response(json_encode("ErreurPlanificationEnArriere"), 419);
+//            }
             foreach ($ev as $value) {
                 if ($value->getStart()->format('Y-m-d') == $date->format('Y-m-d')) {
                     $count++;
@@ -548,9 +548,9 @@ class PlanningController extends Controller
             throw $this->createAccessDeniedException();
         }
         if ($this->getUser()->hasRole('ROLE_ADMIN')) {
-            $planning = $this->getDoctrine()->getRepository('TimSoftGeneralBundle:Planning')->getConfirméByUser($this->getUser());
+            $planning = $this->getDoctrine()->getRepository('TimSoftGeneralBundle:Planning')->getConfirméByUser($this->getUser(), $this->AutorisationAcces('planningArriere', $this->getUser()));
         } else {
-            $planning = $this->getDoctrine()->getRepository('TimSoftGeneralBundle:Planning')->getConfirméByUser($this->getUser());
+            $planning = $this->getDoctrine()->getRepository('TimSoftGeneralBundle:Planning')->getConfirméByUser($this->getUser(), $this->AutorisationAcces('planningArriere', $this->getUser()));
         }
         return $this->render('@TimSoftGeneral/Planning/redactionFP.html.twig', array('plannings' => $planning));
     }
@@ -570,7 +570,7 @@ class PlanningController extends Controller
 
     public function allPlansAction(Request $request)
     {
-        $plannings = $this->getDoctrine()->getRepository('TimSoftGeneralBundle:Planning')->betweenDates($request->get('start'), $request->get('end'), $this->getUser());
+        $plannings = $this->getDoctrine()->getRepository('TimSoftGeneralBundle:Planning')->betweenDates($request->get('start'), $request->get('end'), $this->getUser(), $this->AutorisationAcces('planningArriere', $this->getUser()));
         return new JsonResponse($plannings);
     }
 
@@ -770,7 +770,7 @@ class PlanningController extends Controller
 
     public function jsonPlanningByClientAction($id, Request $request)
     {
-        $plannings = $this->getDoctrine()->getRepository('TimSoftGeneralBundle:Planning')->getByClient($id, $request->get('start'), $request->get('end'), $this->getUser());
+        $plannings = $this->getDoctrine()->getRepository('TimSoftGeneralBundle:Planning')->getByClient($id, $request->get('start'), $request->get('end'), $this->getUser(), $this->AutorisationAcces('planningArriere', $this->getUser()));
         return new JsonResponse($plannings);
     }
 
@@ -791,19 +791,19 @@ class PlanningController extends Controller
 
             $allday = $planning->isAllDay();
 
-            /*----------------------------*/
-            $previous_week = strtotime("-1 week +1 day");
-
-            $start_week = strtotime("last sunday midnight", $previous_week);
-            $end_week = strtotime("next saturday", $start_week);
-
-            $start_week = date("Y-m-d", $start_week);
-            $end_week = date("Y-m-d", $end_week);
-            /*--------------------------*/
-
-            if ($planning->getStart()->format('Y-m-d') < $end_week) {
-                return new Response(json_encode("ErreurPlanificationEnArriere"), 419);
-            }
+//            /*----------------------------*/
+//            $previous_week = strtotime("-1 week +1 day");
+//
+//            $start_week = strtotime("last sunday midnight", $previous_week);
+//            $end_week = strtotime("next saturday", $start_week);
+//
+//            $start_week = date("Y-m-d", $start_week);
+//            $end_week = date("Y-m-d", $end_week);
+//            /*--------------------------*/
+//
+//            if ($planning->getStart()->format('Y-m-d') < $end_week) {
+//                return new Response(json_encode("ErreurPlanificationEnArriere"), 419);
+//            }
 
             $plannings = $this->getDoctrine()->getRepository('TimSoftGeneralBundle:Planning')->findByUtilisateur($planning->getUtilisateur());
             $plannings = $this->unsetValue($plannings, $planning, true);
@@ -1075,6 +1075,18 @@ class PlanningController extends Controller
             'planning' => $planning,
             'form' => $form->createView(),
         ));
+    }
+
+    public function AutorisationAcces($Route, $Utilisateur)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $AutorisationPersonne = $em->getRepository('TimSoftGeneralBundle:DroitAccesPersonne')->getAutorisationPersonne($Route, $Utilisateur);
+        $AutorisationGroupe = $em->getRepository('TimSoftGeneralBundle:DroitAccesGroupe')->getAutorisationGroupe($Route, $Utilisateur->getRoleUtilisateur());
+        if ($AutorisationPersonne || $AutorisationGroupe) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }

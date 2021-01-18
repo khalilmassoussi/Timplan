@@ -50,10 +50,10 @@ class PlanningRepository extends \Doctrine\ORM\EntityRepository
      * @param null $currentUser
      * @return mixed
      */
-    public function findByUser($user, $start, $end, $currentUser = null)
+    public function findByUser($user, $start, $end, $currentUser = null, $enArriere)
     {
 
-        if ($currentUser->getEmail() != 'f.dridi@timsoft.com.tn') {
+        if ($enArriere == false) {
             $query = $this->createQueryBuilder('p')
                 ->select('p')
                 ->leftJoin('p.accompagnements', 'u')
@@ -98,9 +98,9 @@ class PlanningRepository extends \Doctrine\ORM\EntityRepository
             ->getResult();
     }
 
-    public function getConfirméByUser($user)
+    public function getConfirméByUser($user, $enArriere)
     {
-        if ($user->getEmail() != 'f.dridi@timsoft.com.tn') {
+        if ($enArriere == false) {
             if ($user->hasRole('ROLE_ADMIN') || $user->hasRole('ROLE_GESTIONNAIRE')) {
                 return $this->createQueryBuilder('p')
                     ->select('p')
@@ -188,9 +188,9 @@ class PlanningRepository extends \Doctrine\ORM\EntityRepository
             ->getResult();
     }
 
-    public function getByClient($id, $start, $end, $utilisateur = null)
+    public function getByClient($id, $start, $end, $utilisateur = null, $enArriere)
     {
-        if ($utilisateur && $utilisateur->getEmail() != 'f.dridi@timsoft.com.tn') {
+        if ($utilisateur && $enArriere == false) {
             $query = $this->createQueryBuilder('p')
                 ->select('p')
                 ->leftJoin('p.lc', 'lc')
@@ -281,9 +281,9 @@ class PlanningRepository extends \Doctrine\ORM\EntityRepository
         }
     }
 
-    public function betweenDates($start, $end, $utilisateur = null)
+    public function betweenDates($start, $end, $utilisateur, $planning)
     {
-        if ($utilisateur->getEmail() != 'f.dridi@timsoft.com.tn') {
+        if ($planning == false) {
             $query = $this->createQueryBuilder('p')
                 ->select('p')
                 ->andwhere('p.start BETWEEN :start AND :end')

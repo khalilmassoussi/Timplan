@@ -27,7 +27,7 @@ class Client
 
     /**
      * @var int
-     * @ORM\Column(name="CodeClient", type="integer", unique=true, nullable=true)
+     * @ORM\Column(name="CodeClient", type="integer", unique=false, nullable=true)
      */
     private $codeClient;
 
