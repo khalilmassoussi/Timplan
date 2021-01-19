@@ -15,7 +15,6 @@
 {% block SideBar %}
 {% endblock %}
 {% block Contenu %}
-
     <div class="col-md-12">
         <div class="card card-primary card-outline">
             <div class="card-header with-border">
@@ -51,7 +50,7 @@
                         </div>
                     </div>
                 </div>
-                <table id="TableClient" class="table table-striped dataTable"
+                <table id="TableClient" class="table table-striped dataTable table-responsive"
                        cellspacing="0" style="width: 100%;">
                     <thead>
                     <tr>
@@ -71,6 +70,7 @@
                             RAP
                         </th>
                         <th>Business Manager</th>
+                        <th >Affaire</th>
                         <th hidden>
 
                         </th>
@@ -108,6 +108,7 @@
                                 {{ cmd.totalRAP }}
                             </td>
                             <td>{{ cmd.buManager }}</td>
+                            <td>{{ cmd.affaire }}</td>
                             <td>
                                 {% if AutorisationAcces('AfficherCmd' , Utilisateur) %}
                                     <center>
@@ -221,7 +222,7 @@
 
                         that.api().columns().every(function (index) {
                             let column = this;
-                            var select = $('<select class="select2" id="select"><option value=""></option></select>')
+                            var select = $('<select class="form-control"  id="select"><option value=""></option></select>')
                                 .appendTo($(column.header()))
                                 .on('change', function () {
                                     var val = $.fn.dataTable.util.escapeRegex(
@@ -263,9 +264,9 @@
                             }
                             select.val(column.search().slice(1, -1).replace('\\', ''));
                             var state = this.state.loaded();
-                            if ( state ) {
-                                var val = state.columns[ this.index() ];
-                                select.val( val.search.search );
+                            if (state) {
+                                var val = state.columns[this.index()];
+                                select.val(val.search.search);
                             }
                         });
                     },

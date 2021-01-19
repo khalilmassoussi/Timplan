@@ -821,7 +821,7 @@ class PlanningController extends Controller
                 }
             }
             $temps = $editForm->get('temps')->getData();
-            if ($planning->getLc()->JRestant() <= 0 && (in_array('Matin', $temps) && in_array('Après-midi', $temps))) {
+            if (!$planning->isAllDay() && $planning->getLc()->JRestant() <= 0 && (in_array('Matin', $temps) && in_array('Après-midi', $temps))) {
                 return new JsonResponse('Error RAL ' . $planning->getLc()->JRestant() . ' ' . $planning->jRestantes(), 404);
             }
             $feuille = $planning->getFeuille();

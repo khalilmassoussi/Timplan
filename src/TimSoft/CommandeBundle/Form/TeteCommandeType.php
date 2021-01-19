@@ -25,7 +25,8 @@ class TeteCommandeType extends AbstractType
                 'attr' => ['class' => 'js-datepicker'],
                 'html5' => false,
             ))
-            ->add('buManager');
+            ->add('buManager')
+            ->add('affaire');
     }
 
     /**

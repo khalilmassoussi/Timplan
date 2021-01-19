@@ -25,6 +25,7 @@ class TeteCommandeRepository extends \Doctrine\ORM\EntityRepository
         return $this->createQueryBuilder('c')
             ->select('c')
             ->where('c.nCommande = :number')
+            ->andWhere('c NOT INSTANCE OF TimSoft\CommandeBundle\Entity\PreTeteCommande')
             ->setParameter('number', $number)
             ->getQuery()
             ->getOneOrNullResult();

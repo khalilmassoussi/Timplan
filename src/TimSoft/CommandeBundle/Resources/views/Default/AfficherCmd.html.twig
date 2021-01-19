@@ -88,49 +88,40 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-6">
-
-                        <table width="400">
+                        <table width="400" class="table">
                             <tr>
-                                <th scope="row" style="padding: 15px 0px 0px 0px" width="40%">
+                                <th>
                                     <div align="left">Numéro de commande:</div>
                                 </th>
-                                <td style="padding: 15px 0px 0px 0px" id="nCommande">{{ commande.nCommande }}</td>
+                                <td id="nCommande">{{ commande.nCommande }}</td>
                             </tr>
                             <tr>
-                                <th scope="row" style="padding: 15px 0px 0px 0px">
+                                <th>
                                     <div align="left">Client:</div>
                                 </th>
-                                <td style="padding: 15px 0px 0px 0px">{{ commande.client }}</td>
+                                <td>{{ commande.client }}</td>
                             </tr>
                             {% if commande.buManager %}
                                 <tr>
-                                    <th scope="row" style="padding: 15px 0px 0px 0px">Business Manager</th>
-                                    <td style="padding: 15px 0px 0px 0px">{{ commande.buManager }}</td>
+                                    <th>Business Manager</th>
+                                    <td>{{ commande.buManager }}</td>
                                 </tr>
                             {% endif %}
                         </table>
                     </div>
                     <div class="col-md-6">
-
-                        <table width="400" id="DivCente">
+                        <table width="400" class="table">
                             <tr>
-                                <th scope="row" style="padding: 15px 0px 0px 0px">
+                                <th>
                                     <div align="left">Date:</div>
                                 </th>
-                                <td style="padding: 15px 0px 0px 0px">{{ commande.datePiece|date('d-m-Y') }}</td>
+                                <td>{{ commande.datePiece|date('d-m-Y') }}</td>
                             </tr>
                             <tr>
-                                <th></th>
-
-                                <td style="padding: 15px 0px 0px 0px">
-
-                                </td>
-                            </tr>
-                            <tr>
-                                <th scope="row" style="padding: 15px 0px 0px 0px">
+                                <th>
                                     <div align="left">Prix Total:</div>
                                 </th>
-                                <td style="padding: 15px 0px 0px 0px">{{ commande.prixTotal|number_format(3, ',', ' ') }}</td>
+                                <td>{{ commande.prixTotal|number_format(3, ',', ' ') }}</td>
                             </tr>
                             {% if not commande.affaire %}
                                 <tr>
@@ -139,8 +130,8 @@
                                 </tr>
                             {% else %}
                                 <tr>
-                                    <th scope="row" style="padding: 15px 0px 0px 0px">Affaire</th>
-                                    <td style="padding: 15px 0px 0px 0px">{{ commande.affaire }}</td>
+                                    <th>Affaire</th>
+                                    <td>{{ commande.affaire }}</td>
                                 </tr>
                             {% endif %}
                         </table>
