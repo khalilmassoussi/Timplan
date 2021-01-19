@@ -19,135 +19,24 @@
 {% block SideBar %}
 {% endblock %}
 {% block Contenu %}
-    {#{% for message in app.flashes('OK-Modification') %}#}
-    {#<div class="flash-notice">#}
-<body onLoad="$('#my-modal').modal('show');">
-{#<div id="my-modal" class="modal fade">#}
-{#<div class="modal-dialog">#}
-{#<div class="modal-content">#}
-{#<div class="modal-header">#}
-{#<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>#}
-{#<h4 class="modal-title">Validation de la modification</h4>#}
-{#</div>#}
-{#<div class="modal-body">#}
-{#{{message}}#}
-{#</div>#}
-{#<div class="modal-footer">#}
-{#<button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>#}
-{#</div>#}
-{#</div>#}
-{#</div>#}
-{#</div>#}
-{#</body>#}
-{#</div>#}
-{#{% endfor %}#}
-{#{% for message in app.flashes('OK-Ajout') %}#}
-{#<div class="flash-notice">#}
-{#<body onLoad="$('#my-modal').modal('show');">#}
-{#<div id="my-modal" class="modal fade">#}
-{#<div class="modal-dialog">#}
-{#<div class="modal-content">#}
-{#<div class="modal-header">#}
-{#<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>#}
-{#<h4 class="modal-title">Validation d'ajout !</h4>#}
-{#</div>#}
-{#<div class="modal-body">#}
-{#{{message}}#}
-{#</div>#}
-{#<div class="modal-footer">#}
-{#<button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>#}
-{#</div>#}
-{#</div>#}
-{#</div>#}
-{#</div>#}
-{#</body>#}
-{#</div>#}
-{#{% endfor %}#}
-<div class="col-md-12">
-    <div class="card">
-        <div class="card-header with-border">
-            <h2 class="card-title" style="color:#1E5584">Informations de la précommande N°{{ commande.nCommande }}</h2>
-        </div>
-        <div class="card-tools pull-center">
-        </div>
-        <div class="card-body">
-            <br>
-            <div class="row">
-                <div class="col-md-6">
-
-                    <table width="400">
-                        <tr>
-                            <th scope="row" style="padding: 15px 0px 0px 0px" width="40%">
-                                <div align="left">Numéro de précommande:</div>
-                            </th>
-                            <td style="padding: 15px 0px 0px 0px" id="nCommande">{{ commande.nCommande }}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row" style="padding: 15px 0px 0px 0px">
-                                <div align="left">Client:</div>
-                            </th>
-                            <td style="padding: 15px 0px 0px 0px">{{ commande.client }}</td>
-                        </tr>
-                        {% if commande.buManager %}
-                            <tr>
-                                <th scope="row" style="padding: 15px 0px 0px 0px">Business Manager</th>
-                                <td style="padding: 15px 0px 0px 0px">{{ commande.buManager }}</td>
-                            </tr>
-                        {% endif %}
-                    </table>
-                </div>
-                <div class="col-md-6">
-
-                    <table width="400" id="DivCente">
-                        <tr>
-                            <th scope="row" style="padding: 15px 0px 0px 0px">
-                                <div align="left">Date:</div>
-                            </th>
-                            <td style="padding: 15px 0px 0px 0px">{{ commande.datePiece|date('d-m-Y') }}</td>
-                        </tr>
-                        <tr>
-                            <th></th>
-
-                            <td style="padding: 15px 0px 0px 0px">
-
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row" style="padding: 15px 0px 0px 0px">
-                                <div align="left">Prix Total:</div>
-                            </th>
-                            <td style="padding: 15px 0px 0px 0px">{{ commande.prixTotal|number_format(3, ',', ' ') }}</td>
-                        </tr>
-                        <tr>
-                            <th></th>
-                            <td></td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-            <br>
-            <div>
-                {% if not commande.archive %}
-                    <button type="button" class="btn btn-primary" data-toggle="modal"
-                            data-target="#myModal" onclick="myGeeks()" id="modal" disabled>
-                        <i class="ion-forward" style="font-size: 16px"></i>
-                        Affecter
-                    </button>
-                {% endif %}
-                <div align="right">
+    <div class="col-md-12">
+        <div class="card card-primary card-outline">
+            <div class="card-header with-border">
+                <h2 class="card-title" style="color:#1E5584">Informations de la précommande
+                    N°{{ commande.nCommande }}</h2>
+                <div class="card-tools pull-center">
                     {% if not commande.archive %}
                         {% if AutorisationAcces('preCommandeGenerer' , Utilisateur) %}
 
                             <a href="#generer{{ commande.id }}" data-toggle="modal">
-                                <button class="btn btn-success">
+                                <button class="btn btn-success btn-sm">
                                     Génération Commande
                                 </button>
                             </a>
-
                         {% endif %}
                         {% if AutorisationAcces('preCommandeModifier' , Utilisateur) %}
                             <a href="#edit{{ commande.id }}" data-toggle="modal">
-                                <button class="btn btn-success" title="Modifier">
+                                <button class="btn btn-primary btn-sm" title="Modifier">
                                     <i class="fas fa-edit fa-lg"></i>
                                 </button>
                             </a>
@@ -155,285 +44,337 @@
                     {% endif %}
                     {% if AutorisationAcces('supprimer' , Utilisateur) %}
                         <a href="{{ path('supprimer', {id: commande.id}) }}">
-                            <button class="btn btn-danger" title="Supprimer">
+                            <button class="btn btn-danger btn-sm" title="Supprimer">
                                 <i class="fas fa-trash fa-lg"></i>
                             </button>
                         </a>
                     {% endif %}
                 </div>
             </div>
-            <br>
-            <br>
 
-            <form>
-                <table id="TableClient" class="table table-bordered table-striped dataTable" style="width:100%">
-                    <thead>
-                    <tr class="row1 header blue">
-                        <th class="cell1" hidden>id</th>
-                        <th class="cell1">Choisir</th>
-                        <th class="cell1">
-                            Libellé
-                        </th>
-                        <th class="cell1 SumHeader">
-                            <center>Quantité (J)</center>
-                        </th>
-                        <th class="cell1 SumHeader">
-                            <center>Montant HT</center>
-                        </th>
-                        <th class="cell1 SumHeader">
-                            <center>Quantité restante</center>
-                        </th>
-                        <th class="cell1 SumHeader">
-                            <center>Prix de vente</center>
-                        </th>
-                        <th class="cell1 SumHeader">
-                            <center>Montant Restant</center>
-                        </th>
-                        <th class="cell1 SumHeader">
-                            <center>RAP</center>
-                        </th>
-                        <th class="cell1">
-                            <center>BU</center>
-                        </th>
-
-                        <th class="cell1">
-                            {% if not commande.archive %}
-                                <center>Action</center>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <table width="400" class="table">
+                            <tr>
+                                <th>
+                                    <div align="left">Numéro de précommande:</div>
+                                </th>
+                                <td id="nCommande">{{ commande.nCommande }}</td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    <div align="left">Client:</div>
+                                </th>
+                                <td>{{ commande.client }}</td>
+                            </tr>
+                            {% if commande.buManager %}
+                                <tr>
+                                    <th>Business Manager</th>
+                                    <td>{{ commande.buManager }}</td>
+                                </tr>
                             {% endif %}
-                        </th>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <table width="400" id="DivCente" class="table">
+                            <tr>
+                                <th>
+                                    <div align="left">Date:</div>
+                                </th>
+                                <td>{{ commande.datePiece|date('d-m-Y') }}</td>
+                            </tr>
 
-                    </tr>
-                    </thead>
-                    <tfoot>
-                    <tr>
-                        <th hidden></th>
-                        <th></th>
-                        <th class="text-right">Total:</th>
-                        <th class="SumRows text-center"></th>
-                        <th class="SumRows text-center"></th>
-                        <th class="SumRows text-center"></th>
-                        <th class="SumRows text-center"></th>
-                        <th class="SumRows text-center"></th>
-                        <th class="SumRows text-center"></th>
-                        <th></th>
-                        <th></th>
-
-                    </tr>
-                    </tfoot>
-                    <tbody>
-                    {% for lc in commande.lignCommandes %}
-                        <tr class="row1" id="tr{{ lc.id }}">
-                            <td hidden>{{ lc.id }}</td>
-                            <td>
-                                <div class="form-check">
-                                    <center><input type="checkbox" class="form-check-input" value="{{ lc.id }}"
-                                                   name="checkbox" id="{{ lc.id }}"></center>
-                                    {#                                    <label class="form-check-label" for="exampleCheck1">Check me out</label>#}
-                                </div>
-                                {#                                <div class="custom-control custom-checkbox">#}
-                                {#                                    <center><input type="checkbox" class="custom-control-input"#}
-                                {#                                                   value="{{ lc.id }}" name="checkbox" id="{{ lc.id }}">#}
-                                {#                                    </center>#}
-                                {#                                </div>#}
-                            </td>
-                            <td class="cell1">
-                                {{ lc.libelle }}
-                            </td>
-                            <td class="cell1 text-center">
-                                {{ lc.quantite }}
-                            </td>
-                            <td class="cell1 text-center">
-                                {{ lc.montantHT|number_format(3, ',', ' ') }}
-                            </td>
-                            <td class="cell1 text-center">
-                                {{ lc.QteRestante }}
-                            </td>
-                            <td class="cell1 prix text-center" id="prix">
-                                {{ lc.calcul|number_format(3, ',', ' ') }}
-                            </td>
-                            <td class="cc text-center" id="{{ lc.id }}"
-                                align="center">{{ lc.MRestant|number_format(3, ',', ' ') }}</td>
-                            <td class="cell1 text-center" id="{{ lc.id }}" align="center">
-                                {{ lc.JRestant }}
-                            </td>
-                            <td class="cell1 text-center prix">
-                                <center>{{ lc.bu }}</center>
-                            </td>
-                            <td class="cell1 text-center action">
-                                {% if not commande.archive %}
-                                    <center>
-                                        {% if AutorisationAcces('preCommandeModifierLigne' , Utilisateur) %}
-                                            <a class="modifier" href="#" title="Modifier"><i
-                                                        class="fas fa-edit fa-lg"></i></a>
-                                        {% endif %}
-                                        {% if AutorisationAcces('preCommandeSupprimerLigne' , Utilisateur) %}
-                                            <a class="supprimer" href="#" title="Supprimer" id=""><i
-                                                        class="fas fa-trash fa-lg"></i></a>
-                                        {% endif %}
-                                    </center>
-                                {% endif %}
-                            </td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            </form>
-            <p id="sudo" style="color:green;font-size:30px;"></p>
-        </div>
-    </div>
-
-</div>
-<div class="modal fade" id="myModal" role="dialog">
-    <div class="modal-dialog modal-lg">
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Sélectionner un consultant</h4>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <tr>
+                                <th>
+                                    <div align="left">Prix Total:</div>
+                                </th>
+                                <td>{{ commande.prixTotal|number_format(3, ',', ' ') }}</td>
+                            </tr>
+                            <tr>
+                                <th>Affaire</th>
+                                <td>{{ commande.affaire }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
             </div>
-            <form method="post" action="{{ path('addUserToCmd') }}">
-                <div class="modal-body">
-                    <input type="text" id="input" name="post" hidden>
-                    <button class="btn btn-primary" id="render">Afficher les utilisateur des autres BU</button>
-                    <br>
-                    <br>
-                    <table id="TableClient1" class="table table-bordered table-striped dataTable" style="width:100%">
+        </div>
+        <div class="card card-primary card-outline">
+            <div class="card-body">
+                <div class="form-group">
+                    {% if not commande.archive %}
+                        <button type="button" class="btn btn-primary" data-toggle="modal"
+                                data-target="#myModal" onclick="myGeeks()" id="modal" disabled>
+                            <i class="fas fa-forward"></i>
+                            Affecter
+                        </button>
+                    {% endif %}
+                </div>
+                <form>
+                    <table id="TableClient" class="table table-bordered table-striped dataTable"
+                           style="width:100%; font-size: 13.5px">
                         <thead>
                         <tr class="row1 header blue">
-                            <th class="cell1">Choisir
+                            <th class="cell1" hidden>id</th>
+                            <th class="cell1">Choisir</th>
+                            <th class="cell1">
+                                Libellé
+                            </th>
+                            <th class="cell1 SumHeader">
+                                <center>Qté (J)</center>
+                            </th>
+                            <th class="cell1 SumHeader">
+                                <center>Montant HT</center>
+                            </th>
+                            <th class="cell1 SumHeader">
+                                <center>Quantité restante</center>
+                            </th>
+                            <th class="cell1 SumHeader">
+                                <center>Prix de vente</center>
+                            </th>
+                            <th class="cell1 SumHeader">
+                                <center>Montant Restant</center>
+                            </th>
+                            <th class="cell1 SumHeader">
+                                <center>RAP</center>
                             </th>
                             <th class="cell1">
-                                Nom et prénom
+                                <center>BU</center>
                             </th>
+
                             <th class="cell1">
-                                Rôle
+                                {% if not commande.archive %}
+                                    <center>Action</center>
+                                {% endif %}
                             </th>
-                            <th class="cell1">
-                                BU
-                            </th>
+
                         </tr>
                         </thead>
+                        <tfoot>
+                        <tr>
+                            <th hidden></th>
+                            <th></th>
+                            <th class="text-right">Total:</th>
+                            <th class="SumRows text-center"></th>
+                            <th class="SumRows text-center"></th>
+                            <th class="SumRows text-center"></th>
+                            <th class="SumRows text-center"></th>
+                            <th class="SumRows text-center"></th>
+                            <th class="SumRows text-center"></th>
+                            <th></th>
+                            <th></th>
+
+                        </tr>
+                        </tfoot>
                         <tbody>
-                        {% for user in getUsersByBu(app.user.id) %}
-                            <tr class="row1">
-                                <td class="cell1">
-                                    <input type="radio" name="user" value="{{ user.id }}">
+                        {% for lc in commande.lignCommandes %}
+                            <tr class="row1" id="tr{{ lc.id }}">
+                                <td hidden>{{ lc.id }}</td>
+                                <td>
+                                    <div class="form-check">
+                                        <center><input type="checkbox" class="form-check-input" value="{{ lc.id }}"
+                                                       name="checkbox" id="{{ lc.id }}"></center>
+                                    </div>
                                 </td>
                                 <td class="cell1">
-                                    <label for="dewey">{{ user.nomUtilisateur }} {{ user.prenomUtilisateur }}</label>
+                                    {{ lc.libelle }}
                                 </td>
-                                {% if ( user.roleUtilisateur == 'ROLE_ADMIN') %} {% set RoleUser = 'Administrateur' %}
-                                {% elseif ( user.roleUtilisateur == 'ROLE_CONSULTANT') %}{% set RoleUser = 'Consultant' %}
-                                {% elseif ( user.roleUtilisateur == 'ROLE_GESTIONNAIRE') %}{% set RoleUser = 'Gestionnaire' %}
-                                {% elseif ( user.roleUtilisateur == 'ROLE_CHEF') %}{% set RoleUser = 'BU Manager' %}
-                                {% endif %}
-                                <td class="cell1">{{ RoleUser }}</td>
-                                <td class="cell1">
-                                    {% for bu in user.bus %}
-                                        {#                                        {% if bu.libelle %}#}
-                                        {{ bu.libelle }},
-                                        {#                                        {% endif %}#}
-                                    {% endfor %}
+                                <td class="cell1 text-center">
+                                    {{ lc.quantite }}
+                                </td>
+                                <td class="cell1 text-center">
+                                    {{ lc.montantHT|number_format(3, ',', ' ') }}
+                                </td>
+                                <td class="cell1 text-center">
+                                    {{ lc.QteRestante }}
+                                </td>
+                                <td class="cell1 prix text-center" id="prix">
+                                    {{ lc.calcul|number_format(3, ',', ' ') }}
+                                </td>
+                                <td class="cc text-center" id="{{ lc.id }}"
+                                    align="center">{{ lc.MRestant|number_format(3, ',', ' ') }}</td>
+                                <td class="cell1 text-center" id="{{ lc.id }}" align="center">
+                                    {{ lc.JRestant }}
+                                </td>
+                                <td class="cell1 text-center prix">
+                                    <center>{{ lc.bu }}</center>
+                                </td>
+                                <td class="cell1 text-center action">
+                                    {% if not commande.archive %}
+                                        <center>
+                                            {% if AutorisationAcces('preCommandeModifierLigne' , Utilisateur) %}
+                                                <a class="modifier btn btn-primary btn-sm btn" href="#"
+                                                   title="Modifier"><i
+                                                            class="fas fa-edit fa-lg"></i></a>
+                                            {% endif %}
+                                            {% if AutorisationAcces('preCommandeSupprimerLigne' , Utilisateur) %}
+                                                <a class="supprimer btn btn-danger btn-sm btn" href="#"
+                                                   title="Supprimer" id=""><i
+                                                            class="fas fa-trash fa-lg"></i></a>
+                                            {% endif %}
+                                        </center>
+                                    {% endif %}
                                 </td>
                             </tr>
                         {% endfor %}
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Sélectionner un consultant</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <form method="post" action="{{ path('addUserToCmd') }}">
+                    <div class="modal-body">
+                        <input type="text" id="input" name="post" hidden>
+                        <button class="btn btn-primary" id="render">Afficher les utilisateur des autres BU</button>
+                        <br>
+                        <br>
+                        <table id="TableClient1" class="table table-bordered table-striped dataTable"
+                               style="width:100%">
+                            <thead>
+                            <tr class="row1 header blue">
+                                <th class="cell1">Choisir
+                                </th>
+                                <th class="cell1">
+                                    Nom et prénom
+                                </th>
+                                <th class="cell1">
+                                    Rôle
+                                </th>
+                                <th class="cell1">
+                                    BU
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for user in getUsersByBu(app.user.id) %}
+                                <tr class="row1">
+                                    <td class="cell1">
+                                        <input type="radio" name="user" value="{{ user.id }}">
+                                    </td>
+                                    <td class="cell1">
+                                        <label for="dewey">{{ user.nomUtilisateur }} {{ user.prenomUtilisateur }}</label>
+                                    </td>
+                                    {% if ( user.roleUtilisateur == 'ROLE_ADMIN') %} {% set RoleUser = 'Administrateur' %}
+                                    {% elseif ( user.roleUtilisateur == 'ROLE_CONSULTANT') %}{% set RoleUser = 'Consultant' %}
+                                    {% elseif ( user.roleUtilisateur == 'ROLE_GESTIONNAIRE') %}{% set RoleUser = 'Gestionnaire' %}
+                                    {% elseif ( user.roleUtilisateur == 'ROLE_CHEF') %}{% set RoleUser = 'BU Manager' %}
+                                    {% endif %}
+                                    <td class="cell1">{{ RoleUser }}</td>
+                                    <td class="cell1">
+                                        {% for bu in user.bus %}
+                                            {#                                        {% if bu.libelle %}#}
+                                            {{ bu.libelle }},
+                                            {#                                        {% endif %}#}
+                                        {% endfor %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+
+                            </tbody>
+
+                        </table>
+                        <br>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Valider</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+    <div class="modal fade" id="interventions" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="title">Les interventions</h4>
+                </div>
+                <div class="modal-body">
+                    <table id="intervention" width="100%" class="table table-bordered table-hover dataTable">
+                        <thead>
+                        <tr>
+                            <td>
+                                Date
+                            </td>
+                            <td>
+                                Durée
+                            </td>
+                            <td>
+                                Intervenant
+                            </td>
+                            <td>
+                                Statut
+                            </td>
+                            <td>
+                                Journée supplémentaire
+                            </td>
+                        </tr>
+                        </thead>
+                        <tbody>
 
                         </tbody>
-
                     </table>
-                    <br>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Valider</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
                 </div>
-            </form>
+            </div>
+
         </div>
-
     </div>
-</div>
-<div class="modal fade" id="interventions" role="dialog">
-    <div class="modal-dialog modal-lg">
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" id="title">Les interventions</h4>
+    <div class="modal fade" id="modifierModal" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="title">Modification</h4>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-bordered table-hover dataTable">
+                        <tr>
+                            <td>Libelle</td>
+                            <td><input type="text" id="libelle" class="form-control"></td>
+                        </tr>
+                        <tr>
+                            <td>Quantité</td>
+                            <td><input type="number" id="Quantité" class="form-control"></td>
+                        </tr>
+                        <tr>
+                            <td>Montant HT</td>
+                            <td><input type="number" id="MontantHT" class="form-control" step="0.001"></td>
+                        </tr>
+                        <tr>
+                            <td>Quantité restante</td>
+                            <td><input type="number" id="Qrestante" class="form-control"></td>
+                        </tr>
+                        {#                    <tr>#}
+                        {#                        <td>Montant restant</td>#}
+                        {#                        <td><input type="number" id="Mrestant" class="form-control"></td>#}
+                        {#                    </tr>#}
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" id="save">Sauvegarder</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                </div>
             </div>
-            <div class="modal-body">
-                <table id="intervention" width="100%" class="table table-bordered table-hover dataTable">
-                    <thead>
-                    <tr>
-                        <td>
-                            Date
-                        </td>
-                        <td>
-                            Durée
-                        </td>
-                        <td>
-                            Intervenant
-                        </td>
-                        <td>
-                            Statut
-                        </td>
-                        <td>
-                            Journée supplémentaire
-                        </td>
-                    </tr>
-                    </thead>
-                    <tbody>
 
-                    </tbody>
-                </table>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
-            </div>
         </div>
-
     </div>
-</div>
-<div class="modal fade" id="modifierModal" role="dialog">
-    <div class="modal-dialog modal-lg">
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" id="title">Modification</h4>
-            </div>
-            <div class="modal-body">
-                <table class="table table-bordered table-hover dataTable">
-                    <tr>
-                        <td>Libelle</td>
-                        <td><input type="text" id="libelle" class="form-control"></td>
-                    </tr>
-                    <tr>
-                        <td>Quantité</td>
-                        <td><input type="number" id="Quantité" class="form-control"></td>
-                    </tr>
-                    <tr>
-                        <td>Montant HT</td>
-                        <td><input type="number" id="MontantHT" class="form-control" step="0.001"></td>
-                    </tr>
-                    <tr>
-                        <td>Quantité restante</td>
-                        <td><input type="number" id="Qrestante" class="form-control"></td>
-                    </tr>
-                    {#                    <tr>#}
-                    {#                        <td>Montant restant</td>#}
-                    {#                        <td><input type="number" id="Mrestant" class="form-control"></td>#}
-                    {#                    </tr>#}
-                </table>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-success" id="save">Sauvegarder</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-            </div>
-        </div>
-
-    </div>
-</div>
-{{ render(controller('TimSoftCommandeBundle:PreCommande:modifierC', { 'id' : commande.id } )) }}
-{{ render(controller('TimSoftCommandeBundle:PreCommande:generer', { 'id' : commande.id } )) }}
-{#{% include '@TimSoftCommande/Default/modelModifier.html.twig' %}#}
+    {{ render(controller('TimSoftCommandeBundle:PreCommande:modifierC', { 'id' : commande.id } )) }}
+    {{ render(controller('TimSoftCommandeBundle:PreCommande:generer', { 'id' : commande.id } )) }}
 
 {% endblock %}
 {% block css %}
@@ -482,14 +423,6 @@
         }
 
         $(document).ready(function () {
-
-            // $(".save").click(function (e) {
-            //     console.log($('#timsoft_commandebundle_tetecommande'));
-            //     // if (!$('#timsoft_commandebundle_tetecommande').valid()) {
-            //     //     alert('cc');
-            //     //     e.preventDefault()
-            //     // }
-            // });
 
             $.fn.dataTable.moment('LL');
             var table1 = $('#TableClient1').DataTable({
@@ -556,7 +489,6 @@
                 "initComplete": function (settings, json) {
                     this.api().columns('.SumHeader').every(function (index) {
                         var column = this;
-                        console.log(index);
                         var indexx = index;
                         var sum = column
                             .data()
@@ -586,6 +518,8 @@
                 },
                 "columnDefs": [
                     {"width": "23%", "targets": 2},
+                    {"width": "1%", "targets": 5},
+                    {"width": "1%", "targets": 3}
                 ],
             });
             moment.locale('fr');
@@ -630,7 +564,6 @@
                 // $('.modifier').on('click', function (e) {
                 e.preventDefault();
                 var data = table.row($(this).parents('tr')).data();
-                console.log(data);
                 id = data[0];
                 $('#libelle').val(data[2]);
                 $('#Quantité').val(data[3]);
@@ -658,8 +591,6 @@
 
                     },
                     success: function (result) {
-                        console.log(result);
-                        console.log('cccc');
                         location.reload();
 
                     },
@@ -675,12 +606,9 @@
                     url: '{{ path('preCommandeSupprimerLigne') }}',
                     data: {
                         'id': id,
-
                     },
                     success: function (result) {
                         table.row('#tr' + id).remove().draw();
-                        console.log(id);
-
                     },
                     error: 'error'
                 });
@@ -690,13 +618,10 @@
                 $.ajax({
                     type: "POST",
                     url: '{{ path('preCommandeModifier', {'id':app.request.get('id') }) }}',
-                    {#data: {#}
-                    {#    'id':  {{ app.request.get('id') }},#}
-                    {#},#}
                     success: function (result) {
                         $('#modifierCModal').modal();
                         $('#modifierCModalBody').html(result);
-                        console.log(result);
+
 
                     },
                     error: 'error'
@@ -705,7 +630,6 @@
             $(document).on("click", "#TableClient td", function (e) {
                 if (($(this).is(':nth-child(2)') === true) || $(this).is(':last-child') === true) {
                 } else {
-                    console.log('-----------');
                     var data = table.row(this).data()[1];
                     var cc = $(data).find('.form-check-input').val();
                     {#Routing.setBaseUrl({{ app.request.getBaseURL() }});#}
@@ -747,7 +671,6 @@
                             }
                         },
                         error: function (result) {
-                            console.log(result);
                         }
                     });
                 }
@@ -776,7 +699,6 @@
                                         x += value.bus[i].libelle + ', ';
                                     }
                                 }
-                                console.log(x);
                                 var HtmlToAdd = '<input name="user" type="radio" value="' + value.id + '">';
                                 var role;
                                 if (value.roleUtilisateur == 'ROLE_CHEF') {
@@ -818,13 +740,9 @@
             var arr = $.map($('input:checkbox:checked'), function (e, i) {
                 return +e.value;
             });
-            console.log(arr);
             $("#input").val(arr);
         }
 
-        // $('#input.custom-control-input').change(function () {
-        //     $('#modal').prop("disabled", !this.checked);
-        // });
         jQuery("input[name='checkbox']").change(function () {
             $('#modal').prop("disabled", !this.checked);
         });

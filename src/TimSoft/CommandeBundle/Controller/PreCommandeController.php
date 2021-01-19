@@ -438,6 +438,7 @@ class PreCommandeController extends Controller
         $form->get('client')->setData($PreteteCommande->getClient());
         $form->get('buManager')->setData($PreteteCommande->getBuManager());
         $form->get('datePiece')->setData($PreteteCommande->getDatePiece());
+        $form->get('affaire')->setData($PreteteCommande->getAffaire());
         $form->handleRequest($request);
         $em = $this->getDoctrine()->getManager();
         if ($form->isSubmitted() && $form->isValid()) {
@@ -470,8 +471,8 @@ class PreCommandeController extends Controller
                 $newT->addLigne($newL);
             }
             $em->flush();
-            print_r(json_encode($newT));
-            die();
+//            print_r(json_encode($newT));
+//            die();
 
 //            $this->forward('TimSoftCommandeBundle:PreCommande:archive', ['new' => $newT, 'old' => $old]);
             return $this->redirectToRoute('AfficherCmd', ['id' => $newT->getId()]);

@@ -16,7 +16,6 @@
 {% block Contenu %}
 
     <div class="col-md-12">
-        <!--   <div style="border: 2px solid #1E5584; padding: 3px; background-color: #FFFFFF; -moz-border-radius-topleft: 5px; -moz-border-radius-topright: 5px; -moz-border-radius-bottomright: 5px; -moz-border-radius-bottomleft: 5px;">-->
         <div class="card card-primary card-outline">
             <div class="card-header with-border">
                 <h2 class="card-title">Liste de toutes les précommandes </h2>
@@ -24,8 +23,6 @@
             <div class="card-body">
                 <div class="col-md-6 offset-md-3">
                     <div class="card card-warning card-outline  bg-gradient-light">
-                        {#<div class="card-header">#}
-                        {#</div>#}
                         <div class="card-body">
                             <div class="container">
                                 <div class="row justify-content-center">
@@ -52,7 +49,7 @@
                         </div>
                     </div>
                 </div>
-                <table id="TableClient" class="table table-striped dataTable" style="width:100%"
+                <table id="TableClient" class="table table-striped dataTable table-responsive" style="width:100%"
                        cellspacing="0">
                     <thead>
                     <tr>
@@ -75,6 +72,7 @@
                         <th>
                             N° Commande (Vide <input type="checkbox" id="vide">)
                         </th>
+                        <th >Affaire</th>
                         <th hidden></th>
                         <th hidden>
 
@@ -128,6 +126,7 @@
                                     <span class="badge bg-danger" style="font-size: 85%">Non généré</span>
                                 {% endif %}
                             </td>
+                            <td>{{ cmd.affaire }}</td>
                             <td hidden>
                                 {% if cmd.archive %}
                                     {{ cmd.archive }}
@@ -138,7 +137,7 @@
                             <td>
                                 {% if AutorisationAcces('preCommandeAfficher' , Utilisateur) %}
                                     <center>
-                                        <a href="{{ path('preCommandeAfficher', { 'id': cmd.id }) }}">
+                                        <a href="{{ path('preCommandeAfficher', { 'id': cmd.id }) }}" class="btn btn-sm btn-primary">
                                             <i class="fas fa-search fa-lg" title="Consulter la précommande"></i>
                                         </a>
                                     </center>
@@ -259,7 +258,7 @@
                     let that = this;
                     that.api().columns().every(function (index) {
                         let column = this;
-                        var select = $('<select class="select2"><option value=""></option></select>')
+                        var select = $('<select class="form-control"><option value=""></option></select>')
                             .appendTo($(column.header()))
                             .on('change', function () {
                                 var val = $.fn.dataTable.util.escapeRegex(
