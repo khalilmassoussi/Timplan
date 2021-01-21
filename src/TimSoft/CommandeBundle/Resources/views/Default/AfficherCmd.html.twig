@@ -163,7 +163,7 @@
                                 <td>
                                     <div class="form-group clearfix">
                                         <div class="icheck-primary d-inline">
-                                            <input type="checkbox" value="{{ lc.id }}" name="checkbox"
+                                            <input type="checkbox" value="{{ lc.id }}" name="checkbox" class="idlc"
                                                    id="{{ lc.id }}">
                                             <label for="{{ lc.id }}"></label>
                                         </div>
@@ -621,8 +621,9 @@
                 if (($(this).is(':nth-child(2)') === true) || $(this).is(':last-child') === true) {
                 } else {
                     var data = table.row(this).data()[1];
-                    var cc = $(data).find('.form-check-input').val();
+                    var cc = $(data).find('.idlc').val();
                     {#Routing.setBaseUrl({{ app.request.getBaseURL() }});#}
+                    console.log(cc);
                     Routing.setPort('');
                     $.ajax({
                         type: "GET",
@@ -754,7 +755,7 @@
             console.log(arr);
             $("#input").val(arr);
         }
-        
+
         jQuery("input[name='checkbox']").change(function () {
             $('#modal').prop("disabled", !this.checked);
         });
