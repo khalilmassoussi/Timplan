@@ -32,7 +32,7 @@ class MailRappelFPCommand extends ContainerAwareCommand
                 if ($today->diff($planning->getStart())->format("%a") == 1 || $today->diff($planning->getStart())->format("%a") == 3 || $today->diff($planning->getStart())->format("%a") == 5 && $planning->getAlert() <= 3) {
                     $output->writeln($today->diff($planning->getStart())->format("%a") . ' ' . $planning->getStart()->format('c'));
                     $message = (new \Swift_Message('Rappel de Mettre à jour feuille de presence ' . $planning->getLc()->getCommande()->getNCommande()))
-                        ->setFrom(['timplan@timsoft.net' => "Administrateur TimSoft"])
+                        ->setFrom(['Timplan@timsoft-solutions.com' => "Administrateur Timplan"])
                         ->setBody('Bonjour ' . $user->getPrenomUtilisateur() . ',
 
 <p>Rappel : Prière de procéder à la rédaction->validation de la feuille de présence de la journée du ' . $planning->getStart()->format('d/m/Y') . ' sur <a href="timplan.timsoft.net"> Timplan</a>. </p>
@@ -40,7 +40,7 @@ class MailRappelFPCommand extends ContainerAwareCommand
 <p>Merci de prendre quelques minutes pour le faire,</p>
 
 
-<p>En cas de soucis, veuillez-contacter L\'administrateur Timplan sur l\'adresse Timplan@timsoft.net</p>
+<p>En cas de soucis, veuillez-contacter L\'administrateur Timplan sur l\'adresse Timplan@timsoft-solutions.com</p>
 
 
 <p>Cordialement,</p>

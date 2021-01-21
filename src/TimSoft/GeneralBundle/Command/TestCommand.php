@@ -52,7 +52,7 @@ class TestCommand extends ContainerAwareCommand
             $output->writeln($planning->getStart()->format('Y-m-d'));
         }
         $message = (new \Swift_Message('Planning de la semaine'))
-            ->setFrom(['timplan@timsoft.net' => "Administrateur TimSoft"])
+            ->setFrom(['Timplan@timsoft-solutions.com' => "Administrateur Timplan"])
             ->setBody('');
         $failedRecipients = [];
         $numSent = 0;

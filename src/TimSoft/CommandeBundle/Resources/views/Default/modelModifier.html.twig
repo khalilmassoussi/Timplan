@@ -3,7 +3,10 @@
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="title">Modification</h4>
+                <h4 class="modal-title" id="title">Modification commande</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
             </div>
             <div class="modal-body" id="modifierCModalBody">
                 {{ form_start(form, { 'method' : 'post', 'action': path('modifierC', { 'id' : commande.id }) }) }}
@@ -31,8 +34,8 @@
                     </tr>
                 </table>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
                 <button type="submit" class="btn btn-primary">Sauvegarder</button>
             </div>
         </div>

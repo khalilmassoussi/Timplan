@@ -29,7 +29,7 @@ class MailNonPlanificationCommand extends ContainerAwareCommand
                 $output->writeln($utilisateur->__toString());
                 $output->writeln('andouch');
                 $message = (new \Swift_Message('Rappel de planification'))
-                    ->setFrom(['timplan@timsoft.net' => "Administrateur TimSoft"])
+                    ->setFrom(['Timplan@timsoft-solutions.com' => "Administrateur Timplan"])
                     ->setBody('Bonjour ' . $utilisateur->getPrenomUtilisateur() . ',
 
 <p>Votre planning était vide durant ces deux dernières semaines, il est temps de contacter vos clients et générer des prestations.</p>

@@ -8,6 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mime\Email;
 use TimSoft\TasksBundle\Entity\TaskEvent;
 
 /**
@@ -294,11 +295,13 @@ class TaskEventController extends Controller
 
     public function email($taskEvent)
     {
+
+
         /*-------Email---------*/
         $message = (new \Swift_Message('Task ' . $taskEvent->getStatut() . ': ' . $taskEvent->getClient()->getRaisonSociale() . ' du ' . $taskEvent->getStart()->format('d/m/Y')))
-            ->setFrom(['timplan@timsoft.net' => "Administrateur TimSoft"]);
+            ->setFrom(['Timplan@timsoft-solutions.com' => "Administrateur Timplan"]);
         $messageG = (new \Swift_Message('Task ' . $taskEvent->getStatut() . ': ' . $taskEvent->getClient()->getRaisonSociale() . ' du ' . $taskEvent->getStart()->format('d/m/Y')))
-            ->setFrom(['timplan@timsoft.net' => "Administrateur TimSoft"]);
+            ->setFrom(['Timplan@timsoft-solutions.com' => "Administrateur Timplan"]);
         $failedRecipients = [];
         $numSent = 0;
         $user = $taskEvent->getUtilisateur();
@@ -306,14 +309,15 @@ class TaskEventController extends Controller
         $image_src = $message->embed(\Swift_Image::fromPath('Template/Logo-Timplan (1).png'));
 
 
-        $from_name = "Administrateur TimSoft";
-        $from_address = "timplan@timsoft.net";
+
+        $from_name = "Administrateur Timplan";
+        $from_address = "Timplan@timsoft-solutions.com";
         $to_name = $user->getPrenomUtilisateur() . ' ' . $user->getNomUtilisateur();
         $to_address = $user->getEmail();
 
         if ($taskEvent->isAllDay()) {
             $startTime = $taskEvent->getStart()->format('m/d/Y 07:30');
-            $endTime = $taskEvent->getStart()->format('m/d/Y 17:00');
+            $endTime = $taskEvent->getEnd()->format('m/d/Y 17:00');
         } else {
             $startTime = $taskEvent->getStart()->format('m/d/Y H:i');
             $endTime = $taskEvent->getEnd()->format('m/d/Y H:i');
@@ -371,7 +375,7 @@ class TaskEventController extends Controller
             ->setBody($ical)
             ->setDisposition('inline;filename=invite.ics');
         $message->attach($attachment);
-
+        $message->setPriority(Email::PRIORITY_HIGHEST);
         $message->setBody(
             $this->renderView('@TimSoftTasks/Email/email.html.twig', array('Task' => $taskEvent, 'image_src' => $image_src)), 'text/html');
         $messageG->setBody(

@@ -876,9 +876,9 @@ class PlanningController extends Controller
 
             /* ---------------------------------- */
             $message = (new \Swift_Message('Planning ' . $request->get('statut') . ': ' . $planning->getLc()->getCommande()->getClient()->getRaisonSociale() . ' du ' . $planning->getStart()->format('d/m/Y')))
-                ->setFrom(['timplan@timsoft.net' => "Administrateur TimSoft"]);
+                ->setFrom(['Timplan@timsoft-solutions.com' => "Administrateur Timplan"]);
             $messageG = (new \Swift_Message('Planning ' . $request->get('statut') . ': ' . $planning->getLc()->getCommande()->getClient()->getRaisonSociale() . ' du ' . $planning->getStart()->format('d/m/Y')))
-                ->setFrom(['timplan@timsoft.net' => "Administrateur TimSoft"]);
+                ->setFrom(['Timplan@timsoft-solutions.com' => "Administrateur Timplan"]);
             $failedRecipients = [];
             $numSent = 0;
             $user = $planning->getUtilisateur();
@@ -889,8 +889,8 @@ class PlanningController extends Controller
                 }
             }
             if ($planning->getStatut() == 'Confirmé') {
-                $from_name = "Administrateur TimSoft";
-                $from_address = "timplan@timsoft.net";
+                $from_name = "Administrateur Timplan";
+                $from_address = "Timplan@timsoft-solutions.com";
                 $to_name = $user->getPrenomUtilisateur() . ' ' . $user->getNomUtilisateur();
                 $to_address = $user->getEmail();
                 if ($planning->isAllDay()) {

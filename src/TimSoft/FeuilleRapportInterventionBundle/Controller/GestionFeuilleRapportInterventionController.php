@@ -346,7 +346,7 @@ class GestionFeuilleRapportInterventionController extends Controller
                         return $this->redirectToRoute('ModifierRapportIntervention', array('id' => $Feuille->getRapportIntervention()->getId()));
                     } else {
                         $messageRedaction = (new \Swift_Message('En attente de validation : Intervention ' . $Feuille->getClient()->getRaisonSociale() . ' du ' . $Feuille->getDateIntervention()->format("d/m/Y") . ' assuré par ' . $Feuille->getIntervenant()->getNomUtilisateur() . ' ' . $Feuille->getIntervenant()->getPrenomUtilisateur()))
-                            ->setFrom(['timplan@timsoft.net' => "Administrateur TimSoft"])
+                            ->setFrom(['Timplan@timsoft-solutions.com' => "Administrateur Timplan"])
                             ->setBody(
                                 $this->renderView(
                                     '@TimSoftFeuilleRapportIntervention/Emails/redactionFeuille.txt.twig', array('Feuille' => $Feuille)
@@ -396,7 +396,7 @@ class GestionFeuilleRapportInterventionController extends Controller
                     $em->persist($Rapport); //L'enregistrement se fait uniquement dans Doctrine
                     $em->flush(); // pour sauvegarder les données dans la BD
                     $message = (new \Swift_Message('Modification d\'un rapport d\'intervention'))
-                        ->setFrom(['timplan@timsoft.net' => "Administrateur TimSoft"])
+                        ->setFrom(['Timplan@timsoft-solutions.com' => "Administrateur Timplan"])
                         ->setBody(
                             $this->renderView(
                                 '@TimSoftFeuilleRapportIntervention/Emails/emailRapport.txt.twig', array('Rapport' => $Rapport)
@@ -471,7 +471,7 @@ class GestionFeuilleRapportInterventionController extends Controller
                             $em->persist($Rapport);
                             $em->flush();
                             $messageRedaction = (new \Swift_Message('Intervention ' . $Feuille->getClient()->getRaisonSociale() . ' du ' . $Feuille->getDateIntervention()->format("d/m/Y") . ' assuré par ' . $Feuille->getIntervenant()->getNomUtilisateur() . ' ' . $Feuille->getIntervenant()->getPrenomUtilisateur()))
-                                ->setFrom(['timplan@timsoft.net' => "Administrateur TimSoft"])
+                                ->setFrom(['Timplan@timsoft-solutions.com' => "Administrateur Timplan"])
                                 ->setBody(
                                     $this->renderView(
                                         '@TimSoftFeuilleRapportIntervention/Emails/validationFeuille.txt.twig', array('Feuille' => $Feuille)
@@ -522,7 +522,7 @@ class GestionFeuilleRapportInterventionController extends Controller
                             $pusher = $this->get('mrad.pusher.notificaitons'); // Appel le service
                             $pusher->trigger($redactionRapport);
                             $redaction = (new \Swift_Message('Redaction d\'un rapport d\'intervention'))
-                                ->setFrom(['timplan@timsoft.net' => "Administrateur TimSoft"])
+                                ->setFrom(['Timplan@timsoft-solutions.com' => "Administrateur Timplan"])
                                 ->setBody(
                                     $this->renderView(
                                         '@TimSoftFeuilleRapportIntervention/Emails/redactionRapport.txt.twig', array('Rapport' => $Rapport)
@@ -569,7 +569,7 @@ class GestionFeuilleRapportInterventionController extends Controller
                         if ($form["confirmationDeInterventionParClient"]->getData() == 1) {
                             $Client = $Feuille->getIntervention()->getConfirmePar();
                             $messageValidation = (new \Swift_Message('Intervention validé : ' . $Feuille->getClient()->getRaisonSociale() . ' du ' . $Feuille->getDateIntervention()->format("d/m/Y") . ' assuré par ' . $Feuille->getIntervenant()->getNomUtilisateur() . ' ' . $Feuille->getIntervenant()->getPrenomUtilisateur()))
-                                ->setFrom(['timplan@timsoft.net' => "Administrateur TimSoft"])
+                                ->setFrom(['Timplan@timsoft-solutions.com' => "Administrateur Timplan"])
                                 ->setBody(
                                     $this->renderView(
                                         '@TimSoftFeuilleRapportIntervention/Emails/validationFeuille.txt.twig', array('Feuille' => $Feuille)

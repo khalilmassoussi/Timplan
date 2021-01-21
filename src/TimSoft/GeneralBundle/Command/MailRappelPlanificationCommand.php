@@ -34,7 +34,7 @@ class MailRappelPlanificationCommand extends ContainerAwareCommand
             $output->writeln($user->getId());
             echo 'Rappel de Planifier le mois ' . strftime("%B", strtotime($date->format('F')));
             $message = (new \Swift_Message('Rappel de Planifier le mois ' . strftime("%B", strtotime($date->format('F')))))
-                ->setFrom(['timplan@timsoft.net' => "Administrateur TimSoft"])
+                ->setFrom(['Timplan@timsoft-solutions.com' => "Administrateur Timplan"])
                 ->setBody('Bonjour ' . $user->getPrenomUtilisateur() . ',
 
 <p>Ceci est un rappel pour planifier les journées de vos consultants pour le mois <b>' . $mois . '</b> sur <a href="www.timplan.timsoft.net">Timplan</a>.</p>
@@ -43,7 +43,7 @@ class MailRappelPlanificationCommand extends ContainerAwareCommand
 <p>Merci de prendre quelques minutes pour le faire,</p>
 
 
-<p>En cas de soucis, veuillez-contacter L\'administrateur Timplan sur l\'adresse Timplan@timsoft.net</p>
+<p>En cas de soucis, veuillez-contacter L\'administrateur Timplan sur l\'adresse Timplan@timsoft-solutions.com</p>
 
 
 <p>Cordialement,</p>
