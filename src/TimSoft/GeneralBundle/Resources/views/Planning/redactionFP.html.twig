@@ -130,7 +130,15 @@
                 e.preventDefault();
                 var data = table.row($(this).parents('tr')).data();
                 var today = new Date();
-                if (moment(today) < moment(data[1], 'DD/MM/YYYY')) {
+                var access = '{{ AutorisationAcces('planningArriere' , app.user) }}';
+                var diff = moment(today).diff(moment(data[1]), 'days');
+                if (diff > 5 || access !== '1') {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: "L'intervention a depassé 5 Jours, impossible de valider la feuille de présence!",
+                    })
+                } else if (moment(today) < moment(data[1], 'DD/MM/YYYY')) {
                     Swal.fire({
                         icon: 'error',
                         title: 'Oops...',

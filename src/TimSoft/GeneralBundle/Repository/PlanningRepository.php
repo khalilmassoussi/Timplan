@@ -50,40 +50,20 @@ class PlanningRepository extends \Doctrine\ORM\EntityRepository
      * @param null $currentUser
      * @return mixed
      */
-    public function findByUser($user, $start, $end, $currentUser = null, $enArriere)
+    public function findByUser($user, $start, $end, $currentUser = null)
     {
-
-        if ($enArriere == false) {
-            $query = $this->createQueryBuilder('p')
-                ->select('p')
-                ->leftJoin('p.accompagnements', 'u')
-                ->where('p.utilisateur = :user')
-                ->orWhere('u = :user')
-                ->andwhere('p.start BETWEEN :start AND :end')
-                ->andWhere('p.end BETWEEN :start AND :end')
-                ->andWhere('DATE_DIFF(CURRENT_TIMESTAMP(), p.end) <= 2 OR p.statut = :termine')
-                ->setParameter('start', $start)
-                ->setParameter('end', $end)
-                ->setParameter('user', $user)
-                ->setParameter('termine', "Terminé")
-                ->getQuery()
-                ->getResult();
-            return $query;
-        } else {
-            return $this->createQueryBuilder('p')
-                ->select('p')
-                ->leftJoin('p.accompagnements', 'u')
-                ->where('p.utilisateur = :user')
-                ->orWhere('u = :user')
-                ->andwhere('p.start BETWEEN :start AND :end')
-                ->andWhere('p.end BETWEEN :start AND :end')
-                ->setParameter('start', $start)
-                ->setParameter('end', $end)
-                ->setParameter('user', $user)
-                ->getQuery()
-                ->getResult();
-        }
-
+        return $this->createQueryBuilder('p')
+            ->select('p')
+            ->leftJoin('p.accompagnements', 'u')
+            ->where('p.utilisateur = :user')
+            ->orWhere('u = :user')
+            ->andwhere('p.start BETWEEN :start AND :end')
+            ->andWhere('p.end BETWEEN :start AND :end')
+            ->setParameter('start', $start)
+            ->setParameter('end', $end)
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getResult();
     }
 
     public function findByUserBus($bus)
@@ -100,35 +80,7 @@ class PlanningRepository extends \Doctrine\ORM\EntityRepository
 
     public function getConfirméByUser($user, $enArriere)
     {
-        if ($enArriere == false) {
-            if ($user->hasRole('ROLE_ADMIN') || $user->hasRole('ROLE_GESTIONNAIRE')) {
-                return $this->createQueryBuilder('p')
-                    ->select('p')
-                    ->andWhere('p.statut = :statut')
-                    ->andWhere('feuille is null')
-                    ->andWhere('DATE_DIFF(CURRENT_TIMESTAMP(), p.end) <= 5 OR p.statut = :termine')
-                    ->setParameter('termine', "Terminé")
-                    ->leftJoin('p.feuille', 'feuille')
-                    ->setParameter('statut', "Confirmé")
-//                    ->orderBy('p.id', 'DESC')
-                    ->getQuery()
-                    ->getResult();
-            }
-            return $this->createQueryBuilder('p')
-                ->select('p')
-                ->where('p.utilisateur = :user')
-                ->andWhere('p.statut = :statut')
-                ->andWhere('feuille is null')
-                ->andWhere('DATE_DIFF(CURRENT_TIMESTAMP(), p.end) <= 5 OR p.statut = :termine')
-                ->setParameter('termine', "Terminé")
-                ->leftJoin('p.feuille', 'feuille')
-                ->setParameter('statut', "Confirmé")
-                ->setParameter('user', $user)
-//            ->orderBy('p.id DESC')
-                ->getQuery()
-                ->getResult();
-        } else {
-            if ($user->hasRole('ROLE_ADMIN') || $user->hasRole('ROLE_GESTIONNAIRE')) {
+            if ($user->hasRole('') || $user->hasRole('ROLE_GESTIONNAIRE')) {
                 return $this->createQueryBuilder('p')
                     ->select('p')
                     ->andWhere('p.statut = :statut')
@@ -150,7 +102,6 @@ class PlanningRepository extends \Doctrine\ORM\EntityRepository
 //            ->orderBy('p.id DESC')
                 ->getQuery()
                 ->getResult();
-        }
     }
 
     public function PlanningOfMonth($id)
@@ -188,38 +139,20 @@ class PlanningRepository extends \Doctrine\ORM\EntityRepository
             ->getResult();
     }
 
-    public function getByClient($id, $start, $end, $utilisateur = null, $enArriere)
+    public function getByClient($id, $start, $end, $utilisateur = null)
     {
-        if ($utilisateur && $enArriere == false) {
-            $query = $this->createQueryBuilder('p')
-                ->select('p')
-                ->leftJoin('p.lc', 'lc')
-                ->leftJoin('lc.commande', 'c')
-                ->where('c.client = :id')
-                ->andwhere('p.start BETWEEN :start AND :end')
-                ->andWhere('p.end BETWEEN :start AND :end')
-                ->andWhere('DATE_DIFF(CURRENT_TIMESTAMP(), p.end) <= 2 OR p.statut = :termine')
-                ->setParameter('start', $start)
-                ->setParameter('end', $end)
-                ->setParameter('termine', "Terminé")
-                ->setParameter('id', $id)
-                ->getQuery()
-                ->getResult();
-            return $query;
-        } else {
-            return $this->createQueryBuilder('p')
-                ->select('p')
-                ->leftJoin('p.lc', 'lc')
-                ->leftJoin('lc.commande', 'c')
-                ->where('c.client = :id')
-                ->andwhere('p.start BETWEEN :start AND :end')
-                ->andWhere('p.end BETWEEN :start AND :end')
-                ->setParameter('start', $start)
-                ->setParameter('end', $end)
-                ->setParameter('id', $id)
-                ->getQuery()
-                ->getResult();
-        }
+        return $this->createQueryBuilder('p')
+            ->select('p')
+            ->leftJoin('p.lc', 'lc')
+            ->leftJoin('lc.commande', 'c')
+            ->where('c.client = :id')
+            ->andwhere('p.start BETWEEN :start AND :end')
+            ->andWhere('p.end BETWEEN :start AND :end')
+            ->setParameter('start', $start)
+            ->setParameter('end', $end)
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getResult();
     }
 
     public function countByStatut($user, $statut, $date)
@@ -281,30 +214,16 @@ class PlanningRepository extends \Doctrine\ORM\EntityRepository
         }
     }
 
-    public function betweenDates($start, $end, $utilisateur, $planning)
+    public function betweenDates($start, $end, $utilisateur)
     {
-        if ($planning == false) {
-            $query = $this->createQueryBuilder('p')
-                ->select('p')
-                ->andwhere('p.start BETWEEN :start AND :end')
-                ->andWhere('p.end BETWEEN :start AND :end')
-                ->andWhere('DATE_DIFF(CURRENT_TIMESTAMP(), p.end) <= 2 OR p.statut = :termine')
-                ->setParameter('start', $start)
-                ->setParameter('end', $end)
-                ->setParameter('termine', "Terminé")
-                ->getQuery()
-                ->getResult();
-            return $query;
-        } else {
-            return $this->createQueryBuilder('p')
-                ->select('p')
-                ->where('p.start BETWEEN :start AND :end')
-                ->andWhere('p.end BETWEEN :start AND :end')
-                ->setParameter('start', $start)
-                ->setParameter('end', $end)
-                ->getQuery()
-                ->getResult();
-        }
+        return $this->createQueryBuilder('p')
+            ->select('p')
+            ->where('p.start BETWEEN :start AND :end')
+            ->andWhere('p.end BETWEEN :start AND :end')
+            ->setParameter('start', $start)
+            ->setParameter('end', $end)
+            ->getQuery()
+            ->getResult();
     }
 }
 

@@ -622,8 +622,7 @@
                 } else {
                     var data = table.row(this).data()[1];
                     var cc = $(data).find('.idlc').val();
-                    {#Routing.setBaseUrl({{ app.request.getBaseURL() }});#}
-                    console.log(cc);
+
                     Routing.setPort('');
                     $.ajax({
                         type: "GET",

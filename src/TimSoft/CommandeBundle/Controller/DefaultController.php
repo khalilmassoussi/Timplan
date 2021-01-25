@@ -395,6 +395,8 @@ class DefaultController extends Controller
         $sheet->setCellValue('I1', 'Montant HT');
         $sheet->setCellValue('J1', 'Qté restante');
         $sheet->setCellValue('K1', 'Valeur Restante');
+        $sheet->setCellValue('L1', 'Affaire');
+
 
         //  $sheet->setCellValue('E1', '');
 
@@ -411,6 +413,7 @@ class DefaultController extends Controller
             $sheet->setCellValue('I' . $counter, $ligneCommande->getMontantHT());
             $sheet->setCellValue('J' . $counter, $ligneCommande->getQteRestante());
             $sheet->setCellValue('K' . $counter, '');
+            $sheet->setCellValue('L' . $counter, $ligneCommande->getCommande()->getAffaire());
 //            $sheet->setCellValue('E' . $counter, $phoneNumber->getOffice());
             $counter++;
         }

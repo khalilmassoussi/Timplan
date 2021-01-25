@@ -226,6 +226,9 @@
             {% elseif ParConsultant is defined %}
             data.ParConsultant = 'ParConsultant';
             {% endif %}
+
+            var access = '{{ AutorisationAcces('planningArriere' , app.user) }}';
+
             var table = $('#TableRIFP').DataTable({
                 language: {
                     processing: "Traitement en cours...",
@@ -279,6 +282,9 @@
                         "searchable": false,
                         "orderable": false,
                         "render": function (data, type, row, meta) {
+                            var today = moment();
+                            var date = moment(data.Date, 'DD-MM-YYYY');
+                            var diff = today.diff(date, 'days');
 
                             var htmltoAdd = '';
                             if (row.Type === 'Feuille de présence') {
@@ -287,11 +293,11 @@
                                 {% endif %}
                                 {% if AutorisationAcces('TelechargerFeuillePresence' , app.user) %}
                                 htmltoAdd = htmltoAdd + '<a class="btn btn-sm btn-info" href=' + Routing.generate('TelechargerFeuillePresence', {id: row.id}) +
-                                    '><i class="fas fa-download fa-lg" title="Télécharger la feuille"></i> </a>'
+                                    '><i class="fas fa-download fa-lg" title="Télécharger la feuille"></i> </a>';
                                 {% endif %}
                                 if (row.Validation === 'Validé') {
                                     return htmltoAdd
-                                } else {
+                                } else if (diff < 5 || access === '1') {
                                     {% if AutorisationAcces('ModifierFeuillePresence' , app.user) %}
                                     htmltoAdd = htmltoAdd + '<a class="btn btn-sm btn-primary" href=' + Routing.generate('ModifierFeuillePresence', {id: row.id}) + '><i class="fas fa-edit fa-lg" title="Modifier la feuille de présnce"></i></a>';
                                     {% endif %}
@@ -299,6 +305,9 @@
                                     htmltoAdd = htmltoAdd + ' <a class="btn btn-sm btn-danger" href=' + Routing.generate('SupprimerUneFeuille', {id: row.id}) + '  > <i class="fas fa-trash fa-lg" title="Supprimer la feuille de présence"></i> </a>'
                                     {% endif %}
                                     return htmltoAdd;
+                                } else {
+                                    return htmltoAdd;
+
                                 }
 
                             } else {
@@ -310,7 +319,7 @@
                                 {% endif %}
                                 if (row.Validation === 'Validé') {
                                     return htmltoAdd;
-                                } else {
+                                } else if (diff < 5 || access === '1') {
                                     {% if AutorisationAcces('ModifierRapportIntervention' , app.user) %}
                                     htmltoAdd = htmltoAdd + '<a class="btn btn-sm btn-primary" href=' + Routing.generate('ModifierRapportIntervention', {id: row.id}) + '><i class="fas fa-edit fa-lg" title="Modifier le rapport d&apos;intervention"></i> </a>'
                                     {% endif %}
@@ -320,6 +329,8 @@
                                         'title="Supprimer le rapport d\'intervention"></i>\n' +
                                         '</a>';
                                     {% endif %}
+                                    return htmltoAdd;
+                                } else {
                                     return htmltoAdd;
                                 }
                             }

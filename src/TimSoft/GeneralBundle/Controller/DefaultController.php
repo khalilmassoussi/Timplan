@@ -77,6 +77,8 @@ class DefaultController extends Controller
             return $this->render('@TimSoftCommande/Default/mesplans.html.twig');
         } elseif (($user->getRoleUtilisateur() === "ROLE_EXTERNE")) {
             return $this->render('@TimSoftCommande/Default/mesplans.html.twig');
+        } elseif (($user->getRoleUtilisateur() === "ROLE_SUPPORT")) {
+            return $this->render('@TimSoftCommande/Default/mesplans.html.twig');
         }
         return new JsonResponse('cc');
     }

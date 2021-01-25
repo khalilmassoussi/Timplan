@@ -70,9 +70,9 @@
                         </th>
                         <th>Business Manager</th>
                         <th>
-                            N° Commande (Vide <input type="checkbox" id="vide">)
+                            N° Commande
                         </th>
-                        <th >Affaire</th>
+                        <th>Affaire</th>
                         <th hidden></th>
                         <th hidden>
 
@@ -120,7 +120,7 @@
                                               style="font-size: 85%">{{ cmd.commande.nCommande }}</span>
                                     {% else %}
                                         <span class="badge bg-success"
-                                              style="font-size: 85%">Généré</span>
+                                              style="font-size: 85%">Commande Généré</span>
                                     {% endif %}
                                 {% else %}
                                     <span class="badge bg-danger" style="font-size: 85%">Non généré</span>
@@ -129,15 +129,16 @@
                             <td>{{ cmd.affaire }}</td>
                             <td hidden>
                                 {% if cmd.archive %}
-                                    {{ cmd.archive }}
+                                    Commande Généré
                                 {% else %}
-                                    null
+                                    Nongénéré
                                 {% endif %}
                             </td>
                             <td>
                                 {% if AutorisationAcces('preCommandeAfficher' , Utilisateur) %}
                                     <center>
-                                        <a href="{{ path('preCommandeAfficher', { 'id': cmd.id }) }}" class="btn btn-sm btn-primary">
+                                        <a href="{{ path('preCommandeAfficher', { 'id': cmd.id }) }}"
+                                           class="btn btn-sm btn-primary">
                                             <i class="fas fa-search fa-lg" title="Consulter la précommande"></i>
                                         </a>
                                     </center>
@@ -195,19 +196,6 @@
             });
         $(document).ready(function () {
 
-            $('input[type="checkbox"]').click(function () {
-                if ($(this).prop("checked") == true) {
-                    table
-                        .columns(7)
-                        .search('null')
-                        .draw();
-                } else if ($(this).prop("checked") == false) {
-                    table
-                        .columns(7)
-                        .search('')
-                        .draw();
-                }
-            });
 
             var table = $('#TableClient').DataTable({
                 language: {
@@ -235,7 +223,7 @@
                     "serverSide": true,
                     /*"ajax": "''"*/
                 },
-                ordering: false,
+                // ordering: false,
                 responsive: true,
                 drawCallback: function () {
                     var api = this.api();
@@ -243,15 +231,17 @@
                         filter: 'applied'
                     }).data();
                     $.each($(api.table().header()).find("select"), function (colIndex) {
-                        var currData = data.map(function (cols) {
-                            return cols[colIndex];
-                        });
-                        $.each($(this).find("option"), function () {
-                            if (currData.indexOf($(this).text()) != -1 || $(this).text() == '')
-                                $(this).show();
-                            else
-                                $(this).hide();
-                        })
+                        if (colIndex !== 6) {
+                            var currData = data.map(function (cols) {
+                                return cols[colIndex];
+                            });
+                            $.each($(this).find("option"), function () {
+                                if (currData.indexOf($(this).text()) != -1 || $(this).text() == '')
+                                    $(this).show();
+                                else
+                                    $(this).hide();
+                            })
+                        }
                     });
                 },
                 initComplete: function () {
@@ -265,7 +255,7 @@
                                     $(this).val().replace("-", " ")
                                 );
                                 column
-                                    .search(val)
+                                    .search(val ? '^' + val + '$' : '', true, false)
                                     .draw();
                             });
                         if (index === 1) {
@@ -278,7 +268,9 @@
 
 
                         } else if (index === 6) {
-                            $("tr th:nth-child(7) select").css("display", "none");
+                            column.data().unique().sort().each(function (d, j) {
+                                select.append('<option value="' + $(d).text() + '">' + $(d).text() + '</option>')
+                            });
                         } else if (index === 3) {
                             var NewArrayToAdd = [];
                             column.data().unique().sort().each(function (d, j) {
@@ -307,6 +299,8 @@
                     {responsivePriority: 1, targets: 0},
                     {responsivePriority: 2, targets: 2},
                     {responsivePriority: 3, targets: 6},
+                    {targets: [4], orderable: true},
+                    {targets: '_all', orderable: false},
                 ],
 
             });
@@ -402,6 +396,7 @@
                     .search("")
                     .draw();
             });
+
             $('#plus').one('click', function (e) {
                 $(this).attr("disabled", true);
                 $.ajax({
