@@ -80,7 +80,7 @@ class PlanningRepository extends \Doctrine\ORM\EntityRepository
 
     public function getConfirméByUser($user, $enArriere)
     {
-            if ($user->hasRole('') || $user->hasRole('ROLE_GESTIONNAIRE')) {
+            if ($user->hasRole('ROLE_ADMIN') || $user->hasRole('ROLE_GESTIONNAIRE')) {
                 return $this->createQueryBuilder('p')
                     ->select('p')
                     ->andWhere('p.statut = :statut')
