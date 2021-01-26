@@ -605,13 +605,17 @@ class PlanningController extends Controller
         $em = $this->getDoctrine()->getManager(); // initialise la connexion à la BD
         $plannings = [];
         $tasks = [];
-        foreach ($request->get('ids') as $id) {
-            $planning = $em->getRepository("TimSoftGeneralBundle:Planning")->find($id);
-            $plannings[] = $planning;
+        if ($request->get('ids')) {
+            foreach ($request->get('ids') as $id) {
+                $planning = $em->getRepository("TimSoftGeneralBundle:Planning")->find($id);
+                $plannings[] = $planning;
+            }
         }
-        foreach ($request->get('tasks') as $id) {
-            $task = $em->getRepository("TimSoftTasksBundle:TaskEvent")->find($id);
-            $tasks[] = $task;
+        if ($request->get('tasks')) {
+            foreach ($request->get('tasks') as $id) {
+                $task = $em->getRepository("TimSoftTasksBundle:TaskEvent")->find($id);
+                $tasks[] = $task;
+            }
         }
         //  return new JsonResponse($plannings);
 //        $plannings = $em->getRepository("TimSoftGeneralBundle:Planning")->PlanningOfMonth($this->getUser()->getId());
@@ -637,6 +641,7 @@ class PlanningController extends Controller
         $sheet->setCellValue('H1', 'Facturation');
         $sheet->setCellValue('I1', 'Statut');
         $sheet->setCellValue('J1', 'Durée');
+        $sheet->setCellValue('K1', 'Commentaire');
 
 
         $counter = 2;
@@ -660,6 +665,7 @@ class PlanningController extends Controller
             $sheet->setCellValue('H' . $counter, $planning->getFacturation());
             $sheet->setCellValue('I' . $counter, $planning->getStatut());
             $sheet->setCellValue('J' . $counter, $planning->jRestantes());
+            $sheet->setCellValue('K' . $counter, $planning->getCommentaire());
             $counter++;
         }
 

@@ -643,9 +643,8 @@
                         success: function (result) {
                             interventions.clear().draw();
                             $("#interventions").modal();
-                            if (result.length > 0) {
-                                $("#title").html('Les interventions: ' + result[0].libelle);
-                                $.each(result, function (key, value) {
+                                $("#title").html('Les interventions: ' + result.libelle);
+                                $.each(result.plannings, function (key, value) {
                                     let date;
                                     var Supplementaire;
                                     if (value.allDay) {
@@ -668,7 +667,7 @@
                                         Supplementaire,
                                     ]).draw(false);
                                 });
-                            }
+
                         },
                         error: function (result) {
                         }

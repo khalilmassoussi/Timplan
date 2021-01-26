@@ -132,7 +132,7 @@
                 var today = new Date();
                 var access = '{{ AutorisationAcces('planningArriere' , app.user) }}';
                 var diff = moment(today).diff(moment(data[1]), 'days');
-                if (diff > 5 || access !== '1') {
+                if (diff > 5 && access !== '1') {
                     Swal.fire({
                         icon: 'error',
                         title: 'Oops...',

@@ -363,7 +363,8 @@ class Planning extends Event implements \JsonSerializable
                     'Commentaire' => $this->commentaire,
                     'description' => $this->lc->getLibelle(),
                     'nCommande' => $this->lc->getCommande()->getNCommande(),
-                    'type' => $class->getShortName()
+                    'type' => $class->getShortName(),
+                    'affaire' => $this->getLc()->getCommande()->getAffaire()
                 );
             } else {
                 return array(
