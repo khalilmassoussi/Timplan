@@ -114,6 +114,12 @@ class Client
      */
     private $commandes;
 
+    /**
+     * @var
+     * @ORM\OneToMany(targetEntity="TimSoft\TasksBundle\Entity\TaskEvent", mappedBy="client")
+     */
+    private $tasks;
+
     public function __toString()
     {
         return (string)$this->getRaisonSociale();
@@ -448,6 +454,22 @@ class Client
     public function setCommandes($commandes)
     {
         $this->commandes = $commandes;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTasks()
+    {
+        return $this->tasks;
+    }
+
+    /**
+     * @param mixed $tasks
+     */
+    public function setTasks($tasks): void
+    {
+        $this->tasks = $tasks;
     }
 
 }
