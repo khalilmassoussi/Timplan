@@ -130,6 +130,13 @@ class TaskEvent implements \JsonSerializable
     private $endTime;
 
     /**
+     * @var
+     * @ORM\ManyToOne(targetEntity="TimSoft\GeneralBundle\Entity\Affaire")
+     */
+    private $affaire;
+
+
+    /**
      * TaskEvent constructor.
      */
     public function __construct()
@@ -493,6 +500,24 @@ class TaskEvent implements \JsonSerializable
         $difference = abs($endtimestamp - $starttimestamp) / 3600;
         return $difference;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getAffaire()
+    {
+        return $this->affaire;
+    }
+
+    /**
+     * @param mixed $affaire
+     */
+    public function setAffaire($affaire): void
+    {
+        $this->affaire = $affaire;
+    }
+
+
 
     public function jsonSerialize()
     {

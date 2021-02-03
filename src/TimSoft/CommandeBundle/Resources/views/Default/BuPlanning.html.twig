@@ -203,7 +203,6 @@
                 eventClick: function (event) {
                     // event.jsEvent.preventDefault();
                     if (event.event.extendedProps.type !== 'TaskEvent') {
-
                         editPlanningModal(event, calendar);
                     } else {
                         editTaskEvent(event, calendar);
@@ -235,6 +234,9 @@
                             $(event.el).height('auto');
                             $(event.el).find('.fc-title').prepend('<b>Client: </b>');
                             $(event.el).append('<br><span><b>Libellé: </b>' + event.event.extendedProps.libelle + '</span>');
+                            if (event.event.extendedProps.affaire != null) {
+                                $(event.el).append('<br><b>Affaire:</b> ' + event.event.extendedProps.affaire.libelle)
+                            }
                         }
                     }
                     if (event.event.extendedProps.type == 'TaskEvent') {
@@ -290,6 +292,10 @@
                         if (event.event.allDay === false) {
                             $(event.el).find('.fc-title').prepend('<b>Client: </b>');
                             $(event.el).append('<br><span><b>Libellé: </b>' + event.event.extendedProps.libelle + '</span>');
+                            if (event.event.extendedProps.affaire != null) {
+                                $(event.el).append('<br><b>Affaire:</b> ' + event.event.extendedProps.affaire.libelle)
+                            }
+
                             if (moment(event.event.start).hours() > 13) {
                                 $(event.el).append('<br><b>Après-midi</b>');
                             } else {

@@ -16,6 +16,7 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use TimSoft\GeneralBundle\Entity\Client;
 use TimSoft\GeneralBundle\Repository\UtilisateurRepository;
 use TimSoft\TasksBundle\Entity\Activite;
 
@@ -207,17 +208,28 @@ class TaskEventType extends AbstractType
                 'choices' => $tasks,
             ]);
         };
+        $formModifier2 = function (FormInterface $form, Client $client = null) {
+            $affaires = null === $client ? [] : $client->getAffaires();
+
+            $form->add('affaire', EntityType::class, [
+                'class' => 'TimSoft\GeneralBundle\Entity\Affaire',
+                'placeholder' => 'Choisir Affaire',
+                'choice_label' => 'libelle',
+                'choices' => $affaires,
+                "required" => false
+            ]);
+        };
         $builder->addEventListener(
             FormEvents::PRE_SET_DATA,
-            function (FormEvent $event) use ($formModifier) {
+            function (FormEvent $event) use ($formModifier, $formModifier2) {
                 $form = $event->getForm();
 
                 // this would be your entity, i.e. SportMeetup
                 $data = $event->getData();
 
-                $activite = $form->get('activite');
 
                 $formModifier($event->getForm(), $data->getActivite());
+                $formModifier2($event->getForm(), $data->getClient());
 
                 if ($data->isAllDay()) {
                     $form->add('start', DateType::class, [
@@ -251,6 +263,20 @@ class TaskEventType extends AbstractType
                 $formModifier($event->getForm()->getParent(), $activite);
             }
         );
+
+        $builder->get('client')->addEventListener(
+            FormEvents::POST_SUBMIT,
+            function (FormEvent $event) use ($formModifier2) {
+                // It's important here to fetch $event->getForm()->getData(), as
+                // $event->getData() will get you the client data (that is, the ID)
+                $client = $event->getForm()->getData();
+
+                // since we've added the listener to the child, we'll have to pass on
+                // the parent to the callback functions!
+                $formModifier2($event->getForm()->getParent(), $client);
+            }
+        );
+
         $builder->addEventListener(
             FormEvents::PRE_SUBMIT,
             function (FormEvent $event) {

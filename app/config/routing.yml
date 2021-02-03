@@ -1,3 +1,7 @@
+tim_soft_general_affaire:
+    resource: "@TimSoftGeneralBundle/Controller/AffaireController.php"
+    type:     annotation
+
 tim_soft_tasks:
     resource: "@TimSoftTasksBundle/Controller/"
     type:     annotation

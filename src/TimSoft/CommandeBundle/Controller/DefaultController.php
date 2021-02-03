@@ -31,9 +31,9 @@ class DefaultController extends Controller
     public function importerClientAction(Request $request)
     {
 
-//        if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
-//            throw $this->createAccessDeniedException();
-//        }
+        if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
+            throw $this->createAccessDeniedException();
+        }
         $duplicate = [];
         function Test($array, $key)
         {
@@ -133,6 +133,18 @@ class DefaultController extends Controller
                                 return $this->render('@TimSoftCommande/Default/ImportCmd.html.twig', array('form' => $form->createView()));
                             }
                         }
+                        if ($fullrow[13]) {
+                            $affaire = $em->getRepository('TimSoftGeneralBundle:Affaire')->findOneByLibelle($fullrow[13]);
+                            if (is_null($affaire)) {
+                                $this->addFlash("Erreur", "L'affaire " . $fullrow[13] . " est invalide");
+                                return $this->render('@TimSoftCommande/Default/ImportCmd.html.twig', array('form' => $form->createView()));
+                            } else {
+                                if ($affaire->getClient() != $clinet) {
+                                    $this->addFlash("Erreur", "L'affaire " . $fullrow[13] . " n'est pas lié au client " . $clinet->getRaisonSociale());
+                                    return $this->render('@TimSoftCommande/Default/ImportCmd.html.twig', array('form' => $form->createView()));
+                                }
+                            }
+                        }
                     }
                 }
                 $array = new ArrayCollection();
@@ -142,15 +154,28 @@ class DefaultController extends Controller
                             $array->add($row);
                     }
                 }
-//                print_r($array);
+
                 foreach ($array as $value) {
                     if ($value) {
                         if ($value[1] && $value[2] && $value[0] && $value[3] && $value[4] && $value[5]) {
+                            $new = array_filter($array->toArray(), function ($var) use ($value) {
+                                return ($var[2] == $value[2]);
+                            });
+                            echo "<pre>";
+                            print_r(count($new));
+                            echo "</pre>";
+                            if (count($new) > 1) {
+                                $this->addFlash("Erreur", "Le fichier importé n'est pas valide");
+                                return $this->render('@TimSoftCommande/Default/ImportCmd.html.twig', array('form' => $form->createView()));
+                            }
                             $commande = new TeteCommande();
                             $commande->setNCommande($value[2]);
                             $date = new \DateTime($value[3]);
                             $commande->setDatePiece($date);
-                            $commande->setAffaire($value[5]);
+                            $affaire = $em->getRepository('TimSoftGeneralBundle:Affaire')->findOneByLibelle($fullrow[13]);
+                            if ($affaire) {
+                                $commande->setAffaire($affaire);
+                            }
                             $users = $this->getDoctrine()->getRepository('TimSoftGeneralBundle:Utilisateur')->findAll();
                             foreach ($users as $user) {
                                 if ($user->__toString() == $value[4]) {
@@ -169,6 +194,8 @@ class DefaultController extends Controller
                         }
                     }
                 }
+
+                die();
                 $em->flush();
                 $lignes = [];
                 foreach ($fullrows as $fullrow) {

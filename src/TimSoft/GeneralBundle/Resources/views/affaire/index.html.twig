@@ -1,0 +1,94 @@
+{% extends 'Squelette.html.twig' %}
+
+{% block Titre %}
+    Timplan - Les Affaires
+{% endblock %}
+
+{% block Section %}
+    <h1>
+        Les Affaires
+        <small></small>
+    </h1>
+{% endblock %}
+
+
+{% block Navigation %}
+    <li class="breadcrumb-item active">Les Affaires</li>
+{% endblock %}
+{% block css %}
+    {{ parent() }}
+    <link rel="stylesheet" href="https://cdn.datatables.net/rowgroup/1.1.1/css/rowGroup.dataTables.min.css">
+{% endblock %}
+{% block Contenu %}
+    <div class="col-md-12">
+        <div class="card card-outline card-primary">
+            <div class="card-header with-border">
+                <h3 class="card-title">Liste des affaires</h3>
+            </div>
+            <div class="card-body">
+                {% if AutorisationAcces('affaire_new' , Utilisateur) %}
+                    <ul>
+                        <li>
+                            <a href="{{ path('affaire_new') }}" class="btn btn-primary">Ajouter un nouveau affaire</a>
+                        </li>
+                    </ul>
+                {% endif %}
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Libelle</th>
+                        <th>Code Client</th>
+                        <th>Raison Sociale</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for affaire in affaires %}
+                        <tr>
+                            <td>{{ affaire.libelle }}</td>
+                            <td>{{ affaire.client.codeClient }}</td>
+                            <td>{{ affaire.client }}</td>
+                            <td>
+                                <a href="{{ path('affaire_edit', { 'id': affaire.id }) }}" class="btn btn-primary"><i
+                                            class="fas fa-edit fa-lg"
+                                            title="Modifier l'affaire {{ affaire.libelle }}"></i></a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+    {{ parent() }}
+    <script src="https://cdn.datatables.net/rowgroup/1.1.1/js/dataTables.rowGroup.min.js"></script>
+    <script>
+        $('.table').dataTable({
+            language: {
+                processing: "Traitement en cours...",
+                search: "Rechercher&nbsp;:",
+                lengthMenu: "Afficher _MENU_ &eacute;l&eacute;ments",
+                info: "Affichage de l'&eacute;lement _START_ &agrave; _END_ sur _TOTAL_ &eacute;l&eacute;ments",
+                infoEmpty: "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
+                infoFiltered: "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
+                infoPostFix: "",
+                loadingRecords: "Chargement en cours...",
+                zeroRecords: "Aucun &eacute;l&eacute;ment &agrave; afficher",
+                emptyTable: "Aucune donnée disponible dans le tableau",
+
+                aria: {
+                    sortAscending: ": activer pour trier la colonne par ordre croissant",
+                    sortDescending: ": activer pour trier la colonne par ordre décroissant"
+                },
+            },
+            "columnDefs": [
+                {targets: 2, visible: false},
+            ],
+            rowGroup: {
+                dataSrc: [2]
+            },
+        });
+    </script>
+{% endblock %}

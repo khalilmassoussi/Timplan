@@ -35,7 +35,6 @@
                                     <tr>
                                         <th>Statut</th>
                                         <td>{{ taskEvent.statut }}</td>
-                                      
                                     </tr>
                                     <tr>
                                         <th>Etiquette</th>
@@ -81,7 +80,18 @@
                                     {% endif %}
                                     <tr>
                                         <th>Client</th>
-                                        <td>{{ taskEvent.client }}</td>
+                                        <td>
+                                            {{ taskEvent.client }}
+
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Affaire</th>
+                                        <td>
+                                            {% if taskEvent.affaire %}
+                                                {{ taskEvent.affaire.libelle }}
+                                            {% endif %}
+                                        </td>
                                     </tr>
                                     <tr>
                                         <th>Task</th>

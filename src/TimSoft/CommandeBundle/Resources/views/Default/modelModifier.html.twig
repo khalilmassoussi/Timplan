@@ -45,12 +45,41 @@
 <script src="{{ asset('Template2/plugins/jquery/jquery.min.js') }}"></script>
 <script src="{{ asset('Template2/plugins/jquery-ui/jquery-ui.min.js') }}"></script>
 <script>
+
+</script>
+<script>
     $(document).ready(function () {
-        $('#timsoft_commandebundle_tetecommande_client').select2();
+        var $activive = $('#timsoft_commandebundle_tetecommande_client');
+        $activive.select2();
+
         $('#timsoft_commandebundle_tetecommande_buManager').select2();
         $('#timsoft_commandebundle_tetecommande_datePiece').datepicker({
                 format: 'yyyy-mm-dd'
             }
         );
+
+        // When sport gets selected ...
+
+        $activive.change(function () {
+            // ... retrieve the corresponding form.
+            var $form = $(this).closest('form');
+            // Simulate form data, but only include the selected sport value.
+            var data = {};
+            data[$activive.attr('name')] = $activive.val();
+            // Submit data via AJAX to the form's action path.
+            $.ajax({
+                url: $form.attr('action'),
+                type: $form.attr('method'),
+                data: data,
+                success: function (html) {
+                    // Replace current position field ...
+                    $('#timsoft_commandebundle_tetecommande_affaire').replaceWith(
+                        // ... with the returned one from the AJAX response.
+                        $(html).find('#timsoft_commandebundle_tetecommande_affaire')
+                    );
+                    // Position field now displays the appropriate positions.
+                }
+            });
+        });
     });
 </script>

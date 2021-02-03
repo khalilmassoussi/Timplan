@@ -230,7 +230,7 @@
                         return event;
                     },
                     eventRender: function (event, element, view) {
-                        if (($('#ncommande :selected').text() == '' || $('#ncommande :selected').text() == event.event.extendedProps.nCommande) && ($('#affaire :selected').text() == '' || $('#affaire :selected').text() == event.event.extendedProps.affaire)) {
+                        if (($('#ncommande :selected').text() == '' || $('#ncommande :selected').text() == event.event.extendedProps.nCommande) && ($('#affaire :selected').text() == '' || (event.event.extendedProps.affaire != null && $('#affaire :selected').text() == event.event.extendedProps.affaire.libelle))) {
                             if (event.view.type === 'dayGridWeek') {
                                 calendar.height = 450;
                                 $(event.el).height('auto');
@@ -314,6 +314,7 @@
                     $.each(calendar.getEventSources(), function (key, value) {
                         value.remove();
                     });
+                    var clientId = this.value;
                     Routing.setPort(null);
                     $('#ncommande').empty();
                     $('#affaire').empty();
@@ -329,8 +330,14 @@
                                 $('#ncommande').append($("<option />").val(value.id).text(value.nCommande));
                             });
                             $('#affaire').append($("<option />").val(null).text(null));
-                            $.each(data, function (key, value) {
-                                $('#affaire').append($("<option />").val(value.id).text(value.Affaire));
+                            $.ajax({
+                                url: Routing.generate('affaire_by_client', {client: clientId}, true),
+                                dataType: "json",
+                                success: function (affaires) {
+                                    $.each(affaires, function (key, value) {
+                                        $('#affaire').append($("<option />").val(value.id).text(value.libelle));
+                                    });
+                                }
                             });
                         }
                     });
@@ -350,7 +357,6 @@
                 });
                 $('#affaire').on('select2:select', function (e) {
                     var data = e.params.data;
-                    console.log(data.text);
                     $.ajax({
                         url: '{{ path('getByClient') }}',
                         data: {
@@ -361,7 +367,7 @@
                             $('#ncommande').empty();
                             $('#ncommande').append($("<option />").val(null).text(null));
                             $.each(result, function (key, value) {
-                                if (value.Affaire == data.text) {
+                                if (value.Affaire && (value.Affaire.libelle == data.text)) {
                                     $('#ncommande').append($("<option />").val(value.id).text(value.nCommande));
                                 }
                             });
@@ -371,6 +377,22 @@
                     calendar.rerenderEvents();
                 });
                 $('#affaire').on('select2:unselect', function (e) {
+                    var data = e.params.data;
+                    $.ajax({
+                        url: '{{ path('getByClient') }}',
+                        data: {
+                            id: $('#utilisateurs :selected').val() //dynamically get the current selected option from the dropdown
+                        },
+                        dataType: "json",
+                        success: function (result) {
+                            $('#ncommande').empty();
+                            $('#ncommande').append($("<option />").val(null).text(null));
+                            $.each(result, function (key, value) {
+                                $('#ncommande').append($("<option />").val(value.id).text(value.nCommande));
+                            });
+
+                        }
+                    });
                     calendar.rerenderEvents();
                 });
                 $("#export").click(function (e) {

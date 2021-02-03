@@ -126,6 +126,12 @@
                                         <th>Date</th>
                                         <td>{{ planning.lc.commande.datePiece|date('d-m-Y') }}</td>
                                     </tr>
+                                    {% if planning.lc.commande.affaire %}
+                                        <tr>
+                                            <th>Affaire</th>
+                                            <td>{{ planning.lc.commande.affaire.libelle }}</td>
+                                        </tr>
+                                    {% endif %}
                                 </table>
                             </div>
                         </div>
@@ -136,7 +142,7 @@
                 <button class="btn btn-secondary" data-dismiss="modal">
                     <i class="fas fa-window-close fa-lg"></i>
                 </button>
-                {% if AutorisationAcces('deletePlanning' , app.user) %}
+                {% if AutorisationAcces('deletePlanning' , app.user) or planning.id == app.user.id %}
                     <a href="{{ path('deletePlanning', {id: planning.id}) }}" class="btn btn-danger">
                         <i class="fas fa-trash fa-lg"></i>
                     </a>

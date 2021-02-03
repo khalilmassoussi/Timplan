@@ -70,34 +70,29 @@ class Client
 
     /**
      * @var string
-
      * @ORM\Column(name="VilleClient", type="string", length=255 , nullable=true)
      */
     private $villeClient;
 
     /**
      * @var int
-
      * @ORM\Column(name="CodePostalClient", type="integer", nullable=true)
      */
     private $codePostalClient;
 
     /**
      * @var string
-
      * @ORM\Column(name="Telephone", type="string", length=30, nullable=true)
      */
     private $telephone;
 
     /**
      * @var string
-
      */
     private $faxClient;
 
     /**
      * @var string
-
      * @ORM\Column(name="AdresseMailClient", type="string", length=100 ,nullable=true)
      */
     private $adresseMailClient;
@@ -119,6 +114,12 @@ class Client
      * @ORM\OneToMany(targetEntity="TimSoft\TasksBundle\Entity\TaskEvent", mappedBy="client")
      */
     private $tasks;
+
+    /**
+     * @var
+     * @ORM\OneToMany(targetEntity="TimSoft\GeneralBundle\Entity\Affaire", mappedBy="client")
+     */
+    private $affaires;
 
     public function __toString()
     {
@@ -471,5 +472,22 @@ class Client
     {
         $this->tasks = $tasks;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getAffaires()
+    {
+        return $this->affaires;
+    }
+
+    /**
+     * @param mixed $affaires
+     */
+    public function setAffaires($affaires): void
+    {
+        $this->affaires = $affaires;
+    }
+
 
 }

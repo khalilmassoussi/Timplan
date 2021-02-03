@@ -108,7 +108,11 @@
                                 {{ cmd.totalRAP }}
                             </td>
                             <td>{{ cmd.buManager }}</td>
-                            <td>{{ cmd.affaire }}</td>
+                            <td>
+                                {% if cmd.affaire %}
+                                    {{ cmd.affaire.libelle }}
+                                {% endif %}
+                            </td>
                             <td>
                                 {% if AutorisationAcces('AfficherCmd' , Utilisateur) %}
                                     <center>

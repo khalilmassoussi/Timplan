@@ -67,7 +67,7 @@
                         <div class="tab-content tab-validate" id="custom-tabs-three-tabContent">
                             <div class="tab-pane fade active show" id="custom-tabs-three-home" role="tabpanel"
                                  aria-labelledby="custom-tabs-three-home-tab">
-                                <table class="table table-borderless detail">
+                                <table class="table table-borderless detail table-sm">
                                     <tr>
                                         <td>Type</td>
                                         <td>
@@ -82,18 +82,9 @@
                                         </td>
                                         <td>
                                             <div class="form-group clearfix">
-                                                {#{% for key, allDayItem in form.periodique %}#}
-                                                {#<div class="icheck-primary d-inline">#}
-                                                {#{{ form_widget(allDayItem, {'attr': {'class': 'form-check-input'}}) }}#}
-                                                {#{{ form_label(allDayItem) }}#}
-                                                {#</div>#}
-                                                {#{% endfor %}#}
-
                                                 {{ form_widget(form.periodique) }}
                                                 {{ form_label(form.periodique) }}
-
                                             </div>
-
                                         </td>
                                     </tr>
                                     <tr id="tempsT">
@@ -120,7 +111,10 @@
                                     <tr>
                                         <td>Assigner à</td>
                                         <td>{{ form_widget(form.utilisateur, {'attr': {'class': 'form-control'}}) }}</td>
-                                        <td>{{ form_widget(form.client, {'attr': {'class': 'form-control'}}) }}</td>
+                                        <td>
+                                            <div >  {{ form_widget(form.client, {'attr': {'class': 'form-control'}}) }}</div>
+                                             {{ form_widget(form.affaire, {'attr': {'class': 'form-control'}}) }}
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td>Task</td>
@@ -281,6 +275,30 @@
                 $('#timsoft_tasksbundle_taskevent_task').replaceWith(
                     // ... with the returned one from the AJAX response.
                     $(html).find('#timsoft_tasksbundle_taskevent_task')
+                );
+                // Position field now displays the appropriate positions.
+            }
+        });
+    });
+
+    var $client = $('#timsoft_tasksbundle_taskevent_client');
+    // When sport gets selected ...
+    $client.change(function () {
+        // ... retrieve the corresponding form.
+        var $form = $(this).closest('form');
+        // Simulate form data, but only include the selected sport value.
+        var data = {};
+        data[$client.attr('name')] = $client.val();
+        // Submit data via AJAX to the form's action path.
+        $.ajax({
+            url: $form.attr('action'),
+            type: $form.attr('method'),
+            data: data,
+            success: function (html) {
+                // Replace current position field ...
+                $('#timsoft_tasksbundle_taskevent_affaire').replaceWith(
+                    // ... with the returned one from the AJAX response.
+                    $(html).find('#timsoft_tasksbundle_taskevent_affaire')
                 );
                 // Position field now displays the appropriate positions.
             }

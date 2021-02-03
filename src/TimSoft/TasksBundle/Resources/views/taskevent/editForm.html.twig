@@ -108,6 +108,7 @@
                                         </td>
                                         <td>
                                             {{ form_widget(edit_form.client, {'attr': {'class': 'form-control'}}) }}
+                                            {{ form_widget(edit_form.affaire, {'attr': {'class': 'form-control'}}) }}
                                         </td>
                                     </tr>
                                     <tr>
@@ -258,6 +259,7 @@
       href="{{ asset('Template2/plugins/datetimepicker-master/build/jquery.datetimepicker.min.css') }}"/>
 <script src="{{ asset('Template2/plugins/datetimepicker-master/build/jquery.datetimepicker.full.min.js') }}"></script>
 <script>
+    /*-----------Task-----------*/
     var $activive = $('#timsoft_tasksbundle_taskevent_activite');
     // When sport gets selected ...
     $activive.change(function () {
@@ -276,6 +278,31 @@
                 $('#timsoft_tasksbundle_taskevent_task').replaceWith(
                     // ... with the returned one from the AJAX response.
                     $(html).find('#timsoft_tasksbundle_taskevent_task')
+                );
+                // Position field now displays the appropriate positions.
+            }
+        });
+    });
+
+    /*-----------Affaire-----------*/
+    var $client = $('#timsoft_tasksbundle_taskevent_client');
+    // When sport gets selected ...
+    $client.change(function () {
+        // ... retrieve the corresponding form.
+        var $form = $(this).closest('form');
+        // Simulate form data, but only include the selected sport value.
+        var data = {};
+        data[$client.attr('name')] = $client.val();
+        // Submit data via AJAX to the form's action path.
+        $.ajax({
+            url: $form.attr('action'),
+            type: $form.attr('method'),
+            data: data,
+            success: function (html) {
+                // Replace current position field ...
+                $('#timsoft_tasksbundle_taskevent_affaire').replaceWith(
+                    // ... with the returned one from the AJAX response.
+                    $(html).find('#timsoft_tasksbundle_taskevent_affaire')
                 );
                 // Position field now displays the appropriate positions.
             }

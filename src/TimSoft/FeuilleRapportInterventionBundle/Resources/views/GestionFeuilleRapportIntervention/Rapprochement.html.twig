@@ -236,7 +236,7 @@
                             if (row.numLivraison) {
                                 return row.numLivraison;
                             } else {
-                                return 'null';
+                                return '';
                             }
                         },
                         "visible": false,
@@ -272,7 +272,7 @@
                         text: '<i class="fas fa-file-export"></i> Exporter en excel',
                         className: "btn btn-success",
                         exportOptions: {
-                            columns: [0, 1, 2, 3, 5],
+                            columns: [0, 1, 2, 3, 6],
                             rows: ':visible'
                         },
                         init: function (api, node, config) {
@@ -282,9 +282,9 @@
                             var sheet = xlsx.xl.worksheets['sheet1.xml'];
 
                             $('c[r=A2] t', sheet).text('Date');
-                            $('c[r=B2] t', sheet).text('Client');
-                            $('c[r=C2] t', sheet).text('Intervenant');
-                            $('c[r=D2] t', sheet).text('Qte');
+                            $('c[r=B2] t', sheet).text('N°Commande');
+                            $('c[r=C2] t', sheet).text('Client');
+                            $('c[r=D2] t', sheet).text('Intervenant');
                             $('c[r=E2] t', sheet).text('N°CL');
                         }
                     },

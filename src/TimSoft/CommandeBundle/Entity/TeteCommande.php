@@ -39,7 +39,7 @@ class TeteCommande implements \JsonSerializable
      */
     protected $datePiece;
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\ManyToOne(targetEntity="TimSoft\GeneralBundle\Entity\Affaire")
      */
     protected $affaire;
     /**

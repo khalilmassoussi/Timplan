@@ -87,7 +87,7 @@
                             {% else %}
                                 <tr>
                                     <th>Affaire</th>
-                                    <td>{{ commande.affaire }}</td>
+                                    <td>{{ commande.affaire.libelle }}</td>
                                 </tr>
                             {% endif %}
                         </table>
@@ -481,30 +481,31 @@
                     this.api().columns('.SumHeader').every(function (index) {
                         var column = this;
                         var indexx = index;
-                        var sum = column
-                            .data()
-                            .reduce(function (a, b) {
-                                a = a.toString().replace(",", ".");
-                                a = a.replace(new RegExp(' ', 'g'), '');
-                                a = parseFloat(a);
-                                if (isNaN(a)) {
-                                    a = 0;
-                                }
-                                b = b.toString().replace(",", ".");
-                                b = b.replace(new RegExp(' ', 'g'), '');
-                                b = parseFloat(b);
-                                if (isNaN(b)) {
-                                    b = 0;
-                                }
-                                if (indexx === 8 || indexx === 5 || indexx === 3) {
-                                    return a + b;
-                                } else {
+                        if (column.data().length > 0) {
+                            var sum = column
+                                .data()
+                                .reduce(function (a, b) {
+                                    a = a.toString().replace(",", ".");
+                                    a = a.replace(new RegExp(' ', 'g'), '');
+                                    a = parseFloat(a);
+                                    if (isNaN(a)) {
+                                        a = 0;
+                                    }
+                                    b = b.toString().replace(",", ".");
+                                    b = b.replace(new RegExp(' ', 'g'), '');
+                                    b = parseFloat(b);
+                                    if (isNaN(b)) {
+                                        b = 0;
+                                    }
+                                    if (indexx === 8 || indexx === 5 || indexx === 3) {
+                                        return a + b;
+                                    } else {
 
-                                    return currencyFormatDE(a + b, 3, ',', ' ');
-                                }
-                            });
-                        $(column.footer()).html(sum);
-
+                                        return currencyFormatDE(a + b, 3, ',', ' ');
+                                    }
+                                });
+                            $(column.footer()).html(sum);
+                        }
                     });
                 },
                 "columnDefs": [

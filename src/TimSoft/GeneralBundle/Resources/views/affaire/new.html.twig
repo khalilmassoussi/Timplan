@@ -1,0 +1,50 @@
+{% extends 'Squelette.html.twig' %}
+
+{% block Titre %}
+    Timplan - Ajouter un affaire
+{% endblock %}
+
+{% block Section %}
+    <h1>
+        Les Affaires
+        <small>Ajouter un affaire</small>
+    </h1>
+{% endblock %}
+
+
+{% block Navigation %}
+    <li class="breadcrumb-item"><a href="{{ path('affaire_index') }}">Les Affaires</a></li>
+    <li class="breadcrumb-item active">Ajouter un affaire</li>
+{% endblock %}
+
+{% block Contenu %}
+    <div class="col-md-12">
+        <div class="card card-outline card-primary">
+            <div class="card-header with-border">
+                <h3 class="card-title">Ajouter un affaire</h3>
+            </div>
+            <div class="card-body">
+                {{ form_start(form) }}
+                <div class="form-group">
+                    {{ form_widget(form) }}
+                </div>
+                <input type="submit" value="Enregistrer" class="btn btn-primary"/>
+                {{ form_end(form) }}
+                <br>
+                <div>
+                    <ul>
+                        <li>
+                            <a href="{{ path('affaire_index') }}" class="btn btn-primary">Retourner à la liste</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+    {{ parent() }}
+    <script>
+        $('#timsoft_generalbundle_affaire_client').select2();
+    </script>
+{% endblock %}

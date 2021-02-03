@@ -1,0 +1,52 @@
+{% extends 'Squelette.html.twig' %}
+{% block Titre %}
+    Timplan - Modifier {{ affaire.libelle }}
+{% endblock %}
+
+{% block Section %}
+    <h1>
+        Modifier {{ affaire.libelle }}
+        <small></small>
+    </h1>
+{% endblock %}
+
+
+{% block Navigation %}
+    <li class="breadcrumb-item"><a href="{{ path('affaire_index') }}">Les Affaires</a></li>
+    <li class="breadcrumb-item active">Modifier {{ affaire.libelle }}</li>
+{% endblock %}
+{% block Contenu %}
+    <div class="col-md-12">
+        <div class="card card-outline card-primary">
+            <div class="card-header with-border">
+                <h3 class="card-title">Modifier {{ affaire.libelle }}</h3>
+            </div>
+            <div class="card-body">
+
+                {{ form_start(edit_form) }}
+                <div class="form-group">
+                    {{ form_widget(edit_form) }}
+                </div>
+                <input type="submit" value="Modifier" class="btn btn-primary"/>
+                {{ form_end(edit_form) }}
+                <br>
+                <ul>
+                    <li>
+                        <a href="{{ path('affaire_index') }}" class="btn btn-default">Retourner à la liste</a>
+                    </li>
+                    <li>
+                        {{ form_start(delete_form) }}
+                        <input type="submit" value="Supprimer" class="btn btn-primary">
+                        {{ form_end(delete_form) }}
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+    {{ parent() }}
+    <script>
+        $('#timsoft_generalbundle_affaire_client').select2();
+    </script>
+{% endblock %}
