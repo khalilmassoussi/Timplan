@@ -433,12 +433,17 @@ class PreCommandeController extends Controller
     {
         $PreteteCommande = $this->getDoctrine()->getRepository('TimSoftCommandeBundle:PreTeteCommande')->find($request->get('id'));
         $newT = new TeteCommande();
+        $newT->setBuManager($PreteteCommande->getBuManager());
+        $newT->setClient($PreteteCommande->getClient());
+        $newT->setAffaire($PreteteCommande->getAffaire());
+//        $newT->setDatePiece($PreteteCommande->getDatePiece());
+        $newT->setNCommande($PreteteCommande->getNCommande());
         $form = $this->createForm(TeteCommandeType::class, $newT);
-        $form->get('nCommande')->setData($PreteteCommande->getNCommande());
-        $form->get('client')->setData($PreteteCommande->getClient());
-        $form->get('buManager')->setData($PreteteCommande->getBuManager());
+//        $form->get('nCommande')->setData($PreteteCommande->getNCommande());
+//        $form->get('client')->setData($PreteteCommande->getClient());
+//        $form->get('buManager')->setData($PreteteCommande->getBuManager());
         $form->get('datePiece')->setData($PreteteCommande->getDatePiece());
-        $form->get('affaire')->setData($PreteteCommande->getAffaire());
+//        $form->get('affaire')->setData($PreteteCommande->getAffaire());
         $form->handleRequest($request);
         $em = $this->getDoctrine()->getManager();
         if ($form->isSubmitted() && $form->isValid()) {

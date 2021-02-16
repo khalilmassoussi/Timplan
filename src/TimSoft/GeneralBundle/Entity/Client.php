@@ -121,6 +121,18 @@ class Client
      */
     private $affaires;
 
+    /**
+     * @var
+     * @ORM\Column(type="boolean")
+     */
+    private $bloque;
+
+    /**
+     * @var
+     * @ORM\OneToMany(targetEntity="TimSoft\CommandeBundle\Entity\PreTeteCommande", mappedBy="client")
+     */
+    private $precommandes;
+
     public function __toString()
     {
         return (string)$this->getRaisonSociale();
@@ -488,6 +500,39 @@ class Client
     {
         $this->affaires = $affaires;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getBloque()
+    {
+        return $this->bloque;
+    }
+
+    /**
+     * @param mixed $bloque
+     */
+    public function setBloque($bloque): void
+    {
+        $this->bloque = $bloque;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPrecommandes()
+    {
+        return $this->precommandes;
+    }
+
+    /**
+     * @param mixed $precommandes
+     */
+    public function setPrecommandes($precommandes): void
+    {
+        $this->precommandes = $precommandes;
+    }
+
 
 
 }

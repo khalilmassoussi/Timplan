@@ -353,7 +353,7 @@ class Planning extends Event implements \JsonSerializable
                     'JSupplementaire' => $this->jSupplementaire,
                     'Facturation' => $this->facturation,
                     'Intervenant' => $this->utilisateur->getPrenomUtilisateur() . ' ' . $this->utilisateur->getNomUtilisateur(),
-                    'resourceIds' => [$this->utilisateur->getId(), $this->getAccompIds()],
+                    'resourceIds' => array_merge([$this->utilisateur->getId()],$this->getAccompIds()),
                     'Accompagnements' => $this->accompagnements->toArray(),
 //                    'IdAccompagnemant' => $this->accompagnement->getId(),
                     'textColor' => $this->eventTextColor,

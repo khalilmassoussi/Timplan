@@ -3,21 +3,10 @@
 namespace TimSoft\ClientBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use TimSoft\GeneralBundle\Entity\Client;
-use Symfony\Component\Form\FormView;
-use Doctrine\Common\Collections\ArrayCollection;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use TimSoft\GeneralBundle\Form\ImporterClientType;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use JMS\Serializer\SerializerBuilder;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Serializer\Serializer;
-use Symfony\Component\Serializer\Encoder\XmlEncoder;
-use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
-use Symfony\Component\Form\FormError;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class GestionClientController extends Controller
 {
@@ -303,6 +292,21 @@ class GestionClientController extends Controller
         return $this->render('@TimSoftClient/GestionClient/ImporterClient.html.twig', array('form' => $form->createView()));
     }
 
-
+    public function bloqueClientAction(Client $client)
+    {
+        $client->setBloque(1);
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($client);
+        $em->flush();
+        return $this->redirectToRoute('ConsulterClient');
+    }
+    public function activeClientAction(Client $client)
+    {
+        $client->setBloque(0);
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($client);
+        $em->flush();
+        return $this->redirectToRoute('ConsulterClient');
+    }
 
 }

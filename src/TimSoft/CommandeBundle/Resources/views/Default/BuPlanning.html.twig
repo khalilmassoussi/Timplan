@@ -99,9 +99,10 @@
             overflow: auto;
         }
 
-        /*.panel-fullscreen #calendar {*/
-        /*height: 100%;*/
-        /*}*/
+        .fc-body {
+            font-size: 15px;
+        }
+
     </style>
     <div class="col-md-12">
         <div class="card card-outline card-primary">
@@ -233,10 +234,10 @@
                         if (event.event.extendedProps.type != 'TaskEvent') {
                             $(event.el).height('auto');
                             $(event.el).find('.fc-title').prepend('<b>Client: </b>');
-                            $(event.el).append('<br><span><b>Libellé: </b>' + event.event.extendedProps.libelle + '</span>');
                             if (event.event.extendedProps.affaire != null) {
-                                $(event.el).append('<br><b>Affaire:</b> ' + event.event.extendedProps.affaire.libelle)
+                                $(event.el).append('<div><b>Affaire:</b> ' + event.event.extendedProps.affaire.libelle + '</div>')
                             }
+                            $(event.el).append('<div><span><b>Libellé: </b>' + event.event.extendedProps.libelle + '</span></div>');
                         }
                     }
                     if (event.event.extendedProps.type == 'TaskEvent') {
@@ -245,12 +246,18 @@
                             $(event.el).height('auto');
 
                             $(event.el).find('.fc-title').prepend('<b>Client: </b>');
+                            if (event.event.extendedProps.affaire != null) {
+                                $(event.el).append('<div><b>Affaire:</b> ' + event.event.extendedProps.affaire.libelle + '</div>')
+                            }
                             $(event.el).append('<br><span><b>Task: </b>' + event.event.extendedProps.task + '</span>');
                             $(event.el).append('<div><b>Heure: </b>' + moment(event.event.start).format("HH:mm") + '</div>');
                         } else {
                             $(event.el).height('auto');
                             $(event.el).find('.fc-title').prepend('<b>Client: </b>');
-                            $(event.el).append('<br><span><b>Task: </b>' + event.event.extendedProps.task + '</span>');
+                            if (event.event.extendedProps.affaire != null) {
+                                $(event.el).append('<div><b>Affaire:</b> ' + event.event.extendedProps.affaire.libelle+'</div>')
+                            }
+                            $(event.el).append('<div><span><b>Task: </b>' + event.event.extendedProps.task + '</span></div>');
 
                         }
                         if (event.event.extendedProps.etiquette == 'Urgent') {

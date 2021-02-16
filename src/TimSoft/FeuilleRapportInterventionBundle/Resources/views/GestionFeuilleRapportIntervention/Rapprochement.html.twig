@@ -236,7 +236,7 @@
                             if (row.numLivraison) {
                                 return row.numLivraison;
                             } else {
-                                return '';
+                                return 'null';
                             }
                         },
                         "visible": false,
@@ -348,7 +348,7 @@
                                 // $("#Date").append('<span class="input-prepend input-group"><span class="add-on input-group-addon"><i class="glyphicon glyphicon-calendar fa fa-calendar"></i></span><input type="text" style="width: 100%" name="daterange" class="form-control daterange"/></span>');
                             }
                             let column = this;
-                            var select = $('<select class="select2"><option value=""></option></select>')
+                            var select = $('<select class="form-control"><option value=""></option></select>')
                                 .appendTo($(column.header()))
                                 .on('change', function () {
                                     var val = $.fn.dataTable.util.escapeRegex(
@@ -367,10 +367,7 @@
                     });
                 }
             });
-// $('#TableRIFP').delegate('#select222', function () {
-//     this.select2();
-// })
-// $.fn.dataTable.Editor.classes.form.button = "btn";
+
 
             $('.daterange').daterangepicker({
                 "locale": {
@@ -425,10 +422,7 @@
             var startDate;
             var endDate;
             var dataIdx = 0;  //current data column to work with
-// $("#mytable_wrapper thead").on("mousedown", "th", function (event) {
-//     var visIdx = $(this).parent().children().index($(this));
-//     dataIdx = table.column.index('fromVisible', visIdx);
-// });
+
 // Function for converting a dd/mmm/yyyy date value into a numeric string for comparison (example 01-Dec-2010 becomes 20101201
             function parseDateValue(rawDate) {
 

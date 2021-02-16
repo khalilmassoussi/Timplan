@@ -17,15 +17,18 @@
     {% endif %}
     <li class="breadcrumb-item active">Modifier un client</li>
 {% endblock %}
+{% block css %}
+    {{ parent() }}
+    <style>
 
-
+    </style>
+{% endblock %}
 {% block Contenu %}
     <div class="col-md-12">
         <div class="card">
             <div class="card-header with-border">
                 <h2 class="card-title" style="color:#1E5584">Informations de <b>{{ client.raisonSociale }}</b></h2>
             </div>
-
             <br>
             <div class="card-body">
                 {{ form_start(form) }}
@@ -100,6 +103,12 @@
                         <div class="form-group">
                             <label>Clients facturés:</label>
                             {{ form_widget(form.clientFacture , {'attr' : {'class' : 'chosen-select form-control', 'tabindex' : '3' ,'multiple' : 'multiple' ,'data-placeholder' : 'Selectionnez les clients facturés'}} ) }}
+                        </div>
+                        <div class="form-group">
+                            <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
+                                {{ form_widget(form.bloque) }}
+                                {{ form_label(form.bloque) }}
+                            </div>
                         </div>
                     </div>
                 </div>

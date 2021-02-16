@@ -126,7 +126,11 @@
                                     <span class="badge bg-danger" style="font-size: 85%">Non généré</span>
                                 {% endif %}
                             </td>
-                            <td>{{ cmd.affaire }}</td>
+                            <td>
+                                {% if cmd.affaire %}
+                                    {{ cmd.affaire.libelle }}
+                                {% endif %}
+                            </td>
                             <td hidden>
                                 {% if cmd.archive %}
                                     Commande Généré

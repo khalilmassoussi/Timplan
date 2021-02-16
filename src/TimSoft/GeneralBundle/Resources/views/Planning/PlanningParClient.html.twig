@@ -77,6 +77,10 @@
             /*margin: 20px auto;*/
         }
 
+        .fc-body {
+            font-size: 15px;
+        }
+
     </style>
     <div class="col-md-12">
         <div class="card card-outline card-primary">
@@ -131,6 +135,9 @@
         {#<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>#}
         <script>
             document.addEventListener('DOMContentLoaded', function () {
+
+                // $('.fc-body').css('font-size','10px !important');
+
                 var client;
                 var app_user = '{{ app.user.roleUtilisateur|json_encode()|raw }}';
                 var initialLocaleCode = 'fr';
@@ -236,6 +243,9 @@
                                 $(event.el).height('auto');
                                 if (event.event.extendedProps.type == 'TaskEvent') {
                                     $(event.el).find('.fc-title').prepend('<b>Client: </b>');
+                                    if (event.event.extendedProps.affaire != null) {
+                                        $(event.el).append('<div><b>Affaire:</b> ' + event.event.extendedProps.affaire.libelle + '</div>')
+                                    }
                                     $(event.el).append('<b>Task: </b> ' + event.event.extendedProps.task +
                                         '<br><b>Intervenant: </b>' + event.event.extendedProps.Intervenant);
                                     if (event.event.allDay === false) {
@@ -275,6 +285,9 @@
 
                                 } else {
                                     $(event.el).find('.fc-title').prepend('<b>Client: </b>');
+                                    if (event.event.extendedProps.affaire != null) {
+                                        $(event.el).append('<div><b>Affaire:</b> ' + event.event.extendedProps.affaire.libelle + '</div>')
+                                    }
                                     $(event.el).append('<b>Libellé:</b> ' + event.event.extendedProps.libelle +
                                         '<br><b>Lieu: </b>' + event.event.extendedProps.Lieu + '<br><b>Intervenant: </b>' + event.event.extendedProps.Intervenant);
                                     if (event.event.allDay === false) {
@@ -349,12 +362,15 @@
                     });
 
                 });
+
                 $('#ncommande').on('select2:select', function (e) {
                     calendar.rerenderEvents();
                 });
+
                 $('#ncommande').on('select2:unselect', function (e) {
                     calendar.rerenderEvents();
                 });
+
                 $('#affaire').on('select2:select', function (e) {
                     var data = e.params.data;
                     $.ajax({
@@ -376,6 +392,7 @@
                     });
                     calendar.rerenderEvents();
                 });
+
                 $('#affaire').on('select2:unselect', function (e) {
                     var data = e.params.data;
                     $.ajax({
@@ -395,6 +412,7 @@
                     });
                     calendar.rerenderEvents();
                 });
+
                 $("#export").click(function (e) {
                     e.preventDefault();
                     if ($('#utilisateurs').val()) {
@@ -451,6 +469,7 @@
                         })
                     }
                 });
+
                 $('#addTaskButton').on('click', function (e) {
                     e.preventDefault();
                     $.ajax({
@@ -466,6 +485,8 @@
                         },
                     });
                 });
+
+
             });
 
             function formatDate(date) {

@@ -93,7 +93,11 @@
                             </tr>
                             <tr>
                                 <th>Affaire</th>
-                                <td>{{ commande.affaire }}</td>
+                                <td>
+                                    {% if commande.affaire %}
+                                    {{ commande.affaire.libelle }}
+                                    {% endif %}
+                                </td>
                             </tr>
                         </table>
                     </div>
@@ -272,16 +276,12 @@
                                     <td class="cell1">{{ RoleUser }}</td>
                                     <td class="cell1">
                                         {% for bu in user.bus %}
-                                            {#                                        {% if bu.libelle %}#}
                                             {{ bu.libelle }},
-                                            {#                                        {% endif %}#}
                                         {% endfor %}
                                     </td>
                                 </tr>
                             {% endfor %}
-
                             </tbody>
-
                         </table>
                         <br>
                     </div>
@@ -359,10 +359,6 @@
                             <td>Quantité restante</td>
                             <td><input type="number" id="Qrestante" class="form-control"></td>
                         </tr>
-                        {#                    <tr>#}
-                        {#                        <td>Montant restant</td>#}
-                        {#                        <td><input type="number" id="Mrestant" class="form-control"></td>#}
-                        {#                    </tr>#}
                     </table>
                 </div>
                 <div class="modal-footer">

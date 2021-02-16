@@ -1,15 +1,15 @@
 AjouterClient:
     path:     /AjouterClient
     defaults: { _controller: TimSoftClientBundle:GestionClient:AjouterClient }
-    
+
 ImporterClients:
     path:     /ImporterClients
     defaults: { _controller: TimSoftClientBundle:GestionClient:ImporterClient }
-    
+
 ConsulterClient:
     path:     /ConsulterClient
     defaults: { _controller: TimSoftClientBundle:GestionClient:ConsulterClient }
-    
+
 ConsulterUnClient:
     path:     /ConsulterUnClient/{id}
     defaults: { _controller: TimSoftClientBundle:GestionClient:ConsulterUnClient }
@@ -25,3 +25,10 @@ ModifierClient:
 SupprimerClient:
     path:     /SupprimerClient/{id}
     defaults: { _controller: TimSoftClientBundle:GestionClient:SupprimerClient }
+
+BloqueClient:
+    path:     /BloqueClient/{client}
+    defaults: { _controller: TimSoftClientBundle:GestionClient:BloqueClient }
+ActiveClient:
+    path:     /ActiveClient/{client}
+    defaults: { _controller: TimSoftClientBundle:GestionClient:activeClient }

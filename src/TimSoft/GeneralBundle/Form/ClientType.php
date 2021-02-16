@@ -3,6 +3,7 @@
 namespace TimSoft\GeneralBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\CountryType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -25,16 +26,11 @@ class ClientType extends AbstractType
             ->add('paysClient', CountryType::class, array(
                 'preferred_choices' => array('TN'),
             ))
-            ->add('adresseClient', null, array(
-            ))
-            ->add('villeClient', null, array(
-            ))
-            ->add('codePostalClient', null, array(
-            ))
-            ->add('telephone', TelType::class, array(
-            ))
-            ->add('faxClient', TelType::class, array(
-            ))
+            ->add('adresseClient', null, array())
+            ->add('villeClient', null, array())
+            ->add('codePostalClient', null, array())
+            ->add('telephone', TelType::class, array())
+            ->add('faxClient', TelType::class, array())
             ->add('adresseMailClient', EmailType::class, array(
                 'label' => 'form.email',
 //                'translation_domain' => 'FOSUserBundle'
@@ -44,7 +40,14 @@ class ClientType extends AbstractType
                 'widget' => 'single_text',
                 'format' => 'yyyy-MM-dd',
             ))
-            ->add('societeMere');
+            ->add('societeMere')
+            ->add('bloque', CheckboxType::class, [
+                'label' => 'Bloqué',
+                'label_attr' => ['class' => 'custom-control-label'],
+                'attr' => ['class' => 'custom-control-input'],
+                'required' => false
+            ]);
+
     }
 
     /**

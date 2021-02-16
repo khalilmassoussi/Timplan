@@ -38,6 +38,7 @@ class TeteCommandeType extends AbstractType
                 'choice_label' => 'libelle',
                 'placeholder' => 'Choisir un affaire',
                 'choices' => $affaire,
+                "required" => false
             ]);
         };
         $builder->addEventListener(
@@ -45,7 +46,6 @@ class TeteCommandeType extends AbstractType
             function (FormEvent $event) use ($formModifier) {
                 // this would be your entity, i.e. SportMeetup
                 $data = $event->getData();
-
                 $formModifier($event->getForm(), $data->getClient());
             }
         );

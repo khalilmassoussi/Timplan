@@ -121,17 +121,10 @@ class TaskEventType extends AbstractType
                 'required' => false,
             ))
             ->add('periodique', CheckboxType::class, [
-//                'choices' => [
-//                    'Periodique' => true,
-//                    'Non Periodique' => false,
-//                ],
-//                'expanded' => true,
                 'label' => 'Periodicité',
                 'label_attr' => ['class' => 'custom-control-label'],
                 'attr' => ['class' => 'custom-control-input'],
                 'required' => false
-//                'block_name' => 'PeriodiqueForm',
-//                'label_attr' => ['class' => 'checkbox-custom'],
             ])
             ->add('freq', ChoiceType::class, [
                 'choices' => [

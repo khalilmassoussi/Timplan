@@ -400,9 +400,7 @@
             },
             rules: {},
             errorClass: "myErrorClass",
-            highlight:
-
-                function (element, errorClass, validClass) {
+            highlight: function (element, errorClass, validClass) {
                     var elem = $(element);
                     if (elem.hasClass("select2-hidden-accessible")) {
                         $("#select2-" + elem.attr("id") + "-container").parent().addClass(errorClass);

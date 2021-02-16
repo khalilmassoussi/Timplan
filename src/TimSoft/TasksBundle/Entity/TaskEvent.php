@@ -518,11 +518,10 @@ class TaskEvent implements \JsonSerializable
     }
 
 
-
     public function jsonSerialize()
     {
         $class = new \ReflectionClass($this);
-        $this->eventColor = '#81B5D4';
+        $this->eventColor = '#6F9CBB';
         $this->eventTextColor = '#FFFFFF';
         if ($this->periodique == true) {
             if ($this->startTime && $this->endTime) {
@@ -561,7 +560,8 @@ class TaskEvent implements \JsonSerializable
                     'interval' => $this->intervale,
                     'byweekday' => $this->byweekday
                 ],
-                'duration' => ['hours' => $duration]
+                'duration' => ['hours' => $duration],
+                'affaire' => $this->affaire
             );
         } else {
             $array = array(
@@ -586,7 +586,8 @@ class TaskEvent implements \JsonSerializable
                 'activite' => $this->activite,
                 'task' => $this->task,
                 'libelle' => $this->task,
-                'etiquette' => $this->etiquette
+                'etiquette' => $this->etiquette,
+                'affaire' => $this->affaire
             );
         }
         return $array;
