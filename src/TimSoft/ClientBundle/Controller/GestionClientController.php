@@ -288,7 +288,6 @@ class GestionClientController extends Controller
                 return $this->redirectToRoute('ConsulterClient');
             }
         }
-
         return $this->render('@TimSoftClient/GestionClient/ImporterClient.html.twig', array('form' => $form->createView()));
     }
 
